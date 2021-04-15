@@ -1,0 +1,48 @@
+# Unit 2: On Algorithms and more
+
+## Mathematical analysis of algorithms
+
+### Introduct Analytic Analysis of Algorithm Performance 
+
+* Speed complexity, space complexity, etc..
+* Big O notation
+* Compute time...
+* The difference between the theoretical analysis and the real world (complexity classes aren't everything)
+* Overview of complexity classes (just mention NP completeness).
+* Example of searching through an arbitrary list/array vs. a sorted array... O(n) vs. O(log n)
+* Discussion of datastructures that aid a specific purpuse.
+
+### Mathematical Analysis: (Key example) Sorting algorithms and their analysis
+
+* Search through the list naivly
+* Bubble sort and its analysis O(n^2)
+* Merge sort - buidling the recurrenance relation which 
+* Solution of merge sort recurrent relation to get O(n log n)
+* Peek forward (will appear in future units): Heap Sort
+* Quick sort - average O(n log n)
+* Othe discussions (bucket sort O(1) under assumptions.... mention proof of O(n logn) is best can be done...)
+
+## Implementation of algorithms and some data structures
+
+### Memory Management
+
+* The stack vs. the heap.
+* Memory locallity principles.
+* Allocation and "de-allocation" (theory) - Gargabe collection.
+* More on how variables are represented/stored in memory.
+
+### Hands-on Sorting implementation and empirical testing
+* Some implementation of sorting algoithms.
+* Empirically comparing different algorithms for sorting 
+* Connecting with an example to the tools below (CLI for sorting).
+
+## More tools
+
+### General tools
+* Unix command line,
+* Git and GitHub like systems
+* IDE - Visual Studio Code (?).
+
+### More on tools in Julia
+* The Juliapackage manager.
+* Julia compilation steps

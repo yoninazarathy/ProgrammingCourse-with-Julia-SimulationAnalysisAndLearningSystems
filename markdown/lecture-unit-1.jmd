@@ -1,0 +1,70 @@
+# Unit 1: Basics
+
+Before anything - a 10-20 minute demo.... e.g. expected number of findings of minimum when searching through an array.... or Resvouir sampling
+
+## Premeble (before really coding)
+
+### What you "already know"
+
+* Python scripting
+* MATLAB scripting
+* R scripting
+* Files, computer, internet
+* Mathematics at level of STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + More math electives 
+
+### What is a computer?
+
+* Turing + tape? Finite Automata? Von-Neuman architecture.
+* CPU, Memory, RAM, (ROM used to be a term), Disk, Operating system....
+* Running batch things, running responsive.
+* Software vs. Hardware..... 
+* History... (Turing, Ada, etc...)
+
+### The culture of software development and Who is a programmer?
+
+* "code is read more than it is written"....
+* Big complaint of software engineers interacting with mathematicians is "black box of code that isn't easy to follow".
+* In academia, code is an artifact of research and isn't the work itself.
+* If code was written like paper, many practionars would be happier...
+* Diverse teams...
+
+### Bits, bytes, hex, binary, and the works...
+
+* Bits and bytes.
+* Binary, hex, and arithmetic.
+* Shift left/shift right, ones complement
+* Mega bit per sec /vs. Mega byte   rates memory.... 
+
+## Julia from the ground up
+
+### Extended Hello world (0'th story)
+
+* Julia as a language (+community, history, motivation, etc...)
+* Running from A file in command line. 
+* REPL
+* Jupyter (more on Jupyter a bit below...)
+* Already have something simple in there with an array and a comprehnsion and broadcasting  [example code](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/1_chapter/helloWorld.jl)
+
+### Square root (the 1'st story)
+
+* Basics
+* Variables (also complex types)
+* Types (basic story about types)
+* Many methods for the one function
+* The Babilonian algorithm 
+* Broadcasting as well
+* The "quakeIII" algorithm for the inverse of square root a Float32 
+
+### Factorial (the 2'nd story)
+* Basics
+* Recursion
+* BigInts
+* The Gamma function
+* Accuracy of the Stirling approximation (will use arrays also for plotting)
+    
+### Something with language and strings (the 3'rd story)
+* Frequency counting in a corpus.
+* Something a bit smarter after a bit.
+* Discuss ASCII, Unicode...
+
+

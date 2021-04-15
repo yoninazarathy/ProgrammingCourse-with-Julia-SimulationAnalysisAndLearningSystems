@@ -1,0 +1,53 @@
+# Unit 4: More language features for software architecture
+
+## Motivations from Algebra
+
+### Existing Software
+
+* Symoblic mathematics in general overview (Maple, Mathematica, Magma, more rigourous systems...)
+* Usage of an existing package (Symbolics.jl / SimPy.jl.....)
+
+### Some Basic Problems and Objects
+
+* Rational numbers represenation
+* Polynomial Representation
+* Example: Bitpacking example/discussion...  
+
+(From this point down in the unit.... you focus on Julia with the polynomials and rationals as examples....)
+
+## Types and the Type System
+
+### Julia types
+
+ * Julia in-built types and the type hierarachy
+ * Multiple dispatch
+
+QQQQ - More work here....
+
+
+ Goal: [Case Study of Rational](https://docs.julialang.org/en/v1/manual/constructors/#Case-Study:-Rational)
+
+
+### More on User Defined Types
+
+ multiple dispatch
+ defining structures
+ designing types
+ mutability
+
+
+## Some More Datastrcutures
+
+### Dictionaries and Hash
+
+* Dictionaries and Julia `Dict()` from a user perspective.
+* Hash tables (example implementation).
+* More dicussion hash functions (and other applications in computer science).
+
+### Heaps 
+
+* The heap data structure
+* Analytic analysis of heaps, O(log n) insert, etc... "heapify"
+* Mathematical analysis of performance
+* Data representation (dangled vs. in an array...)
+* Using a heap object (from a package)...

@@ -1,0 +1,44 @@
+# Unit 3: On data files, and basic numerics
+
+## Data analysis
+
+### Files and file formats
+
+* Standard file formats (e.g. CSV, JSON)
+* Very basic usage of Dataframes (with more to come in Unit 7)
+* Reading and writing to files
+* Web input
+
+### Basic scientific work envionrment
+
+* basic plotting with Julia 
+* basic descriptive statistics 
+* statistical plotting with Julia
+ 
+## Numerics
+
+### More on numerics and floating points
+* Representation of floating point numbers
+* Numerical inaccuracy issues
+* Numerical derivatives and examples
+* Multiple methods for numerical integration and their error analysis (theoretical and analytic)
+* Brief intro to automatic differention
+
+### Differential Equations
+* Solutions of differential equations using DifferentialEquations.jl (simple examples)
+* Euler Method implemination 
+* Runga-Kutta 4-5 implemination
+* Simpletic integrator example...(?) e.g. planetary motion + discussion/demo of error
+
+###  Matrix operations
+* Basics with the LinearAlgebra package
+* Discussion and overview of LAPACK and BLAS.
+* Discussion of sparsity
+* The many things behind the backlash operator....
+
+## Finally More More Tools (last tooling bit in course)
+
+* profiling @time
+* Debugging
+* Hacks like Revise.jl  
+* More useful Macros for debugging @assert @show (if hasn't been shown before)... @info @warn 
