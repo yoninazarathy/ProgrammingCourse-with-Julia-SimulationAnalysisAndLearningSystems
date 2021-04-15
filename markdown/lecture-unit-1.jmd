@@ -1,6 +1,131 @@
 # Unit 1: Basics
 
+To introduce things say you have an array of values and want to find the maximal value. How would you do it? Here is some Julia code:
+
+<!---
 Before anything - a 10-20 minute demo.... e.g. expected number of findings of minimum when searching through an array.... or Resvouir sampling
+--->
+```julia
+using Random
+
+function find_max(data)
+    max_value = -Inf
+    for x in data
+        if x > max_value
+            max_value = x
+        end
+    end
+    return max_value
+end
+
+Random.seed!(0)
+data = rand(100)
+max_value = find_max(data)
+println("Found maximal value: $(max_value)")
+```
+
+**Here is a question**: How many times was a new maximum found?
+
+Let's count.
+
+```julia
+using Random
+
+function find_max(data)
+    max_value = -Inf
+    n = 0
+    for x in data
+        if x > max_value
+            n = n+1
+            max_value = x
+        end
+    end
+    return max_value, n
+end
+
+Random.seed!(0)
+data = rand(100)
+max_value, n = find_max(data)
+println("Found maximal value: $(max_value)")
+println("There were $n records along the way.")
+```
+
+But for different data (different seed) there is obviously possibiliy a different number of records...
+
+```julia
+Random.seed!(1)
+data = rand(100)
+max_value, n = find_max(data)
+println("Found maximal value: $(max_value)")
+println("There were $n records along the way.")
+```
+
+How many on average? Denote the number of records for $n$ data points by $X_n$ then,
+$$
+X_n = I_1 + I_2 + \ldots + I_n,
+$$
+where,
+$$
+I_i =
+\begin{cases}
+1 & \text{if}~i~\text{'th data point is a record}, \\
+0 & \text{otherwise}.
+\end{cases}
+$$
+Now,
+$$
+{\mathbb E}[X_n] = {\mathbb E}[I_1] + {\mathbb E}[I_2] + \ldots + {\mathbb E}[I_n]. 
+$$
+Observe that ${\mathbb E}[I_i] = {\mathbb P}(I_i = 1)$ and for statistically independent and idenitcally distributed data points we have,
+$$
+{\mathbb P}(I_i = 1) = \frac{1}{i},
+$$
+why? Hence,
+$$
+{\mathbb E}[X_n] = h_n = \sum_{i=1}^n \frac{1}{i},
+$$
+the harmonic sum. It is known that
+$$
+h_n = \log(n) + \gamma + o(1),
+$$
+where $\gamma$ is the [Euler–Mascheroni constant](Euler–Mascheroni constant). That is 
+$$
+h_n \approx \log(n) + \gamma.
+$$
+Let's see it...
+```julia
+using Plots
+
+println("γ = ",Float64(MathConstants.γ))  #\gamma + [TAB]
+
+h(n) = sum(1/i for i in 1:n)
+approx_h(n) = log(n) + MathConstants.γ
+
+for n in 1:10
+    println(n, "\t", h(n), "\t", approx_h(n) )
+end
+
+err = [h(n) - approx_h(n) for n in 1:20]
+
+scatter(1:20,err,xticks=1:20,xlabel="n",ylabel = "Error",ylim = (0,0.5), legend=false)
+```
+
+Here is a Monte Carlo estimate,
+```julia
+using Statistics
+
+records = []
+
+for s in 1:10^5
+    Random.seed!(s)
+    data = rand(100)
+    _, n = find_max(data)
+    push!(records,n)
+end
+println("log(100) + γ =  $(approx_h(100)), Monte Carlo Estimate: $(mean(records))")
+
+histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="probability",legend=false)
+```
 
 ## Premeble (before really coding)
 
@@ -68,3 +193,6 @@ Before anything - a 10-20 minute demo.... e.g. expected number of findings of mi
 * Discuss ASCII, Unicode...
 
 
+$$
+\int_x f(x) dx
+$$
