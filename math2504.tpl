@@ -21,7 +21,7 @@
   <style type="text/css">
   {{{ :stylesheet }}}
   </style>
-  <link rel="icon" type="image/png" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
 </HEAD>
 
 <BODY>

@@ -88,7 +88,7 @@ the harmonic sum. It is known that
 $$
 h_n = \log(n) + \gamma + o(1),
 $$
-where $\gamma$ is the [Euler–Mascheroni constant](Euler–Mascheroni constant). That is 
+where $\gamma$ is the [Euler–Mascheroni constant](https://en.wikipedia.org/wiki/Euler%E2%80%93Mascheroni_constant). That is 
 $$
 h_n \approx \log(n) + \gamma.
 $$
@@ -178,7 +178,7 @@ histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="prob
 * Many methods for the one function
 * The Babilonian algorithm 
 * Broadcasting as well
-* The "quakeIII" algorithm for the inverse of square root a Float32 
+* The "quakeIII" algorithm for the receiprocal of square root a Float32 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/p8u_k2LIZyo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
