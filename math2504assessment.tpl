@@ -21,7 +21,7 @@
   <style type="text/css">
   {{{ :stylesheet }}}
   </style>
-  <link rel="icon" type="image/png" href="../ximg/favicon-32x32.png">
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
 </HEAD>
 
 <BODY>
@@ -41,15 +41,6 @@
               <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
           </center>
           <br>
-          <center>
-          <a href = "lecture-unit-1.html"> Unit 1 </a> |
-          <a href = "lecture-unit-2.html"> Unit 2 </a> |
-          <a href = "lecture-unit-3.html"> Unit 3 </a> |
-          <a href = "lecture-unit-4.html"> Unit 4 </a> |
-          <a href = "lecture-unit-5.html"> Unit 5 </a> |
-          <a href = "lecture-unit-6.html"> Unit 6 </a> |
-          <a href = "lecture-unit-7.html"> Unit 7 </a> 
-          </center>
           <br>
 
         {{{ :body }}}
@@ -60,18 +51,6 @@
           <center>
               <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
           </center>
-          <br>
-          <center>
-          <a href = "lecture-unit-1.html"> Unit 1 </a> |
-          <a href = "lecture-unit-2.html"> Unit 2 </a> |
-          <a href = "lecture-unit-3.html"> Unit 3 </a> |
-          <a href = "lecture-unit-4.html"> Unit 4 </a> |
-          <a href = "lecture-unit-5.html"> Unit 5 </a> |
-          <a href = "lecture-unit-6.html"> Unit 6 </a> |
-          <a href = "lecture-unit-7.html"> Unit 7 </a> 
-          </center>
-          <br>
-
           <p>
             Published from <a href="{{{:weave_source}}}">{{{:weave_source}}}</a>
             using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> {{:weave_version}} on {{:weave_date}}.
