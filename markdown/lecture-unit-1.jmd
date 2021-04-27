@@ -180,6 +180,8 @@ histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="prob
 * Broadcasting as well
 * The "quakeIII" algorithm for the receiprocal of square root a Float32 
 
+ 
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/p8u_k2LIZyo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Factorial (the 2'nd story)
