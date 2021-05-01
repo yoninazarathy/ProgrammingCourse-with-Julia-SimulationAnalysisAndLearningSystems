@@ -155,10 +155,57 @@ histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="prob
 
 ### Bits, bytes, hex, binary, and the works...
 
-* Bits and bytes.
+* Bits and bytes. 
+
+```julia
+0xa + 0x6
+```
+
+
+```julia
+s = string(19, base = 16)
+@show s
+@show hex2bytes(s)
+```
 * Binary, hex, and arithmetic.
 * Shift left/shift right, ones complement
-* Mega bit per sec /vs. Mega byte   rates memory.... 
+
+```julia
+x = 0b101
+@show x
+@show bitstring(x)
+@show x << 3
+@show bitstring(x << 3)
+println()
+
+x = 2^4
+@show x
+@show 2x
+@show x << 1
+@show x/2
+@show x//2
+@show x >> 1
+```
+
+```julia
+println("Wrap-around of unsigned integers")
+x = UInt8(255)
+@show x
+println("Adding 1: ", x + UInt8(1), "\n")
+
+println("Wrap-around of signed integers")
+x = Int8(127)
+@show x
+println("Adding 1: ", x + Int8(1), "\n" )
+
+println("A \"Normal\" integer")
+x = UInt(0xFFFFFFFFFFFFFFFF) #Note that UInt = UInt64 on 64 bit computers 
+@show x
+println("Adding 1: ", x + 1, "\n")
+```
+
+
+* Mega bit per sec /vs. Mega byte rates memory.... 
 
 ## Julia from the ground up
 

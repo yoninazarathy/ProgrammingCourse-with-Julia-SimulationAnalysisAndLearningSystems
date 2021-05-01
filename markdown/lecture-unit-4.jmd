@@ -17,8 +17,132 @@
 
 ### Julia types
 
+Everything has a type.
+
+```julia
+x = 2.3
+@show typeof(x)
+
+x = 2.3f0
+@show typeof(x)
+
+x = 2
+@show typeof(x)
+
+x = 23//10
+@show typeof(x)
+
+x = 2 + 3im
+@show typeof(x)
+
+x = 2.0 +3im
+@show typeof(x)
+
+x = "Hello!"
+@show typeof(x)
+
+x= [1,2,3]
+@show typeof(x)
+
+x = [1,2,3.0]
+@show typeof(x)
+
+x = [1.0,2,"three"]
+@show typeof(x)
+
+x = 1:3
+@show typeof(x)
+
+x = [1 2; 3 4]
+@show typeof(x)
+
+x = Float64
+@show typeof(x)
+
+x = :Hello
+@show typeof(x);
+
+```
+
+There is a type hierarchy.
  * Julia in-built types and the type hierarachy
+
+```julia
+x = 2.3
+@show typeof(x)
+@show supertype(Float64)
+@show supertype(AbstractFloat)
+@show supertype(Real)
+@show supertype(Number);
+```
+
+Let's walk down from `Number`
+```julia
+using InteractiveUtils: subtypes
+
+function type_and_children(type,depth::Int = 0)
+    if !isconcretetype(type)
+        println("-"^depth, type, " - abstract")
+        for c in subtypes(type)
+            type_and_children(c,depth+1)
+        end
+    else
+        println("-"^depth, type, " - concrete")
+        end
+end
+
+type_and_children(Number)
+println()
+```
+
+* mutability 
+
+```julia
+x = 7
+@show ismutable(x)
+
+x = [7]
+@show ismutable(x);
+```
+
+
  * User defined types
+
+```julia
+struct Person
+    height::Float64
+    weight::Float64
+    name::String
+end
+
+person = Person(184.3,87.2,"Jessica")
+
+@show typeof(person)
+
+@show person.height;
+@show person.weight;
+@show person.name;
+
+```
+
+```julia
+@show ismutable(person)
+person1.weight = 85.4 #lost some weight - but this will generate and error
+```
+
+```julia
+mutable struct MutablePerson
+    height::Float64
+    weight::Float64
+    name::String
+end
+
+person = MutablePerson(184.3,87.2,"Jessica")
+person.weight = 85.4 #lost some weight
+
+println(person)
+```
+
  * Mutable and immutable types
  * Constructors (without the nuiencens of inner vs. outer etc... at this point).
  * Discussion of what you would see in terms of types in other languages

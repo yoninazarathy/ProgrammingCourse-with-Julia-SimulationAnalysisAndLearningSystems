@@ -646,7 +646,7 @@ img {max-width : 100%}
 div.title {text-align: center;}
 
   </style>
-  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+  <link rel="icon" type="image/png" href="../ximg/favicon-32x32.png">
 </HEAD>
 
 <BODY>
@@ -683,10 +683,10 @@ div.title {text-align: center;}
 <ul>
 <li><p>Symoblic mathematics in general overview &#40;Maple, Mathematica, Magma, more rigourous systems...&#41;</p>
 </li>
-<li><p>Usage of an existing package &#40;Symbolics.jl / SimPy.jl.....&#41;</p>
+<li><p>Usage of an existing package in Julia - example &#40;Symbolics.jl / SimPy.jl.....&#41;</p>
 </li>
 </ul>
-<h3>Some Basic Problems and Objects</h3>
+<h3>Some Basic Problems/Goals and Objects</h3>
 <ul>
 <li><p>Rational numbers represenation</p>
 </li>
@@ -695,12 +695,260 @@ div.title {text-align: center;}
 <li><p>Example: Bitpacking example/discussion...  </p>
 </li>
 </ul>
-<p>&#40;From this point down in the unit.... you focus on Julia with the polynomials and rationals as examples....&#41;</p>
 <h2>Types and the Type System</h2>
 <h3>Julia types</h3>
+<p>Everything has a type.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.3</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.3f0</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>23</span><span class='hljl-oB'>//</span><span class='hljl-ni'>10</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-n'>im</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-ni'>3</span><span class='hljl-n'>im</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Hello!&quot;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;three&quot;</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>3</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>:Hello</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;x&#41; &#61; Float64
+typeof&#40;x&#41; &#61; Float32
+typeof&#40;x&#41; &#61; Int64
+typeof&#40;x&#41; &#61; Rational&#123;Int64&#125;
+typeof&#40;x&#41; &#61; Complex&#123;Int64&#125;
+typeof&#40;x&#41; &#61; ComplexF64
+typeof&#40;x&#41; &#61; String
+typeof&#40;x&#41; &#61; Vector&#123;Int64&#125;
+typeof&#40;x&#41; &#61; Vector&#123;Float64&#125;
+typeof&#40;x&#41; &#61; Vector&#123;Any&#125;
+typeof&#40;x&#41; &#61; UnitRange&#123;Int64&#125;
+typeof&#40;x&#41; &#61; Matrix&#123;Int64&#125;
+typeof&#40;x&#41; &#61; DataType
+typeof&#40;x&#41; &#61; Symbol
+</pre>
+
+
+<p>There is a type hierarchy.</p>
 <ul>
 <li><p>Julia in-built types and the type hierarachy</p>
 </li>
+</ul>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.3</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Float64</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>AbstractFloat</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Real</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Number</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;x&#41; &#61; Float64
+supertype&#40;Float64&#41; &#61; AbstractFloat
+supertype&#40;AbstractFloat&#41; &#61; Real
+supertype&#40;Real&#41; &#61; Number
+supertype&#40;Number&#41; &#61; Any
+</pre>
+
+
+<p>Let&#39;s walk down from <code>Number</code></p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>InteractiveUtils</span><span class='hljl-oB'>:</span><span class='hljl-t'> </span><span class='hljl-n'>subtypes</span><span class='hljl-t'>
+
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>type_and_children</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-n'>depth</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-oB'>!</span><span class='hljl-nf'>isconcretetype</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;-&quot;</span><span class='hljl-oB'>^</span><span class='hljl-n'>depth</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot; - abstract&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>c</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-nf'>subtypes</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>)</span><span class='hljl-t'>
+            </span><span class='hljl-nf'>type_and_children</span><span class='hljl-p'>(</span><span class='hljl-n'>c</span><span class='hljl-p'>,</span><span class='hljl-n'>depth</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>else</span><span class='hljl-t'>
+        </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;-&quot;</span><span class='hljl-oB'>^</span><span class='hljl-n'>depth</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot; - concrete&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>type_and_children</span><span class='hljl-p'>(</span><span class='hljl-n'>Number</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>()</span>
+</pre>
+
+
+<pre class="output">
+Number - abstract
+-Complex - abstract
+-Real - abstract
+--AbstractFloat - abstract
+---BigFloat - concrete
+---Float16 - concrete
+---Float32 - concrete
+---Float64 - concrete
+--AbstractIrrational - abstract
+---Irrational - abstract
+--FixedPointNumbers.FixedPoint - abstract
+---FixedPointNumbers.Fixed - abstract
+---FixedPointNumbers.Normed - abstract
+--Integer - abstract
+---Bool - concrete
+---GeometryBasics.OffsetInteger - abstract
+---Signed - abstract
+----BigInt - concrete
+----Int128 - concrete
+----Int16 - concrete
+----Int32 - concrete
+----Int64 - concrete
+----Int8 - concrete
+---Unsigned - abstract
+----UInt128 - concrete
+----UInt16 - concrete
+----UInt32 - concrete
+----UInt64 - concrete
+----UInt8 - concrete
+--Rational - abstract
+--StatsBase.PValue - concrete
+--StatsBase.TestStat - concrete
+</pre>
+
+
+<ul>
+<li><p>mutability </p>
+</li>
+</ul>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>7</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>ismutable</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>7</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>ismutable</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+ismutable&#40;x&#41; &#61; false
+ismutable&#40;x&#41; &#61; true
+</pre>
+
+
+<ul>
+<li><p>User defined types</p>
+</li>
+</ul>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>struct</span><span class='hljl-t'> </span><span class='hljl-n'>Person</span><span class='hljl-t'>
+    </span><span class='hljl-n'>height</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+    </span><span class='hljl-n'>weight</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+    </span><span class='hljl-n'>name</span><span class='hljl-oB'>::</span><span class='hljl-n'>String</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>person</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Person</span><span class='hljl-p'>(</span><span class='hljl-nfB'>184.3</span><span class='hljl-p'>,</span><span class='hljl-nfB'>87.2</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;Jessica&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>person</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>person</span><span class='hljl-oB'>.</span><span class='hljl-n'>height</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>person</span><span class='hljl-oB'>.</span><span class='hljl-n'>weight</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>person</span><span class='hljl-oB'>.</span><span class='hljl-n'>name</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;person&#41; &#61; Main.##WeaveSandBox#526.Person
+person.height &#61; 184.3
+person.weight &#61; 87.2
+person.name &#61; &quot;Jessica&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>ismutable</span><span class='hljl-p'>(</span><span class='hljl-n'>person</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>person1</span><span class='hljl-oB'>.</span><span class='hljl-n'>weight</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>85.4</span><span class='hljl-t'> </span><span class='hljl-cs'>#lost some weight - but this will generate and error</span>
+</pre>
+
+
+<pre class="output">
+ismutable&#40;person&#41; &#61; false
+</pre>
+
+<pre class="julia-error">
+ERROR: UndefVarError: person1 not defined
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-k'>mutable struct</span><span class='hljl-t'> </span><span class='hljl-n'>MutablePerson</span><span class='hljl-t'>
+    </span><span class='hljl-n'>height</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+    </span><span class='hljl-n'>weight</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+    </span><span class='hljl-n'>name</span><span class='hljl-oB'>::</span><span class='hljl-n'>String</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>person</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>MutablePerson</span><span class='hljl-p'>(</span><span class='hljl-nfB'>184.3</span><span class='hljl-p'>,</span><span class='hljl-nfB'>87.2</span><span class='hljl-p'>,</span><span class='hljl-s'>&quot;Jessica&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>person</span><span class='hljl-oB'>.</span><span class='hljl-n'>weight</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>85.4</span><span class='hljl-t'> </span><span class='hljl-cs'>#lost some weight</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>person</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Main.##WeaveSandBox#526.MutablePerson&#40;184.3, 85.4, &quot;Jessica&quot;&#41;
+</pre>
+
+
+<ul>
+<li><p>Mutable and immutable types</p>
+</li>
+<li><p>Constructors &#40;without the nuiencens of inner vs. outer etc... at this point&#41;.</p>
+</li>
+<li><p>Discussion of what you would see in terms of types in other languages</p>
+</li>
+</ul>
+<h3>Multiple Dispatch</h3>
+<ul>
+<li><p>The idea of multiple dispatch &#40;functions and methods&#41; - and how it allows to create generalized code</p>
+</li>
+</ul>
+<ul>
 <li><p>Multiple dispatch</p>
 </li>
 </ul>
@@ -753,7 +1001,7 @@ div.title {text-align: center;}
 
           <p>
             Published from <a href="lecture-unit-4.jmd">lecture-unit-4.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.7 on 2021-04-18.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.7 on 2021-04-30.
           </p>
         </div>
       </div>
