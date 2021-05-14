@@ -1,2 +1,32 @@
-# Unit 7: QQQQ
+# Unit 7: Working with heterogenous datasets and a view towards machine learning
+
+# Dataframes
+
+* The dataframes package.
+* Spliting, apply, and `by()`
+* Missing values and basic imputation.
+
+# Memory management
+
+* More on the heap vs. stack. 
+* The garbage collector.
+* Out-of-core example - working/fetching files....
+
+# Basic regression and classification Problems
+
+* Usage of black box neural network `MetalHead.jl`  (motivation - we won't do more with Neural Networks)
+* Least squares `pinv()` on MNIST or similar.
+* Quantifing accuracy for classfication (accuracy, precision, recall, F1, confusion matrix)
+
+# Tree based models 
+
+* Hand made decision tree on simple dataset.
+* Decision trees
+* Boosting 
+* Random forests
+
+# Tips for impelmenting random forests.
+
+* ???
+
 

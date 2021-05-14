@@ -1,2 +1,44 @@
-# Unit 6: QQQQ
+# Unit 6: Monte Carlo and discrete event simulation
+
+## (Pseudo)-Random Numbers
+
+* Its all in the seed.
+* LCG
+* Testing for "randomness"
+* The state of the art: Mersenee Twister and RNG objects
+
+## From Uniform(0,1) to an arbitrary distribution
+
+* Inverse probability transform
+* Rejection sampling
+* Box-Muller Gaussians
+
+# Basic Monte Carlo based statistical analysis
+
+* Bootstrap confidence intervals..
+
+# Discrete event simulation basics
+
+* Modelling
+* Queue examples.  <!--https://github.com/h-Klok/StatsWithJuliaBook/blob/master/10_chapter/DESqueue.jl -->
+<!-- https://github.com/h-Klok/StatsWithJuliaBook/blob/master/10_chapter/mm1DESwaitingTimes.jl !-->
+* Chemical reaction examples
+* Basic manipulation of dates/times. `using Dates`
+
+# Under the hood in discrete event simulation engines
+
+* Heaps
+
+# Modular software design
+
+* Modules
+* Packages
+
+# More on Julia and programming
+
+* Additional language features including meta-programming and further understanding of the compilation process. 
+* More on type inference and performance implications.
+* More on profiling and performance optimization. 
+* Examples of using marcros and very basic creation (e.g. package GLM, LaTeXStrings).  
+
 
