@@ -20,8 +20,7 @@
 Everything has a type.
 
 ```julia
-x = 2.3
-@show typeof(x)
+@show typeof(2.3)
 
 x = 2.3f0
 @show typeof(x)
@@ -74,6 +73,7 @@ x = 2.3
 @show supertype(AbstractFloat)
 @show supertype(Real)
 @show supertype(Number);
+@show supertype(Any);
 ```
 
 Let's walk down from `Number`
@@ -82,7 +82,7 @@ using InteractiveUtils: subtypes
 
 function type_and_children(type,depth::Int = 0)
     if !isconcretetype(type)
-        println("-"^depth, type, " - abstract")
+        println("-"^depth, type, " - non-concrete", isabstracttype(type) ? ", abstract" : ", non-abstract")
         for c in subtypes(type)
             type_and_children(c,depth+1)
         end

@@ -701,8 +701,7 @@ div.title {text-align: center;}
 
 
 <pre class='hljl'>
-<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.3</span><span class='hljl-t'>
-</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-nfB'>2.3</span><span class='hljl-p'>)</span><span class='hljl-t'>
 
 </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.3f0</span><span class='hljl-t'>
 </span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
@@ -746,7 +745,7 @@ div.title {text-align: center;}
 
 
 <pre class="output">
-typeof&#40;x&#41; &#61; Float64
+typeof&#40;2.3&#41; &#61; Float64
 typeof&#40;x&#41; &#61; Float32
 typeof&#40;x&#41; &#61; Int64
 typeof&#40;x&#41; &#61; Rational&#123;Int64&#125;
@@ -776,7 +775,8 @@ typeof&#40;x&#41; &#61; Symbol
 </span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Float64</span><span class='hljl-p'>)</span><span class='hljl-t'>
 </span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>AbstractFloat</span><span class='hljl-p'>)</span><span class='hljl-t'>
 </span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Real</span><span class='hljl-p'>)</span><span class='hljl-t'>
-</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Number</span><span class='hljl-p'>);</span>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Number</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>supertype</span><span class='hljl-p'>(</span><span class='hljl-n'>Any</span><span class='hljl-p'>);</span>
 </pre>
 
 
@@ -786,6 +786,7 @@ supertype&#40;Float64&#41; &#61; AbstractFloat
 supertype&#40;AbstractFloat&#41; &#61; Real
 supertype&#40;Real&#41; &#61; Number
 supertype&#40;Number&#41; &#61; Any
+supertype&#40;Any&#41; &#61; Any
 </pre>
 
 
@@ -797,7 +798,7 @@ supertype&#40;Number&#41; &#61; Any
 
 </span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>type_and_children</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-n'>depth</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
     </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-oB'>!</span><span class='hljl-nf'>isconcretetype</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>)</span><span class='hljl-t'>
-        </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;-&quot;</span><span class='hljl-oB'>^</span><span class='hljl-n'>depth</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot; - abstract&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;-&quot;</span><span class='hljl-oB'>^</span><span class='hljl-n'>depth</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>type</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot; - non-concrete&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nf'>isabstracttype</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>?</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;, abstract&quot;</span><span class='hljl-t'> </span><span class='hljl-oB'>:</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;, non-abstract&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
         </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>c</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-nf'>subtypes</span><span class='hljl-p'>(</span><span class='hljl-n'>type</span><span class='hljl-p'>)</span><span class='hljl-t'>
             </span><span class='hljl-nf'>type_and_children</span><span class='hljl-p'>(</span><span class='hljl-n'>c</span><span class='hljl-p'>,</span><span class='hljl-n'>depth</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'>
         </span><span class='hljl-k'>end</span><span class='hljl-t'>
@@ -812,36 +813,36 @@ supertype&#40;Number&#41; &#61; Any
 
 
 <pre class="output">
-Number - abstract
--Complex - abstract
--Real - abstract
---AbstractFloat - abstract
+Number - non-concrete, abstract
+-Complex - non-concrete, non-abstract
+-Real - non-concrete, abstract
+--AbstractFloat - non-concrete, abstract
 ---BigFloat - concrete
 ---Float16 - concrete
 ---Float32 - concrete
 ---Float64 - concrete
---AbstractIrrational - abstract
----Irrational - abstract
---FixedPointNumbers.FixedPoint - abstract
----FixedPointNumbers.Fixed - abstract
----FixedPointNumbers.Normed - abstract
---Integer - abstract
+--AbstractIrrational - non-concrete, abstract
+---Irrational - non-concrete, non-abstract
+--FixedPointNumbers.FixedPoint - non-concrete, abstract
+---FixedPointNumbers.Fixed - non-concrete, non-abstract
+---FixedPointNumbers.Normed - non-concrete, non-abstract
+--Integer - non-concrete, abstract
 ---Bool - concrete
----GeometryBasics.OffsetInteger - abstract
----Signed - abstract
+---GeometryBasics.OffsetInteger - non-concrete, non-abstract
+---Signed - non-concrete, abstract
 ----BigInt - concrete
 ----Int128 - concrete
 ----Int16 - concrete
 ----Int32 - concrete
 ----Int64 - concrete
 ----Int8 - concrete
----Unsigned - abstract
+---Unsigned - non-concrete, abstract
 ----UInt128 - concrete
 ----UInt16 - concrete
 ----UInt32 - concrete
 ----UInt64 - concrete
 ----UInt8 - concrete
---Rational - abstract
+--Rational - non-concrete, non-abstract
 --StatsBase.PValue - concrete
 --StatsBase.TestStat - concrete
 </pre>
@@ -892,7 +893,7 @@ ismutable&#40;x&#41; &#61; true
 
 
 <pre class="output">
-typeof&#40;person&#41; &#61; Main.##WeaveSandBox#526.Person
+typeof&#40;person&#41; &#61; Main.##WeaveSandBox#300.Person
 person.height &#61; 184.3
 person.weight &#61; 87.2
 person.name &#61; &quot;Jessica&quot;
@@ -931,7 +932,7 @@ ERROR: UndefVarError: person1 not defined
 
 
 <pre class="output">
-Main.##WeaveSandBox#526.MutablePerson&#40;184.3, 85.4, &quot;Jessica&quot;&#41;
+Main.##WeaveSandBox#300.MutablePerson&#40;184.3, 85.4, &quot;Jessica&quot;&#41;
 </pre>
 
 
@@ -1001,7 +1002,7 @@ Main.##WeaveSandBox#526.MutablePerson&#40;184.3, 85.4, &quot;Jessica&quot;&#41;
 
           <p>
             Published from <a href="lecture-unit-4.jmd">lecture-unit-4.jmd</a>
-            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.7 on 2021-04-30.
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.8 on 2021-05-07.
           </p>
         </div>
       </div>
