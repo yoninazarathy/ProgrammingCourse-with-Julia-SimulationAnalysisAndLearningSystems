@@ -144,14 +144,14 @@ You are coming to this course after doing several mathematics and statistics cou
 * You certaintly know how to use files, directories, and the internet. 
 * Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + several more math electives.
 
-[![Women coding image](../markdown/img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
+[![Women coding image](../web_img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
 
 #### What is a computer?
 
 Wikipedia says this about a [computer](https://en.wikipedia.org/wiki/Computer):
 > A computer is a machine that can be programmed to carry out sequences of arithmetic or logical operations automatically. 
 
-[![Ada](../markdown/img/ada.jpg)](https://en.wikipedia.org/wiki/Ada_Lovelace)
+[![Ada](../web_img/ada.jpg)](https://en.wikipedia.org/wiki/Ada_Lovelace)
 
 
 We can live with this definition. Here are some notes and bits.
@@ -164,7 +164,7 @@ Most computers today implement some form of the [von Neumann architecture](https
 
 You should also know of the conceptual mathematical model of a computer which is typically the [Turing machine](https://en.wikipedia.org/wiki/Turing_machine). The nice thing about such an abstraction is that it often helps understand what and how certain algorithms operate, as well as their limitations. There are also related computer theoretic notions such as [Finite Automata](https://en.wikipedia.org/wiki/Deterministic_finite_automaton). We don't get too much into such computer-science/discrete-math notions in the course. However, it is very interesting stuff, that lies at the centre of mathematics and computer science. 
 
-[![Alan Turing](../markdown/img/alan-turing.jpg)](https://en.wikipedia.org/wiki/Alan_Turing)
+[![Alan Turing](../web_img/alan-turing.jpg)](https://en.wikipedia.org/wiki/Alan_Turing)
 
 #### The culture of software development and Who is a programmer?
 
