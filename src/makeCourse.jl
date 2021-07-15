@@ -1,8 +1,9 @@
 using Weave
 cd(@__DIR__)
+using Pkg; Pkg.activate("..")
 cd("..")
 
-kwargs = (doctype = "md2html", out_path = "lectures_html", template = "math2504.tpl")
+kwargs= (doctype = "md2html", out_path = "lectures_html", template = "math2504.tpl")
 
 weave("markdown/lecture-unit-1.jmd"; kwargs...)
 weave("markdown/lecture-unit-2.jmd"; kwargs...)
