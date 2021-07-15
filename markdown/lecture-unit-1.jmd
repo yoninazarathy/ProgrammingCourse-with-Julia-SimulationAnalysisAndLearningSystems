@@ -591,6 +591,23 @@ float Q_rsqrt( float number )
 }
 ```
 
+Here is what the equivalent code looks like in Julia
+
+```julia
+function fast_inv_sqrt(number::Float32)
+    x2 = number*Float32(0.5)
+    #reinterpret the float32 number to a 32 bit unsigned integer
+    i = reinterpret(UInt32, number)
+    #do WTF magic
+    i = 0x5F3759Df - (i >> 1)
+    #reinterpet back into a float32
+    y = reinterpret(Float32, i)
+    #do an iteration of newtons method from a good first guess
+    y = y * (Float32(1.5) - (x2 * y^2))
+    return y
+end
+```
+
 Watch this video:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/p8u_k2LIZyo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
