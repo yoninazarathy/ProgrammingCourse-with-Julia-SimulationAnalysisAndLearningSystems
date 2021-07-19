@@ -401,19 +401,16 @@ sqrt(Complex(-1))
 
 In julia a function (such as `sqrt` or its alias `√`) can have many methods:
 
-```
-julia> @which sqrt(2)
-sqrt(x::Real) in Base.Math at math.jl:608
-```
-
-```
-julia> @which sqrt(2.0)
-sqrt(x::Union{Float32, Float64}) in Base.Math at math.jl:581
+```julia
+@which sqrt(2)
 ```
 
+```julia
+@which sqrt(2.0)
 ```
-julia> @which sqrt(π*im) #\pi + [Tab]
-sqrt(z::Complex) in Base at complex.jl:481
+
+```julia
+@which sqrt(π*im) #\pi + [Tab]
 ```
 
 What if we wanted to apply square root to several/many elements together? It is common to use the `.` broadcast operator.
@@ -443,54 +440,14 @@ Here `sqrt_llvm()` compiles to [Low Level Virtual Machine(LLVM)](https://en.wiki
 
 This will generally look the same on different computer types (LLVM is hardward agnostic):
 
-```
-julia> @code_llvm sqrt(2.5)
-;  @ math.jl:581 within `sqrt'
-define double @julia_sqrt_13593(double %0) {
-top:
-;  @ math.jl:582 within `sqrt'
-; ┌ @ float.jl:371 within `<'
-   %1 = fcmp uge double %0, 0.000000e+00
-; └
-  br i1 %1, label %L5, label %L3
-
-L3:                                               ; preds = %top
-  %2 = call nonnull {}* @j_throw_complex_domainerror_13595({}* inttoptr (i64 4568275576 to {}*), double %0)
-  call void @llvm.trap()
-  unreachable
-
-L5:                                               ; preds = %top
-;  @ math.jl:583 within `sqrt'
-  %3 = call double @llvm.sqrt.f64(double %0)
-  ret double %3
-}
+```julia
+@code_llvm sqrt(2.5)
 ```
 
 This will look different for different computer types (cpus):
 
-```
-julia> @code_native sqrt(2.5)
-        .section        __TEXT,__text,regular,pure_instructions
-; ┌ @ math.jl:581 within `sqrt'
-        pushq   %rax
-        vxorpd  %xmm1, %xmm1, %xmm1
-; │ @ math.jl:582 within `sqrt'
-; │┌ @ float.jl:371 within `<'
-        vucomisd        %xmm0, %xmm1
-; │└
-        ja      L17
-; │ @ math.jl:583 within `sqrt'
-        vsqrtsd %xmm0, %xmm0, %xmm0
-        popq    %rax
-        retq
-; │ @ math.jl:582 within `sqrt'
-L17:
-        movabsq $throw_complex_domainerror, %rax
-        movabsq $4568275576, %rdi               ## imm = 0x1104A5A78
-        callq   *%rax
-        ud2
-        nopl    (%rax)
-; └
+```julia
+@code_native sqrt(2.5)
 ```
 
 However, what if we wanted to do square roots via software? For example,
@@ -606,11 +563,15 @@ function fast_inv_sqrt(number::Float32)
     y = y * (Float32(1.5) - (x2 * y^2))
     return y
 end
+
+x = Float32(4.0)
+y = fast_inv_sqrt(x)
+print("1/√(4) ≈ $(y)")
 ```
 
-Watch this video:
+Click the image below to watch a video with a detailed explaination of the algorithm:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/p8u_k2LIZyo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Fast Inverse Square Root](http://img.youtube.com/vi/p8u_k2LIZyo/0.jpg)](http://www.youtube.com/watch?v=p8u_k2LIZyo "Fast Inverse Square Root")
 
 #### Factorial (the 2'nd story)
 
@@ -706,28 +667,12 @@ end
 
 And use Julia's `@code_lowered` macro to see how Julia parses the code into an intermediate representation (before being further compiled to LLVM). In both forms we get the exact same intermediate form.
 
+```julia
+@code_lowered my_factorial1(10)
 ```
-julia> @code_lowered my_factorial1(10)
-CodeInfo(
-1 ─ %1 = n == 0
-└──      goto #3 if not %1
-2 ─      return 1
-3 ─ %4 = n - 1
-│   %5 = Main.my_factorial1(%4)
-│   %6 = n * %5
-└──      return %6
-)
 
-julia> @code_lowered my_factorial2(10)
-CodeInfo(
-1 ─ %1 = n == 0
-└──      goto #3 if not %1
-2 ─      return 1
-3 ─ %4 = n - 1
-│   %5 = Main.my_factorial2(%4)
-│   %6 = n * %5
-└──      return %6
-)
+```julia
+@code_lowered my_factorial2(10)
 ```
 
 How big of factorials can we compute? With `BigInt`, created via `big()`, there is sometimes no limit, but if we wanted to stay within the machine word size, we stay with `Int64` (with Julia `Int` is either `Int32` on "32 bit machines" or `Int64` on "64 bit machines). But even 32 bit machines support 64 bit integers (by doubling words).
