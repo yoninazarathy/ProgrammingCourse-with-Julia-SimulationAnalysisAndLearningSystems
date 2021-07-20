@@ -168,11 +168,17 @@ You should also know of the conceptual mathematical model of a computer which is
 
 #### The culture of software development and Who is a programmer?
 
-* "code is read more than it is written"....
+Two software aphorisms to consider as you progress
+
+* "code is read much more often than it is written"
+* "There are only two hard things in Computer Science: cache invalidation and naming things"
+
+Some general observations of the teething difficulties of working in software as a mathematician
+
 * Big complaint of software engineers interacting with mathematicians is "black box of code that isn't easy to follow".
-* In academia, code is an artifact of research and isn't the work itself.
-* If code was written like paper, many practionars would be happier...
-* Diverse teams...
+* In academia, code is an artifact of doing research work. Outside academia code is the output.
+* If code was treated like writing a paper (or was a research output valued by itself), this transition would be smoother.
+* Mathematicians can bring value at many levels of an organisation, you will be interacting with a diverse set of people. Communication skills are important. Treat code as one way of communicating.
 
 #### Bits, bytes, hex, binary, and the works...
 
@@ -207,7 +213,7 @@ for n in -128:127
 end
 ```
 
-Base $16$, called hexadecimal is very common. One hexadeicmal character uses four bits. The prefix notation `0x` prior to the digits often indicates a number is represented as hexadecimal. The digit symbols
+Base $16$, called hexadecimal is very common. One hexadecimal character uses four bits. The prefix notation `0x` prior to the digits often indicates a number is represented as hexadecimal. The digit symbols
 
 ```julia
 using LaTeXStrings, Random
@@ -261,6 +267,58 @@ x = UInt(0xFFFFFFFFFFFFFFFF) #Note that UInt = UInt64 on 64 bit computers
 @show x
 println("Adding 1: ", x + 1, "\n")
 ```
+
+Why does this occur? A useful exercise is to examine how addition can be implemented purely using logical operations (as occurs in hardware). Consider the following code
+
+```julia
+
+half_adder(a::T, b::T) where {T <: Bool} = (xor(a,b), a & b)
+ 
+function full_adder(a::T, b::T, carry::T) where {T<:Bool}
+    (s, carry_a) = half_adder(carry, a)
+    (s, carry_b) = half_adder(s, b)
+    return (s, carry_a | carry_b)
+end
+
+function add_n_digits(a::T, b::T, n) where {T <: Int}
+    #calculate y = a + b using array indexing and logic operations
+    #convert to a vector of booleans
+    a_bool = digits(Bool, a, base = 2, pad = n)
+    b_bool = digits(Bool, b, base = 2, pad = n)
+    y_bool = fill(Bool(0), n)
+    carry = false
+    for i = 1 : n
+        (y_bool[i], carry) = full_adder(a_bool[i], b_bool[i], carry)
+    end
+    return y_bool, a_bool, b_bool
+end
+
+#turn boolean array back into a string
+display_bool_array(y) = join(reverse(Int.(y)), "")
+
+a = 1
+b = 1
+
+y_bool, a_bool, b_bool = add_n_digits(a, b, 16)
+
+println("adding $a + $b")
+println("a = $(display_bool_array(a_bool))")
+println("b = $(display_bool_array(b_bool))")
+println("y = $(display_bool_array(y_bool))", "\n")
+
+a = 1
+b = 2^16 - 1 #biggest 16 bit UInt
+
+y_bool, a_bool, b_bool = add_n_digits(a, b, 16)
+
+println("adding $a + $b")
+println("a = $(display_bool_array(a_bool))")
+println("b = $(display_bool_array(b_bool))")
+println("y = $(display_bool_array(y_bool))", "\n")
+
+```
+
+It is a useful exercise to consider how an equivalent logic based approach might work for other seemingly simple operations such as multiplication? Also consider how many discrete operations are required as the size of the binary representation increases?
 
 Binary data considered as a string can often appear as hex. 
 
@@ -331,7 +389,7 @@ We start by discussing Julia and a simple "Hello World" example and then continu
 
 * "Hello World" [Taken from SWJ book](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/1_chapter/helloWorld.jl)
 * Julia as a language (community, history, and motivation...)
-* Running from A file in command line. (Demonstration).
+* Running from a file from the command line. (Demonstration).
 * The Read Evaluate Print Loop REPL. (Demonstration).
 * Jupyter (Demonstration).
 
