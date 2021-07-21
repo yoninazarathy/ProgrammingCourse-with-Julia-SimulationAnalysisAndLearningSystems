@@ -3,9 +3,9 @@ cd(@__DIR__)
 using Pkg; Pkg.activate("..")
 cd("..")
 
-kwargs= (doctype = "md2html", out_path = "lectures_html", template = "math2504.tpl")
+kwargs= (doctype = "md2html", out_path = "lectures_html", template = "math2504.tpl", mod = Main)
 
-weave("markdown/lecture-unit-1.jmd"; mod = Main, kwargs...)
+weave("markdown/lecture-unit-1.jmd"; kwargs...)
 weave("markdown/lecture-unit-2.jmd"; kwargs...)
 weave("markdown/lecture-unit-3.jmd"; kwargs...)
 weave("markdown/lecture-unit-4.jmd"; kwargs...) 
