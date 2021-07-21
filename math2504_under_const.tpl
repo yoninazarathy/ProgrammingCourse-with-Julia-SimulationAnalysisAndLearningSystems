@@ -35,6 +35,7 @@
         </div>
 
           <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2021)</h1>
+          <h2 style="color:red">UNDER CONSTRUCTION</h2>
           <br>
           <center>
               <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
