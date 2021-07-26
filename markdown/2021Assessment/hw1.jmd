@@ -1,4 +1,6 @@
-# Homework \#1 - Semester 2, 2021
+# Homework \#1 - Semester 2, 2021 
+
+(last edit: July 26, 2021)
 
 --- 
 
@@ -16,9 +18,10 @@ Use LaTeX to write a version of it with two additional nested levels. That is, r
 
 **1b**: Use Markdown to write an ordered list of your 5 favorite books. Add (Markdown) hyperlinks to each of the books.
 
-**1c**: Use HTML to embed an interesting YouTube video about mathematics and software.
+**1c**: Use HTML to embed an image with an hyperlink from the image. Use HTML to resize the image to a size you like. Make sure the aspect ratio is maintained.
 
-**1d**: Use HTML to embed an image with an hyperlink from the image.
+**1d**: Use HTML to create a table of your weekly class schedule. See for example this [reference](https://www.w3schools.com/html/html_tables.asp).
+
 
 
 ## Question 2: Continued Fractions for the Golden Ratio
@@ -30,7 +33,7 @@ $$
 
 It naturally appears as the solution of a quadratic equation but can also be represented via a continued fraction as in Question 1. 
 
-Consider the code below which initilizes the continued fraction expression with an 'initial guess' of $2$.
+Consider the code below which initializes the continued fraction expression with an 'initial guess' of $2$.
 
 ```julia
 function golden_continued_frac(n, init = 2)
@@ -57,18 +60,18 @@ for n in 1:5
 end
 ```
 
-**2b**: It is thus expected that error of the approximation will depend on how far the initial value is from the actual golden ratio, as well as on the number of levels of the continued fraction. Investigate this error for initial values in the range of $\pm 0.5$ with steps of $0.1$ from the golden ratio and $n=5,6,7,8,9,10$.
+**2b**: It is thus expected that error of the approximation will depend on how far the initial value is from the actual golden ratio, as well as on the number of levels of the continued fraction. Investigate this error for initial values in the range of $\pm 0.5$ with steps of $0.1$ from the golden ratio and $n=5,6,7,8,9,10$. Present your results in the form of a plot, where you show how the initial value affect the absolute error of the approximation after $n$ iterations. For example, plot multiple series (one for each initial value), where the horizontal axis is $n$ and the vertical axis is the absolute error.
 
-**Solution**:
+To help you with the plotting, here is some code that plots random values, plotting series on a single plot with a legend, labels, and such.
 
 ```julia
 using Plots
 
-init_grid = (golden_explicit-0.2):0.05:(golden_explicit+0.2)
+init_grid = 1.5:0.1:2.3
 n_range = 5:10
 results = Dict()
 for init in init_grid, n in n_range
-    results[(init, n)] = abs(golden_continued_frac(n,init) - golden_explicit)
+    results[(init, n)] = 0.1*rand()/(n+init)
 end
 
 plot(n_range, 
@@ -77,7 +80,6 @@ plot(n_range,
     xlabel = "n",
     ylabel = "Absolute error")
 ```
-
 
 ## Question 3: Primes and Goldbach's conjecture
 
@@ -111,8 +113,7 @@ n = 100
 println("First $n primes: ",sieve_of_Eratosthenes(n))
 ```
 
-This sieve yields a way to get a list of the first $n$ primes. However it is used inefficiently in the code below to create a plot of the number of pairs
-
+This sieve yields a way to get a list of the first $n$ primes. However it is used inefficiently in the code below to create a plot of the number of Goldbach pairs.
 
 ```julia
 using Plots
@@ -136,13 +137,45 @@ end
 scatter(even_range,checks,legend=false,xlabel="n",ylabel="Number of Goldbach pairs")
 ```
 
-## Question 4: Binary, Hex, Decimal, and BCD 
+Modify this code or create code of your own so that you can plot a figure similar to the above for the first $10^6$ Goldbach pairs. Do **not** use any in-built (or package) functions for prime numbers (e.g. (Primes.jl)[https://github.com/JuliaMath/Primes.jl]). In the figure, instead of plotting all the points associated with Goldbach pairs, only plot a random subset of the points so that the figure won't have more than about $20,000$ points. 
+
+## Question 4: Binary, Hex, and Decimal 
+
+Consider this code which creates two functions for creating random strings representing binary numbers and hexadecimal numbers.
 
 ```julia
-
+random_binary_string(n = 12) = *([rand(['0','1']) for _ in 1:n]...)
+random_hex_string(n=3) = *([rand(union('0':'9','A':'F')) for _ in 1:n]...);
 ```
 
+For example,
+
+```julia
+using Random
+Random.seed!(0)
+@show random_binary_string()
+@show random_hex_string();
+```
+
+*4a*: Explain how these functions work. 
+
+Assume now that you are given inputs:
+
+```julia
+using Random
+Random.seed!(0)
+r_bin_strs = [random_binary_string() for _ in 1:10^3]
+r_hex_strs = [random_hex_string() for _ in 1:10^3];
+```
+
+*4b*: Use standard Julia functions to parse these arrays of strings into arrays of numerical values and report the sum of the values (present the result in decimal). So your output should be two decimal numbers, one which is the sum of all of the binary numbers in the array, and the other which is the sum of all of the hex numbers. Prior to checking your output, suggest an estimate (expected value) for the sum - explain why.
+
+*4c*: Now create your own functions (from first principles parsing strings) to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.
+
+
 ## Question 5 - Sorting - Part 1
+
+Consider this code which sorts a list of names:
 
 ```julia
 function array_table(array, heading)
@@ -162,6 +195,7 @@ names = [   "Amy Chan",
             "Tina Moghaddam",
             "Paul Bellette",
             "Paul Vrbik",
+            "Tom Cranitch",
             "Yoni Nazarathy"]
 
 sorted_names = sort(names)
@@ -173,90 +207,97 @@ sorted_names = sort(names,by=(x)->reverse(split(x," ")))
 array_table(sorted_names,"Sorted by last name")
 ```
 
+**5a**: Read the help entry for `sort()`. Now modify the code to sort the list based on the shortest last name (shortest first, longest last).
+
+**5b**: Implement your own sort function, say `my_sort_bubble()`, using a Bubble sort algorithm. Your function should also accept a `by=` argument and work in the same way. Show the output on the same list, sorting by last name first.
+
+
 ## Question 6 - Sorting - Part 2
 
+**6a**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of question 5, using last name first.
 
-Quick sort analysis was in class. We now analyze merge-sort (for the number of comparisons).
+**6b**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@time` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner.
 
+**6c**: Look up a derivation of the average running time of quick sort. Summarize this derivation, explaining the steps.
 
 
 ## Question 7 - Matrix Multiplication
 
+He is code that creates two random matrices and displays their matrix product:
+
 ```julia
-using LinearAlgebra, Plots
-
-function a_mat(K,γ)
-    A = diagm(fill(1+2γ,K)) + diagm(+1 => fill(1-γ,K-1)) + diagm(-1 => fill(1-γ,K-1))
-    A[1,1] = 1+γ
-    A[K,K] = 1+γ
-    A[1,K] = 1
-    A[K,1] = 1
-    A
-end
-
-function ã_mat(K,γ)
-     el(i,j,K) = (i^2 - i + (K+1-j)^2 - (K+1-j) ) / (2K*γ) - (K^3 - K - 6γ)/(6(K^2)*γ)
-     [i ≤ j ? el(i,j,K-1) : el(j,i,K-1) for i in 1:K, j in 1:K]
-end 
-A = a_mat(10,0.5)
-Ã = ã_mat(10,0.5)
-A
-#pA = heatmap(A,yflip=true,aspect=1,legned=false)
-#pÃ = heatmap(Ã,yflip=true,legned=false)
-
-#plot(pA,pÃ,legend=false)
+using LinearAlgebra
+Random.seed!(0)
+A = round.(10*rand(2,3))
+B = round.(10*rand(3,4))
+A*B
 ```
 
-```julia
-Ã
-```
+This in built multiplication is designed to be very numerically efficient. However matrix multiplication can be computed in different ways and to explore these ways you will write your own matrix multiplication functions.
+
+For example:
 
 ```julia
-inv(A)
-```
-
-```julia
-Ã-inv(A)
-```
-
-
-```julia
-function my_mat_multiply(A, B; method = :inner)
+function my_mult_inner_products(A,B)
     nA,mA = size(A)
     nB,mB = size(B)
     @assert mA == nB
-    n,m,p = nA,mA,mB
+    n, m, p = nA, mA, mB
     C = Array{Float64}(undef,n,p)
-    if method == :inner
-        for i in 1:n
-            for j in 1:p
-                C[i,j] = A[i,:]'*B[:,j]
-            end
-        end
-    elseif method == :cols
-        for i in 1:p
-            C[:,i] = sum([A[:,i]*B[i,j] for j in 1:m])
-        end
-    elseif method == :rows
-        for i in 1:p
-            C[:,i] = sum([A[:,i]*B[i,j] for j in 1:m])
-        end
-    elseif method == :outer
-        for i in 1:p
-            C[:,i] = sum([A[:,i]*B[i,j] for j in 1:m])
+
+    for i in 1:n
+        for j in 1:p
+            C[i,j] = A[i,:]' * B[:,j] #compute inner product of i'th row of A and j'th collumn of B
         end
     end
-    C
+    return C
 end
 
-Atest = [1 2 3; 4 5 6]
-Btest = [1 2 3 4; 5 6 7 8; 9 10 11 12]
-
-my_mat_multiply(Atest,Btest,method = :cols)
+my_mult_inner_products(A,B)
 ```
+
+However, matrix products can be represented in other ways, and each of these other ways will have their own implementation.  You will now create your own three functions that execute these implementations, and in each case test they get the same result for the test matrices `A` and `B` above.
+
+**7a**: `my_mult_by_cols()`: The matrix product can be represented as the linear combination of the columns. That is, the $j$th column of $C$ is a linear combination of the columns of $A$ with weights given by the $j$th column of $B$. Implement this making use of Julia's vector arithmetic e.g.:
 
 ```julia
-Atest*Btest
+vec1 = [1,2,3];
+vec2 = [2,0,4];
+3*vec1 + 4*vec2
+```
+**7b**: `my_mult_by_rows()`: Similarly to the above, you can take linear combinations of the rows of $B$. This representation is the "dual" of 7a. Carry this out as well.
+
+**7c**: `my_mult_sum_outer_products()`: A third representation is to consider outer products and observe that,
+
+$$
+A B = \sum_{j=1}^m A_{:,\,j} B_{j,\,:}^\top ~~,
+$$
+
+where $A_{:,\,j}$ is the $j$th column of $A$ and $B_{j,\,:}$ is the $j$th row of $B$ (represented as a column vector and hence its transpose is a row vector).
+
+To see such outer products (rank one matrices) in Julia, consider:
+
+```julia
+vec1 = [1,2,3];
+vec2 = [2,0,4];
+vec1*vec2'
 ```
 
+So now rank one matrices may be added up.
+
+**7d**: After you have implemented the functions for 7a, 7b, and 7c, it may appear that in each of these cases there is only a single loop while the function provided, `my_mult_inner_products()` has a nested loop. Does this mean that in terms of complexity of the number of the operations, 7a, 7b, and 7c are necessarily much more efficient? Explain your result.
+
 ## Question 8 - Recursive Computation of Determinants
+
+Here is code that creates a random $10 \times 10$ matrix and computes its determinant.
+
+```julia
+using LinearAlgebra
+Random.seed!(0)
+A = rand(10,10)
+det(A)
+```
+
+Write your own determinant function `my_det()` which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants.
+
+Test your function on the same matrix $A$ from above to see you obtain the same value.
