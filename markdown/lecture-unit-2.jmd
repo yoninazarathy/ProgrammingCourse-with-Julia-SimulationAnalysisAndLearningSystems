@@ -1,40 +1,660 @@
 # Unit 2: On Algorithms and more
 
+In the previous unit we got straight into general programming basics as well as specifics with Julia. We now know basic syntax, variables, conditional statements, loops, functions, and more. We spoke about bits, bytes, and representation of integers on a computer. In terms of tools we used Jupyter and the REPL.
+
+In this unit we'll get a taste for basic mathematical analysis of algorithms and quantification of behavior and performance. We'll also deal with more extensive tools including Git and GitHub, Visual Studio Code (IDE), and basic Unix command line.
+
+We'll start with basic demonstrations of the fact that the performance of algorithms can be analyzed mathematically.
+
 ## Mathematical analysis of algorithms
 
-### Introduce Analytic Analysis of Algorithm Performance 
+As an illustration take sorting. Say we have a list of numbers and wish to sort it:
 
-* Speed complexity, space complexity, etc..
-* Big O notation
-* Compute time...
-* The difference between the theoretical analysis and the real world (complexity classes aren't everything)
+```julia
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+sort!(data) #The '!' is part of the function name and indicates data is sorted in place
+println("Sorted data: ", data)
+```
+
+How would we implement such a sorting algorithm ourselves? One basic algorithm is called [bubble sort](https://en.wikipedia.org/wiki/Bubble_sort). Here is an implementation:
+
+```julia
+function bubble_sort!(a)
+    n = length(a)
+    for i in 1:n-1
+        for j in 1:n-i
+            if a[j] > a[j+1]
+                a[j], a[j+1] = a[j+1], a[j]
+            end
+        end
+    end
+    return a
+end
+
+bubble_sort!(data)
+println("Sorted data (with buble sort): ", data)
+```
+
+A key question when considering such an algorithm is **how fast does it run?** Other key questions include **how much memory does it use?**, as well as other questions. Such questions are often critical during the phase of algorithm design, and are later critical with algorithm or datastructure choice.
+
+Later in the course you'll use quite robust benchmarking tool such as [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl) to empirically measure performance. But for now, lets empirically measure the performance of bubble sort. We also compare it to the in-built sorting algorithm.
+
+```julia
+using Random
+
+function do_timing()
+    data = [65, 51, 32, 12, 23, 84, 68, 1]
+    println("Bubble sort on small data ($(length(data))):")
+    @time bubble_sort!(data);
+
+    data = [65, 51, 32, 12, 23, 84, 68, 1]
+    println("In-built sort on small data ($(length(data))):")
+    @time sort!(data);
+
+    Random.seed!(0)
+    data = rand(Int,10^4)
+    println("Bubble sort on larger data ($(length(data))):")
+    @time bubble_sort!(data);
+
+    Random.seed!(0)
+    data = rand(Int,10^4)
+    println("In-built sort on larger data ($(length(data))):")
+    @time sort!(data);
+end
+do_timing();
+```
+
+We can see that the in-built sort is much faster than our bubble sort. 
+
+Now obviously we can optimize our bubble sort a little bit, for example here is a slightly better version that has type specifications and [avoids bounds checking](https://docs.julialang.org/en/v1/devdocs/boundscheck/): 
+
+
+```julia
+using Random
+Random.seed!(0)
+
+function slightly_faster_bubble_sort!(a::Vector{Int})::Vector{Int}
+    n = length(a)
+    for i in 1:n-1
+        for j in 1:n-i
+            @inbounds begin
+                if a[j] > a[j+1]
+                    a[j], a[j+1] = a[j+1], a[j]
+                end
+            end
+        end
+    end
+    return a
+end
+
+#Let it run a few times so compiler will optimize it further
+for _ in 1:10
+    slightly_faster_bubble_sort!(rand(Int,100))
+end
+
+function do_timing()
+    Random.seed!(0)
+    data = rand(Int,10^4)
+    println("Slightly faster bubble sort ($(length(data))):")
+    @time slightly_faster_bubble_sort!(data);
+end
+do_timing();
+```
+
+You can probably see that this shaved off a few milliseconds of compute time, but still the time is much longer than the in-built sort. 
+
+Let's investigate (empirically) a bit further:
+```julia
+using Random, Plots
+Random.seed!(0)
+
+data = rand(Int64,10^4)
+n_range = 500:500:10^4 
+
+function do_timing()
+    times = Vector{Float64}(undef,0)
+
+    for n in n_range
+        start_time = time_ns()
+        bubble_sort!(data[1:n])
+        end_time = time_ns()
+        push!(times, Int(end_time - start_time)/10^6) #time in milliseconds
+    end
+    return times
+end
+
+times = do_timing()
+
+plot(n_range,times, 
+    xlabel="Input size", ylabel="Sorting time (ms)", legend = false, shape = :circle)
+```
+
+It appears that the running time grows quadratically with the input size! We can event try to fit a quadratic model using least squares for it:
+
+```julia
+using DataFrames, GLM
+
+data = DataFrame(X = Float64.(n_range), Y = times) #More on DataFrames later in the course
+model = lm(@formula(Y ~ 1 + X + X^2), data) #This fits a linear model to the features 1, X, X^2 
+println(model)
+predict_bubble_time(n) = coef(model)'*[1,n,n^2]
+scatter(n_range, times, 
+    xlabel="n", label = "Bubble sort")
+plot!(n_range, predict_bubble_time.(n_range), 
+    xlabel="n", ylabel="Sorting time (ms)", 
+    label = "Least squares fit", legend = :topleft)
+```
+
+Let's see how this measured performance works for $30$ thousand observations and $50$ thousand observations: 
+
+```julia
+Random.seed!(0)
+
+function do_timing()
+    data = rand(Int,3*10^4)
+    prediction_seconds =  predict_bubble_time(3*10^4)/10^3
+    print("Predicted time: $prediction_seconds \n Actual time:")
+    @time bubble_sort!(data);
+
+    data = rand(Int,5*10^4)
+    prediction_seconds =  predict_bubble_time(5*10^4)/10^3
+    print("\nPredicted time: $prediction_seconds \n Actual time:")
+    @time bubble_sort!(data);
+end
+do_timing();
+```
+
+It isn't a bad prediction. So with the coefficients of the regression being $\beta_0, \beta_1$, and $\beta_2$ we have an empirical model for the computation time, $T(n)$, for input of size $n$:
+
+$$
+T(n) = \beta_0 + \beta_1 n + \beta_2 n^2.
+$$
+
+If you run these experiments on your computer you'll almost certainly get different $\beta$ values from the ones obtained here (the data is the same with a fixed seed but the hardware and instance of runs is different). Even on the same machine, different runs of the experiment will yield different $\beta$ values and hence a different $T(\cdot)$. 
+
+What if instead about worrying about the exact $T(\cdot)$ function we will focus on the most dominant term? Here we plot the running time first divided by $n^{1.8}$ and then by $n^{2}$. 
+
+```julia
+using LaTeXStrings
+
+plot(n_range, times ./ n_range .^ (1.8),shape = :circle,label = L"T(n) / n^{1.8}")
+plot!(n_range, times ./ n_range .^ 2,label = L"T(n) / n^{2}",
+    xlabel = "n", ylabel = "Ratio",legend = :topleft,shape = :circle,)
+```
+The fact that it roughly goes to a constant when dividing by $n^2$ gives us an indication that,
+$$
+T(n) \sim n^2.
+$$
+The symbol '$\sim$' means here that for some constant,
+$$
+\lim_{n \to \infty} \frac{T(n)}{n^2} = C.
+$$
+
+You can also interpret it as,
+$$
+T(n) = C n^2 + o(n^2)
+$$
+where $o(n^2)$ is some function such that when dividing by $n^2$ and taking $n \to \infty$, the ratio vanishes. 
+
+Now in computer science and the study of algorithms, you would often roughly say that,
+$$
+T(n) = O(n^2).
+$$
+Where the $O(\cdot)$ here follow [Big O notation](https://en.wikipedia.org/wiki/Big_O_notation). However to be more precise, some would interpret $T(n) = O(n^2)$ to mean that $T(n)$ `grows` not faster than $n^2$. Then it is also $O(n^3)$ and $O(n^4)$ and even $O(2^n)$ (exponential growth. However in this case we (so far empirically) see that the computation is at $O(n^2)$ and hence sometimes $\Theta(n^2)$ is used for this. However, as this is not a full algorithms course, we'll just loosely write $O(n^2)$.
+
+**But why is bubble sort an "$O(n^2)$ time complexity algorithm"?**
+
+Well in this case we can inspect the algorithm and consider the number of comparisons taking place. To do so look at this "fragment of code":
+
+```
+1: for i in 1:n-1                         #Outer loop
+2:     for j in 1:n-i                     #Inner loop  
+3:        if a[j] > a[j+1]                #Comparison  
+4:            a[j], a[j+1] = a[j+1], a[j] #Switch
+```
+
+It is essentially the heart of the bubble sort algorithm. The outer loop runs $n-1$ times in these runs, the number of iterations of the inner loop are $n-1$, $n-2$, $n-3$,... $1$.  Hence line 3, the comparison line runs,
+$$
+1 + 2 + \ldots + n-1 = \frac{n(n-1)}{2} = \frac{1}{2}n^2 - \frac{n}{2} = O(n^2).
+$$
+
+It never hurts to check:
+
+```julia
+function profiling_bubble_sort!(a)
+    k = 0
+    n = length(a)
+    for i in 1:n-1
+        for j in 1:n-i
+            k += 1 #profiling step
+            if a[j] > a[j+1]
+                a[j], a[j+1] = a[j+1], a[j]
+            end
+        end
+    end
+    return k #returns the number of comparisons made
+end
+
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+n = length(data)
+
+@show profiling_bubble_sort!(data)
+@show n*(n-1) ÷ 2;
+```
+
+As an aside, lets do this profiling by making a different version of our bubble sort that accepts a comparison function. We can use the `>` function as a default argument and later replace it with something else. Lets first test it works:
+
+```julia
+function bubble_sort!(a; comp = >)
+    n = length(a)
+    for i in 1:n-1
+        for j in 1:n-i
+            if comp(a[j],a[j+1])
+                a[j], a[j+1] = a[j+1], a[j]
+            end
+        end
+    end
+    return a
+end
+
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+bubble_sort!(data) #uses the default argument for comp
+println("Sorted data (with bubble sort): ", data)
+```
+
+Now lets sort based on sum of digits (instead of decimal value of digits).
+
+```julia
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+my_comp(num1, num2) = sum(digits(num1)) > sum(digits(num2))
+bubble_sort!(data, comp = my_comp)
+println("Sorted by sum of digits: ", data)
+```
+
+Note that we could have also use an anonymous function:
+```julia
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+bubble_sort!(data, comp = (n1,n2) -> sum(digits(n1)) > sum(digits(n2)) )
+println("Sorted by sum of digits: ", data)
+```
+
+Finally lets make a comparison function that increments a global counter of the number of times it is called. 
+
+```julia
+k = 0 #global variable for number of comparisons
+bubble_sort!(data, comp = (n1,n2) -> begin        #we can use a begin-end block to make a multi-line anonymous function
+                                        global k+=1
+                                        sum(digits(n1)) > sum(digits(n2)) 
+                                     end )
+println("Sorted data: ", data)
+println("Number of comparisons: ", k) 
+```
+
+#### Now lets compare bubble sort with the in-built sort:
+
+As you can see form the plot, the in-built sort is about 200x faster! This is mostly **not** because of "in-built performance improvements" (remember that in Julia almost all the in-built functions are themselves written in Julia). It is because a different algorithm is used. In fact, sorting is one of the basic computer science problems that has been exhaustively studied. See for example the [Wikipedia sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm) entry with a table listing the complexity of many sorting methods.
+
+```julia
+using Random, Plots
+Random.seed!(0)
+
+data = rand(Int64,10^4)
+n_range = 500:500:10^4 
+
+function do_timing()
+    times = Vector{Float64}(undef,0)
+
+    for n in n_range
+        start_time = time_ns()
+        sort!(data[1:n]) #Use the in-built sort! instead
+        end_time = time_ns()
+        push!(times, Int(end_time - start_time)/10^6) #time in milliseconds
+    end
+    return times
+end
+
+times = do_timing()
+plot(n_range,times, xlabel="n", ylabel="Sorting time (ms)", legend = false)
+```
+
+Note that the running time appears to grow linearly but actually we will theoretically see soon that it is of order $n \log n$. In fact, there are multiple sorting algorithms that have $O(n \log n)$ complexity and it can even be proved that for arbitrary data you cannot do better than $O(n \log n)$ in terms of the number of comparisons.
+
+We'll explore one such "efficient" sorting algorithm, heap-sort, and this is because the heap data structure on which heap-sort is based will be with us for most of the course. heap-sort is not necessarily the best algorithm, and in fact when you call `sort!` in Julia, by default the quick-sort algorithm is used. See the actual source code in [https://github.com/JuliaLang/julia/blob/master/base/sort.jl](https://github.com/JuliaLang/julia/blob/master/base/sort.jl).xs
+
+But first we discuss a few datastructures. 
+
+### A Whirlwind tour of a Few Datastructures
+
+Note: Do not confuse "Datastructures" with "Databases", these are related terms that mean different things.
+
+When we approach programming without thinking about it too much there is one simple datastructure, an **array**. An array is a list of a given length with random access to any point. For example,
+
+```julia
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+@show length(data)
+@show data[4]; #the fourth element
+```
+
+Lookups in an array are $O(1)$ constant time. But other operations can be more costly. This is because an array spans adjacent memory cells and if we want to `insert!`, `push!`, or `prepend!` to it, then more memory often needs to be managed and the array often needs to be copied. Just to get an understanding of arrays, lets use `pointer` to get the address of an array and certain elements in it.
+
+```julia
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+@show eltype(data)
+@show sizeof(eltype(data))
+@show pointer(data)
+@show pointer(data,1)
+@show pointer(data,2)
+@show pointer(data,length(data));
+
+#This is true for any array
+always_true = (pointer(data,length(data)) - pointer(data))/sizeof(eltype(data)) + 1 == length(data)
+@show always_true;
+```
+In a classic datastructures course, you would often study the following data structures just after speaking about arrays:
+
+* [Linked lists](https://en.wikipedia.org/wiki/Linked_list)
+* [Queues](https://en.wikipedia.org/wiki/Queue_(abstract_data_type))
+* [Stacks](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))
+
+We won't do this thoroughly here due to lack of time (some of this material is taught in [COMP3506](https://my.uq.edu.au/programs-courses/course.html?course_code=COMP3506) at UQ). You can see implementations of these datasturctures and others in [DataStructures.jl](https://github.com/JuliaCollections/DataStructures.jl). 
+
+We do consider a few of the key other [Collections and Datastructures](https://docs.julialang.org/en/v1/base/collections/) that Julia supplies. The key ones include:
+
+* Multidimensional arrays (tensors)
+* Dictionaries 
+* Sets
+
+### Multidimensional arrays 
+
+ Multidimensional arrays are basically arrays where the indexing into the array is carried out in smarter way. The simplest example is a matrix.
+
+```julia
+m, n = 3, 5
+data = Array{Int8,2}(undef,m,n)
+N = n*m #Total size of data
+for i in 1:N
+    @show pointer(data,i)
+    data[i] = i #even though data is a matrix, we can just go over the times sequentially.
+end
+data
+```
+
+As you can see, `data[i,j]` is just like `data[(j-1)*m + i]`:
+
+```julia
+for j in 1:n, i in 1:m
+    @show data[i,j], data[(j-1)*m + i]
+end
+```
+
+Access of matrix elements is $O(1)$, however this doesn't mean that in practice (certainly in big numerical computations), different ways of accesing the matrix vary:
+
+```julia
+Random.seed!(0)
+n, m = 500, 10^7
+data = rand(n,m)
+function do_timing(data, n, m)
+    println("Summing up row by row:")
+    @time begin
+        s = zero(eltype(data))
+        for i in 1:n
+            for j in 1:m
+                s += data[i,j]
+            end
+        end
+    end
+    println("Summing up column by column:")
+    @time begin
+        s = zero(eltype(data))
+        for j in 1:m
+            for i in 1:n
+                s += data[i,j]
+            end
+        end
+    end
+end
+do_timing(data, n, m);
+```
+
+As you can see, going by columns is much faster than going by rows. This is because there are many **cache misses** if we go by rows. The key takeaway here is that while the speed complexity of the array algorithm $O(1)$ does not capture actual clock speed because of computer architecture issues such as the cache.
+
+#### Dictionaries
+
+As the name implies, dictionaries refer to collections that keep **keys** and **values** and allow for efficient lookup. For example:
+
+```julia
+#A dictionary mapping subburb to postcode
+dict = Dict{String,Int16}()
+dict["Saint Lucia"] = 4067
+dict["South Brisbane"] = 4101
+dict["Rochdale"] = 4123
+
+@show dict["Rochdale"]
+@show keys(dict)
+@show values(dict)
+dict
+```
+
+```julia
+dict["Taringa"] #Will not work
+```
+
+A dictionary where the keys are $\{1,\ldots,n\}$ or some subset can just be implemented via an array (via index lookup), but in general this is more complicated. A naive (and highly inefficient) way to implement a dictionary such as from the example above is:
+```julia
+dict_keys = Array{String}(undef,0)
+dict_values = Array{Int16}(undef,0)
+
+function add_key_value_pair(keys,values,new_key,new_value)
+    #Note that keys and values are `passed by reference` and hence can be modified
+    push!(keys, new_key) 
+    push!(values, new_value)
+end
+
+add_key_value_pair(dict_keys,dict_values,"Saint Lucia", 4067)
+add_key_value_pair(dict_keys,dict_values,"South Brisbane", 4101)
+add_key_value_pair(dict_keys,dict_values,"Rochdale", 4123)
+
+function value_of_key(keys,values,key_in_question) 
+    for (i,k) in enumerate(keys)
+        k == key_in_question && return values[i]
+    end
+    @error "didn't find the key $key_in_question"
+end
+
+@show value_of_key(dict_keys,dict_values,"Rochdale")
+
+value_of_key(dict_keys,dict_values,"Taringa") #Will throw an error (
+```
+
+```
+┌ Error: didn't find the key Taringa
+```
+
+However you can probably see that the time complexity of `value_of_key()` is of the order $O(n)$ when $n$ is the number of keys. This is very time-consuming lookup. An  (on average) efficient way to implement dictionaries is via a [Hash table](https://en.wikipedia.org/wiki/Hash_table) data structure. We won't get into the details now, but (solely for those interested) refer this (more advanced talk) related to [alternative implementations of dictionaries](https://www.youtube.com/watch?v=Y-hAZcqAw28) (this is a recent talk by one of the course lecturers, Andy Ferris).
+
+### Sets
+
+Another type of collection that is in-built in Julia and often very useful is a `Set`. Unlike arrays that maintain order, sets (like in mathematics) are unordered and do not have repetitions.
+
+```julia
+my_set = Set([1,2,3,4,1,2,3])
+```
+
+You can do a variety of set operations on sets. See for example this code from [SWJ](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/2_chapter/sets.jl)
+
+```julia
+A = Set([2,7,2,3])
+B = Set(1:6)
+omega = Set(1:10)
+
+AunionB = union(A, B)
+AintersectionB = intersect(A, B)
+BdifferenceA = setdiff(B,A)
+Bcomplement = setdiff(omega,B)
+AsymDifferenceB = union(setdiff(A,B),setdiff(B,A))
+println("A = $A, B = $B")
+println("A union B = $AunionB")
+println("A intersection B = $AintersectionB")
+println("B diff A = $BdifferenceA")
+println("B complement = $Bcomplement")
+println("A symDifference B = $AsymDifferenceB")
+println("The element '6' is an element of A: $(in(6,A))")
+println("Symmetric difference and intersection are subsets of the union: ",
+        issubset(AsymDifferenceB,AunionB),", ", issubset(AintersectionB,AunionB))
+```
+
+Why use sets and what would you expect them to be efficient with? Let's take data that has $10^5$ elements selected randomly out of the possible `Int32` (most chances are that all elements are unique - how would you compute this chance?):
+
+```julia
+Random.seed!(0)
+array_data = rand(Int32,10^5)
+my_set = Set(array_data)
+@show length(my_set); #Since this shows 10^5 as output it indicates all values were unique.
+```
+
+Say now we want to lookup if an arbitrary number, `n` is in the set. If we were just using an array there is no good way to look for it better than $O(n)$. But in case of a set, seeing set membership is guaranteed to be much quicker.
+
+```julia
+function do_timing()
+    @time begin
+        x = 10^5 #smallest number will be 213796.
+        while true
+            x ∈ array_data && break
+            x += 1
+        end
+        @show x
+    end
+
+    @time begin
+        x = 10^5 
+        while true
+            x ∈ my_set && break
+            x += 1
+        end
+        @show x
+    end
+end
+
+do_timing();
+```
+
+
+
+### Priority queues, heaps, and back to sorting.
+
+
+```julia
+using Random, DataStructures
+Random.seed!(0)
+
+
+function heap_sort!(array::AbstractArray)
+    h = BinaryMinHeap{eltype(array)}()
+    for e in array
+        push!(h, e)
+    end
+    return extract_all!(h)
+end
+
+data = [65, 51, 32, 12, 23, 84, 68, 1]
+heap_sort!(data)
+```
+
+Now some benchmarks:
+
+```julia
+Random.seed!(0)
+
+data = rand(Int64,10^6)
+
+n_range = 10^4:10^4:10^6 
+times_heap_sort = Vector{Float64}(undef,0)
+
+for n in n_range
+    start_time = time_ns()
+     (data[1:n]) 
+    end_time = time_ns()
+    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+end
+
+plot(n_range,times_heap_sort, c = :red, label="heap sort (spikes due to GC)")
+```
+
+QQQQ - discuss memory management of heap sort and memory in general.
+
+```julia
+Random.seed!(0)
+data = rand(Int64,10^6)
+@time heap_sort!(data);
+```
+
+```julia
+Random.seed!(0)
+data = rand(Int64,10^6)
+@time sort!(data);
+```
+
+
+QQQQ - so there is memory allocation and GC taking place. Let's see without GC:
+
+```julia
+Random.seed!(0)
+
+data = rand(Int64,10^6)
+
+n_range = 10^4:10^4:10^6 
+times_heap_sort = Vector{Float64}(undef,0)
+
+GC.enable(false) 
+for n in n_range
+    start_time = time_ns()
+     (data[1:n]) 
+    end_time = time_ns()
+    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+end
+GC.enable(true)
+
+plot(n_range,times_heap_sort, c = :red, label="heap sort (spikes due to GC)")
+```
+
+
+
+```julia
+using Random, Plots
+Random.seed!(0)
+
+data = rand(Int64,10^6)
+
+n_range = 10^4:10^4:10^6 
+times_heap_sort = Vector{Float64}(undef,0)
+times_in_built_sort = Vector{Float64}(undef,0)
+
+GC.enable(false) 
+for n in n_range
+    start_time = time_ns()
+    heap_sort!(data[1:n]) 
+    end_time = time_ns()
+    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+    
+    start_time = time_ns()
+    sort!(data[1:n]) 
+    end_time = time_ns()
+    push!(times_in_built_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+end
+GC.enable(true)
+
+plot(n_range,times_heap_sort, label="heap sort")
+plot!(n_range,times_in_built_sort, label = "in-built sort",
+    xlabel="n", ylabel="Sorting time (ms)")
+```
+
+
+
+
 * Overview of complexity classes (just mention NP completeness).
 * Example of searching through an arbitrary list/array vs. a sorted array... O(n) vs. O(log n)
-* Discussion of datastructures that aid a specific purpuse.
 
-### Mathematical Analysis: (Key example) Sorting algorithms and their analysis
 
-* Search through the list naivly
-* Bubble sort and its analysis O(n^2)
-* Merge sort - buidling the recurrenance relation which 
-* Solution of merge sort recurrent relation to get O(n log n)
-* Peek forward (will appear in future units): Heap Sort
-* Quick sort - average O(n log n)
-* Othe discussions (bucket sort O(1) under assumptions.... mention proof of O(n logn) is best can be done...)
-
-## Implementation of algorithms and some data structures
-
-### Memory Management
-
-* The stack vs. the heap.
-* Memory locallity principles.
-* Allocation and "de-allocation" (theory) - Gargabe collection.
-* More on how variables are represented/stored in memory.
-
-### Hands-on Sorting implementation and empirical testing
-* Some implementation of sorting algoithms.
-* Empirically comparing different algorithms for sorting 
-* Connecting with an example to the tools below (CLI for sorting).
 
 ## More tools
 
