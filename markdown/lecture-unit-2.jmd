@@ -87,18 +87,20 @@ function slightly_faster_bubble_sort!(a::Vector{Int})::Vector{Int}
     return a
 end
 
-#Let it run a few times so compiler will optimize it further
-for _ in 1:10
-    slightly_faster_bubble_sort!(rand(Int,100))
-end
+#Let it run once to remove precompilation overhead
+slightly_faster_bubble_sort!(rand(Int,100))
 
-function do_timing()
-    Random.seed!(0)
-    data = rand(Int,10^4)
-    println("Slightly faster bubble sort ($(length(data))):")
-    @time slightly_faster_bubble_sort!(data);
-end
-do_timing();
+Random.seed!(0)
+data = rand(Int,1000)
+
+println("bubble sort ($(length(data))):")
+@time bubble_sort!(data);
+
+Random.seed!(0)
+data = rand(Int,1000)
+
+println("Slightly faster bubble sort ($(length(data))):")
+@time slightly_faster_bubble_sort!(data);
 ```
 
 You can probably see that this shaved off a few milliseconds of compute time, but still the time is much longer than the in-built sort. 
@@ -108,22 +110,20 @@ Let's investigate (empirically) a bit further:
 using Random, Plots
 Random.seed!(0)
 
-data = rand(Int64,10^4)
-n_range = 500:500:10^4 
-
 function do_timing()
     times = Vector{Float64}(undef,0)
-
+    n_range = 500 : 500 : 10^4 
     for n in n_range
+        data = rand(Int64, n)
         start_time = time_ns()
         bubble_sort!(data[1:n])
         end_time = time_ns()
         push!(times, Int(end_time - start_time)/10^6) #time in milliseconds
     end
-    return times
+    return times, n_range
 end
 
-times = do_timing()
+times, n_range = do_timing()
 
 plot(n_range,times, 
     xlabel="Input size", ylabel="Sorting time (ms)", legend = false, shape = :circle)
@@ -292,28 +292,27 @@ println("Number of comparisons: ", k)
 
 #### Now lets compare bubble sort with the in-built sort:
 
-As you can see form the plot, the in-built sort is about 200x faster! This is mostly **not** because of "in-built performance improvements" (remember that in Julia almost all the in-built functions are themselves written in Julia). It is because a different algorithm is used. In fact, sorting is one of the basic computer science problems that has been exhaustively studied. See for example the [Wikipedia sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm) entry with a table listing the complexity of many sorting methods.
+As you can see from the plot, the in-built sort is about 200x faster! This is mostly **not** because of "in-built performance improvements" (remember that in Julia almost all the in-built functions are themselves written in Julia). It is because a different algorithm is used. In fact, sorting is one of the basic computer science problems that has been exhaustively studied. See for example the [Wikipedia sorting algorithms](https://en.wikipedia.org/wiki/Sorting_algorithm) entry with a table listing the complexity of many sorting methods.
 
 ```julia
 using Random, Plots
 Random.seed!(0)
 
-data = rand(Int64,10^4)
-n_range = 500:500:10^4 
-
 function do_timing()
     times = Vector{Float64}(undef,0)
-
+    n_range = 500:500:10^4 
     for n in n_range
+        Random.seed!(0)
+        data = rand(Int64,n)
         start_time = time_ns()
         sort!(data[1:n]) #Use the in-built sort! instead
         end_time = time_ns()
         push!(times, Int(end_time - start_time)/10^6) #time in milliseconds
     end
-    return times
+    return times, n_range
 end
 
-times = do_timing()
+times, n_range = do_timing()
 plot(n_range,times, xlabel="n", ylabel="Sorting time (ms)", legend = false)
 ```
 
@@ -391,7 +390,7 @@ Access of matrix elements is $O(1)$, however this doesn't mean that in practice 
 
 ```julia
 Random.seed!(0)
-n, m = 500, 10^7
+n, m = 500, 10^6
 data = rand(n,m)
 function do_timing(data, n, m)
     println("Summing up row by row:")
@@ -537,6 +536,7 @@ end
 
 do_timing();
 ```
+
 
 ### Priority queues, heaps, and back to sorting.
 
