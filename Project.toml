@@ -1,3 +1,4 @@
 [deps]
+GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
