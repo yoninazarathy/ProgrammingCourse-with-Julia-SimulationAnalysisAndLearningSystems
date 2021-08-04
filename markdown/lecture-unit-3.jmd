@@ -520,22 +520,88 @@ I == inv(A)*A #Will be false due to numerical error
 I ≈ inv(A)*A #\approx + [TAB] shorthand for isapprox()
 ```  
 
-One of the most powerful linear algebra tools is 
-```julia
-? \
+One of the most verstile linear algebra tools is the function "`\`", sometimes called the left division operator.
 ```
+help?> \
+search: \
 
-We won't cover all of the linear algebra capabilities but rather use them as they are needed throughout the course. However, let's consider a single example of least squares fitting:
+  \(x, y)
+
+  Left division operator: multiplication of y by the inverse of x on the left. Gives floating-point results for integer
+  arguments.
+
+  Examples
+  ≡≡≡≡≡≡≡≡≡≡
+
+  julia> 3 \ 6
+  2.0
+  
+  julia> inv(3) * 6
+  2.0
+  
+  julia> A = [4 3; 2 1]; x = [5, 6];
+  
+  julia> A \ x
+  2-element Vector{Float64}:
+    6.5
+   -7.0
+  
+  julia> inv(A) * x
+  2-element Vector{Float64}:
+    6.5
+   -7.0
+   
+   ...
+```
+As shown in th documentation above it is used to "solve" systems of linear equations. However, it can also find least squares solutions to overdetermined systems of equations.
+
+
+We won't cover all of the linear algebra capabilities but rather use them as they are needed throughout the course. However, let's consider a single example of least squares fitting. Take this very simple dataset of 5 points. The least squares line has an intercept of 0.945 and a slope of 0.716. 
 
 ```julia
 using DataFrames, GLM, Statistics, LinearAlgebra, CSV, HTTP
 resp = HTTP.request("GET","https://raw.githubusercontent.com/h-Klok/StatsWithJuliaBook/master/data/L1L2data.csv")
 data = CSV.read(IOBuffer(String(resp.body)), DataFrame)
-
 xVals, yVals = data.X, data.Y
-n = length(xVals)
-A = [ones(n) xVals]
 
+modelJ = lm(@formula(Y ~ X), data)
+b0, b1 = coef(modelJ)
+@show b0, b1
+scatter(xVals, yVals,
+        legend=false,xlim=(0,10),ylim=(0,10),
+        xlabel = "X values", ylabel = "Y values")
+plot!([0,10], [b0, b0 + 10*b1])
+```
+
+This least squares line minimizes (assume $n=5$),
+$$
+\sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i)^2.
+$$
+
+This is just like minimizing $\|A \beta - y\|^2$, where $\beta$ is the vector of $\beta_0$ and $\beta_1$ in this case, and $A$ is an $n\times 2$ matrix where the first column has 1's and the second column has the values of the variable $x$. 
+
+It can be shown that the minimizer is a solution of the normal equations,
+$$
+A^TA \beta = A^T y.
+$$
+
+```julia
+n = length(xVals)
+A = [ones(n) xVals] #This is sometimes called the design matrix
+```
+
+Let's check that the normal equations are indeed solved by the solution `b0` and `b1` computed above:
+
+```julia
+β=[b0,b1] #computed via lm() above
+lhs_normal_equations = A'A*β
+rhs_normalequations = A'*yVals
+lhs_normal_equations - rhs_normalequations
+```
+
+Now for the fun of it, and to see several linear algebra features, we'll compute $\beta$ using 9 alternative methods and in the process see quite a few `LinearAlgebra` functions including `dot`, `pinv`, `qr`, `svd`, and `Diagonal`. As you can see from the output. In all cases, these different methods of computing the least squares estimates yields the same coefficients. Note that the first two approaches are specific to "simple linear regression" (a single independent variable). However the other approaches will in general work with multiple independent variables as long as the columns of $A$ are linearly independent. The SVD and gradient descent approach will also work in case $A$ is is not a full rank matrix.
+
+```julia
 # Approach A - Using specific formulas for simple linear regression
 xBar, yBar = mean(xVals),mean(yVals)
 sXX, sXY = ones(n)'*(xVals.-xBar).^2 , dot(xVals.-xBar,yVals.-yBar)
@@ -578,15 +644,8 @@ while norm(bPrev-b) >= √eps()
 end
 b0I, b1I = b[1], b[2]
 
-# Approach J - Using the GLM package 
-modelJ = lm(@formula(Y ~ X), data)
-b0J, b1J = coef(modelJ)
-
-# Approach K - Using the GLM package
-modelK = glm(@formula(Y ~ X), data, Normal())
-b0K, b1K = coef(modelK)
-println(round.([b0A,b0B,b0C,b0D,b0E,b0F,b0G,b0H,b0I,b0J,b0K],digits=3))
-println(round.([b1A,b1B,b1C,b1D,b1E,b1F,b1G,b1H,b1I,b1J,b1K],digits=3))
+println(round.([b0A,b0B,b0C,b0D,b0E,b0F,b0G,b0H,b0I],digits=3))
+println(round.([b1A,b1B,b1C,b1D,b1E,b1F,b1G,b1H,b1I],digits=3))
 ```
 
 
