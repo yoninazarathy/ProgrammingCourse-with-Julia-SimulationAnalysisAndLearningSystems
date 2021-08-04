@@ -528,9 +528,11 @@ One of the most powerful linear algebra tools is
 We won't cover all of the linear algebra capabilities but rather use them as they are needed throughout the course. However, let's consider a single example of least squares fitting:
 
 ```julia
-using DataFrames, GLM, Statistics, LinearAlgebra, CSV
-data = CSV.read("../data/L1L2data.csv")
-xVals, yVals = data[:,1], data[:,2]
+using DataFrames, GLM, Statistics, LinearAlgebra, CSV, HTTP
+resp = HTTP.request("GET","https://raw.githubusercontent.com/h-Klok/StatsWithJuliaBook/master/data/L1L2data.csv")
+data = CSV.read(IOBuffer(String(resp.body)), DataFrame)
+
+xVals, yVals = data.X, data.Y
 n = length(xVals)
 A = [ones(n) xVals]
 
@@ -568,11 +570,11 @@ V, Sp, Us = F.V, Diagonal(1 ./ F.S), F.U'
 b0H, b1H = (V*Sp*Us)*yVals
 
 # Approach I - Gradient Descent - we won't describe here
-eta, eps = 0.002, 10^-6.
+η = 0.002
 b, bPrev = [0,0], [1,1]
-while norm(bPrev-b) >= eps
+while norm(bPrev-b) >= √eps()
     global bPrev = b
-    global b = b - eta*2*A'*(A*b - yVals)
+    global b = b - η*2*A'*(A*b - yVals)
 end
 b0I, b1I = b[1], b[2]
 

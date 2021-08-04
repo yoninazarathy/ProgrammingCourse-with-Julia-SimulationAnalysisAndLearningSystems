@@ -781,7 +781,7 @@ n&#61;5	approx &#61; 1.618033988749895
 
 <pre class='hljl'>
 <span class='hljl-s'>&quot;&quot;&quot;
-Returns the first `n` primes.
+Returns the all the primes up to n.
 &quot;&quot;&quot;</span><span class='hljl-t'>
 </span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>sieve_of_Eratosthenes</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
     </span><span class='hljl-n'>primebits</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-n'>Bool</span><span class='hljl-p'>,</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#Will contain true if the index is prime (initially all assumed prime)</span><span class='hljl-t'>
@@ -884,7 +884,7 @@ random_hex_string&#40;&#41; &#61; &quot;7CD&quot;
 
 <p><em>4b</em>: Use standard Julia functions to parse these arrays of strings into arrays of numerical values and report the sum of the values &#40;present the result in decimal&#41;. So your output should be two decimal numbers, one which is the sum of all of the binary numbers in the array, and the other which is the sum of all of the hex numbers. Prior to checking your output, suggest an estimate &#40;expected value&#41; for the sum - explain why.</p>
 <p><em>4c</em>: Now create your own functions &#40;from first principles parsing strings&#41; to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.</p>
-<h2>Question 5 &#40;5pts&#41;:Sorting - Part 1</h2>
+<h2>Question 5 &#40;5pts&#41;: Sorting - Part 1</h2>
 <p>Consider this code which sorts a list of names:</p>
 
 
@@ -1069,8 +1069,9 @@ A B = \sum_{j=1}^m A_{:,\,j} B_{j,\,:}^\top ~~,
 </pre>
 
 
-<p>Write your own determinant function <code>my_det&#40;&#41;</code> which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants.</p>
-<p>Test your function on the same matrix <span class="math">$A$</span> from above to see you obtain the same value.</p>
+<p><strong>8a</strong>: Write your own determinant function <code>my_det&#40;&#41;</code> which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants. Your function should call itself <span class="math">$n$</span> times when presented with matrices of size <span class="math">$n>2$</span>.  Test your function on the same matrix <span class="math">$A$</span> from above to see you obtain the same value.</p>
+<p><strong>8b</strong>: Determine an expression for the number of times <code>my_det&#40;&#41;</code> is called, when called for an <span class="math">$n \times n$</span> matrix.</p>
+<p><strong>8c</strong>: Test this by using a global variable &#40;or some better means&#41;, which is incremented eat time the function is called.</p>
 
 
         <HR/>

@@ -107,7 +107,7 @@ First consider the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_o
 
 ```julia
 """
-Returns the first `n` primes.
+Returns the all the primes up to n.
 """
 function sieve_of_Eratosthenes(n)
     primebits = ones(Bool,n) #Will contain true if the index is prime (initially all assumed prime)
@@ -191,7 +191,7 @@ r_hex_strs = [random_hex_string() for _ in 1:10^3];
 *4c*: Now create your own functions (from first principles parsing strings) to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.
 
 
-## Question 5 (5pts):Sorting - Part 1
+## Question 5 (5pts): Sorting - Part 1
 
 Consider this code which sorts a list of names:
 
@@ -316,6 +316,9 @@ A = rand(10,10)
 det(A)
 ```
 
-Write your own determinant function `my_det()` which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants.
-
+**8a**: Write your own determinant function `my_det()` which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants. Your function should call itself $n$ times when presented with matrices of size $n>2$. 
 Test your function on the same matrix $A$ from above to see you obtain the same value.
+
+**8b**: Determine an expression for the number of times `my_det()` is called, when called for an $n \times n$ matrix.
+
+**8c**: Test this by using a global variable (or some better means), which is incremented eat time the function is called.
