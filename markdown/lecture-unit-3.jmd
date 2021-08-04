@@ -165,6 +165,7 @@ You can use Julia for plotting and statistics. We won't cover all the features o
 **Simple direct plotting of functions**:
 
 ```julia
+using Plots
 plot([cos sin], label = ["cos" "sin"])
 ```
 
