@@ -635,13 +635,13 @@ Now in a scenario like a mass vaccination centre it isn't really a problem to us
 
 ##### The Heap data structure
 
-The [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)) is a smarter tree based way of keep the elments of a priority queue. With this data structure, finding the maximum is $O(1)$, deleting the maximumum is $O(\log n)$, insertions are $O(\log n)$, and updating of a priority is $O(\log n)$. We'll see the way it is implemented in Unit 6, but for now we'll use it as a "black box".
+The [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)) is a smarter tree based way of keep the elements of a priority queue. With this data structure, finding the maximum is $O(1)$, deleting the maximum is $O(\log n)$, insertions are $O(\log n)$, and updating of a priority is $O(\log n)$. We'll see the way it is implemented in Unit 6, but for now we'll use it as a "black box".
 
-One implemintation we can use is from [DataStructures.jl](https://github.com/JuliaCollections/DataStructures.jl).
+One implementation we can use is from [DataStructures.jl](https://github.com/JuliaCollections/DataStructures.jl).
 
 Now observe that since the operations of insertions and deletion of the maximum are efficient, we also get an efficient sorting algorithm:
 
-**The heap sort algorithm** just pushes the values to be sorted into a heap and then pops out the maximal value one after the other. Since there are $n$ values and putting in a value takes $O(\log n)$ time, putting all $n$ values in requires $O(n \log n)$ time. Then popping the values another $O(n \log n)$ time so the total time is twice of that which is still $O(n \log n)$. This is much better than the $O(n^2)$ of bubble sort and is equivalaent to the best (asymptotic) sorting performance possible.
+**The heap sort algorithm** just pushes the values to be sorted into a heap and then pops out the maximal value one after the other. Since there are $n$ values and putting in a value takes $O(\log n)$ time, putting all $n$ values in requires $O(n \log n)$ time. Then popping the values another $O(n \log n)$ time so the total time is twice of that which is still $O(n \log n)$. This is much better than the $O(n^2)$ of bubble sort and is equivalent to the best (asymptotic) sorting performance possible.
 
 
 ```julia
@@ -667,24 +667,24 @@ heap_sort!(data)
 data
 ```
 
-Now some benchmarks:
+Lets carry out rough benchmarks. As we can see (even though this is a very sloppy timing mechanism), there appears to be linear growth. Note that the difference between $O(n)$ and $O(n \log n)$ is hard to pick up with sloppy timings such as this.
 
 ```julia
 Random.seed!(0)
 
 function do_timing()
-    data = rand(Int64,10^6)
+    data = rand(Int64,10^8)
 
-    n_range = 10^4:10^4:10^6 
+    n_range = 10^4:10^4:10^6
     times_heap_sort = Vector{Float64}(undef,0)
 
 
     for n in n_range
-        GC.enable(false) 
+        GC.enable(false) #This turns off garbage collection
         start_time = time_ns()
-        (data[1:n]) 
+        heap_sort!(data[1:n]) 
         end_time = time_ns()
-        GC.enable(true) 
+        GC.enable(true) #GC back on
         push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
     end
     return times_heap_sort, n_range
@@ -693,11 +693,11 @@ end
 times_heap_sort, n_range = do_timing()
 
 plot(n_range,times_heap_sort, 
-    shape = :square, c = :red, legend = :topleft
-    label="heap sort",xlabel = "n", ylabel = "Time (sec)")
+    shape = :square, c = :red, legend = :topleft,
+    label="heap sort",xlabel = "n", ylabel = "Time (msec)")
 ```
 
-QQQQ - discuss memory management of heap sort and memory in general.
+Lets also consider a single timing of $10^6$ data points:
 
 ```julia
 Random.seed!(0)
@@ -705,75 +705,129 @@ data = rand(Int64,10^6)
 @time heap_sort!(data);
 ```
 
+And compare it with the in-built sort:
+
 ```julia
 Random.seed!(0)
 data = rand(Int64,10^6)
 @time sort!(data);
 ```
 
-
-QQQQ - so there is memory allocation and GC taking place. Let's see without GC:
-
-```julia
-Random.seed!(0)
-
-data = rand(Int64,10^6)
-
-n_range = 10^4:10^4:10^6 
-times_heap_sort = Vector{Float64}(undef,0)
-
-GC.enable(false) 
-for n in n_range
-    start_time = time_ns()
-     (data[1:n]) 
-    end_time = time_ns()
-    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
-end
-GC.enable(true)
-
-plot(n_range,times_heap_sort, c = :red, label="heap sort (spikes due to GC)")
-```
-
-
+We still see that the in-built sort is about twice as fast and does not allocate memory. In contrast the heap sort algorithm used memory. Comparing the two together we see they appear to (empirically) be of similar order, but the constant of heap-sort is about twice as much as the in-built sort.
 
 ```julia
 using Random, Plots
 Random.seed!(0)
 
-data = rand(Int64,10^6)
+function do_timing()
+    data = rand(Int64,10^6)
 
-n_range = 10^4:10^4:10^6 
-times_heap_sort = Vector{Float64}(undef,0)
-times_in_built_sort = Vector{Float64}(undef,0)
+    n_range = 2*10^4:2*10^4:10^6 
+    times_heap_sort = Vector{Float64}(undef,0)
+    times_in_built_sort = Vector{Float64}(undef,0)
 
-GC.enable(false) 
-for n in n_range
-    start_time = time_ns()
-    heap_sort!(data[1:n]) 
-    end_time = time_ns()
-    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
-    
-    start_time = time_ns()
-    sort!(data[1:n]) 
-    end_time = time_ns()
-    push!(times_in_built_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+    for n in n_range
+        GC.enable(false) 
+        start_time = time_ns()
+        heap_sort!(data[1:n]) 
+        end_time = time_ns()
+        GC.enable(true)
+        push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+        
+        GC.enable(false)
+        start_time = time_ns()
+        sort!(data[1:n]) 
+        end_time = time_ns()
+        GC.enable(true)
+        push!(times_in_built_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+    end
+    return times_heap_sort, times_in_built_sort, n_range
 end
-GC.enable(true)
 
-plot(n_range,times_heap_sort, label="heap sort")
-plot!(n_range,times_in_built_sort, label = "in-built sort",
-    xlabel="n", ylabel="Sorting time (ms)")
+times_heap_sort, times_in_built_sort, n_range = do_timing()
+
+plot(n_range,times_heap_sort, label="heap sort",shape = :star)
+plot!(n_range,times_in_built_sort, label = "in-built sort", shape = :circle,
+        xlabel="n", ylabel="Sorting time (ms)", legend = :topleft)
 ```
 
+So what is the in-built sort? Lets look at "quick sort".
+
+#### Quicksort (and Merge Sort on the way)
+
+On our path to understanding quick sort we'll start with a different sorting algorithm Merge sort. It uses a [divide and conquer](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm) strategy somewhat similar to our target algorithm, quick-sort. 
+
+Here is an implementation of merge sort that is very wasteful in terms of memory copies (we won't present a more efficient implementation here). Nevertheless the key principle is that when presented with sorting an array of length $n$, merge-sort splits it into two arrays of size $n/2$ (or close to that if $n$ is odd). Merge sort then sorts each of the sub-arrays by calling itself again (a recursive call), and then when presented with two sorted sub arrays merge sort merges them in order.
+
+The code below implements this from first principles. It can be improved in terms of style and efficiency but is good enough to get the main idea:
+
+```julia
+#Note that there are much better implementations of this which avoid all this memory copying
+function my_merge_sort(data)
+    n = length(data)
+    (n == 1) && return data 
+    p = n ÷ 2 #\div + [TAB]
+    data_bottom = my_merge_sort(data[1:p]) #Get a sorted version of bottom half
+    data_top = my_merge_sort(data[p+1:n]) #get a sorted version of top half
+    data_new = Vector{eltype(data)}(undef,length(data))
+    
+    #Now merge, b and t are running indexes for the bottom and top
+    b, t = 1, 1 #will
+    for i in 1:n #loop on indexes of destination array
+        if b > length(data_bottom) #if data_bottom array is finished
+            data_new[i] = data_top[t] 
+            t += 1
+            continue #returns to top of for loop
+        end
+        if t > length(data_top) #if data_top is finished
+            data_new[i] = data_bottom[b]
+            b += 1
+            continue #returns to top of for loop
+        end
+
+        #if here then bottom and top are not finished - put the smaller element in the destination
+        if data_bottom[b] <= data_top[t]
+            data_new[i] = data_bottom[b]
+            b += 1
+        else
+            data_new[i] = data_top[t]
+            t+=1
+        end
+    end
+    return data_new
+end
+```
+
+Let's compare merge sort with the in-built sort on $10^6$ integers. You can see from the output a check that both functions create the same sub-array. You can also see that the timing of merge-sort is significantly higher (by a factor of about 5) however it is still competitive timing (e.g. when comparing to bubble sort). Again keep in mind that our implementation was very wasteful due to multiple copying of the data. 
+
+```julia
+Random.seed!(0)
+data = rand(Int64,10^6)
+@show my_merge_sort(data) == sort(data)
+
+println("Time for Merge sort:")
+@time my_merge_sort(data)
+
+println("Time for in-built sort:")
+@time sort(data);
+```
+
+We will now analyze the computational complexity time of merge sort and see it is $O(n \log n$). The key is to consider the three main actions carried out by merge sort:
+
+1. Sort the bottom sub list.
+1. Sort the top sub list.
+1. Merge the data.
+
+If $T(n)$ is the time for sorting data of size $n$ then $T(n/2)$ is the time for sorting each sublist. Further, you can see that the time to merge the two sublists is of order $O(n)$ because it requires running on the whole length of the dataset once. Hence we get,
+
+$$
+T(n) = 2 T(\frac{n}{2}) + O(n).
+$$
 
 
+---
 
-* Overview of complexity classes (just mention NP completeness).
-* Example of searching through an arbitrary list/array vs. a sorted array... O(n) vs. O(log n)
-
-
-
-## More tools
+# More tools
 
 We now spend more time on "tools", namely,
 
@@ -787,20 +841,20 @@ An [operating system](https://en.wikipedia.org/wiki/Operating_system) is softwar
 
 * Files
 * Computer memory (RAM)
-* Running programms, processes (tasks), and sometimes threads within a task
+* Running programs, processes (tasks), and sometimes threads within a task
 * Input/Output
 * Networking
 * More ...
 
-This includes low level interfaces between the running programs and hardware, as well as its own "programs" for interfacing and managining the system (e.g. graphical user interface for files, and importantly for us the **shell**).
+This includes low level interfaces between the running programs and hardware, as well as its own "programs" for interfacing and managing the system (e.g. graphical user interface for files, and importantly for us the **shell**).
 
 [Unix](https://en.wikipedia.org/wiki/Unix) is a classic operating system still very much in use today. Mac's operating system [macOS](https://en.wikipedia.org/wiki/MacOS) is based on Unix. Similarly, [Linux](https://en.wikipedia.org/wiki/Linux) is a Unix based system. The most popular desktop family of operating systems, [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) is not Unix based.
 
-Our focus is on the **shell**, or **command line interace** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knoweldge as as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
+Our focus is on the **shell**, or **command line interface** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knowledge as as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
 
-Note that when you run a Julia REPL, hitting `;` puts you in "shell mode" where the sytem's default shell is present. 
+Note that when you run a Julia REPL, hitting `;` puts you in "shell mode" where the system's default shell is present. 
 
-We won't become shell experts but only learn to carry out a few basic tasks. Our main usecase will be using Git source control software (see more below). For this, we'll also learn about basic file manipulation commands and a few more tid bits will appear as needed. We assume you are familiar with the fact your system has files, and folders (directories). Here are more things to be aware of:
+We won't become shell experts but only learn to carry out a few basic tasks. Our main use case will be using Git source control software (see more below). For this, we'll also learn about basic file manipulation commands and a few more tid bits will appear as needed. We assume you are familiar with the fact your system has files, and folders (directories). Here are more things to be aware of:
 
 * `~` stands for the folder of your user.
 * `/` stands for the root directory.
@@ -820,7 +874,7 @@ Key file manipulation commands are (be careful!):
 * `cp` copy.
 * `mv` move (also rename).
 
-A few more usefull commands (apps):
+A few more useful commands (apps):
 * `echo` print to screen (can be used as part of a shell script).
 * `cat` print a text file.
 * `grep` search within a file.
@@ -828,7 +882,7 @@ A few more usefull commands (apps):
 
 Commands work well with wildcards/regular expressions. A very common one is `*`.  
 
-Output of commands can be **piped** into other commands using `|`, similary it can be redirectred into file with `>` or `>>` for appending.
+Output of commands can be **piped** into other commands using `|`, similarly it can be redirected into file with `>` or `>>` for appending.
 
 There are some commands dealing with users and permissions (we won't cover unless needed):
 
