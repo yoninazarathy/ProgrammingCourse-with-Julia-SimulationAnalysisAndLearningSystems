@@ -155,7 +155,7 @@ end
 scatter(even_range,checks,legend=false,xlabel="n",ylabel="Number of Goldbach pairs")
 ```
 
-Modify this code or create code of your own so that you can plot a figure similar to the above for the first $10^6$ Goldbach pairs. Do **not** use any in-built (or package) functions for prime numbers (e.g. (Primes.jl)[https://github.com/JuliaMath/Primes.jl]). In the figure, instead of plotting all the points associated with Goldbach pairs, only plot a random subset of the points so that the figure won't have more than about $20,000$ points. 
+Modify this code or create code of your own so that you can plot a figure similar to the above for the first $10^6$ Goldbach pairs. Do **not** use any in-built (or package) functions for prime numbers (e.g. [Primes.jl](https://github.com/JuliaMath/Primes.jl). In the figure, instead of plotting all the points associated with Goldbach pairs, only plot a random subset of the points so that the figure won't have more than about $20,000$ points. 
 
 ## Question 4 (15pts): Binary, Hex, and Decimal 
 
