@@ -318,7 +318,7 @@ plot(n_range,times, xlabel="n", ylabel="Sorting time (ms)", shape = :star, legen
 
 Note that the running time appears to grow linearly but actually we will theoretically see soon that it is of order $n \log n$. In fact, there are multiple sorting algorithms that have $O(n \log n)$ complexity and it can even be proved that for arbitrary data you cannot do better than $O(n \log n)$ in terms of the number of comparisons.
 
-We'll explore one such "efficient" sorting algorithm, heap-sort, and this is because the heap data structure on which heap-sort is based will be with us for most of the course. heap-sort is not necessarily the best algorithm, and in fact when you call `sort!` in Julia, by default the quick-sort algorithm is used. See the actual source code in [https://github.com/JuliaLang/julia/blob/master/base/sort.jl](https://github.com/JuliaLang/julia/blob/master/base/sort.jl).xs
+We'll explore one such "efficient" sorting algorithm, heap-sort, and this is because the heap data structure on which heap-sort is based will be with us for most of the course. heap-sort is not necessarily the best algorithm, and in fact when you call `sort!` in Julia, by default the quick-sort algorithm is used. See the actual source code in [https://github.com/JuliaLang/julia/blob/master/base/sort.jl](https://github.com/JuliaLang/julia/blob/master/base/sort.jl).
 
 But first we discuss a few datastructures. 
 
@@ -818,12 +818,47 @@ We will now analyze the computational complexity time of merge sort and see it i
 1. Sort the top sub list.
 1. Merge the data.
 
-If $T(n)$ is the time for sorting data of size $n$ then $T(n/2)$ is the time for sorting each sublist. Further, you can see that the time to merge the two sublists is of order $O(n)$ because it requires running on the whole length of the dataset once. Hence we get,
+If $T(n)$ is the time for sorting data of size $n$ then $T(n/2)$ is the time for sorting each sub-list. Further, you can see that the time to merge the two sub-lists is of order $O(n)$ because it requires running on the whole length of the dataset once. Hence we get,
 
 $$
 T(n) = 2 T(\frac{n}{2}) + O(n).
 $$
 
+This type of recursion is popular in several divide and conquer algorithms and we can now use the so called [Master theorem for analysis of algorithms](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms)) to see that this recursion is "solved by" $T(n) = O(n \log n)$. We won't get into all the mathematical details, but as an illustration that this is sensible assume that the $O(n)$ term in the recursion is $C (\log 2)n$ (that is, assume a specific constant and ignore lower order $o(n)$ terms). Then by plugging in $T(n) = C n \log n$, for some constant $C$, we see it is a solution: 
+
+$$
+C n \log n = 2 C \frac{n}{2} \log \frac{n}{2} + C (\log 2) n = C n \log n. 
+$$
+
+The Master theorem allows to formalize this taking into considerations all possible $O(n)$ terms.
+
+### A quick glimpse at quick-sort
+
+We now explore [quicksort](https://en.wikipedia.org/wiki/Quicksort). Like merge sort it is a divide and conquer algorithm. Implementing it is part of HW1, so we won't provide an implementation. However here is pseudocode adapted from Wikipedia broken up into two functions `quicksort` which operates on an array `A` indexed by `lo` and `hi` (in an initial call you would use `lo = 1` and `hi = length(A)`:
+
+```
+algorithm quicksort(A, lo, hi):
+    if lo > 0 && hi > 0 then
+         if lo < hi then
+              p := partition(A, lo, hi)
+              quicksort(A, lo, p - 1)
+              quicksort(A, p + 1, hi)
+
+algorithm partition(A, lo, hi):
+    pivot := A[hi]
+    i := lo - 1
+    for j := lo to hi do
+        if A[j] <= pivot then
+            i := i + 1
+            swap A[i] with A[j]
+    return i
+```
+
+There are many resources on the web dealing with quicksort. Here is one very nice [recommended video](https://www.youtube.com/watch?v=0SkOjNaO1XY). Note that it uses Python where array indexing starts at `0` and not `1` like Julia. Also note that in Python `def` is how you define a function.
+
+We note that quick-sort's worst case complexity is actually $O(n^2)$ however on average it is $O(n \log n)$. Still, even though it doesn't have guaranteed performance like merge sort or heap sort, it is a very fast algorithm and generally beats merge sort and heap sort in terms of the constants. It is also by default "in place", just like it's slow cousin, bubble sort.
+
+Quicksort recently celebrated 60 years. Here is an useful [article](https://plus.maths.org/content/happy-birthday-quicksort) about it and here is the [follow-up](https://plus.maths.org/content/happy-birthday-quicksort-0) about it.
 
 ---
 
