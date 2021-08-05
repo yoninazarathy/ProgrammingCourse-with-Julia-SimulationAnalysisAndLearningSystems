@@ -313,7 +313,7 @@ function do_timing()
 end
 
 times, n_range = do_timing()
-plot(n_range,times, xlabel="n", ylabel="Sorting time (ms)", legend = false)
+plot(n_range,times, xlabel="n", ylabel="Sorting time (ms)", shape = :star, legend = false)
 ```
 
 Note that the running time appears to grow linearly but actually we will theoretically see soon that it is of order $n \log n$. In fact, there are multiple sorting algorithms that have $O(n \log n)$ complexity and it can even be proved that for arbitrary data you cannot do better than $O(n \log n)$ in terms of the number of comparisons.
@@ -389,30 +389,35 @@ end
 Access of matrix elements is $O(1)$, however this doesn't mean that in practice (certainly in big numerical computations), different ways of accesing the matrix vary:
 
 ```julia
+function sum_rows(data, n, m)
+    s = zero(eltype(data))
+    for i in 1:n
+        for j in 1:m
+            s += data[i,j]
+        end
+    end
+    return s
+end
+function sum_columns(data, n, m)
+    s = zero(eltype(data))
+    for j in 1:m
+        for i in 1:n
+            s += data[i,j]
+        end
+    end
+    return s
+end
+using Random
 Random.seed!(0)
 n, m = 500, 10^6
 data = rand(n,m)
-function do_timing(data, n, m)
-    println("Summing up row by row:")
-    @time begin
-        s = zero(eltype(data))
-        for i in 1:n
-            for j in 1:m
-                s += data[i,j]
-            end
-        end
-    end
-    println("Summing up column by column:")
-    @time begin
-        s = zero(eltype(data))
-        for j in 1:m
-            for i in 1:n
-                s += data[i,j]
-            end
-        end
-    end
-end
-do_timing(data, n, m);
+#dry run for precompilation
+sum_columns(data, n, m)
+sum_rows(data, n, m)
+println("Summing with the column iteration moving fastest")
+@time sum_columns(data, n, m)
+println("Summing with the row iteration moving fastest")
+@time sum_rows(data, n, m);
 ```
 
 As you can see, going by columns is much faster than going by rows. This is because there are many **cache misses** if we go by rows. The key takeaway here is that while the speed complexity of the array algorithm $O(1)$ does not capture actual clock speed because of computer architecture issues such as the cache.
@@ -538,9 +543,105 @@ do_timing();
 ```
 
 
-### Priority queues, heaps, and back to sorting.
+### Priority queues, heaps, and back to sorting
+
+We can't cover all of the fundamental algorithms and data structures in this course, so we chose one non-trivial data structure to focus on. This is the [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)). It will be used here for sorting, used in Unit 5 for algebraic manipulations, and used in Unit 6 as an aid for discrete event simualtion.
+
+Note: do not confuse the heap data structure with the other computer science usage of "heap", also known as "free store" which refers to the place in [memory](https://en.wikipedia.org/wiki/Memory_management) where allocations happen. In Julia the heap is used for allocations of immutable types and has garbage collection. More on that in Unit 4.
+
+Before starting to see what a heap does (we'll continue in more depth in future units on how it works), we'll discuss what we expect it to do - namely implement an efficient **priority queue**. 
+
+Consider for example a hypothetical situation where thousands of individuals attend a mass vaccination centre. As they arrive each individual, tagged by their name (a `String`) and recieves a priority for vaccination which is a number (say `Float32`). Assume (hypothetically) that the priority is a function of their age, their occupation (essential or not), and their medical condition. Hence there are many possible different priorities. 
+
+Continuing with this example, assume the individuals queue (e.g. wait in a big arena or showgrounds area) and are only called when their priority is the highest (clearly high priority individuals won't queue much while others wait for a long while). The management system will then keep track of the priorities of the individuals and do the following:
+
+* Add individuals (this will happen at every arbitrary time in which someone arrives).
+* Remove the individual with the highest priority (they then get vaccinated and leave).
+* Modify an individual's priority if they complain about waiting too long or in case of other reasons.
+
+There are different alternatives for implementing such a data structure and in all cases the associated "collection" will be called a **priority queue**. It turns out that the heap data structure is the most efficient way to implement a priority (certainly if the number of items is large). But for starters lets consider some naive implemintations.
+
+A small digresion is to see the Julia type of **named tuples** which present one way of keep individuals:
+
+```julia
+person_A = (priority = 23.2, name = "Zack") #This is a named tuple, 
+person_B = (priority = 12.6, name = "Lenna")#if there wasn't "priority =" and "name =" it would just be a tuple
+
+@show typeof(person_A)
+@show person_A
+@show person_B;
+
+@show person_A.name
+@show person_B.priority;
+```
+
+So the type of this objects is `NamedTuple{(:priority, :name), Tuple{Float64, String}}` and they are just convient to work with.
+
+Now back to our naive priority queue. We will just keep an array of the named tuples (the naiveness is not because of the named tuples but because of the fact we are using an array). 
+
+```julia
+#Create an empty priorty queue as an array of named tuples
+naive_priority_queue = NamedTuple{(:priority, :name), Tuple{Float64, String}}[];
+```
+
+Now in the most naive implemintation, every time we add an individual we'll just `push!` their named tuple to the array. For example,
+
+```julia
+new_person = (priority = 123.2, name = "Yarden")
+push!(naive_priority_queue,new_person)
+
+another_new_person = (priority = 12.5, name = "Sharon")
+push!(naive_priority_queue,another_new_person)
+
+yet_another_new_person = (priority = 4.4, name = "Miriam")
+push!(naive_priority_queue,yet_another_new_person)
+
+even_another_new_person = (priority = 54.2, name = "Moshe")
+push!(naive_priority_queue,even_another_new_person)
 
 
+naive_priority_queue
+```
+
+Note that (in principle) such a `push!` is a costly operation because from time to time new memory needs to be allocated and the whole array copied.
+
+Then each time we wish to remove an individual there will be the the costly (why?) operation of `deleteat!`. This is $O(n)$ every time.
+
+```julia
+index_of_person_we_want_to_delte = 3 #Say we know this index
+deleteat!(naive_priority_queue, index_of_person_we_want_to_delte)
+naive_priority_queue
+```
+
+Finally searching for the individual with the highest priority is also $O(n)$.
+
+```julia
+# You can ignore the type annotations of the inputs and outputs for now
+function get_next_person(priority_queue::Vector{NamedTuple{(:priority, :name), Tuple{Float64, String}}})::NamedTuple{(:priority, :name), Tuple{Float64, String}}
+    @assert !isempty(priority_queue) 
+    max_p = first(priority_queue)
+    for p in priority_queue
+        (p.priority > max_p.priority) && (max_p = p)
+    end
+    return max_p
+end
+
+get_next_person(naive_priority_queue)
+```
+
+Now you may think of simple ways to improve this, for example by enforcing the **invariant** that `naive_priority_queue` is always sorted. But this then implies that adding individuals is an $O(n)$ worst case operation. 
+
+Now in a scenario like a mass vaccination centre it isn't really a problem to use such a priority queue with $O(n)$ costs for most operations. This is because the frequency of events is not high and neither is $n$. However, in other scenarios where events (additions, deletions, finding the maximum priority) occur very frequently then $O(n)$ for each operation may be very painful. For example, what if you were simulating that vaccination centre on a computer (similar simulations will be considered in Unit 6). 
+
+##### The Heap data structure
+
+The [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)) is a smarter tree based way of keep the elments of a priority queue. With this data structure, finding the maximum is $O(1)$, deleting the maximumum is $O(\log n)$, insertions are $O(\log n)$, and updating of a priority is $O(\log n)$. We'll see the way it is implemented in Unit 6, but for now we'll use it as a "black box".
+
+One implemintation we can use is from [DataStructures.jl](https://github.com/JuliaCollections/DataStructures.jl).
+
+Now observe that since the operations of insertions and deletion of the maximum are efficient, we also get an efficient sorting algorithm:
+
+**The heap sort algorithm** just pushes the values to be sorted into a heap and then pops out the maximal value one after the other. Since there are $n$ values and putting in a value takes $O(\log n)$ time, putting all $n$ values in requires $O(n \log n)$ time. Then popping the values another $O(n \log n)$ time so the total time is twice of that which is still $O(n \log n)$. This is much better than the $O(n^2)$ of bubble sort and is equivalaent to the best (asymptotic) sorting performance possible.
 
 
 ```julia
@@ -548,16 +649,22 @@ using Random, DataStructures
 Random.seed!(0)
 
 
-function heap_sort!(array::AbstractArray)
-    h = BinaryMinHeap{eltype(array)}()
-    for e in array
-        push!(h, e)
+function heap_sort!(a::AbstractArray)
+    h = BinaryMinHeap{eltype(a)}()
+    for e in a
+        push!(h, e) #This is an O(log n) operation
     end
-    return extract_all!(h)
+    
+    #Write back onto the original array
+    for i in 1:length(a)
+        a[i] = pop!(h) #This is an O(log n) operation
+    end
+    return a
 end
 
 data = [65, 51, 32, 12, 23, 84, 68, 1]
 heap_sort!(data)
+data
 ```
 
 Now some benchmarks:
@@ -565,19 +672,29 @@ Now some benchmarks:
 ```julia
 Random.seed!(0)
 
-data = rand(Int64,10^6)
+function do_timing()
+    data = rand(Int64,10^6)
 
-n_range = 10^4:10^4:10^6 
-times_heap_sort = Vector{Float64}(undef,0)
+    n_range = 10^4:10^4:10^6 
+    times_heap_sort = Vector{Float64}(undef,0)
 
-for n in n_range
-    start_time = time_ns()
-     (data[1:n]) 
-    end_time = time_ns()
-    push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+
+    for n in n_range
+        GC.enable(false) 
+        start_time = time_ns()
+        (data[1:n]) 
+        end_time = time_ns()
+        GC.enable(true) 
+        push!(times_heap_sort, Int(end_time - start_time)/10^6) #time in milliseconds
+    end
+    return times_heap_sort, n_range
 end
 
-plot(n_range,times_heap_sort, c = :red, label="heap sort (spikes due to GC)")
+times_heap_sort, n_range = do_timing()
+
+plot(n_range,times_heap_sort, 
+    shape = :square, c = :red, legend = :topleft
+    label="heap sort",xlabel = "n", ylabel = "Time (sec)")
 ```
 
 QQQQ - discuss memory management of heap sort and memory in general.
