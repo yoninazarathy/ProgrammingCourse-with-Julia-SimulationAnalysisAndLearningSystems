@@ -912,8 +912,11 @@ Key file manipulation commands are (be careful!):
 A few more useful commands (apps):
 * `echo` print to screen (can be used as part of a shell script).
 * `cat` print a text file.
+* `head` print with first 10 lines of a text file
+* `tail` print with last 10 lines of a text file
+* `diff` compare two files line by line
 * `grep` search within a file.
-* ...
+* `vim` and `emacs` text editors
 
 Commands work well with wildcards/regular expressions. A very common one is `*`.  
 
@@ -927,9 +930,87 @@ There are some commands dealing with users and permissions (we won't cover unles
 
 There are some commands dealing with processes:
 
+* `top` a task manager, shows running processes with cpu and memory utilization
 * `kill` a process.
 * `ps` see running processes.
 
+Here are some tools for dealing with useful networking tasks
+
+* `curl` transfer data from a network with a variety of protocols supported
+* `wget` transfer data from a network (recursive downloads supported)
+* `ssh` cryptographic network protocol. Allows remote access to other machines.
+
+Finally some useful development tools
+
+* `gcc` GNU compiler collection
+* `make` useful tool for building applications
+* `gdb` debugging tools 
+
+### A Note on the Unix Philosphy
+
+It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarised by Doug McIlroy (the inventor of Unix pipes) as
+
+* Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new features.
+* Expect the output of every program to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
+* Design and build software, even operating systems, to be tried early, ideally within weeks. Don't hesitate to throw away the clumsy parts and rebuild them.
+* Use tools in preference to unskilled help to lighten a programming task, even if you have to detour to build the tools and expect to throw some of them out after you've finished using them.
+
 ### Git and GitHub
 
-Working with software requires keeping track of versions and modifications. For this there is a set of best working practices that often depend on the task at hand. One very useful tool is [Git](https://en.wikipedia.org/wiki/Git). We will be using Git both via command line and via Visual Studio Code. Git interfaces with online platforms such as [GitHub](https://en.wikipedia.org/wiki/GitHub) and [GitLab](https://en.wikipedia.org/wiki/GitLab). You may use GUI based applications for GitHub, such as [GitHub Desktop](https://desktop.github.com/).
+Working with software requires keeping track of versions and modifications. For this there is a set of best working practices that often depend on the task at hand. 
+
+The basic functionality of a version control system are 
+
+* Keeping track of the history of software over time 
+* Being able to revert changes to a previous point in time (in case you break something important) 
+* Being able to make, track and merge experimental functionality, while keeping a "good" version unpolluted 
+* Keeping a remote backup of the source code in case of a disaster.
+* Allow teams of people to work in this way on a codebase without treading on each others toes (too much) 
+
+One very useful tool is [Git](https://en.wikipedia.org/wiki/Git). We will be using Git both via command line and via Visual Studio Code. Git interfaces with online platforms such as [GitHub](https://en.wikipedia.org/wiki/GitHub) and [GitLab](https://en.wikipedia.org/wiki/GitLab). You may use GUI based applications for GitHub, such as [GitHub Desktop](https://desktop.github.com/).
+
+For a review of commands see this [cheat sheet](https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet) 
+
+### VS Code IDE
+
+An IDE is an acronym for an "Integrated Developement Environment". The most basic development environment is simply a text file editior (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
+
+Features of an IDE that will make your life easier
+
+* Text Editor
+* Source Code Navigation
+* Syntax Highlighting
+* Debugger
+* Code Completion
+* Version Control Integration
+* Search Tools
+* Language Support
+* Code Linting
+
+In this course we recommnd using [VSCode](https://code.visualstudio.com/), an open source code editing tool made by Microsoft.
+
+### A Rough Field Guide to Software Licencing
+
+There are a vast number of licencing arrangements for dealing with the use of software and the availability of source code for the software. Two broad classes to be aware of
+
+* Proprietary Software
+* Free and Open Source Software
+
+The source code for Proprietary Software is typically a closely guarded secret and unauthorised use can have severe legal consequences.
+
+Free and Open source does not mean that source code can always be used in whatever fashion is desired. Many different philosophies around why a particular developer or organisation wishes to distribute source code need to be respected.
+
+Open source code falls into three broad classes
+
+* Permissive Licence (e.g. BSD, MIT, Apache)
+* Copyleft (e.g. GPL)
+* Public Domain (e.g. CC0)
+
+A rough summary is that Permissive licences tend to be favourable for commercial use of derived software, Copyleft makes derived works free to redistribute but they must also be Copyleft works and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
+
+Examples of Software released under different licences
+
+* Proprietary - Microsoft Windows, MacOS, MATLAB
+* Permissive - Julia (MIT), Python (PSFL), Android (Apache 2.0 for userspace, GPLv2 for kernel)
+* Copyleft - Linux (GPLv2), R (GPLv2)
+* Public Domain - BLAS, SQLite
