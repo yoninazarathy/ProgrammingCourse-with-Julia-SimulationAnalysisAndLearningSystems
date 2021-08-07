@@ -181,7 +181,7 @@ end
 
 structured_π(L::Int; p::Float64 = 0.45, r::Float64 = 0.01)::Vector{Float64} = begin
     q = 1 - p - r
-    [(p/q)^i  for i in 1:L] * (q-p) / p / (1-(p/q)^L)
+    [(p/q)^i  for i in 1:L] * (q-p) / p / (1-(p/q)^L) #Explicit expression (birth death)
 end;
 ```
 
@@ -208,7 +208,7 @@ We can see that it is a stationary distribution:
 
 You will now consider $L=2,3,4,5,10,20,30,40,50,100,200,300,400,500,1000$ and in each case use methods 1-4 above to compute/estimate $\pi$. Create 4 functions, one for each method and in each case use the function to compute/estimate $\pi$ and compare your estimated vector with the output of `structured_π`. Note that methods 1-3 will use functions from [LinearAlgebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/) while method 4 requires random variable generation. You may make use of [`sample` from StatsBase.jl](https://juliastats.org/StatsBase.jl/stable/sampling/#StatsBase.sample) for this, or any other means. You may choose for how many steps to run the Markov Chain ($N$). Similarly, since the second method requires you take take matrix powers $P^n$ for high $n$, you may also choose which $n$ to use.
 
-Once your code works for the four methods works, create some graphic or tabular output of your choice (one or two plots at most) which evaluates performance of each of the methods in terms of accuracy (and optional: running time). To measure accuracy use the `norm` function to compute the euclidean norm between your calcuated $\pi$ and that arising from `structured_π`.
+Once your code works for the four methods, create some graphic or tabular output of your choice (one or two plots at most) which evaluates performance of each of the methods in terms of accuracy (and optional: running time). To measure accuracy use the `norm` function to compute the euclidean norm between your calcuated $\pi$ and that arising from the explicit solution `structured_π`.
 
 ## Question 5 (15pt): Planetary Motion - Part 1
 
