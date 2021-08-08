@@ -384,4 +384,52 @@ Note: Your solution to this question does not need to deal with binary data or u
 
 ## Question 6 (15pt): Planetary Motion - Part 2
 
-To be updated.
+The equations of motion described above for a planetary system have the special property of being a Hamiltonian System. Hamiltonian Systems are of great interest to physicists and mathematicians due to their significance in physical modelling and their special properties. A (time invariant) Hamiltonian System is one where there the dynamics of the system are completely determined by a smooth scalar function $H(q,p)$, for $q$ and $p \in \mathbb R}^d$, where the dynmanics are described by the system of first order differential equations
+
+$$
+\left\{
+\begin{align*}
+\frac{dq_{i}}{dt} &= \frac{\partial H}{\partial p_{i}},\\
+\frac{dp_{i}}{dt} &= -\frac{\partial H}{\partial q_{i}}.
+\end{align*}
+\right.
+$$
+
+For the planetary motion example the variables $q$ and $p$ can be interpreted as the position ($x \hat{i} + y \hat{j}$) and momentum ($v_{x} \hat{i} + v_{y} \hat{j}$) vectors and the Hamiltonian can be interpreted as the total energy of the system and has the special separable form in terms of kinetic ($T$) and potential ($V$) energy
+
+$$
+\begin{align*}
+H(q,p) = T(p) + V(q)
+H(x, y, v_{x},v_{y}) = v_{x}^2 + v_{y}^2 - \frac{1}{\sqrt{x^2 + y^2}}
+\end{align*}
+$$
+
+(note that length and time scales have been resized to remove the mass and gravitational constants). It is beyond the scope of this course but a special property of Hamiltonian systems that can be exploited for numerical methods is [Sympletic Geometry](https://en.wikipedia.org/wiki/Symplectic_geometry). The numerical methods that use this propery are correspondingly known as [Symplectic Integrators](https://en.wikipedia.org/wiki/Symplectic_integrator).
+
+A particularly simple and effective sympletic integrator that works for variable time steps ($h$) is a leapfrog integrator in kick-drift-kick form. This takes a second order ODE for $u(t) \in {\mathbb R}^d$ of the form 
+
+$$
+\frac{d^2 u}{dt^2} = f(u),
+\frac{du}{dt} = v
+\qquad
+\text{and}
+\qquad
+u(0) = u_0
+\frac{du}(dt)(0) = v_0
+$$
+
+and uses an intermediate velocity update ($v_frac{1}{2})to update the system via the following recursion
+
+$$
+v_{\frac{1}{2}} = v(t) + \frac{h}{2} f\big(u(t)\big),
+u(t + h) = u(t) + h v_{\frac{1}{2}}
+v(t + h) = v_{\frac{1}{2}} + \frac{h}{2}f\big(u(t + h)\big)
+$$
+
+**6a**: Implement the Second Order Leapfrog method above for yourself for the second order form of the dynamics of planetary motion. Create similar plots of the Euler and RK4 methods above with $h=0.01$, $h=0.1$, and $h=0.5$
+
+**6b**: Compare the computational complexity of the Leapfrog method with Euler and RK4 methods by comparing how many floating point operations per time step each method uses in your implementation.
+
+**6c**: Chose a range to time horizons to simulate over, comment on the trend of the accuracy of each method for long simulation runs. Summarise this analysis in a single compelling plot.
+
+**6d**: The Julia package DifferentialEquations.jl has support for various state of the art techniques, including [sympletic integrators](https://diffeq.sciml.ai/stable/solvers/dynamical_solve/). Chose a state of the art standard ODE solver and a symplectic integrator and simulate this ODE system. Compare results with your own implementations.
