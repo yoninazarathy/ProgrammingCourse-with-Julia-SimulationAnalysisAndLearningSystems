@@ -17,7 +17,7 @@ The PDF file should be a nice formatted file that has:
 * A (clickable) link to your GitHub repo.
 * The code and output should be presented sequentially for each question. I.e. question 1's code and output, followed by question 2's code and output, etc... 
 
-The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
 
 Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. Hence a very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
 
@@ -54,6 +54,7 @@ Your GitHub repo should be formatted as exactly as follows:
 julia src/q3/q3_solution.jl
 ```
 and this will produce your output for question 3. 
+* Have an `other` directory where you can place the animation you create for Q5, and if you wish any other auxiallary material.
 
 Note that question 1 is clearly different as it requires you to show evidence of using a few unix commands. For this question just have `q1_solution.txt` as a file in `src/q1/`.
 
@@ -377,7 +378,9 @@ plot_solution(t,u,title = "Euler's method", label="h=$h")
 
 **5c**: Comment on the efficiency of the methods and their ability to predict the trajectory, also as a function of $h$ and comparatively. 
 
-Note: You do not need to use serialization to deal with the binary data. Here it is simply a mechanism for obtaining data.
+**5d**: Create a single animation which jointly illustrates the trajectory of the worst trajectory and the best trajectory from the 6 trajectories above. It is recommended that the animation display the running time, and trace the path of the earth in both trajectories, ideally using different colors and any other means you find for best visibility. The animation can be placed in your GitHub submission and a link to it provided with your submission.
+
+Note: Your solution to this question does not need to deal with binary data or use serialization as we have. Here it is simply a mechanism for obtaining data for our example plot (which you can reproduce).
 
 ## Question 6 (15pt): Planetary Motion - Part 2
 
