@@ -384,7 +384,7 @@ Note: Your solution to this question does not need to deal with binary data or u
 
 ## Question 6 (15pt): Planetary Motion - Part 2
 
-The equations of motion described above for a planetary system have the special property of being a [Hamiltonian System](https://en.wikipedia.org/wiki/Hamiltonian_system). Hamiltonian Systems are of great interest to physicists and mathematicians due to their significance in physical modelling and their special properties. A (time invariant) Hamiltonian System is one where there the dynamics of the system are completely determined by a smooth scalar function $H(q,p)$, for $q$ and $p \in {\mathbb R}^{\tilde{d}}$, where the dynamics are described by the system of first order differential equations for $i=1,\ldots,{\tilde d}$:
+The equations of motion described above for a planetary system have the special property of being a [Hamiltonian System](https://en.wikipedia.org/wiki/Hamiltonian_system). Hamiltonian Systems are of great interest to physicists and mathematicians due to their significance in physical modelling and their special properties. A (time invariant) Hamiltonian System is one where the dynamics of the system are completely determined by a smooth scalar function $H(q,p)$, for $q$ and $p \in {\mathbb R}^{\tilde{d}}$, where the dynamics are described by the system of first order differential equations for $i=1,\ldots,{\tilde d}$:
 
 $$
 \left\{
