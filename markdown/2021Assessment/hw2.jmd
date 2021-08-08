@@ -67,7 +67,7 @@ In this question you will manipulate a few files via Unix command line. If you a
 
 Your submission should be comprised of the text from the shell including the commands you used and the outputs. Just get it by copying the shell text and pasting in a file.
 
-**1a**: Create the folder `hw2_q1` and make that your working directory in the shell. Illusrate this via `pwd`.
+**1a**: Create the folder `hw2_q1` and make that your working directory in the shell. Illustrate this via `pwd`.
 
 **1b**: Display your name to the terminal using the `echo` command.
 
@@ -116,7 +116,7 @@ The program should then create two CSV files, both with header rows and named `m
 * `character_count` - determines how many characters total are in the cell (include characters such as `\n` and count unique characters as a single character. E.g. `√` is a single character.
 * `line_count` - The number of lines the cell uses.
 
-The remaining columns count frequency of elements within the markdown or code of the cell. These columns will differ for `markdown_summary.csv` and `code_summary.csv`, and are descrbied now.
+The remaining columns count frequency of elements within the markdown or code of the cell. These columns will differ for `markdown_summary.csv` and `code_summary.csv`, and are described now.
 
 For the markdown summary file create columns: `#`, `##`, `###`, `####`, each of which count the number of times the respective element appears in the cell. For example if a cell has `#` and `##` in it, each once, then the respective entries in the line for this cell should be `1, 1, 0, 0`.
 
@@ -150,7 +150,7 @@ A discrete time, time-homogenous, finite state markov chain can be defined as a 
 
 Markov chains are very useful models for a variety of applications and at UQ are briefly introduced in [STAT2003](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT2003) and studied in detail in [STAT3004](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3004). Here we will simply use them as a motivating example for practicing using linear algebra and no further background from these courses is needed.
 
-We focus on irreducible, aperiodic, finite state Markov chains. Irreducible means that for every pair $(i,j)$ there exists an $n$ such that $i$-th $j$-th entry of the matrix power $P^n$ is non-negative. Aperiodic is guarnteed when the diagonal entries of $P$ are strictly positive. Ireeducibility means that every state $\{1,\ldots,L\}$ is reachable from every other state and being aperiodic implies there aren't times $n$ where only a subset of the states can be visited. For such Markov chains, one important vector quantity is the **stationary probability** (row) $L$-vector. Here it is denoted $\pi$ with $\sum_{i=1}^L \pi_i =1$ and $\pi_i>0$ for every $i$. This vector $\pi$ counts the long term statistical occupancy of states, and can be characterized/computed in several ways:
+We focus on irreducible, aperiodic, finite state Markov chains. Irreducible means that for every pair $(i,j)$ there exists an $n$ such that $i$-th $j$-th entry of the matrix power $P^n$ is non-negative. Aperiodic is guaranteed when the diagonal entries of $P$ are strictly positive. Irreducibility means that every state $\{1,\ldots,L\}$ is reachable from every other state and being aperiodic implies there aren't times $n$ where only a subset of the states can be visited. For such Markov chains, one important vector quantity is the **stationary probability** (row) $L$-vector. Here it is denoted $\pi$ with $\sum_{i=1}^L \pi_i =1$ and $\pi_i>0$ for every $i$. This vector $\pi$ counts the long term statistical occupancy of states, and can be characterized/computed in several ways:
 
 1. It satisfies $\pi P = \pi$ (note that this is an undetermined system of linear equations because $(I-P)$ is singular; still the additional requirement that $\sum_{i=1}^L \pi_i =1$ ensures uniqueness of $\pi$).
 1. For any $i$,
@@ -208,17 +208,177 @@ We can see that it is a stationary distribution:
 
 You will now consider $L=2,3,4,5,10,20,30,40,50,100,200,300,400,500,1000$ and in each case use methods 1-4 above to compute/estimate $\pi$. Create 4 functions, one for each method and in each case use the function to compute/estimate $\pi$ and compare your estimated vector with the output of `structured_π`. Note that methods 1-3 will use functions from [LinearAlgebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/) while method 4 requires random variable generation. You may make use of [`sample` from StatsBase.jl](https://juliastats.org/StatsBase.jl/stable/sampling/#StatsBase.sample) for this, or any other means. You may choose for how many steps to run the Markov Chain ($N$). Similarly, since the second method requires you take take matrix powers $P^n$ for high $n$, you may also choose which $n$ to use.
 
-Once your code works for the four methods, create some graphic or tabular output of your choice (one or two plots at most) which evaluates performance of each of the methods in terms of accuracy (and optional: running time). To measure accuracy use the `norm` function to compute the euclidean norm between your calcuated $\pi$ and that arising from the explicit solution `structured_π`.
+Once your code works for the four methods, create some graphic or tabular output of your choice (one or two plots at most) which evaluates performance of each of the methods in terms of accuracy (and optional: running time). To measure accuracy use the `norm` function to compute the euclidean norm between your calculated $\pi$ and that arising from the explicit solution `structured_π`.
 
 ## Question 5 (15pt): Planetary Motion - Part 1
 
-To be updated.
+In this problem and the next we deal with ordinary differential equations (ODEs), similar to those associated with planetary motion. Specifically we focus on a very simple two body problem reduced to two one body problems. Here you will implement the [Euler Method](https://en.wikipedia.org/wiki/Euler_method) and the [classic Runge–Kutta method](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) for solving ODEs. You will use these methods on the simple problem and analyze their performance in terms of step size.
+
+In general, take a function $f: {\mathbb R}^d \to {\mathbb R}^d$ which we called the _right hand side_ (RHS). The ODE seeks a function $u(\cdot)$ where $u(t) \in {\mathbb R}^d$, with,
+$$
+\frac{d u}{dt} = f(u),
+\qquad
+\text{and}
+\qquad
+u(0) = u_0.
+$$
+Here $u_0 \in {\mathbb R}^d$ is a given _initial condition_. Note also that in this formulation here, $f(\cdot)$ only depends on the _state_ $u$ and not on time, $t$. A more general formulation allows dependence on time. 
+
+A solution $u(\cdot)$ is a function which for any $t\ge 0$ specifies the state $u(t)$ and satisfies the ODE above.
+
+For a given ODE problem, namely a RHS $f(\cdot)$ and an initial condition $u_0$, an ODE numerical solver is an algorithm that tries to find $u(t)$ over time $t$ in some range $[0,T]$. Euler's method works by setting $u(0) = u_0$ and following the key recursion,
+$$
+u(t+h) = u(t) + h f\big(u(t)\big),
+$$
+starting with $t=0$ and incrementing $t$ by $h$ until $t\ge T$.
+
+The classic Runge–Kutta method, called also RK4, works via a more intricate scheme where,
+$$
+u(t+h) = u(t) + \frac{h}{6}(k_1 + 2k_2 + 2k_3 +k_4),
+$$
+where,
+$$
+\begin{align*}
+k_{1} &=f\left(u(t)\right) \\
+k_{2} &=f\left(u(t) + h \, \frac{k_{1}}{2}\right), \\
+k_{3} &=f\left(u(t) + h \, \frac{k_{2}}{2}\right) \\
+k_{4} &=f\left(u(t) + h\, k_{3}\right) .
+\end{align*}
+$$
+For both algorithms the step size $h>0$ is a key parameter.
+
+Our example ODE deals with a mass orbiting a much larger mass on a plane (a reasonable approx 
+to the earth around the sun). This is a two body problem reduced to two one body problems. A trivial one for the [barycentre](https://en.wikipedia.org/wiki/Barycenter) and a second order differential equation for the orbit around the centre of mass. We now develop this ODE from simple physical principles (note that the physics of the problem is not crucial for solving this assignment problem).
+
+Newtons Law states that,
+$$
+m \, a = F(r),
+$$
+where $m$ is the mass of earth, $a$ is the acceleration vector, and $F(r)$ is the gravitational force vector acting on earth as a function of $r$, the distance between the earth and the sun (which is the distance between earth and the barycentre). This force, driven by a $1/r$ potential, is given via,
+$$
+F(r) = -\frac{m\, M\, G}{~~r^2} r'
+$$
+where $r'$ is a unit vector pointing at the barycentre, $M$ is the [mass of the sun](https://en.wikipedia.org/wiki/Solar_mass), and $G$ is the [gravitational constant](https://en.wikipedia.org/wiki/Gravitational_constant). Hence the acceleration vector of earth is
+$$
+a = -\frac{M\, G}{~~~r^2}r'.
+$$
+We now describe the location of earth via $x(t)$ and $y(t)$ in Cartesian coordinates, using the standard unit vectors $\hat{i}$ and $\hat{j}$. With this description, the acceleration vector is,
+$$
+a = \frac{d^2x}{dt^2} \hat{i} + \frac{d^2y}{dt^2} \hat{j}.
+$$
+Now since,
+$$
+r = \sqrt{x^2 + y^2}
+\qquad
+\text{and}
+\qquad
+r' = \frac{x}{|r|} \hat{i} + \frac{y}{|r|} \hat{j},
+$$
+we get a system of second order ordinary differential equations:
+$$
+\left\{
+\begin{align*}
+\frac{d^2x}{dt^2} &= -\frac{M\, G\, x}{~~r^{3}},\\
+\frac{d^2y}{dt^2} &= -\frac{M\, G\, y}{~~r^{3}}.
+\end{align*}
+\right.
+$$
+This system has an explicit ellipsoid solution.
+
+We also expect the total energy $E$ to be conserved where $E = E_K(t) + E_P(t)$ with the kinetic energy satisfying $E_K(t) \propto \|v(t)\|^2$ and the potential energy satisfying and $E_P(t) \propto -1/r(t)$. Here "$\propto$" indicates "proportional to". Here $v(t)$ is the velocity vector comprised of $v_x(t)$ and $v_y(t)$ with,
+$$
+v_x = \frac{dx}{dt},
+\qquad
+\text{and}
+\qquad 
+v_y = \frac{dy}{dt}.
+$$
+
+With such an explicit solution and the invariant of conservation of energy, we can now evaluate the performance of the various numerical schemes and their parameters. To do so, we also convert the system into the ODE form presented above (converting it from a second order ODE to a first order one). This is done by representing the state vector $u(t)$ with $d=4$ as $v_x(t)$, $v_y(t)$, $x(t)$, $y(t)$. Thus,
+$$
+\left\{
+\begin{align*}
+\frac{dv_x}{dt} &= -\frac{M\,G\,x}{~~r^{3}},\\
+\frac{dv_y}{dt} &= -\frac{M\,G\,y}{~~r^{3}},\\
+\frac{dx}{dt} &= v_x, \\
+\frac{dy}{dt} &= v_y.
+\end{align*}
+\right.
+$$
+
+The following code specifies the function `df_dt_one_body` which is the RHS for this ODE. The other four one line functions are convenience accessors to the state variables.
+
+```julia
+#These four convenience functions extract the state variable from the state vector
+#It is assumed the layout of the vector u is u = [v_x, v_y, x, y]
+state_v_x(u::Vector{Float64}) = u[1]
+state_v_y(u::Vector{Float64}) = u[2]
+state_x(u::Vector{Float64}) = u[3]
+state_y(u::Vector{Float64}) = u[4]
+
+"""
+Computes the RHS for the one body problem. 
+"""
+function df_dt_one_body(u::Vector{Float64}, t::Float64)::Vector{Float64}
+    M, G = 1, 1 #We take these constants as normalized. Naturally they would need to be set for physical values.
+    r = sqrt(state_x(u)^2 + state_y(u)^2)
+    return [-M*G*state_x(u)/r^3, -M*G*state_y(u)/r^3, state_v_x(u), state_v_y(u)]
+end;
+```
+
+Once you use it to obtain a solution on a time vector `t` and a state (vector of vectors) `u`, a function such as `plot_solution` below can be used to plot the solution, also allowing you to use a `title` for the plot and a `label` for the series:
+
+```julia
+using Plots, Measures
+
+function plot_solution( t::AbstractArray{T}, 
+                        u::Vector{Vector{Float64}}; 
+                        title::String = "",
+                        label::Union{String, Bool} = false) where T
+    x, y, v_x, v_y = state_x.(u), state_y.(u), state_v_x.(u), state_v_y.(u)
+ 
+    #"Energy"
+    r = @. sqrt(x^2 + y^2)
+    E = @. v_x^2 + v_y^2 - 1.0/r
+
+    p1 = plot(  x, y, label = label, xlabel= "X", ylabel = "Y",
+                title = title*" (position)", aspectratio=1,legend=:topleft,ylim=(-7,7))
+    scatter!([0], [0], ms=15, msw=0, c=:orange, shape =:star, label="Sun")
+    scatter!([x[1]], [y[1]], ms=5, msw=0, c=:blue, shape =:circle, label="Earth initial position")
+
+    p4 = plot(  t, E, xlabel = "Time", ylabel = "Energy",
+                label = label, title = title*" (energy)")
+    plot(p1, p4, margin = 10mm,size=(800,400))
+end;
+```
+
+Here for example we read binary data from a file (from the web), where we previously created `example_trajectory.dat` by running the Euler method on the time-horizon $[0,200]$ with a step size of $h=0.01$, an initial location of $(1.5,0)$, and initial vertical velocity of $1$. We stored the binary data of the trajectory of type `Vector{Vector{Float64}}` in a file using the [serialization](https://docs.julialang.org/en/v1/stdlib/Serialization/) mechanism and the code below reads the binary data back into `u` so it can plot it.
+
+The plot illustrates that that trajectory deviates from the desired ellipsoid solution and that the energy is not kept constant as needed.
+
+```julia
+using Serialization, HTTP
+h = 0.01
+t = 0:h:200
+u_0 = [0., 1, 1.5, 0]
+
+#Note: the data was written to file via serialize("data/example_trajectory.dat", u) and then committed to GitHub
+ode_web = HTTP.request("GET","https://github.com/yoninazarathy/"*
+                            "ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/"*
+                            "raw/e71c6d085e0fcf79e3737c3a1db0fc56904e3f10/data/example_trajectory.dat")
+u = deserialize(IOBuffer(ode_web.body))
+@show typeof(u)
+plot_solution(t,u,title = "Euler's method", label="h=$h")
+```
+
+**5a**: Implement the Euler's method yourself and create similar plots with $h=0.001$ and $h=0.0001$ for the same time range and initial conditions. Plot plots similar to the plot above for the three values of $h$ ($0.01$, $0.001$, and $0.0001$). The trajectory plots should appear separately, but the energy plots should appear on the same plot. 
+
+**5b**: Repeat by implementing the RK4 method for $h=0.01$, $h=0.1$, and $h=0.5$. 
+
+**5c**: Comment on the efficiency of the methods and their ability to predict the trajectory, also as a function of $h$ and comparatively. 
+
+Note: You do not need to use serialization to deal with the binary data. Here it is simply a mechanism for obtaining data.
 
 ## Question 6 (15pt): Planetary Motion - Part 2
 
 To be updated.
-
-
-
-
-

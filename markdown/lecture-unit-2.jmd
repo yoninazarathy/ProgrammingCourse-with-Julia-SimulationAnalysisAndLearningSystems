@@ -946,9 +946,9 @@ Finally some useful development tools
 * `make` useful tool for building applications
 * `gdb` debugging tools 
 
-### A Note on the Unix Philosphy
+### A Note on the Unix Philosophy
 
-It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarised by Doug McIlroy (the inventor of Unix pipes) as
+It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarized by Doug McIlroy (the inventor of Unix pipes) as
 
 * Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new features.
 * Expect the output of every program to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
@@ -973,7 +973,7 @@ For a review of commands see this [cheat sheet](https://www.atlassian.com/git/tu
 
 ### VS Code IDE
 
-An IDE is an acronym for an "Integrated Developement Environment". The most basic development environment is simply a text file editior (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
+An IDE is an acronym for an "Integrated Development Environment". The most basic development environment is simply a text file editor (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
 
 Features of an IDE that will make your life easier
 
@@ -987,7 +987,7 @@ Features of an IDE that will make your life easier
 * Language Support
 * Code Linting
 
-In this course we recommnd using [VSCode](https://code.visualstudio.com/), an open source code editing tool made by Microsoft.
+In this course we recommend using [VSCode](https://code.visualstudio.com/), an open source code editing tool made by Microsoft.
 
 ### A Rough Field Guide to Software Licencing
 
@@ -1006,7 +1006,7 @@ Open source code falls into three broad classes
 * Copyleft (e.g. GPL)
 * Public Domain (e.g. CC0)
 
-A rough summary is that Permissive licences tend to be favourable for commercial use of derived software, Copyleft makes derived works free to redistribute but they must also be Copyleft works and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
+A rough summary is that Permissive licences tend to be favorable for commercial use of derived software, Copyleft makes derived works free to redistribute but they must also be Copyleft works and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
 
 Examples of Software released under different licences
 
