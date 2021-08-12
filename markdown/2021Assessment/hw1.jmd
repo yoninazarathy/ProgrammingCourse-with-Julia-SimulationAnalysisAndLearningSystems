@@ -310,7 +310,7 @@ So now rank one matrices may be added up.
 Here is code that creates a random $10 \times 10$ matrix and computes its determinant.
 
 ```julia
-using LinearAlgebra
+using LinearAlgebra, Random
 Random.seed!(0)
 A = rand(10,10)
 det(A)
