@@ -407,14 +407,69 @@ bitstring(-1/0) #-Inf
 
 ### Numerical inaccuracy issues
 
+Due to the approximate nature of the floating point numbers there are a range of numerical issues that can arise. The most simple being that some number are not exactly represented, e.g.
+
+```julia
+@show big(0.1)
+```
+
+This approximate nature also leads to associativity of addition of floating point numbers not being guaranteed, e.g.
+
+```julia
+@show (0.1 + 0.2) + 0.3 == 0.1 + (0.2 + 0.3)
+```
+
+but this is not usually a big error
+
+```julia
+@show (0.1 + 0.2) + 0.3 ≈ 0.1 + (0.2 + 0.3)
+@show (0.1 + 0.2) + 0.3 - (0.1 + (0.2 + 0.3))
+```
+
+Also small numbers can get "absorbed" into a larger number
+
+```julia
+@show (1e9 + 1e-9) == 1e9
+```
+
+Obviously repeated addition can compound errors, for example
+
+```julia
+a = 0.1
+x = 0.0
+n = 1e6
+
+for i = 1 : n
+    x += a
+end
+
+error =  a*n - x
+@show error
+```
+
+There are many examples of such errors and when used in complex operations these errors can lead to the violation of expected mathematical results, e.g.
+
+```julia
+using LinearAlgebra
+
+x = [ones(10,6) zeros(10)]
+
+eigen_values, eigen_vectors = eigen(x'*x)
+
+fraction_bad =  sum(eigen_values .< 0)/length(eigen_values)
+
+@show fraction_bad
+```
 
 ### Numerical derivatives
 
+These errors are particularly bad when considering a finite difference approximation to a derivative
 
 $$
 f'(x) \approx \frac{f(x+h) - f(x)}{h}
 $$
 
+Mathematically we would expect that the error in the mathematical approximation should go to zero as $h$ approaches zero. However floating point errors increase (difference of close numbers divided by a small number) so there is an optimal value for the finite difference step size that reduces the total approximation error.
 
 ```julia
 diff_forward(f, x; h = sqrt(eps())) = (f(x+h) - f(x))/h
@@ -431,6 +486,13 @@ plot(h_range,[errs0 errs1], yaxis = :log,xaxis = :log,
 
 ### Brief intro to automatic differentiation
 
+Doing finite differences suffers from numerical accuracy issues. Doing finite differences for functions of the type $y = f(x)$ where $y \in {\mathbb R}$ and $x \in {\mathbb R}^{\tilde{n}}$ where $ n > 1$ also suffers from a computational complexity issue as $O(n)$ function evaluations are also required. A modern approach to this is called automatic differentiation, where floating point precision accuracy for the derivative is achieved and $O(1)$ function evaluations are required. This works by the cunning application of the chain rule and a special numerical type called a [Dual Number](https://en.wikipedia.org/wiki/Dual_number). We won't go into details here but this is supported by various Julia packages.
+
+```julia
+using Zygote
+
+@show gradient((x,y) -> 3x + 4y + 1, 0,0)
+```
 
 ### Numerical integration
 
