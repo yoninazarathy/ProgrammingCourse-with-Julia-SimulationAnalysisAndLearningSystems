@@ -116,7 +116,7 @@ println(df)
 
 ```julia
 df_no_names = CSV.File("people_no_header.csv",header = false ) |> DataFrame
-println(df)
+println(df_no_names)
 ```
 
 ```julia
@@ -366,7 +366,8 @@ $$
 
 ```julia
 @show 2^(-52)
-@show 2^(-13);
+@show 2^(-23)
+@show 2^(-10);
 ```
 
 We can suppose there is some (mathematical) function $\text{fl}: {\mathbb F} \to {\mathbb R}$ where $\text{fl}(x)$ takes a real number $x$ and maps it to the nearest $\tilde{x}$ in ${\mathbb F}$. For positive $x$ it lies in the interval $[2^e,2^{e+1})$ where the spacing between the elments is $2^{e-d}$. Hence $|\tilde{x} - x| \le \frac{1}{2} 2^{e-d}$. We can now consider the relative error between $\tilde{x}$ and $x$:
@@ -496,10 +497,107 @@ using Zygote
 
 ### Numerical integration
 
-* Multiple methods for numerical integration and their error analysis (theoretical and analytic)
+Numerical integration finds many useful applications in Applied Mathematics, Statistics, Science and Engineering. The standard problem is to find a numerical estimate of the definite integral of some function. Numerical methods for the approximate integration of univariate functions are usually refered to as quadrature methods and higher dimensional problems are refered to as cubature methods. As a starting point consider the 1D integral of the function $f(x)$ from $x=a$ to $x=b$
+
+$$
+\int _{a}^{b}f(x)dx
+$$
+
+A simple method for estimating the integral is to use the Reimann sum at some finite width to approximate the integral, i.e.
+
+$$
+\int _{a}^{b}f(x)dx \approx (b - a)f\left(\frac{a+b}{2}\right)
+$$
+
+This can be improved by using interpolating polynomials of successively higher orders to more closely follow the function (called [Newton-Cotes formulas](https://en.wikipedia.org/wiki/Newton%E2%80%93Cotes_formulas)). Fox example, for a 1st order polynomial we get the trapezoid rule
+
+$$
+\int _{a}^{b}f(x)dx \approx (b - a)\left(\frac{f(a)+f(b)}{2}\right)
+$$
+
+and for a second order polynomial we get Simpson's Rule
+
+$$
+\int _{a}^{b}f(x)dx \approx \frac{b - a}{6}\left[f(a)+4f\left(\frac{a+b}{2}\right)+f(b)\right]
+$$
+
+and so on and so on. In general the error of these methods reduces as the order of the polynomial increases. However an important special case is when the function is smooth is periodic, here midpoint and trapezoid rules have excellent convergence properies (beating the higher order methods), see below
+
+```julia
+using SpecialFunctions
+
+function riemann_sum(f, a, b, method = "midpoint")
+    if method == "midpoint"
+        return (b - a)*f((a + b)/2)
+    elseif method == "simpsons"
+        return (b-a) / 6 * (f(a) + 4*f((a+b)/2) + f(b))
+    else
+        @error("unsupported method given")
+    end 
+end
+
+f1(x) = exp(10*cos(x))
+f2(x) = exp(x)
+
+#from 0 to 2π
+integral_f1 = 2π*besseli(0,10)
+integral_f2 = exp(2π) - 1
+
+#use a map to implement midpoint method on successively finer grid
+
+f1_int_midpoint = Float64[]
+f1_int_simpsons = Float64[]
+
+f2_int_midpoint = Float64[]
+f2_int_simpsons = Float64[]
+
+n_range = 1 : 100
+
+for n in n_range
+    dx = 2π/n
+    xs = 0 .+ dx * (0 : n-1 )
+    f1_int_mid = sum(map(x -> riemann_sum(f1, x, x+dx), xs))
+    f1_int_simp = sum(map(x -> riemann_sum(f1, x, x+dx, "simpsons"), xs))
+    push!(f1_int_midpoint, f1_int_mid)
+    push!(f1_int_simpsons, f1_int_simp)
+    f2_int_mid = sum(map(x -> riemann_sum(f2, x, x+dx), xs))
+    f2_int_simp = sum(map(x -> riemann_sum(f2, x, x+dx, "simpsons"), xs))
+    push!(f2_int_midpoint, f2_int_mid)
+    push!(f2_int_simpsons, f2_int_simp)
+end
+
+p1 = plot(log.(abs.(f2_int_midpoint .- integral_f2)), xlabel = "n", ylabel = "log abs error", label = "midpoint f2")
+plot!(p1, log.(abs.(f2_int_simpsons .- integral_f2)), xlabel = "n", ylabel = "log abs error", label = "simpsons f2")
+
+p2 = plot(log.(abs.(f1_int_midpoint .- integral_f1)), xlabel = "n", ylabel = "log abs error", label = "midpoint f1")
+plot!(p2, log.(abs.(f1_int_simpsons .- integral_f1)), xlabel = "n", ylabel = "log abs error", label = "simpsons f1")
+
+plot(p1,p2)
+```
+
+The wild success of the simple integration methods for smooth periodic function methods explains why the [Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) sees such widespread use in Science and Engineering (for example in the [JPEG](https://en.wikipedia.org/wiki/JPEG) compression algorithm, well its close cousin the DCT).
+
+Higher dimensional integration methods (cubature) methods follow a similar approach but due to the poor scaling of computational complexity with dimension tend to feature advance adaptive methods to resize the grid the integral is performed on. See for example the rate of error increase with dimension in the following integral of a multivariate noraml distribution using a state of the art integration method
+
+```julia
+using HCubature
+
+M = 4.5
+maxD = 10
+
+f(x) = (2*pi)^(-length(x)/2) * exp(-(1/2)*x'x)
+
+for n in 1:maxD
+    a = -M*ones(n)
+    b = M*ones(n)
+    I,e = hcubature(f, a, b, maxevals = 10^7)
+    println("n = $(n), integral = $(I), error (estimate) = $(e)")
+end
+```
 
 ### Differential Equations
 
+Differential equations are the backbone of physical modelling in Science and Engineering and hence a vast amount of literature to the numerical solution of differential equations has been produced. Partial Differential Euqations require some special care for numerical analysis and won't be covered here. Ordinary Differential Equations are much more approachable (particularly initial value problems). In fact Julia features a state of the art library for the solution of Ordinary (and Stochastic) Differential Equations in [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl). A simple example is given below for a "spring-mass_damper" second order ODE.
 
 ```julia
 using DifferentialEquations, LinearAlgebra, Plots
@@ -535,10 +633,46 @@ p2 = scatter!([0], [initX[1]],
 plot(p1, p2, size=(800,400), legend=:topright)
 ```
 
-* Solutions of differential equations using DifferentialEquations.jl (simple examples)
-* Euler Method implementation 
-* Runga-Kutta 4-5 implementation
-* Simpletic integrator example...(?) e.g. planetary motion + discussion/demo of error
+There is a great similarity in the basic method for the numerical solution of ODES and the numerical integration methods outlined above. For example consider the following initial value ODE problem
+
+$$
+\frac{d y}{dt} = f(y,t),
+\qquad
+\text{and}
+\qquad
+y(0) = y_0.
+$$
+
+where $f: {\mathbb R}^n \to {\mathbb R}^n$ and we seek solutions on some time horizon from $t = 0$ to $t = a$.
+
+The most basic approximation method to the derivative is using the approximation
+
+$$
+\frac{d y}{dt} \approx \frac{y(t + h) - y(t)}{h}
+$$
+
+which when applied recursively yields a basic numerical method called Euler's Method.
+
+$$
+y(t+h) = y(t) + h f\big(y(t)\big),
+$$
+
+A popular Higher Order Method are the Runge-Kutta Methods. These use intermediate points to approximate the derivative that have coefficents chosen to reduce the approximation error. The 4th order Runge-Kutta mthod is of the form
+
+$$
+y(t+h) = y(t) + \frac{h}{6}(k_1 + 2k_2 + 2k_3 +k_4),
+$$
+where,
+$$
+\begin{align*}
+k_{1} &=f\left(y(t)\right) \\
+k_{2} &=f\left(y(t) + h \, \frac{k_{1}}{2}\right), \\
+k_{3} &=f\left(y(t) + h \, \frac{k_{2}}{2}\right) \\
+k_{4} &=f\left(y(t) + h\, k_{3}\right) .
+\end{align*}
+$$
+
+Note that if we consider the Fundamental Theorem of Calculus we can recognise that Eulers method and the RK4 method are similar to the Midpoint rule and Simpsons rule for numerical integration.  
 
 ###  Matrix operations
 
@@ -714,3 +848,41 @@ println(round.([b1A,b1B,b1C,b1D,b1E,b1F,b1G,b1H,b1I],digits=3))
 
 ### Sparsity
 
+A very useful data structure for dealing with large matrices is a Sparse Matrix. The idea is that only the non zero elements of a matrix are kept and typical linear algebra methods and extended for this special type. These types of matrices arise very frequently in the numerical solution of PDEs from the finite difference approximation of certain operators, in applications of graph theory where the edges are sparse and also in Statistics and Machine Learning where the [Inverse Covariance Matrix](https://en.wikipedia.org/wiki/Precision_(statistics)) often has a special sparse structure. 
+
+Consider the following imaginary social network
+
+```julia
+using SparseArrays, Random, Arpack, LinearAlgebra
+
+n_people = 10000
+
+Random.seed!(0)
+rows = Int[]
+columns = Int[]
+
+for i = 1 : n_people
+    for j = i + 1 : n_people
+        is_friend = rand() < 100/n_people
+        if is_friend
+            push!(rows, i)
+            push!(columns, j)
+            push!(rows, j)
+            push!(columns, i)
+        end
+    end
+end
+
+friend_matrix = sparse(rows, columns, 1)
+big_zeros = zeros(n_people, n_people)
+
+#show size in memory of sparse adjacency matrix
+varinfo(r"friend_matrix")
+varinfo(r"big_zeros")
+
+#now you want to do some spectral graph theory on the network to discover clusters of friends
+
+@time eigs(friend_matrix)
+
+#don't even try to take eigenvalues of a dense matrix this size O(n^2.4ish)!!!!  
+```
