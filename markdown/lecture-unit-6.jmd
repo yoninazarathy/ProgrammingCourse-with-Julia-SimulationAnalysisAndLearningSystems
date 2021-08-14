@@ -15,7 +15,12 @@
 
 # Basic Monte Carlo based statistical analysis
 
-* Bootstrap confidence intervals..
+* Discussion/quick demo Bootstrap confidence intervals..
+* Discussion of MCMC
+
+# Markov Chains (back to it from HW2 question)
+* Markov chain simulation
+* Mention continuous time...
 
 # Discrete event simulation basics
 
@@ -27,7 +32,8 @@
 
 # Under the hood in discrete event simulation engines
 
-* Heaps
+* Now understaning the heap datastructue (and implementing one)...
+* Generic interfaces again... (Put "anything" in a heap...)
 
 # Modular software design
 
@@ -37,8 +43,8 @@
 # More on Julia and programming
 
 * Additional language features including meta-programming and further understanding of the compilation process. 
-* More on type inference and performance implications.
-* More on profiling and performance optimization. 
+* More on type inference and performance implications. `@code_warntype`
+* More on profiling and performance optimization. `BenchmarkTools.jl`
 * Examples of using marcros and very basic creation (e.g. package GLM, LaTeXStrings).  
 
 

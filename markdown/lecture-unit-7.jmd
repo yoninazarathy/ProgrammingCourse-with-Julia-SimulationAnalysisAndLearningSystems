@@ -1,19 +1,32 @@
 # Unit 7: Working with heterogenous datasets and a view towards machine learning
 
+# Databases
+
+* Relational databases as a concept... 
+* Andy to show an example...
+* There is a language: SQL....
+
 # Dataframes
 
-* The dataframes package.
+* Beyond arrays, dictionaries, and such... but not yet in a DB.
+* The dataframes package - basic usage:
+ - Filtering rows.
+ - Accessing.
+ - Modifying.
+ - Copy, DeepCopy, etc....
 * Spliting, apply, and `by()`
+* Join... 
 * Missing values and basic imputation.
 
 # Memory management
 
 * More on the heap vs. stack. 
 * The garbage collector.
-* Out-of-core example - working/fetching files....
+* Out-of-core example - working/fetching files.... (DataFrames works with "arrow format" (https://en.wikipedia.org/wiki/Apache_Arrow). Example that implements line by line CSV... and then discuss modern pardigms such as Arrow
 
 # Basic regression and classification Problems
 
+* Basic stuff with GLM (again) - examples of Metaprogramming here.
 * Usage of black box neural network `MetalHead.jl`  (motivation - we won't do more with Neural Networks)
 * Least squares `pinv()` on MNIST or similar.
 * Quantifing accuracy for classfication (accuracy, precision, recall, F1, confusion matrix)

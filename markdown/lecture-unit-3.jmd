@@ -160,7 +160,7 @@ strands[250]
 
 ### Basic scientific work environment
 
-You can use Julia for plotting and statistics. We won't cover all the features of [Plots.jl](http://docs.juliaplots.org/latest/), but instead will show a few examples taken from [SWJ](https://statisticswithjulia.org/) which showcase plotting and animation. You may also use the [image gallary](https://statisticswithjulia.org/gallery.html), where in each case clicking on the example image gives you a link to self contained source code that plots the image. Note that in that source you can ignore (comment out) `pyplot()` which is a function which sets the backend of the plotting as Python's plotting package.
+You can use Julia for plotting and statistics. We won't cover all the features of [Plots.jl](http://docs.juliaplots.org/latest/), but instead will show a few examples taken from [SWJ](https://statisticswithjulia.org/) which showcase plotting and animation. You may also use the [image gallery](https://statisticswithjulia.org/gallery.html), where in each case clicking on the example image gives you a link to self contained source code that plots the image. Note that in that source you can ignore (comment out) `pyplot()` which is a function which sets the backend of the plotting as Python's plotting package.
 
 **Simple direct plotting of functions**:
 
@@ -370,7 +370,7 @@ $$
 @show 2^(-10);
 ```
 
-We can suppose there is some (mathematical) function $\text{fl}: {\mathbb F} \to {\mathbb R}$ where $\text{fl}(x)$ takes a real number $x$ and maps it to the nearest $\tilde{x}$ in ${\mathbb F}$. For positive $x$ it lies in the interval $[2^e,2^{e+1})$ where the spacing between the elments is $2^{e-d}$. Hence $|\tilde{x} - x| \le \frac{1}{2} 2^{e-d}$. We can now consider the relative error between $\tilde{x}$ and $x$:
+We can suppose there is some (mathematical) function $\text{fl}: {\mathbb F} \to {\mathbb R}$ where $\text{fl}(x)$ takes a real number $x$ and maps it to the nearest $\tilde{x}$ in ${\mathbb F}$. For positive $x$ it lies in the interval $[2^e,2^{e+1})$ where the spacing between the elements is $2^{e-d}$. Hence $|\tilde{x} - x| \le \frac{1}{2} 2^{e-d}$. We can now consider the relative error between $\tilde{x}$ and $x$:
 $$
 \frac{|\tilde{x} - x|}{|x|} \le \frac{2^{e-d-1}}{2^e} \le \frac{1}{2} \varepsilon_{\text{mach}}.
 $$
@@ -497,7 +497,7 @@ using Zygote
 
 ### Numerical integration
 
-Numerical integration finds many useful applications in Applied Mathematics, Statistics, Science and Engineering. The standard problem is to find a numerical estimate of the definite integral of some function. Numerical methods for the approximate integration of univariate functions are usually refered to as quadrature methods and higher dimensional problems are refered to as cubature methods. As a starting point consider the 1D integral of the function $f(x)$ from $x=a$ to $x=b$
+Numerical integration finds many useful applications in Applied Mathematics, Statistics, Science and Engineering. The standard problem is to find a numerical estimate of the definite integral of some function. Numerical methods for the approximate integration of univariate functions are usually referred to as quadrature methods and higher dimensional problems are referred to as cubature methods. As a starting point consider the 1D integral of the function $f(x)$ from $x=a$ to $x=b$
 
 $$
 \int _{a}^{b}f(x)dx
@@ -521,7 +521,7 @@ $$
 \int _{a}^{b}f(x)dx \approx \frac{b - a}{6}\left[f(a)+4f\left(\frac{a+b}{2}\right)+f(b)\right]
 $$
 
-and so on and so on. In general the error of these methods reduces as the order of the polynomial increases. However an important special case is when the function is smooth is periodic, here midpoint and trapezoid rules have excellent convergence properies (beating the higher order methods), see below
+and so on and so on. In general the error of these methods reduces as the order of the polynomial increases. However an important special case is when the function is smooth is periodic, here midpoint and trapezoid rules have excellent convergence properties (beating the higher order methods), see below
 
 ```julia
 using SpecialFunctions
@@ -577,7 +577,7 @@ plot(p1,p2)
 
 The wild success of the simple integration methods for smooth periodic function methods explains why the [Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) sees such widespread use in Science and Engineering (for example in the [JPEG](https://en.wikipedia.org/wiki/JPEG) compression algorithm, well its close cousin the DCT).
 
-Higher dimensional integration methods (cubature) methods follow a similar approach but due to the poor scaling of computational complexity with dimension tend to feature advance adaptive methods to resize the grid the integral is performed on. See for example the rate of error increase with dimension in the following integral of a multivariate noraml distribution using a state of the art integration method
+Higher dimensional integration methods (cubature) methods follow a similar approach but due to the poor scaling of computational complexity with dimension tend to feature advance adaptive methods to resize the grid the integral is performed on. See for example the rate of error increase with dimension in the following integral of a multivariate normal distribution using a state of the art integration method:
 
 ```julia
 using HCubature
@@ -597,7 +597,7 @@ end
 
 ### Differential Equations
 
-Differential equations are the backbone of physical modelling in Science and Engineering and hence a vast amount of literature to the numerical solution of differential equations has been produced. Partial Differential Euqations require some special care for numerical analysis and won't be covered here. Ordinary Differential Equations are much more approachable (particularly initial value problems). In fact Julia features a state of the art library for the solution of Ordinary (and Stochastic) Differential Equations in [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl). A simple example is given below for a "spring-mass_damper" second order ODE.
+Differential equations are the backbone of physical modelling in Science and Engineering and hence a vast amount of literature to the numerical solution of differential equations has been produced. Partial Differential Equations require some special care for numerical analysis and won't be covered here. Ordinary Differential Equations are much more approachable (particularly initial value problems). In fact Julia features a state of the art library for the solution of Ordinary (and Stochastic) Differential Equations in [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl). A simple example is given below for a "spring-mass_damper" second order ODE.
 
 ```julia
 using DifferentialEquations, LinearAlgebra, Plots
@@ -657,7 +657,7 @@ $$
 y(t+h) = y(t) + h f\big(y(t)\big),
 $$
 
-A popular Higher Order Method are the Runge-Kutta Methods. These use intermediate points to approximate the derivative that have coefficents chosen to reduce the approximation error. The 4th order Runge-Kutta mthod is of the form
+A popular Higher Order Method are the Runge-Kutta Methods. These use intermediate points to approximate the derivative that have coefficients chosen to reduce the approximation error. The 4th order Runge-Kutta mthod is of the form
 
 $$
 y(t+h) = y(t) + \frac{h}{6}(k_1 + 2k_2 + 2k_3 +k_4),
