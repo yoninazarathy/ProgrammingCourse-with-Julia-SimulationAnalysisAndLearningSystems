@@ -441,7 +441,7 @@ x = 0.0
 n = 1e6
 
 for i = 1 : n
-    x += a
+    global x += a
 end
 
 error =  a*n - x
