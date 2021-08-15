@@ -5,6 +5,13 @@ Someplace here: The "declarative language paradigm" (SQL as an example) - contra
 
 ## Motivations from Algebra
 
+```julia
+using SymPy
+x = symbols("x")		       # or  @syms x
+y = sin(pi*x)
+y(1)                           # Does y.subs(x, 1). Use y(x=>1) to be specific as to which symbol to substitute
+```
+
 ### Existing Software
 
 * Symoblic mathematics in general overview (Maple, Mathematica, Magma, more rigourous systems...)
