@@ -427,7 +427,7 @@ As you can see, going by columns is much faster than going by rows. This is beca
 As the name implies, dictionaries refer to collections that keep **keys** and **values** and allow for efficient lookup. For example:
 
 ```julia
-#A dictionary mapping subburb to postcode
+#A dictionary mapping suburb to postcode
 dict = Dict{String,Int16}()
 dict["Saint Lucia"] = 4067
 dict["South Brisbane"] = 4101
@@ -467,14 +467,14 @@ end
 
 @show value_of_key(dict_keys,dict_values,"Rochdale")
 
-value_of_key(dict_keys,dict_values,"Taringa") #Will throw an error (
+value_of_key(dict_keys,dict_values,"Taringa") #Will throw an error
 ```
 
 ```
 ┌ Error: didn't find the key Taringa
 ```
 
-However you can probably see that the time complexity of `value_of_key()` is of the order $O(n)$ when $n$ is the number of keys. This is very time-consuming lookup. An  (on average) efficient way to implement dictionaries is via a [Hash table](https://en.wikipedia.org/wiki/Hash_table) data structure. We won't get into the details now, but (solely for those interested) refer this (more advanced talk) related to [alternative implementations of dictionaries](https://www.youtube.com/watch?v=Y-hAZcqAw28) (this is a recent talk by one of the course lecturers, Andy Ferris).
+However you can probably see that the time complexity of `value_of_key()` is of the order $O(n)$ when $n$ is the number of keys. This is a very time-consuming lookup. An  (on average) efficient way to implement dictionaries is via a [Hash table](https://en.wikipedia.org/wiki/Hash_table) data structure. We won't get into the details now, but (solely for those interested) refer this (more advanced talk) related to [alternative implementations of dictionaries](https://www.youtube.com/watch?v=Y-hAZcqAw28) (this is a recent talk by one of the course lecturers, Andy Ferris).
 
 ### Sets
 
@@ -516,7 +516,7 @@ my_set = Set(array_data)
 @show length(my_set); #Since this shows 10^5 as output it indicates all values were unique.
 ```
 
-Say now we want to lookup if an arbitrary number, `n` is in the set. If we were just using an array there is no good way to look for it better than $O(n)$. But in case of a set, seeing set membership is guaranteed to be much quicker.
+Say now we want to lookup if an arbitrary number, `n` is in the set. If we were just using an array there is no good way to look for it better than $O(n)$. But in the case of a set, seeing set membership is guaranteed to be much quicker.
 
 ```julia
 function do_timing()
@@ -545,13 +545,13 @@ do_timing();
 
 ### Priority queues, heaps, and back to sorting
 
-We can't cover all of the fundamental algorithms and data structures in this course, so we chose one non-trivial data structure to focus on. This is the [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)). It will be used here for sorting, used in Unit 5 for algebraic manipulations, and used in Unit 6 as an aid for discrete event simualtion.
+We can't cover all of the fundamental algorithms and data structures in this course, so we chose one non-trivial data structure to focus on. This is the [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)). It will be used here for sorting, used in Unit 5 for algebraic manipulations, and used in Unit 6 as an aid for discrete event simulation.
 
 Note: do not confuse the heap data structure with the other computer science usage of "heap", also known as "free store" which refers to the place in [memory](https://en.wikipedia.org/wiki/Memory_management) where allocations happen. In Julia the heap is used for allocations of immutable types and has garbage collection. More on that in Unit 4.
 
 Before starting to see what a heap does (we'll continue in more depth in future units on how it works), we'll discuss what we expect it to do - namely implement an efficient **priority queue**. 
 
-Consider for example a hypothetical situation where thousands of individuals attend a mass vaccination centre. As they arrive each individual, tagged by their name (a `String`) and recieves a priority for vaccination which is a number (say `Float32`). Assume (hypothetically) that the priority is a function of their age, their occupation (essential or not), and their medical condition. Hence there are many possible different priorities. 
+Consider for example a hypothetical situation where thousands of individuals attend a mass vaccination centre. As they arrive, each individual is tagged by their name (a `String`), and recieves a priority for vaccination which is a number (say `Float32`). Assume (hypothetically) that the priority is a function of their age, their occupation (essential or not), and their medical condition. Hence there are many possible different priorities. 
 
 Continuing with this example, assume the individuals queue (e.g. wait in a big arena or showgrounds area) and are only called when their priority is the highest (clearly high priority individuals won't queue much while others wait for a long while). The management system will then keep track of the priorities of the individuals and do the following:
 
@@ -561,7 +561,7 @@ Continuing with this example, assume the individuals queue (e.g. wait in a big a
 
 There are different alternatives for implementing such a data structure and in all cases the associated "collection" will be called a **priority queue**. It turns out that the heap data structure is the most efficient way to implement a priority (certainly if the number of items is large). But for starters lets consider some naive implemintations.
 
-A small digresion is to see the Julia type of **named tuples** which present one way of keep individuals:
+A small digression is to see the Julia type of **named tuples**; which present one way of keeping individuals:
 
 ```julia
 person_A = (priority = 23.2, name = "Zack") #This is a named tuple, 
@@ -635,7 +635,7 @@ Now in a scenario like a mass vaccination centre it isn't really a problem to us
 
 ##### The Heap data structure
 
-The [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)) is a smarter tree based way of keep the elements of a priority queue. With this data structure, finding the maximum is $O(1)$, deleting the maximum is $O(\log n)$, insertions are $O(\log n)$, and updating of a priority is $O(\log n)$. We'll see the way it is implemented in Unit 6, but for now we'll use it as a "black box".
+The [heap data structure](https://en.wikipedia.org/wiki/Heap_(data_structure)) is a smarter tree based way of keeping the elements of a priority queue. With this data structure, finding the maximum is $O(1)$, deleting the maximum is $O(\log n)$, insertions are $O(\log n)$, and updating of a priority is $O(\log n)$. We'll see the way it is implemented in Unit 6, but for now we'll use it as a "black box".
 
 One implementation we can use is from [DataStructures.jl](https://github.com/JuliaCollections/DataStructures.jl).
 
@@ -885,7 +885,7 @@ This includes low level interfaces between the running programs and hardware, as
 
 [Unix](https://en.wikipedia.org/wiki/Unix) is a classic operating system still very much in use today. Mac's operating system [macOS](https://en.wikipedia.org/wiki/MacOS) is based on Unix. Similarly, [Linux](https://en.wikipedia.org/wiki/Linux) is a Unix based system. The most popular desktop family of operating systems, [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) is not Unix based.
 
-Our focus is on the **shell**, or **command line interface** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knowledge as as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
+Our focus is on the **shell**, or **command line interface** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knowledge as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
 
 Note that when you run a Julia REPL, hitting `;` puts you in "shell mode" where the system's default shell is present. 
 
@@ -905,7 +905,7 @@ Key file navigation commands are:
 Key file manipulation commands are (be careful!):
 
 * `rm` remove.
-* `rmdir`remove (empty directory).
+* `rmdir` remove (empty directory).
 * `cp` copy.
 * `mv` move (also rename).
 
@@ -934,13 +934,13 @@ There are some commands dealing with processes:
 * `kill` a process.
 * `ps` see running processes.
 
-Here are some tools for dealing with useful networking tasks
+Here are some tools for dealing with useful networking tasks:
 
 * `curl` transfer data from a network with a variety of protocols supported
 * `wget` transfer data from a network (recursive downloads supported)
 * `ssh` cryptographic network protocol. Allows remote access to other machines.
 
-Finally some useful development tools
+Finally some useful development tools:
 
 * `gcc` GNU compiler collection
 * `make` useful tool for building applications
@@ -948,7 +948,7 @@ Finally some useful development tools
 
 ### A Note on the Unix Philosophy
 
-It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarized by Doug McIlroy (the inventor of Unix pipes) as
+It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarized by Doug McIlroy (the inventor of Unix pipes) as:
 
 * Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new features.
 * Expect the output of every program to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
@@ -959,12 +959,12 @@ It can be hard to quantify good software design. An informative approach is the 
 
 Working with software requires keeping track of versions and modifications. For this there is a set of best working practices that often depend on the task at hand. 
 
-The basic functionality of a version control system are 
+The basic functionality of a version control system are:
 
-* Keeping track of the history of software over time 
+* Keeping track of software history over time
 * Being able to revert changes to a previous point in time (in case you break something important) 
 * Being able to make, track and merge experimental functionality, while keeping a "good" version unpolluted 
-* Keeping a remote backup of the source code in case of a disaster.
+* Keeping a remote backup of the source code in case of a disaster
 * Allow teams of people to work in this way on a codebase without treading on each others toes (too much) 
 
 One very useful tool is [Git](https://en.wikipedia.org/wiki/Git). We will be using Git both via command line and via Visual Studio Code. Git interfaces with online platforms such as [GitHub](https://en.wikipedia.org/wiki/GitHub) and [GitLab](https://en.wikipedia.org/wiki/GitLab). You may use GUI based applications for GitHub, such as [GitHub Desktop](https://desktop.github.com/).
@@ -975,7 +975,7 @@ For a review of commands see this [cheat sheet](https://www.atlassian.com/git/tu
 
 An IDE is an acronym for an "Integrated Development Environment". The most basic development environment is simply a text file editor (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
 
-Features of an IDE that will make your life easier
+Features of an IDE that will make your life easier:
 
 * Text Editor
 * Source Code Navigation
@@ -991,7 +991,7 @@ In this course we recommend using [VSCode](https://code.visualstudio.com/), an o
 
 ### A Rough Field Guide to Software Licencing
 
-There are a vast number of licencing arrangements for dealing with the use of software and the availability of source code for the software. Two broad classes to be aware of
+There are a vast number of licencing arrangements for dealing with the use of software and the availability of source code for the software. Two broad classes to be aware of:
 
 * Proprietary Software
 * Free and Open Source Software
@@ -1000,15 +1000,15 @@ The source code for Proprietary Software is typically a closely guarded secret a
 
 Free and Open source does not mean that source code can always be used in whatever fashion is desired. Many different philosophies around why a particular developer or organisation wishes to distribute source code need to be respected.
 
-Open source code falls into three broad classes
+Open source code falls into three broad classes:
 
 * Permissive Licence (e.g. BSD, MIT, Apache)
 * Copyleft (e.g. GPL)
 * Public Domain (e.g. CC0)
 
-A rough summary is that Permissive licences tend to be favorable for commercial use of derived software, Copyleft makes derived works free to redistribute but they must also be Copyleft works and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
+A rough summary is that Permissive Licences tend to be favorable for commercial use of derived software, Copyleft makes derived works free to redistribute, but they must also be Copyleft works, and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
 
-Examples of Software released under different licences
+Examples of Software released under different licences:
 
 * Proprietary - Microsoft Windows, MacOS, MATLAB
 * Permissive - Julia (MIT), Python (PSFL), Android (Apache 2.0 for userspace, GPLv2 for kernel)
