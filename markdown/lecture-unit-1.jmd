@@ -50,7 +50,7 @@ println("Found maximal value: $(max_value)")
 println("There were $n records along the way.")
 ```
 
-But for different data (different seed) there is obviously possibiliy a different number of records...
+But for different data (different seed) obviously there are a different number of possible records...
 
 ```julia
 Random.seed!(1)
@@ -76,7 +76,7 @@ Now,
 $$
 {\mathbb E}[X_n] = {\mathbb E}[I_1] + {\mathbb E}[I_2] + \ldots + {\mathbb E}[I_n]. 
 $$
-Observe that ${\mathbb E}[I_i] = {\mathbb P}(I_i = 1)$ and for statistically independent and idenitcally distributed data points we have,
+Observe that ${\mathbb E}[I_i] = {\mathbb P}(I_i = 1)$ and for statistically independent and identically distributed data points we have,
 $$
 {\mathbb P}(I_i = 1) = \frac{1}{i},
 $$
@@ -129,7 +129,7 @@ println("log(100) + γ =  $(approx_h(100)), Monte Carlo Estimate: $(mean(records
 histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="probability",legend=false)
 ```
 
-## Premeble (before really getting into code)
+## Preamble (before really getting into code)
 
 Here is some general information to discuss before getting to the nitty gritty. 
 
@@ -138,10 +138,10 @@ Here is some general information to discuss before getting to the nitty gritty.
 You are coming to this course after doing several mathematics and statistics courses. Hence we assume you have already done some coding or scripting of sorts. For example you might have done a bit of [Python](https://en.wikipedia.org/wiki/Python_(programming_language)), some [MATLAB](https://en.wikipedia.org/wiki/MATLAB) scripting, used some code in [R](https://en.wikipedia.org/wiki/R_(programming_language)), or similar. In all these cases, we assume that you've already experienced a bit of the following:
 
 * You have written some commands/code that are later interpreted by the computer to execute actions.
-* You are aware that in a computer program you typically define variables, often giving them meaningful names.
+* You are aware that in a computer program you typically define variables; often giving them meaningful names.
 * You know that you can make computers do the same action again and again, by wrapping code in loops, often using conditional statements (`if`) to decide how the program should continue.
 * You have even used and/or written a few functions (or routines) where you specify how some action should be done and describe that action in a function.
-* You certaintly know how to use files, directories, and the internet. 
+* You certainly know how to use files, directories, and the internet. 
 * Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + several more math electives.
 
 [![Women coding image](../web_img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
@@ -158,27 +158,27 @@ We can live with this definition. Here are some notes and bits.
 
 Most computers today implement some form of the [von Neumann architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture). It means there are processing units (CPUs), memory, external (slower) storage, and multiple input out mechanisms. There are multiple forms to this but in most cases the following components exist:
 
-* A set of instructions is executed via hardware. The instructions are sometimes themselves encoded in hardward but are often written in software and can be changed.
+* A set of instructions is executed via hardware. The instructions are sometimes themselves encoded in hardware, but are often written in software and can be changed.
 * There is memory, and often multiple forms of memory. Fast memory near the CPU (cache), RAM (Random Access Memory) allowing the CPU to compute, disk memory, and even more memory (almost infinite) on the internet.
 * There are often higher order abstractions that organize the way instructions are executed by the CPU(s). This is typically an operating system (Linux, Mac OS, Windows, iOS, Android, etc...).
 
-You should also know of the conceptual mathematical model of a computer which is typically the [Turing machine](https://en.wikipedia.org/wiki/Turing_machine). The nice thing about such an abstraction is that it often helps understand what and how certain algorithms operate, as well as their limitations. There are also related computer theoretic notions such as [Finite Automata](https://en.wikipedia.org/wiki/Deterministic_finite_automaton). We don't get too much into such computer-science/discrete-math notions in the course. However, it is very interesting stuff, that lies at the centre of mathematics and computer science. 
+You should also know of the conceptual mathematical model of a computer which is typically the [Turing machine](https://en.wikipedia.org/wiki/Turing_machine). The nice thing about such an abstraction is that it often helps understand what and how certain algorithms operate, as well as their limitations. There are also related computer theoretic notions such as [Finite Automata](https://en.wikipedia.org/wiki/Deterministic_finite_automaton). We don't get too much into such computer science/discrete math notions in the course. However, it is very interesting stuff, that lies at the centre of mathematics and computer science. 
 
 [![Alan Turing](../web_img/alan-turing.jpg)](https://en.wikipedia.org/wiki/Alan_Turing)
 
 #### The culture of software development and Who is a programmer?
 
-Two software aphorisms to consider as you progress
+Two software aphorisms to consider as you progress:
 
 * "code is read much more often than it is written"
 * "There are only two hard things in Computer Science: cache invalidation and naming things"
 
-Some general observations of the teething difficulties of working in software as a mathematician
+Some general observations of the teething difficulties of working in software as a mathematician:
 
 * Big complaint of software engineers interacting with mathematicians is "black box of code that isn't easy to follow".
 * In academia, code is an artifact of doing research work. Outside academia code is the output.
 * If code was treated like writing a paper (or was a research output valued by itself), this transition would be smoother.
-* Mathematicians can bring value at many levels of an organisation, you will be interacting with a diverse set of people. Communication skills are important. Treat code as one way of communicating.
+* Mathematicians can bring value at many levels of an organisation, as you will be interacting with a diverse set of people. Communication skills are important, so treat code as one way of communicating.
 
 #### Bits, bytes, hex, binary, and the works...
 
@@ -318,7 +318,7 @@ println("y = $(display_bool_array(y_bool))", "\n")
 
 ```
 
-It is a useful exercise to consider how an equivalent logic based approach might work for other seemingly simple operations such as multiplication? Also consider how many discrete operations are required as the size of the binary representation increases?
+It is a useful exercise to consider how an equivalent logic based approach might work for other seemingly simple operations such as multiplication. Also, consider how many discrete operations are required, as the size of the binary representation increases.
 
 Binary data considered as a string can often appear as hex. 
 
@@ -328,7 +328,7 @@ data_as_binary = hex2bytes(data_as_string)
 @show data_as_binary;
 ```
 
-Bit shift operations are efficient and allow to multiply or divide by powers of 2.
+Bit shift operations are efficient and allow you to multiply or divide by powers of 2.
 
 ```julia
 x = 0b101
@@ -430,9 +430,9 @@ sqrt.(squares)
 * Variables (also complex types)
 * Types (basic story about types)
 * Many methods for the one function
-* The Babilonian algorithm 
+* The Babylonian algorithm 
 * Broadcasting as well
-* The "quakeIII" algorithm for the receiprocal of square root a Float32 
+* The "quakeIII" algorithm for the reciprocal of square root Float32 
 
 ```julia
 sqrt(25)
@@ -457,7 +457,7 @@ sqrt(Complex(-1))
 √2 #\sqrt + [TAB]
 ```
 
-In julia a function (such as `sqrt` or its alias `√`) can have many methods:
+In Julia a function (such as `sqrt` or its alias `√`) can have many methods:
 
 ```julia
 @which sqrt(2)
@@ -494,9 +494,9 @@ But how is such an algorithm implemented? In Julia's source code, in [`math.jl`]
 end
 ```
 
-Here `sqrt_llvm()` compiles to [Low Level Virtual Machine(LLVM)](https://en.wikipedia.org/wiki/LLVM), so while many functions in Julia are actually implemented in Julia, with square roots it is better to let the underlying low level (LLVM) code handle square roots because it is later changed to assembly code which is very fast. You can inspect this via the macros `@code_llvm` and `@code_native`.  
+Here `sqrt_llvm()` compiles to [Low Level Virtual Machine(LLVM)](https://en.wikipedia.org/wiki/LLVM), so while many functions in Julia are actually implemented in Julia, with square roots it is better to let the underlying low level (LLVM) code handle square roots because it is later changed to assembly code; which is very fast. You can inspect this via the macros `@code_llvm` and `@code_native`.  
 
-This will generally look the same on different computer types (LLVM is hardward agnostic):
+This will generally look the same on different computer types (LLVM is hardware agnostic):
 
 ```julia
 @code_llvm sqrt(2.5)
@@ -516,12 +516,12 @@ sqrt(big(10)^100)
 
 What are (in principle) some [methods to compute square roots](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots)? Let's look at them and implement them.
 
-One method is the [Babylonian algorithm](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method): Say we are given a number positive real number $z$ and want it's square root. We start with an initial guess $x_0$. We then apply the recursive step,
+One method is the [Babylonian algorithm](https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method): Say we are given a positive real number $z$ and want its square root. We start with an initial guess $x_0$. We then apply the recursive step,
 
 $$
 x_{k+1} = \frac{1}{2}\Big(x_k+\frac{z}{x_k}\Big).
 $$
-That is, at each step the next iterate is the arithmetic mean of the previous iterate, $x_k$, and $z/x_k$. The Babylonian algorithm is to run this iteration until convergence (note the default initial guess in this implemintation is $z/2$):
+That is, at each step the next iterate is the arithmetic mean of the previous iterate, $x_k$, and $z/x_k$. The Babylonian algorithm runs this iteration until convergence (note the default initial guess in this implementation is $z/2$):
 
 ```julia
 function bab_sqrt(z ; init_x = z/2, verbose = false, tol = 1e-10)
@@ -539,13 +539,13 @@ bs, s = bab_sqrt(5000;verbose = true), sqrt(5000)
 println("Babylonian:\t$bs\nSystem:\t\t$s")
 ```
 
-We can view the ancient Babylonian method as an application of the more general [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) for solving equations. Our goal is to solve $x^2 = z$ where $z$ is given and $x$ is desired. That is define $f(x) = x^2 - z$ and we wish to fine the solution of $f(x) = 0$. Newton's method iterates,
+We can view the ancient Babylonian method as an application of the more general [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) for solving equations. Our goal is to solve $x^2 = z$ where $z$ is given and $x$ is desired. That is define $f(x) = x^2 - z$ and we wish to find the solution of $f(x) = 0$. Newton's method iterates,
 
 $$
 x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)},
 $$
 
-based on an affine (linear) approximation of $f(\cdot)$ at the point $x_k$. Here $f'(\cdot)$ is the derivative which in our case is, $f'(x) = 2x$. So Newton's iterates for finding the square root are,
+based on an affine (linear) approximation of $f(\cdot)$ at the point $x_k$. Here $f'(\cdot)$ is the derivative, which in our case is $f'(x) = 2x$. So Newton's iterates for finding the square root are,
 
 $$
 x_{k+1} = x_k - \frac{x_k^2-z}{2 x_k} = \frac{x_k}{2} + \frac{z}{2x_k} = \frac{1}{2}\Big(x_k+\frac{z}{x_k}\Big).
@@ -563,7 +563,7 @@ $$
 \overline{u} = \frac{1}{\|u\|} u = \frac{1}{\sqrt{u_1^2 + u_2^2}} u.
 $$
 
-We could obviously just compute the reciprical $1/\sqrt{z}$ by dividing by $1$, for example in the case of the vector normalization we can do this in Julia in multiple ways:
+We could obviously just compute the reciprocal $1/\sqrt{z}$ by dividing by $1$, for example in the case of the vector normalization we can do this in Julia in multiple ways:
 
 ```julia
 using LinearAlgebra
@@ -585,7 +585,7 @@ uN5 = u/sqrt(dot(u,u))
 @show uN5;
 ```
 
-However for the interest of it, lets consider another way to do it which is specific for 32bit floating point numbers: The [Fast Inverse Square Root Algorithm](https://en.wikipedia.org/wiki/Fast_inverse_square_root). This is the code in the [C Language](https://en.wikipedia.org/wiki/C_(programming_language)) as appearing originally.
+However for the interest of it, lets consider another way to do it which is specific for 32bit floating point numbers: The [Fast Inverse Square Root Algorithm](https://en.wikipedia.org/wiki/Fast_inverse_square_root). This is how the original code appeared in the [C Language](https://en.wikipedia.org/wiki/C_(programming_language)).
 
 ```
 float Q_rsqrt( float number )
@@ -606,7 +606,7 @@ float Q_rsqrt( float number )
 }
 ```
 
-Here is what the equivalent code looks like in Julia
+Here is the equivalent code in Julia.
 
 ```julia
 function fast_inv_sqrt(number::Float32)
@@ -627,7 +627,7 @@ y = fast_inv_sqrt(x)
 print("1/√(4) ≈ $(y)")
 ```
 
-Click the image below to watch a video with a detailed explaination of the algorithm:
+Click the image below to watch a video with a detailed explanation of the algorithm:
 
 [![Fast Inverse Square Root](http://img.youtube.com/vi/p8u_k2LIZyo/0.jpg)](http://www.youtube.com/watch?v=p8u_k2LIZyo "Fast Inverse Square Root")
 
@@ -668,7 +668,7 @@ n \cdot (n-1)! & n = 1,2,\ldots\\
 \end{cases}
 $$
 
-This is a recursive definition. Let's implement it
+This is a recursive definition. Let's implement it:
 
 ```julia
 function my_factorial(n)
@@ -733,7 +733,7 @@ And use Julia's `@code_lowered` macro to see how Julia parses the code into an i
 @code_lowered my_factorial2(10)
 ```
 
-How big of factorials can we compute? With `BigInt`, created via `big()`, there is sometimes no limit, but if we wanted to stay within the machine word size, we stay with `Int64` (with Julia `Int` is either `Int32` on "32 bit machines" or `Int64` on "64 bit machines). But even 32 bit machines support 64 bit integers (by doubling words).
+How large can factorials we compute be? With `BigInt`, created via `big()`, there is sometimes no limit, but if we wanted to stay within the machine word size, we stay with `Int64` (with Julia `Int` is either `Int32` on "32 bit machines" or `Int64` on "64 bit machines). But even 32 bit machines support 64 bit integers (by doubling words).
 
 Lets first use [Stirling's approximation](https://en.wikipedia.org/wiki/Stirling%27s_approximation) to get an estimate of the largest factorial we can compute with `UInt64`.
 
@@ -743,7 +743,7 @@ $$
 
 To see the approximation isn't unreasonable, observe that $n! \le n^n$ (why?) but isn't so far either. 
 ```julia
-#An array of named tuples (note that "n!" is just a name
+#An array of named tuples (note that "n!" is just a name)
 [(n! = factorial(n), n2n = n^n, ratio = factorial(n)/(n^n)) for n in 1:10]
 ```
 
@@ -763,7 +763,7 @@ So let's use Stirling to see how big $n$ can be to fit in `UInt64`. That is solv
 $$
 \sqrt{2 \pi} \, n^{n+\frac{1}{2}} e^{-n}  = 2^{64}-1.
 $$
-There are multiple ways to try to do this. We'll use floating point numbers and just search. Observe before this,
+There are multiple ways to try to do this. We'll use floating point numbers and just search. Observe this:
 
 ```julia
 2^64-1, typeof(2^64-1) #This is a signed integer by default
@@ -790,7 +790,7 @@ In general,
 @show typemax(Float64);
 ```
 
-Here is the search (to simplify lets focus on signed integers): 
+Here is the search (to simplify let's focus on signed integers): 
 
 ```julia
 limit = typemax(Int64)
@@ -851,7 +851,7 @@ using SpecialFunctions #You'll need to add (install) SpecialFunctions
 gamma(6.5)
 ```
 
-To feel more confident this value makes agrees with the integral definition of $\Gamma(\cdot)$, let's compute the integral in a very crude manner ([Riemann_sum](https://en.wikipedia.org/wiki/Riemann_sum)):
+To feel more confident this value agrees with the integral definition of $\Gamma(\cdot)$; let's compute the integral in a very crude manner ([Riemann_sum](https://en.wikipedia.org/wiki/Riemann_sum)):
 
 ```julia
 function my_crude_gamma(z; delta= 0.01, M = 50)
