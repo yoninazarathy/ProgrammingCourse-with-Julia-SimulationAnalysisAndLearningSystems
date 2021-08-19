@@ -23,6 +23,15 @@ y(1)                           # Does y.subs(x, 1). Use y(x=>1) to be specific a
 * Polynomial Representation
 * Example: Bitpacking example/discussion...  
 
+## Another look at Julia
+
+#### [Functions](https://docs.julialang.org/en/v1/manual/functions/)
+
+* [Argument destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
+
+
+
+
 ## Types and the Type System
 
 ### Julia types
