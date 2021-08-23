@@ -12,8 +12,6 @@ y = sin(pi*x)
 y(1)                           # Does y.subs(x, 1). Use y(x=>1) to be specific as to which symbol to substitute
 ```
 
-### Existing Software
-
 * Symoblic mathematics in general overview (Maple, Mathematica, Magma, more rigourous systems...)
 * Usage of an existing package in Julia - example (Symbolics.jl / SimPy.jl.....)
 
@@ -28,11 +26,24 @@ y(1)                           # Does y.subs(x, 1). Use y(x=>1) to be specific a
 #### [Functions](https://docs.julialang.org/en/v1/manual/functions/)
 
 * [Argument destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
+* [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
+* [Optional arguments](https://docs.julialang.org/en/v1/manual/functions/#Optional-Arguments)
+* [Keyword arguments](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments)
+* [Do Block Syntax for Function Arguments](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)
+* [Function composition and piping](https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping)
+* [Dot Syntax for Vectorizing Functions](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized)
 
+#### Exception handling and errors
 
+See [control flow in Julia docs](https://docs.julialang.org/en/v1/manual/control-flow/)
+
+#### Variable scope
+See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/)
 
 
 ## Types and the Type System
+
+See [types in the Julia docs](https://docs.julialang.org/en/v1/manual/types/)
 
 ### Julia types
 
@@ -166,39 +177,20 @@ println(person)
  * Constructors (without the nuiencens of inner vs. outer etc... at this point).
  * Discussion of what you would see in terms of types in other languages
 
- ### Multiple Dispatch
+ ### Methods and Multiple Dispatch
 
-* The idea of multiple dispatch (functions and methods) - and how it allows to create generalized code
+[See methods in Julia docs](https://docs.julialang.org/en/v1/manual/methods/)
 
+### More on Constructors 
 
- * Multiple dispatch
+[See constructors in Julia docs](https://docs.julialang.org/en/v1/manual/constructors/)
 
-QQQQ - More work here....
+### Conversion and Promotion
 
+[See conversion and promotion in Julia docs](https://docs.julialang.org/en/v1/manual/conversion-and-promotion/)
+
+### Programming to an interface
+
+[See interfacs in Julia docs](https://docs.julialang.org/en/v1/manual/interfaces/)
 
  Goal: [Case Study of Rational](https://docs.julialang.org/en/v1/manual/constructors/#Case-Study:-Rational)
-
-
-### More on User Defined Types
-
- multiple dispatch
- defining structures
- designing types
- mutability
-
-
-## Some More Datastrcutures
-
-### Dictionaries and Hash
-
-* Dictionaries and Julia `Dict()` from a user perspective.
-* Hash tables (example implementation).
-* More dicussion hash functions (and other applications in computer science).
-
-### Heaps 
-
-* The heap data structure
-* Analytic analysis of heaps, O(log n) insert, etc... "heapify"
-* Mathematical analysis of performance
-* Data representation (dangled vs. in an array...)
-* Using a heap object (from a package)...
