@@ -965,6 +965,11 @@ git-tree-sha1 = "0d1245a357cc61c8cd61934c07447aa569ff22e6"
 uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 version = "1.1.0"
 
+[[Primes]]
+git-tree-sha1 = "afccf037da52fa596223e5a0e331ff752e0e845c"
+uuid = "27ebfcd6-29c5-5fa9-bf4b-fb8fc14df3ae"
+version = "0.5.0"
+
 [[Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
@@ -1058,6 +1063,12 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "68db32dff12bb6127bac73c209881191bf0efbb7"
 uuid = "f50d1b31-88e8-58de-be2c-1cc44531875f"
 version = "0.3.0+0"
+
+[[Roots]]
+deps = ["CommonSolve", "Printf"]
+git-tree-sha1 = "06ba8114bf7fc4fd1688e2e4d2259d2000535985"
+uuid = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
+version = "1.2.0"
 
 [[RuntimeGeneratedFunctions]]
 deps = ["ExprTools", "SHA", "Serialization"]

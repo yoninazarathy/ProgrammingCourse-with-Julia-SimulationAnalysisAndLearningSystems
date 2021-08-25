@@ -161,7 +161,7 @@ $$
 3. The theory of non-negative matrices implies that $P$ has a a real eigenvalue equal to $1$. This is the eigenvalue with maximal magnitude among all eigenvalues of $P$. The vector $\pi$ is proportional to the eigenvector associated with this maximal eigenvalue ($\sum_{i=1}^L \pi_i =1$).
 1. Given a sequence of random variables from this Markov chain $\{X_0,X_1,X_2,\ldots\}$ we estimate $\pi_i$ for large $N$ via,
 $$
-\pi_i \approx \frac{1}{n} \sum_{n=1}^N {\mathbf 1} \{X_n = i\}, 
+\pi_i \approx \frac{1}{N} \sum_{n=1}^N {\mathbf 1} \{X_n = i\}, 
 $$
 where ${\mathbf 1}\{\cdot\}$ is the indicator function equalling $1$ if the argument occurs, and $0$ otherwise. This is true for any initial probability vector $p^{0}$.
 
