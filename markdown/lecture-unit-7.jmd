@@ -26,6 +26,123 @@
 
 # Basic regression and classification Problems
 
+```julia
+using Flux, Flux.Data.MNIST, LinearAlgebra
+using Flux: onehotbatch
+
+imgs   = Flux.Data.MNIST.images()
+labels = Flux.Data.MNIST.labels()
+nTrain = length(imgs)
+trainData = vcat([hcat(float.(imgs[i])...) for i in 1:nTrain]...)
+trainLabels = labels[1:nTrain]
+testImgs = Flux.Data.MNIST.images(:test)
+testLabels = Flux.Data.MNIST.labels(:test)
+nTest = length(testImgs)
+testData = vcat([hcat(float.(testImgs[i])...) for i in 1:nTest]...)
+
+A = [ones(nTrain) trainData]
+Adag = pinv(A)
+tfPM(x) = x ? +1 : -1
+yDat(k) = tfPM.(onehotbatch(trainLabels,0:9)'[:,k+1])
+bets = [Adag*yDat(k) for k in 0:9]
+
+classify(input) = findmax([([1 ; input])'*bets[k] for k in 1:10])[2]-1
+
+predictions = [classify(testData[k,:]) for k in 1:nTest]
+confusionMatrix = [sum((predictions .== i) .& (testLabels .== j))
+				for i in 0:9, j in 0:9]
+accuracy = sum(diag(confusionMatrix))/nTest
+
+println("Accuracy: ", accuracy, "\nConfusion Matrix:")
+show(stdout, "text/plain", confusionMatrix)
+```
+
+```julia
+using Flux.Data.MNIST, DecisionTree, Random
+Random.seed!(0)
+
+trainImgs   = MNIST.images()
+trainLabels = MNIST.labels()
+nTrain = length(trainImgs)
+trainData = vcat([hcat(float.(trainImgs[i])...) for i in 1:nTrain]...)
+
+testImgs = MNIST.images(:test)
+testLabels = MNIST.labels(:test)
+nTest = length(testImgs)
+testData = vcat([hcat(float.(testImgs[i])...) for i in 1:nTest]...)
+
+numFeaturesPerTree = 10
+numTrees = 40
+portionSamplesPerTree = 0.7
+maxTreeDepth = 10
+
+model = build_forest(trainLabels, trainData, 
+                    numFeaturesPerTree, numTrees, 
+                    portionSamplesPerTree, maxTreeDepth)
+println("Trained model:")
+println(model)
+
+predicted_labels = [apply_forest(model, testData[k,:]) for k in 1:nTest]
+accuracy = sum(predicted_labels .== testLabels)/nTest
+println("\nPrediction accuracy (measured on test set of size $nTest): ",accuracy)
+```
+
+```julia
+using Flux, Flux.Data.MNIST, Statistics, BSON, Random, Plots
+using Flux: onehotbatch, onecold, crossentropy
+Random.seed!(0)
+
+epochs = 30
+eta = 5e-3
+batchSize = 1000
+trainRange, validateRange = 1:5000, 5001:10000
+
+function minibatch(x, y, indexRange)
+    xBatch = Array{Float32}(undef, size(x[1])..., 1, length(indexRange))
+    for i in 1:length(indexRange)
+        xBatch[:, :, :, i] = Float32.(x[indexRange[i]])
+    end
+    return (xBatch, onehotbatch(y[indexRange], 0:9))
+end
+
+trainLabels = MNIST.labels()[trainRange]
+trainImgs = MNIST.images()[trainRange]
+mbIdxs = Iterators.partition(1:length(trainImgs), batchSize)
+trainSet = [minibatch(trainImgs, trainLabels, bi) for bi in mbIdxs]
+
+validateLabels = MNIST.labels()[validateRange]
+validateImgs = MNIST.images()[validateRange]
+validateSet = minibatch(validateImgs, validateLabels, 1:length(validateImgs))
+
+model1= Chain(flatten, Dense(784, 200,relu),Dense(200, 100,tanh),
+				Dense(100, 10,sigmoid), softmax)
+
+model2= Chain(Conv((5, 5), 1=>8, relu), MaxPool((2,2)),
+                Conv((3, 3), 8=>16, relu), MaxPool((2,2)),
+                flatten, Dense(400, 10), softmax)
+
+opt1 = ADAM(eta); opt2 = ADAM(eta)
+accuracyPaths = [[],[]]
+accuracy(x, y, model) = mean(onecold(model(x)) .== onecold(y))
+loss(x, y, model) = crossentropy(model(x), y)
+cbF1() = push!(accuracyPaths[1],accuracy(validateSet..., model1))
+cbF2() = push!(accuracyPaths[2],accuracy(validateSet..., model2))
+
+model1(trainSet[1][1]); model2(trainSet[1][1])
+for _ in 1:epochs
+    Flux.train!((x,y)->loss(x,y,model1), params(model1), trainSet, opt1, cb=cbF1)
+    Flux.train!((x,y)->loss(x,y,model2), params(model2), trainSet, opt2, cb=cbF2)
+	print(".")
+end
+
+println("\nModel1 (Dense) accuracy = ", accuracy(validateSet..., model1))
+println("Model2 (Convolutional) accuracy = ", accuracy(validateSet..., model2))
+plot(accuracyPaths,label = ["Dense" "Convolutional"],
+	ylim=(0.7,1.0), xlabel="Batch number", ylabel = "Validation Accuracy")
+```
+
+
+
 * Basic stuff with GLM (again) - examples of Metaprogramming here.
 * Usage of black box neural network `MetalHead.jl`  (motivation - we won't do more with Neural Networks)
 * Least squares `pinv()` on MNIST or similar.

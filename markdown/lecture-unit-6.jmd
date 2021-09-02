@@ -7,22 +7,359 @@
 * Testing for "randomness"
 * The state of the art: Mersenee Twister and RNG objects
 
+```julia
+using Plots, LaTeXStrings, Measures
+
+a, c, m = 69069, 1, 2^32
+next(z) = (a*z + c) % m
+
+N = 10^6
+data = Array{Float64,1}(undef, N)
+
+x = 808
+for i in 1:N
+    data[i] = x/m
+    global x = next(x)
+end
+
+p1 = scatter(1:1000, data[1:1000], 
+    c=:blue, m=4, msw=0, xlabel=L"n", ylabel=L"x_n")
+p2 = histogram(data, bins=50, normed=:true, 
+    ylims=(0,1.1), xlabel="Support", ylabel="Density")
+plot(p1, p2, size=(800, 400), legend=:none, margin = 5mm)
+```
+
+
 ## From Uniform(0,1) to an arbitrary distribution
 
 * Inverse probability transform
 * Rejection sampling
 * Box-Muller Gaussians
 
+```julia
+using Distributions, Plots
+
+triangDist = TriangularDist(0,2,1)
+xGrid = 0:0.1:2
+N = 10^6
+inverseSampledData = quantile.(triangDist,rand(N))
+
+histogram( inverseSampledData, bins=30, normed=true,
+	ylims=(0,1.1), label="Inverse transform data")
+plot!( xGrid, pdf.(triangDist,xGrid), c=:red, lw=4, 
+	xlabel="x", label="PDF", ylabel = "Density", legend=:topright)
+```
+
+```julia
+using StatsBase, Distributions, Plots
+
+function prn(lambda)
+    k, p = 0, 1
+    while p > MathConstants.e^(-lambda)
+        k += 1
+        p *= rand()
+    end
+    return k-1
+end
+
+xGrid, lambda, N = 0:16, 5.5, 10^6
+
+pDist = Poisson(lambda)
+bPmf = pdf.(pDist,xGrid)
+data = counts([prn(lambda) for _ in 1:N],xGrid)/N
+
+plot( xGrid, data, 
+	line=:stem, marker=:circle, 
+	c=:blue, ms=10, msw=0, lw=4, label="MC estimate")
+plot!( xGrid, bPmf, line=:stem, 
+	marker=:xcross, c=:red, ms=6, msw=0, lw=2, label="PMF",
+	ylims=(0,0.2), xlabel="x", ylabel="Probability of x events")
+```
+
+```julia
+using Random, Distributions, Plots
+Random.seed!(1)
+
+Z() = sqrt(-2*log(rand()))*cos(2*pi*rand())
+xGrid = -4:0.01:4
+
+histogram([Z() for _ in 1:10^6], bins=50, 
+		normed=true, label="MC estimate")
+plot!(xGrid, pdf.(Normal(),xGrid), 
+	 c=:red, lw=4, label="PDF", 
+	 xlims=(-4,4), ylims=(0,0.5), xlabel="x", ylabel="f(x)")
+```
+
 # Basic Monte Carlo based statistical analysis
 
 * Discussion/quick demo Bootstrap confidence intervals..
 * Discussion of MCMC
 
+```julia
+using Distributions, Plots
+
+alpha, beta = 8, 2
+prior(lam) = pdf(Gamma(alpha, 1/beta), lam)
+data = [2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]
+
+like(lam) = *([pdf(Poisson(lam),x) for x in data]...)
+posteriorUpToK(lam) = like(lam)*prior(lam)
+
+sig = 0.5
+foldedNormalPDF(x,mu) = (1/sqrt(2*pi*sig^2))*(exp(-(x-mu)^2/2sig^2)
+                                                + exp(-(x+mu)^2/2sig^2))
+foldedNormalRV(mu) = abs(rand(Normal(mu,sig)))
+
+function sampler(piProb,qProp,rvProp)
+    lam = 1
+    warmN, N = 10^5, 10^6
+    samples = zeros(N-warmN)
+
+    for t in 1:N
+        while true
+            lamTry = rvProp(lam)
+            L = piProb(lamTry)/piProb(lam)
+            H = min(1,L*qProp(lam,lamTry)/qProp(lamTry,lam))
+            if rand() < H
+                lam = lamTry
+                if t > warmN
+                    samples[t-warmN] = lam
+                end
+                break
+            end
+        end
+    end
+    return samples
+end
+
+mcmcSamples = sampler(posteriorUpToK,foldedNormalPDF,foldedNormalRV)
+println("MCMC Bayes Estimate: ",mean(mcmcSamples))
+
+stephist(mcmcSamples, bins=100, 
+	c=:black, normed=true, label="Histogram of MCMC samples")
+
+lamRange = 0:0.01:10
+plot!(lamRange, prior.(lamRange), 
+	c=:blue, label="Prior distribution")
+
+closedFormPosterior(lam)=pdf(Gamma(alpha + sum(data),1/(beta+length(data))),lam)
+plot!(lamRange, closedFormPosterior.(lamRange), 
+	c=:red, label="Posterior distribution", 
+	xlims=(0, 10), ylims=(0, 1.2),
+    xlabel=L"\lambda",ylabel="Density")
+```
+
 # Markov Chains (back to it from HW2 question)
+
+```julia
+using LinearAlgebra, Statistics, StatsBase, Plots
+
+n, N = 5, 10^6
+P = diagm(-1 => fill(1/3,n-1),
+           0 => fill(1/3,n),
+           1 => fill(1/3,n-1))
+P[1,n], P[n,1] = 1/3, 1/3
+
+A = UpperTriangular(ones(n,n))
+C = P*A
+
+function f1(x,u)
+    for xNew in 1:n
+        if u <= C[x+1,xNew]
+            return xNew-1
+        end
+    end
+end
+
+f2(x,xi) = mod(x + xi , n)
+
+function countTau(f,rnd)
+    t = 0
+    visits = fill(false,n)
+    state = 0
+    while sum(visits) < n
+        state = f(state,rnd())
+        visits[state+1] |= true
+        t += 1
+    end
+    return t-1
+end
+
+data1 = [countTau(f1,rand) for _ in 1:N]
+data2 = [countTau(f2,()->rand([-1,0,1]) ) for _ in 1:N]
+est1, est2 = mean(data1), mean(data2)
+c1, c2 = counts(data1)/N,counts(data2)/N
+println("Estimated mean value of tau using f1: ",est1)
+println("Estimated mean value of tau using f2: ",est2)
+println("\nThe matrix P:", P)
+scatter(4:33,c1[1:30], 
+	c=:blue, ms=5, msw=0, 
+	label="Transition probability matrix")
+scatter!(4:33,c2[1:30], 
+	c=:red, ms=5, msw=0, shape=:cross, 
+	label="Stochastic recursive formula", xlabel="Time", ylabel="Probability")
+```
+
 * Markov chain simulation
 * Mention continuous time...
 
 # Discrete event simulation basics
+
+```julia
+using Distributions, Random, Plots
+Random.seed!(0)
+
+beta, delta, gamma = 0.25, 0.4, 0.1
+initialInfect = 0.025
+M = 1000
+I0 = Int(floor(initialInfect*M))
+N = 30
+
+function simulateSIRDoobGillespie(beta,delta,gamma,I0,M,T)
+    t, S, E, I, R = 0.0, M-I0, 0, I0, 0
+    tValues, sValues, eValues, iValues, rValues = [0.0], [S], [E], [I], [R]
+    while t<T
+        infectionRate = beta*I*S
+        symptomRate = delta*E
+        removalRate = gamma*I
+        totalRate = infectionRate + symptomRate + removalRate
+        probs = [infectionRate, symptomRate, removalRate]/totalRate
+        t += rand(Exponential(1/(totalRate)))
+        u = rand()
+        if u < probs[1]
+            S -= 1; E += 1
+        elseif u < probs[1] + probs[2]
+            E -=1; I+=1
+        else
+            I -= 1; R += 1
+        end
+        push!(tValues,t)
+        push!(sValues,S);push!(eValues,E);push!(iValues,I);push!(rValues,R)
+        I == 0 && break
+    end
+    return [tValues, sValues, eValues, iValues, rValues]
+end
+
+tV,sV,eV,iV,rV = simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)
+lastT = tV[end]
+
+finals = [simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)[5][end] 
+                for _ in 1:N]/M
+
+p1 = plot(tV,sV/M,label = "Susceptible", c=:green)
+plot!(tV,eV/M,label = "Exposed", c=:blue)
+plot!(tV,iV/M,label = "Infected",c=:red)
+plot!(tV,rV/M,label = "Removed", c=:yellow,
+    xlabel = "Time", ylabel = "Proportion",
+    legend = :topleft, xlim = (0,lastT*1.05))
+scatter!(lastT*1.025*ones(N),finals, c = :yellow,label= "Final Infected")
+```
+
+```julia
+using Distributions, Random, Plots
+Random.seed!(4)
+
+function simulateMM1DoobGillespie(lambda,mu,Q0,T)
+    t, Q = 0.0 , Q0
+    tValues, qValues = [0.0], [Q0]
+    while t<T
+        if Q == 0
+            t += rand(Exponential(1/lambda))
+            Q = 1
+        else
+            t += rand(Exponential(1/(lambda+mu)))
+            Q += 2(rand() < lambda/(lambda+mu)) -1
+        end
+        push!(tValues,t)
+        push!(qValues,Q)
+    end
+    return [tValues, qValues]
+end
+
+function stichSteps(epochs,q)
+    n = length(epochs)
+    newEpochs  = [ epochs[1] ]
+    newQ = [ q[1] ]
+    for i in 2:n
+        push!(newEpochs,epochs[i])
+        push!(newQ,q[i-1])
+        push!(newEpochs,epochs[i])
+        push!(newQ,q[i])
+    end
+    return [newEpochs, newQ]
+end
+
+lambda, mu = 0.7, 1.0
+Tplot, Testimation = 200, 10^7
+Q0 = 20
+
+eL,qL = simulateMM1DoobGillespie(lambda, mu ,Q0, Testimation)
+meanQueueLength = (eL[2:end]-eL[1:end-1])'*qL[1:end-1]/last(eL)
+rho = lambda/mu
+println("Estimated mean queue length: ", meanQueueLength )
+println("Theoretical mean queue length: ", rho/(1-rho) )
+
+epochs, qValues = simulateMM1DoobGillespie(lambda, mu, Q0,Tplot)
+epochsForPlot, qForPlot = stichSteps(epochs,qValues)
+plot(epochsForPlot,qForPlot, 
+	c=:blue, xlims=(0,Tplot), ylims=(0,25), xlabel="Time",
+	ylabel="Customers in queue", legend=:none)
+
+```
+
+```julia
+using Distributions, Random
+Random.seed!(1)
+
+function queueDES(T, arrF, serF, capacity = Inf, initQ = 0)
+    t, q, qL = 0.0, initQ, 0.0
+
+    nextArr, nextSer = arrF(), q == 0 ? Inf : serF()
+    while t < T
+        tPrev, qPrev = t, q
+        if nextSer < nextArr
+            t = nextSer
+            q -= 1
+            if q > 0
+                nextSer = t + serF()
+            else
+                nextSer = Inf
+            end
+        else
+            t = nextArr
+            if q == 0
+                nextSer = t + serF()
+            end
+            if q < capacity
+                q += 1
+            end
+            nextArr = t + arrF()
+        end
+        qL += (t - tPrev)*qPrev
+    end
+    return qL/t
+end
+
+lam, mu, K = 0.82, 1.3, 5
+rho = lam/mu
+T = 10^6
+
+mm1Theor = rho/(1-rho)
+md1Theor = rho/(1-rho)*(2-rho)/2
+mm1kTheor = rho/(1-rho)*(1-(K+1)*rho^K+K*rho^(K+1))/(1-rho^(K+1))
+
+mm1Est = queueDES(T,()->rand(Exponential(1/lam)),
+            			  ()->rand(Exponential(1/mu)))
+md1Est = queueDES(T,()->rand(Exponential(1/lam)),
+                                   ()->1/mu)
+mm1kEst = queueDES(T,()->rand(Exponential(1/lam)),
+                                      ()->rand(Exponential(1/mu)), K)
+
+println("The load on the system: ",rho)
+println("Queueing theory: ", (mm1Theor,md1Theor,mm1kTheor) )
+println("Via simulation: ", (mm1Est,md1Est,mm1kEst) )
+```
+
 
 * Modelling
 * Queue examples.  <!--https://github.com/h-Klok/StatsWithJuliaBook/blob/master/10_chapter/DESqueue.jl -->
