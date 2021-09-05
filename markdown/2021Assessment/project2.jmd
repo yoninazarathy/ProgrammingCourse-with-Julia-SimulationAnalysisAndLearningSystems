@@ -40,7 +40,7 @@ Marking responses will be made by the teaching staff by annotating **selected pa
 ## Setting up your GitHub repo for hand-in (10pts):
 
 * Ideally use the same account you used for PROJECT1 and HW1. 
-* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2021-PROJECT2`. So for example if your name is "Jeannette Young", the repo name should be `Jeannette-Young-2504-2021-PROJECT2`.
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>-and-<<FIRST NAME2>>-<<LAST NAME2>>-2504-2021-PROJECT2`. So for example if your names are "Jeannette Young" and "Julia Gillard", the repo name should be `Jeannette-Young-and-Julia-Gillard-2504-2021-PROJECT2`.
 * Make sure the repo is **private**.
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.
 * Do **not** make any changes (commits) to the repo after the project due date. 
@@ -61,8 +61,8 @@ Write a 1-4 paragraph summary of Maithili Mehta's perspective seminar. The write
 
 The writeup should address the following questions:
 
-1. What was Amy’s career path, and her relationship with software, mathematics, and statistics?
-1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from here job?
+1. What was Maitha's career path, and her relationship with software and mathematics?
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
 1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
 1. Have you picked up any tips from Amy’s talk, which you can perhaps use in your career down the road?
 1. Feel free to state anything else that you found interesting from the talk.
@@ -70,7 +70,9 @@ The writeup should address the following questions:
 
 ## Main project task (80pts)
 
-Your task is to simulate a complex queueing network system/model. In this model there are $L$ stations (e.g. $L=5$ or $L=100$) and each station has a **server** and a **waiting buffer**. There are jobs traversing through the network and the stations. Jobs can be numbered $\ell=1,2,3,\ldots$ and it is expected that the simulation processes thousands, millions, or more jobs. 
+Your task is to simulate a complex queueing network system/model. As motivation consider an amusement park (e.g. Dream World). There are multiple rides and inividuals queue up for rides. After they finish a ride they walk to a different ride and so-fourth. However, this is just a rough motivation and there are still significant differences between the model you will simulate and what may constitute something like an amuesment park.
+
+In your queueing simulation model there are $L$ stations (e.g. $L=5$ or $L=100$) and each station has a  **server** and a **waiting buffer**. There are jobs traversing through the network and the stations. Jobs can be numbered $\ell=1,2,3,\ldots$ and it is expected that the simulation processes thousands, or millions of jobs. 
 
 A job's location can be one of:
 
@@ -80,13 +82,11 @@ A job's location can be one of:
 * In the system currently moving between stations.
 * Out of the system after leaving.
 
-Motivation: think of an amusement park (sea world....)
-
-In this continuous time system, jobs arrive to the system according to a random process (see below) and the traverse between the stations as we describe now.
+In this continuous time system, jobs arrive to the system according to a random process (see distributional specification below) and traverse between the stations as we describe now.
 
 Each station $i=1,\ldots,L$ has a service rate $\mu_i > 0$ which is the inverse of the mean expected time it takes the server to process a job. It also has a buffer capacity $K_i$ which implies the number of jobs that can queue in the buffer. The capacity $K_i$ is a non-negative integer or can be $\infty$.
 
-When a job arrives to station $i$, if there is room in the buffer the buffer and queues for service. However if the buffer is full (the current jobs waiting in the buffer is equal to $K_i$), the job does not enter the buffer and moves according to an **overflow rule** (these rules are described below).
+When a job arrives to station $i$, if there is room in the buffer, the job queues for service. However if the buffer is full (the current jobs waiting in the buffer is equal to $K_i$), the job does not enter the buffer and moves according to an **overflow rule** (these rules are described below).
 
 Durations of events follow independent random variables. These include
 
@@ -95,8 +95,9 @@ Durations of events follow independent random variables. These include
 * Duration of time moving between stations when overflowing.
 * Duration of time moving between stations after service.
 
+When a job completes service at a buffer it either leaves the system immediatly, or moves to another buffer. The choice of its destination is based on the routhing matrix $P$. Here $P_{i,j}$ is probability of going to station j after compleining service in station $i$.  It is assumed that $P$ has non-negative entries and has a spectral radius less than $1$. Mathematically this means that the maximal aboslute value of eigenvalues of $P$ is less than unity.
 
-(Routhing) Matrix $P$: $P_{i,j}$ probability of going to station j after compleining service in $i$.  Sub-stochastic, non-negative entries, spectral radius. I + P + P^2 + .... converges.. inverse of (I-P) exists....
+When a job arrives to buffer $i$ that is full, 
 
 (Overflow) Matrix $Q$: $Q_{i,j}$ also sub-strochastic and it says... if a job arrives to station $i$ with $K_i$ in the buffer (station is full) then you overflow and go from $i$ to $j$ with probability $Q_{i,j}$ or leave... with 1- \sum_j Q_{i,j}$
 

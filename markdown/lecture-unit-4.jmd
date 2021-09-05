@@ -216,8 +216,40 @@ for _ ∈ 1:10 #\in + [TAB]
     try
         my_2_by_2_inv(A)
     catch e
-        println(A, " is singular!")
+        println(e)
     end
+end
+```
+
+An exception may be caught way down the call stack:
+
+```julia
+A = ones(2,2)
+f(mat) = 10*my_2_by_2_inv(A)
+g(mat) = f(mat .+ 3)
+h(mat) = 2g(mat)
+h(A)
+```
+```
+ERROR: ArgumentError: matrix is singular or near singular
+Stacktrace:
+ [1] my_2_by_2_inv(A::Matrix{Float64})
+   @ Main ~/git/mine/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/markdown/lecture-unit-4.jmd:5
+ [2] f(mat::Matrix{Float64})
+   @ Main ./REPL[33]:1
+ [3] g(mat::Matrix{Float64})
+   @ Main ./REPL[34]:1
+ [4] h(mat::Matrix{Float64})
+   @ Main ./REPL[35]:1
+ [5] top-level scope
+   @ REPL[36]:1
+```
+
+```julia
+try 
+    h(A)
+catch e
+    println(e)
 end
 ```
 
@@ -226,31 +258,73 @@ end
 See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
 
 ```julia
-data = [1,2,3]
+data = [1, 2, 3]
 s = 0
-beta, gamma = 2, 1
+β, γ = 2, 1
 
 for i in 1:length(data)
-    print(i," ")
     global s    #This usage of the `global` keyword is not needed in Jupyter
                 #But elsewhere without it:
                 #ERROR: LoadError: UndefVarError: s not defined
-    s += beta*data[i]
-    data[i] *= -1
+    s += β*data[i]
+    data[i] *= -1 #Note that we didn't need 'global' for data
 end
-# print(i)       #Would cause ERROR: LoadError: UndefVarError: i not defined
-println("\nSum of data in external scope: ", s)
+#print(i)       #Would cause ERROR: LoadError: UndefVarError: i not defined
+@show data
+@show s
 
-function sumData(beta)
+function sum_data(β)
     s = 0           #try adding the prefix global
     for i in 1:length(data)
-        s += data[i] + gamma
+        s += β*(data[i] + γ)
     end
     return s
 end
-println("Sum of data in a function: ", sumData(beta/2))
+@show sum_data(β/2)
 @show s
 ```
+
+Julia uses Lexical scoping:
+
+```julia
+
+function my_function()
+    x = 10
+    function my_function_inside_a_function()
+        @show x
+    end
+    return my_function_inside_a_function
+end
+
+x = 20
+f_ret = my_function()
+f_ret();
+```
+
+The use of `outer`:
+
+```julia
+function f()
+    i = 0
+    for i = 1:3
+        # empty
+    end
+    return i
+end
+f()
+```
+
+```julia
+function f()
+    i = 0
+    for outer i = 1:3
+        # empty
+    end
+    return i
+end
+f()
+```
+
 
 ## Types and the Type System
 
@@ -326,24 +400,78 @@ x = 2.3
 @show supertype(Any);
 ```
 
+There is an **is a** relationship:
+```julia
+isa(2.3, Number)
+```
+
+```julia
+isa(2.3, String)
+```
+
+```julia
+2.3 isa Float64
+```
+
+```julia
+my_type = Float64
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+```julia
+my_type = Real
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+Some types are not abstract nor concrete:
+
+```julia
+my_type = Complex
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+```
+help?> Complex
+search: Complex complex ComplexF64 ComplexF32 ComplexF16 precompile __precompile__ componentwise_logpdf
+
+  Complex{T<:Real} <: Number
+
+  Complex number type with real and imaginary part of type T.
+
+  ComplexF16, ComplexF32 and ComplexF64 are aliases for Complex{Float16}, Complex{Float32} and Complex{Float64} respectively.
+```
+
+
 Let's walk down from `Number`:
 
 ```julia
 using InteractiveUtils: subtypes
 
-function type_and_children(type,depth::Int = 0)
+function type_and_children(type, depth::Int = 0)
     if !isconcretetype(type)
-        println("-"^depth, type, " - non-concrete", isabstracttype(type) ? ", abstract" : ", non-abstract")
-        for c in subtypes(type)
-            type_and_children(c,depth+1)
+        #Non-concrete
+        print("-"^depth, type, ": non-concrete")
+        #Types that are not concrete can be abstract or not
+        if isabstracttype(type) 
+            println(", abstract")
+            for c in subtypes(type)
+                type_and_children(c,depth+1)
+            end
+        else
+             println(", non-abstract")
+             @assert isempty(subtypes(type))
         end
     else
-        println("-"^depth, type, " - concrete")
-        end
+        #Concrete
+        @assert isempty(subtypes(type))
+        println("-"^depth, type, ": concrete")
+    end
 end
 
 type_and_children(Number)
-println()
 ```
 
 A type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
@@ -384,26 +512,34 @@ println("Immutable:")
 a = 10
 b = a
 b = 20
-@show a
+@show a;
+```
 
+```julia
 println("\nNo copy:")
 a = [10]
 b = a
 b[1] = 20
-@show a
+@show a;
+```
 
+```julia
 println("\nCopy:")
 a = [10]
 b = copy(a)
 b[1] = 20
-@show a
+@show a;
+```
 
+```julia
 println("\nShallow copy:")
 a = [[10]]
 b = copy(a)
 b[1][1] = 20
-@show a
+@show a;
+```
 
+```julia
 println("\nDeep copy:")
 a = [[10]]
 b = deepcopy(a)
@@ -486,6 +622,11 @@ struct Dog <: Mammal
     weight::Float64
 end
 
+struct FlexDog{T <: Real} <: Mammal
+    height::T
+    weight::T
+end
+
 struct Crocodile <: Reptile
     length::Float64
     weight::Float64
@@ -533,13 +674,52 @@ Crocodile(:fresh_water)
 Crocodile(:ice_water) #will generate an error
 ```
 
-A bit more on constructors later.
+A bit more on [constructors](https://docs.julialang.org/en/v1/manual/constructors/) will come later.
+
+Notice we had the [parameteric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) `FlexDog`:
+
+```julia
+dash_my_dog = FlexDog(2,4)
+@show typeof(dash_my_dog)
+
+lassy_your_dog = FlexDog(2.3f0,5.7f0)
+@show typeof(lassy_your_dog)
+
+my_dog_array = FlexDog{UInt16}[]
+```
+
+```julia
+my_dog_array = FlexDog{Complex}[] #Will not work because Complex is not a Real
+```
+
+With multiple dispatch we can get a form of polymorphism:
+
+```julia
+animal_noise(animal::Dog) = println("woof")
+animal_noise(animal::Human) = println("hello")
+animal_noise(animal::Crocodile) = println("chchch")
+
+animals = [Crocodile(:salt_water), Human(2.4,2.3,false), Crocodile(:salt_water), Dog(5.3,2.5)]
+animal_noise.(animals);
+```
+
+```julia
+methods(animal_noise)
+```
+
+We can even handle the `FlexDog`:
+
+```julia
+animal_noise(animal::Union{Dog,FlexDog}) = println("woof")
+push!(animals, FlexDog{Int16}(2,4))
+animal_noise.(animals);
+```
 
 ### Methods and Multiple Dispatch
 
 [See methods in Julia docs](https://docs.julialang.org/en/v1/manual/methods/).
 
-If there is one key attribute to Julia it is **multiple dispatch**. 
+If there is one key attribute to Julia it is **multiple dispatch** as we have just seen above. 
 
 ```julia
 function my_f(x::Int)
@@ -555,7 +735,13 @@ my_f(2.5)
 println(methods(my_f))
 ```
 
-**More to be updated here...**
+### Defining more methods for existing functions
+
+QQQQ
+
+### Some examples...
+
+Examples
 
 ### More to be covered as part of Unit 6:
 
@@ -563,64 +749,4 @@ println(methods(my_f))
 
 [See conversion and promotion in Julia docs](https://docs.julialang.org/en/v1/manual/conversion-and-promotion/)
 
-
 [See interfaces in Julia docs](https://docs.julialang.org/en/v1/manual/interfaces/)
-
-### QQQQ
-
-### Case study of a rational type...
-
-From Julia docs: [Case Study of Rational](https://docs.julialang.org/en/v1/manual/constructors/#Case-Study:-Rational). 
- 
-```julia
-#The struct
-struct OurRational{T<:Integer} <: Real
-           num::T
-           den::T
-           function OurRational{T}(num::T, den::T) where T<:Integer
-               if num == 0 && den == 0
-                    error("invalid rational: 0//0")
-               end
-               g = gcd(den, num)
-               num = div(num, g)
-               den = div(den, g)
-               new(num, den)
-           end
-end
-```
-
-```julia
-#Some constructors
-OurRational(n::T, d::T) where {T<:Integer} = OurRational{T}(n,d)
-OurRational(n::Integer, d::Integer) = OurRational(promote(n,d)...)
-OurRational(n::Integer) = OurRational(n,one(n))
-⊘(n::Integer, d::Integer) = OurRational(n,d)
-```
-
-```julia
-
-
-
-
-
-Programming paradigm's (more on this in Unit 6): The "declarative language paradigm" (SQL as an example) - contrasting with "the imperative language". (See also functional programming COMP3400).
-
-
-## Motivations from Algebra
-
-```julia
-using SymPy
-x = symbols("x")		       # or  @syms x
-y = sin(pi*x)
-y(1)                           # Does y.subs(x, 1). Use y(x=>1) to be specific as to which symbol to substitute
-```
-
-* Symoblic mathematics in general overview (Maple, Mathematica, Magma, more rigourous systems...)
-* Usage of an existing package in Julia - example (Symbolics.jl / SimPy.jl.....)
-
-### Some Basic Problems/Goals and Objects
-
-* Rational numbers represenation
-* Polynomial Representation
-* Example: Bitpacking example/discussion...  
-

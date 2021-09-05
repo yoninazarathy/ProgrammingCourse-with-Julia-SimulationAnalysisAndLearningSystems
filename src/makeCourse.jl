@@ -13,6 +13,6 @@ kwargs_publish = (doctype = "md2html", out_path = "lectures_html", template = "m
 # weave("markdown/lecture-unit-3.jmd"; kwargs_publish...)
 weave("markdown/lecture-unit-4.jmd"; kwargs_publish...) 
 # weave("markdown/lecture-unit-5.jmd"; kwargs_uc...) 
-weave("markdown/lecture-unit-6.jmd"; kwargs_uc...) 
-weave("markdown/lecture-unit-7.jmd"; kwargs_uc...) 
+# weave("markdown/lecture-unit-6.jmd"; kwargs_uc...) 
+# weave("markdown/lecture-unit-7.jmd"; kwargs_uc...) 
 
