@@ -102,7 +102,7 @@ Once this type is created, "remove" the division abd gcd/Euclidean operations ou
 
 The `show` method for `PolynomialModP` should also indicate that it is mod p.
 
-### Task 3 (10pts) - Improving multiplication
+### Task 4 (10pts) - Improving multiplication
 
 The current multiplication implementation is not efficient. Create some benchmarking test that in addition to testing the validity of multiplication also quantifies performance for an increasing size of polynomials. 
 
@@ -110,11 +110,11 @@ Now implement a different better form of multiplication using **interpolation** 
 
 Your tests and benchmarks should also be for the your new `PolynomialModP` type and its operations.
 
-### Task 4 (10pts) - Improving power
+### Task 5 (10pts) - Improving power
 
 Similarly to multiplication, you may notice the the implementation of the power operator, `^`, can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `Polynomial` and `PolynomialModP`.
 
-### Task 5 (20pts) - Factorization mod p
+### Task 6 (20pts) - Factorization mod p
 
 Now that you have efficient multiplication, power, and the datatype `PolynomialModP` together with the other working operations. Implement polynomial factorization for `PolynomialModP`. The code already exists some of the functionality for this, but for `Polynomial`. Your job is to adapt the functionality to `PolynomialModP` and to finish off the factorization functionality.
 
