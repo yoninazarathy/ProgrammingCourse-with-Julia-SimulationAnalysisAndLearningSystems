@@ -735,13 +735,214 @@ my_f(2.5)
 println(methods(my_f))
 ```
 
+It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but then towards the end of the course it is worth to listen to it again and see what makes sense and what not yet.
+
 ### Defining more methods for existing functions
 
-QQQQ
+Almost any operation in julia is a function. For example,
+
+```julia
+@which 2+3
+```
+
+There are many methods for `+`:
+
+```julia
+methods(+) |> length
+```
+
+So what if we had our own type and wanted to have `+` for it, and say an integer.
+
+```julia
+struct PlayerScore
+    player_name::String
+    score::Int
+end
+
+me = PlayerScore("Johnny", 22)
+```
+
+```julia
+me += 10 #will generate an error since `+` for me and an integer is not defined and `+` is used in `+=`
+```
+
+So let's define it:
+
+```julia
+import Base: + #we do this to let Julia know we will add more methods to `+`
+
+function +(ps::PlayerScore, n::Int)::PlayerScore
+    return PlayerScore(ps.player_name, ps.score + n)
+end
+
+me += 10;
+me
+```
+
+You can do this for every operation and function you want (and makes sense).  What if we wanted "pretty printing"?
+
+```julia
+import Base: show
+
+show(io::IO, ps::PlayerScore) = print(io,"Score for $(ps.player_name) =  $(ps.score)")
+
+println("We have a some score: $me. Pretty good!")
+```
 
 ### Some examples...
 
-Examples
+Lets consider an example where we want to collect data and also have quick running statistics. E.g.
+
+```julia
+using Random, Statistics
+Random.seed!(0)
+get_new_data() = 100*rand() #This will in practice be anything...
+
+data = Float64[]
+
+function collect_and_use_data(data)
+    for t in 1:100 #This will be much bigger 
+
+        #Periodically we collect new data
+        new_data_point = get_new_data()
+        push!(data,new_data_point)
+
+        #Peridoically we look at summary statistics
+        if t%20 == 0
+            println("-------")
+            println("Mean: ", mean(data))
+            println("Max: ", maximum(data))
+        end
+    end
+end
+
+collect_and_use_data(data)
+```
+Think of this scenario repeating often and for `t` being big... so you don't want to recompute the mean and max every time.
+
+```julia
+mutable struct RunningStatsData
+    data::Vector{Float64}
+    mean::Float64
+    max::Float64
+    RunningStatsData() = new([],NaN,NaN)
+end
+
+function show_summary(rsd::RunningStatsData)
+        println("Mean: ", rsd.mean)
+        println("Max: ", rsd.max)
+end
+
+data = RunningStatsData()
+show_summary(data)
+```
+
+We can now make specifics method for `push!`, `max`, and `mean` for this new type:
+
+```julia
+Random.seed!(0)
+
+import Base: push!, maximum
+import Statistics: mean
+
+maximum(rsd::RunningStatsData) = rsd.max
+mean(rsd::RunningStatsData) = rsd.mean
+
+function push!(rsd::RunningStatsData,data_point)
+    #Insert the new datapoint
+    push!(rsd.data, data_point)
+
+    # Update the maximum
+    if data_point > rsd.max || isnan(rsd.max)
+        rsd.max = data_point
+    end
+
+    # Update the mean
+    n = length(rsd.data)
+    if n == 1 
+        rsd.mean = data_point #If first data point just set it
+    else
+        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
+    end
+end
+
+data = RunningStatsData()
+collect_and_use_data(data)
+```
+
+Going a bit more generic we could have also had,
+
+```julia
+mutable struct FlexRunningStatsData{T <: Number}
+    data::Vector{T}
+    mean::Float64
+    max::T
+    FlexRunningStatsData{T}() where T = new([],NaN,typemin(T))
+end
+
+maximum(rsd::FlexRunningStatsData) = rsd.max
+mean(rsd::FlexRunningStatsData) = rsd.mean
+
+function push!(rsd::FlexRunningStatsData,data_point)
+    #Insert the new datapoint
+    push!(rsd.data, data_point)
+
+    # Update the maximum
+    if data_point > rsd.max || isnan(rsd.max)
+        rsd.max = data_point
+    end
+
+    # Update the mean
+    n = length(rsd.data)
+    if n == 1 
+        rsd.mean = data_point #If first data point just set it
+    else
+        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
+    end
+end
+
+Random.seed!(0)
+get_new_data() = rand(0:10^4) 
+
+data = FlexRunningStatsData{Int}()
+collect_and_use_data(data)
+```
+
+```julia
+@which mean(data)
+```
+
+But there is a problem with the above. Should we have done `<: Number` or `<: Real`? What is `T` was `Complex`?
+
+### Using structs for data structures
+
+```julia
+Random.seed!(0)
+
+struct Node
+    id::UInt16
+    friends::Vector{Node}
+    Node() = new(rand(UInt16), [])
+    Node(friend::Node) = new(rand(UInt16),[friend])
+end
+
+"""
+Makes 'n` children to node, each with a single friend
+"""
+function make_children(node::Node, n::Int, friend::Node)
+    for _ in 1:n
+        new_node = Node(friend)
+        push!(node.friends, new_node)
+    end
+end
+
+root = Node()
+make_children(root, 3, root)
+for node in root.friends
+    make_children(node, 2,root)
+end
+root
+```
 
 ### More to be covered as part of Unit 6:
 
