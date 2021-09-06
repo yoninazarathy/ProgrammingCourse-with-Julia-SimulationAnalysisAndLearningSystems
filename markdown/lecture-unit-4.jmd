@@ -653,7 +653,7 @@ function Crocodile(type::Symbol)
     if type == :salt_water
         return Crocodile(2.0,200,:salt_water) #average salt water croc
     elseif type == :fresh_water
-        return Crocodile(1.5,150,:salt_water) #average fresh water croc
+        return Crocodile(1.5,150,:fresh_water) #average fresh water croc
     else
         error("Can't make crocodile of type $type")
     end
