@@ -118,6 +118,8 @@ Your tests and benchmarks should also be for the your new `PolynomialModP` type 
 
 Similarly to multiplication, you may notice the the implementation of the power operator, `^` as well as `pow_mod` (or its new version in `PolynomialModP`), can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `Polynomial` and `PolynomialModP`.
 
+A method for optimizing the "w^p mod p" calculation for w a polynomial and p a prime, will be covered in the lectures. You should use this method where applicable.
+
 ### Task 6 (20pts) - Factorization mod p
 
 Now that you have efficient multiplication, power, and the datatype `PolynomialModP` together with the other working operations. Adapt the polynomial factorization to use this new functionality. The current code (supplied with the basic project) works for limited cases but can get stuck on certain examples. 
