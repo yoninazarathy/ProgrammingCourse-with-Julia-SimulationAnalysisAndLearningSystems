@@ -92,8 +92,8 @@ Durations of events follow independent random variables. These include
 
 * Durations between times of external arrivals. The external rate of arrivals is $\lambda > 0$, so the mean duration between arrivals is $1/\lambda$.
 * Durations of service times. As stated above the mean is $1/\mu_i$.
-* Duration of time moving between stations when overflowing. The mean time is $1/eta$, fixed for all stations.
-* Duration of time moving between stations after service. The mean is again $1/eta$.
+* Duration of time moving between stations when overflowing. The mean time is $1/\eta$, fixed for all stations.
+* Duration of time moving between stations after service. The mean is again $1/\eta$.
 
 All of these durations are gamma distributed with a ratio of the mean and variance (squared coefficient of variation) equal to $3$. Hence the parameters for durations are $\lambda$, $\eta$, and $\mu_1,\ldots,\mu_L$.
 

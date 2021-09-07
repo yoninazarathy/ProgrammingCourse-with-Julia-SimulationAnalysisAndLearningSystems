@@ -74,31 +74,35 @@ You will build your project on top of the [project GitHub repository](https://gi
 
 ### Task 1 (5 pts) - Getting it to run, improving pretty printing, and creating your own example script.
 
-Once you create your own repository you can make sure it works. Run the code of `test/runtests.jl` and `example_script.jl`. At this point study the functionality of the repository as a user. That is look at the function signatures but not at the function implementation.  Understand what it can do. Now create your own example script, `example_script_2.jl`, with a few "thoughtful polynomials" of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output (e.g. using `println`) that describes what is going on. So basically, `example_script_2.jl` is an improvement over the supplied `example_script.jl`.
+Once you create your own repository you can make sure it works. Run the code of `test/runtests.jl` and `example_script.jl`. At this point study the functionality of the repository as a user. That is look at the function signatures but not at the function implementation.  Understand what it can do. 
+
+Now create your own example script, `example_script_2.jl`, with a few "thoughtful polynomials" of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output (e.g. using `println`) that describes what is going on. So basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`. With your improved script make sure you illustrate the key functionality of most of the operations available via the software. Make sure you choose sensible example polynomials and residue classes (primes) to work with.
 
 In addition, as part of this task improve the "pretty printing" of the polynomials. At the moment terms with power `0` or `1` are printed as `x^0` and `x^1`. Similarly negative coefficients are still preceded by a `+` symbol. Improve this so that polynomials are displayed as cleanly as possible.
 
 ### Task 2 (10pts) - Refactoring the data structure used
 
-As you can see, a heap is used for storing the terms of the polynomial. This can be good in contexts beyond the current application such as polynomials with multiple variables, or polynomials with rational coefficients. However for our purpose, the heap is not really useful. In fact, it is a hinderance at times. 
+As you can see, a heap data structure is used for storing the terms of the polynomial. This can be good in contexts beyond the current application such as polynomials with multiple variables, or polynomials with rational coefficients. However for our purpose, the heap is not really useful. In fact, it is a hinderance at times. 
 
 Your job with this task is to replace the heap with one of (your choice):
 * A simple array of terms.
 * A dictionary of terms. 
 
-As you do this, make sure that all of the functionality of the project remains intact by re-running the tests as well as creating your own additional tests if needed. Make sure that the invariant of not having two terms of the same degree is kept. Similarly, if the polynomial is $0$ then have the array or dictionary empty. 
+As you do this, make sure that all of the functionality of the project remains intact by re-running the tests as well as creating your own additional tests if needed. Make sure that the invariant of not having two terms of the same degree is kept. Similarly, if the polynomial is $0$ then have the array or the dictionary empty. 
 
 ### Task 3 (15pts) - Creating a polynomial mod p datatype and further refactoring
 
 You may notice that `Polynomial` datatype does not know the field of the coefficients. Hence operations such as `divide`, `gcd`, or `factor` need to continuously use `mod` and are often with an "unnatural" interface where they return a function which is then gets $p$ (the prime) as an argument. However, for much of the functionality of this project we do consider the polynomials as "mod p".
 
-Your task here is to create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `Polynomial` but will keep all the coefficients in the range $0,1,2,\ldots,p$ where $p$ is the prime number of the instance. 
+Your task here is to create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `Polynomial` but will keep all the coefficients in the range $0,1,2,\ldots,p$ where $p$ is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
 
-Create units tests for this type just like currently exist in the package and make sure all of the functionality is kept working (only this restricted set of polynomials).
+Create units tests for this type just like the ones that currently exist in the package and make sure all of the functionality is kept working (only to this restricted set of polynomials).
 
 Your new datatype should still rely on existing functionality of the type `Polynomial`. But, for example, after doing arithmetic operations, it should ensure that all coefficients are represented mod $p$. 
 
-Once this type is created, "remove" the division abd gcd/Euclidean operations out of polynomial. That is, it should no longer be possible to do `p1 ÷ p2` where `p1` and `p2` are of the `Polynomial` type. This means you should update/trim the units tests for `Polynomial` and have the new units tests for your new `PolynomialModP` type.
+Once this type is created, "remove" the division and gcd/Euclidean operations out of polynomial. That is, it should no longer be possible to do `p1 ÷ p2` where `p1` and `p2` are of the `Polynomial` type. This means you should update/trim the units tests for `Polynomial` and have the new units tests for your new `PolynomialModP` type.
+
+With this refactoring, the `pow_mod` function should no longer be supported for polynomials. Instead make a version of this, using `^` for `PolynomialModP`.
 
 The `show` method for `PolynomialModP` should also indicate that it is mod p.
 
@@ -106,18 +110,20 @@ The `show` method for `PolynomialModP` should also indicate that it is mod p.
 
 The current multiplication implementation is not efficient. Create some benchmarking test that in addition to testing the validity of multiplication also quantifies performance for an increasing size of polynomials. 
 
-Now implement a different better form of multiplication using **interpolation** as presented in the lecture. Test it and benchmark it against the old multiplication (it is recommended to keep the old form in another function). 
+Now implement a different better form of multiplication using **interpolation** as presented in the lecture. Test it and benchmark it against the old multiplication (it is recommended to keep the old form in another function or method). 
 
-Your tests and benchmarks should also be for the your new `PolynomialModP` type and its operations.
+Your tests and benchmarks should also be for the your new `PolynomialModP` type and its operations. 
 
 ### Task 5 (10pts) - Improving power
 
-Similarly to multiplication, you may notice the the implementation of the power operator, `^`, can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `Polynomial` and `PolynomialModP`.
+Similarly to multiplication, you may notice the the implementation of the power operator, `^` as well as `pow_mod` (or its new version in `PolynomialModP`), can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `Polynomial` and `PolynomialModP`.
 
 ### Task 6 (20pts) - Factorization mod p
 
-Now that you have efficient multiplication, power, and the datatype `PolynomialModP` together with the other working operations. Implement polynomial factorization for `PolynomialModP`. The code already exists some of the functionality for this, but for `Polynomial`. Your job is to adapt the functionality to `PolynomialModP` and to finish off the factorization functionality.
+Now that you have efficient multiplication, power, and the datatype `PolynomialModP` together with the other working operations. Adapt the polynomial factorization to use this new functionality. The current code (supplied with the basic project) works for limited cases but can get stuck on certain examples. 
 
-Use the algorithms presented in the lecture.
+With your new code, test on a wider set of examples including bigger primes. Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer.
 
-Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 60 seconds on your computer.
+Also, factorization when the prime is `3` currently doesn't always work. Find the problem with this factorization, fix it, and make it work.
+
+Your modification should include modification and enhancement of the current unit tests.
