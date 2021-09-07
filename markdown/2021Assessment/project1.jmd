@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2021
 # Univariate Polynomials with Integer Coefficients (+ perspective seminar summary)
 
-(last edit: Sep 5, 2021)
+(last edit: Sep 7, 2021)
 
 **Due:** End of Day, Friday, 24, September, 2021. Late submissions are not accepted.
 
@@ -94,7 +94,7 @@ As you do this, make sure that all of the functionality of the project remains i
 
 You may notice that `Polynomial` datatype does not know the field of the coefficients. Hence operations such as `divide`, `gcd`, or `factor` need to continuously use `mod` and are often with an "unnatural" interface where they return a function which is then gets $p$ (the prime) as an argument. However, for much of the functionality of this project we do consider the polynomials as "mod p".
 
-Your task here is to create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `Polynomial` but will keep all the coefficients in the range $0,1,2,\ldots,p$ where $p$ is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
+Your task here is to create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `Polynomial` but will keep all the coefficients in the range $0,1,2,\ldots,p-1$ where $p$ is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
 
 Create units tests for this type just like the ones that currently exist in the package and make sure all of the functionality is kept working (only to this restricted set of polynomials).
 
