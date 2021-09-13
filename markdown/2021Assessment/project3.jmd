@@ -1,0 +1,7 @@
+* Hetrogenous data (Data Frame with 10+ variables of different types).
+* Random forest and decision tree (still not sure to what level....).
+* Transformation from the data frame to a (cleaner) matrix of data. 
+* Randomly synthesized dataset (that we create).... on the housing...
+  - price as a function of attributes/features
+ 
+Optimization: Find profitable improvements - or something of that sort...

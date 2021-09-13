@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2021
 # Univariate Polynomials with Integer Coefficients (+ perspective seminar summary)
 
-(last edit: Sep 7, 2021)
+(last edit: Sep 13, 2021)
 
 **Due:** End of Day, Friday, 24, September, 2021. Late submissions are not accepted.
 
@@ -110,9 +110,12 @@ The `show` method for `PolynomialModP` should also indicate that it is mod p.
 
 The current multiplication implementation is not efficient. Create some benchmarking test that in addition to testing the validity of multiplication also quantifies performance for an increasing size of polynomials. 
 
-Now implement a different better form of multiplication using **interpolation** as presented in the lecture. Test it and benchmark it against the old multiplication (it is recommended to keep the old form in another function or method). 
+Now implement a different better form of multiplication using the **Chinese Remainder Theorem** (CRT) as presented in the lecture (previously it was stated to use "interpolation", but using the CRT is easier). Test it and benchmark it against the old multiplication (it is recommended to keep the old form in another function or method). 
+
+You will need to implement multiplication for your `PolynomialModP` type first.  Then the generic multiplication algorithm will compute products of a sufficient number of primes using your mod p multiplication, and then use the CRT to construct the solution in $Z[x]$.
 
 Your tests and benchmarks should also be for the your new `PolynomialModP` type and its operations. 
+
 
 ### Task 5 (10pts) - Improving power
 
