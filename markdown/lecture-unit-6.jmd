@@ -1,11 +1,82 @@
 # Unit 6: Monte Carlo and discrete event simulation
 
+In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudo random numbers**, is infact mildely related to computer algebra because algorithms for generating uniform pseudo random numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and structured software design. 
+
+[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city on the Mediteranian sea which is known for gambling. This name made its way to the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) in the middle of the 20'th century to describe computational methods that involve randomness or pseudo randomness. So in general when you "use Monte Carlo" it means you use some form of randomness (or typicall pseudo randomness) as part of an algorithm or computation.
+
+Discrete event simulation is one form of simulation of mathematical models. It can be viewed as one of many components of Monte Carlo methods, however we note that Monte Carlo is a much broader field. In fact, UQ has multiple researchers known for their contributions to Monte Carlo including [Dirk Kroese](https://people.smp.uq.edu.au/DirkKroese/). The choice to cover discrete event simulation as part of this unit is because of the programming complexity that it entails. As is made evident in this unit, the development of a **discrete event simulation engine** requires some structured programming and design.
+
+The mathematics and modelling concepts that this unit covers are:
+
+* A light introduction to (uniform) pseudo random numbers. How they are generated and what to expect from them.
+* Generation of random quantities from arbitrary distributions based on (uniform) pseudo random numbers.
+* A light overview of multiple applications of pseudo random numbers including the bootstrap method in statistics and MCMC (Monte Carlo Markov Chains) - this is just an overview.
+* Discrete event simulation modelling and the structure of a discrete event simulation engine.
+* Understanding the heap datatsructure which is the best known implemintation of a priority queue (needed for discrete event simulation engine).
+
+In addition to the mathematical and modelling concepts that you'll pick up in this unit, you will also further your understanding of programming, data structures, and Julia. Specifically you will cover
+
+* The heap datastructure and its innner workings.
+* Parameteric types in greater depth.
+* Working with Julia modules and creating your own package.
+* Further understanding how to benchmark and optimize code.
+* Gain further experience in designing types (`struct`s).
+
+In terms of Monte Carlo and discrete event simulation 
+
+## True Random Number generators
+
+We won't dwell on this. But there is an industry for [hardward random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator).
+
 ## (Pseudo)-Random Numbers
 
-* Its all in the seed.
-* LCG
-* Testing for "randomness"
-* The state of the art: Mersenee Twister and RNG objects
+The main player in this discussion is the `rand()` function. When used without input arguments, `rand()` generates a ``random'' number in the interval $[0,1]$.  Several questions can be asked. How is it random? What does random within the interval $[0,1]$ really mean? How can it be used as an aid for statistical and scientific computation? For this we discuss pseudorandom numbers in a bit more generality.
+
+The "random" numbers we generate using Julia, as well as most "random" numbers used in any other scientific computing platform, are actually pseudorandom. That is, they aren't really random but rather appear random. For their generation, there is some deterministic (non-random and well defined) sequence, $\{x_n\}$, specified by
+
+$$
+x_{n+1} = f(x_n, x_{n-1},\ldots),
+$$
+
+originating from some specified **seed**, $x_0$. The mathematical function, $f(\cdot)$ is often (but not always) quite a complicated function, designed to yield desirable properties for the sequence $\{x_n\}$ that make it appear random. Among other properties we wish for the following to hold:
+
+* (i) Elements $x_i$ and $x_j$ for $i \neq j$ should appear statistically independent. That is, knowing the value of $x_i$ should not yield information about the value of $x_j$. 
+* (ii) The distribution of $\{x_n\}$ should appear uniform. That is, there shouldn't be values (or ranges of values) where elements of $\{x_n\}$ occur more frequently than others. 
+* (iii) The range covered by $\{x_n\}$ should be well defined. 
+* (iv) The sequence should repeat itself as rarely as possible.
+
+Typically, a mathematical function such as $f(\cdot)$ is designed to produce integers in the range $\{0,\ldots,2^{\ell}-1\}$ where $\ell$ is typically 16, 32, 64 or 128 (depending on the number of bits used to represent an integer). Hence $\{x_n\}$ is a sequence of pseudorandom integers. Then if we wish to have a pseudorandom number in the range $[0,1]$ (represented via a floating point number), we normalize via,
+
+$$
+U_n = \frac{x_n}{2^\ell-1}.
+$$
+
+When calling `rand()` in Julia (as well as in many other programming languages), what we are doing is effectively requesting the system to present us with $U_n$. Then, in the next call, $U_{n+1}$, and in the call after this $U_{n+2}$ etc. As a user, we don't care about the actual value of $n$, we simply trust the computing system that the next pseudorandom number will differ and adhere to the properties (i)--(iv) mentioned above.
+
+One may ask, where does the sequence start? For this we have a special name that we call $x_0$. It is known as the **seed** of the pseudorandom sequence. Typically, as a scientific computing system starts up, it sets $x_0$ to be the current time. This implies that on different system startups, $x_0, x_1, x_2, \ldots$ will be different sequences of pseudorandom numbers. However, we may also set the seed ourselves. There are several uses for this and it is often useful for reproducibility of results (as you have already seen throughout this course). 
+
+### Inside a Simple Pseudorandom Number Generator
+
+First lets not confuse the term "random" with "arbitrary" or "non-deterministic". Here is for example a "non-determinstic number":
+
+```julia
+a = Array{Int}(undef,10^4)
+non_deterministic_number = sum(a)
+@show non_deterministic_number
+```
+
+This number is arbitrary but we have no gurantee that it comes from some distribution, or that if we create it twice then each instance is statistically indepndent of the other.
+
+Back to (pseudo)-random numbers, number theory and related fields play a central role in the mathematical study of pseudorandom number generation, the internals of which are determined by the specifics of $f(\cdot)$ of the recusion above. Typically this is not of direct interest to statisticians or users. For exploratory purposes we illustrate how one can make a simple pseudorandom number generator.  
+
+A simple to implement class of (now classic and outdated) pseudo-random number generators is the class of [Linear Congruential Generators](https://en.wikipedia.org/wiki/Linear_congruential_generator) (LCG). These types of LCGs are common in older systems. Here the function $f(\cdot)$ is nothing but an affine (linear) transformation modulo $m$,
+
+$$
+x_{n+1} = (a \,x_n + c ) ~\mbox{mod}~ m.
+$$
+
+The integer parameters $a$, $c$ and $m$ are fixed and specify the details of the LCG. Some number theory research has determined "good" values of $a$ and $c$ for specific values of $m$. For example, for $m=2^{32}$, setting $a=69069$ and $c=1$ yields sensible performance (other possibilities work well, but not all). Here we generate values based on this LCG: 
+
 
 ```julia
 using Plots, LaTeXStrings, Measures
@@ -28,6 +99,8 @@ p2 = histogram(data, bins=50, normed=:true,
     ylims=(0,1.1), xlabel="Support", ylabel="Density")
 plot(p1, p2, size=(800, 400), legend=:none, margin = 5mm)
 ```
+
+The period of the RNG (random number generator) is the number of steps taken until an entry repeats itself. The quantities $a$, $c$, and $m$ above are chosen so that there is a [full cycle](https://en.wikipedia.org/wiki/Full_cycle) for the LCG.
 
 
 ## From Uniform(0,1) to an arbitrary distribution
