@@ -1,38 +1,3 @@
 # Unit 5: Computer algebra systems and symbolic computation
 
-## Background from elementary algebra number theory
-
-* Fields and rings
-* Invertability
-* Zero divisors
-* Integral domains
-* Unique factorization domains
-* Irreducibililty
-* Euclidean domains
-* Primitive $n$th root of unity
-
-## Some core elementary number theory algorithms
-
-* Computing inverses modulo n
-* The division algorithm
-* The binary GCD algorithm
-* Euclid's algorithm
-* The extended Euclidean algorithm
-* Stein's algorithm
-* Shonhhe-Strassen Algorithm (GCD in $O(n \log n)$
-
-## The ring of univaraiate polynomials
-
-* Division
-* GCD
-* Polynomial representation (bitpacking) - (efficient comparing of monomials) 
-* Chinese reminder theorem
-* p-addic lifting
-* Univariate Hensel lifting
-* interpolation
-
-## Towards a computer algebra system
-
-* Polynomial arithmetic
-* GCD
-* Factoring and factoring mod p
+This lecture is presented in a Jupyter notebook.
