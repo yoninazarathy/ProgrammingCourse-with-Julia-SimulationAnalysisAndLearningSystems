@@ -1,41 +1,43 @@
 # Unit 6: Monte Carlo and discrete event simulation
 
-In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudo random numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudo random numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and structured software design. 
+In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and structured software design. 
 
-[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city on the Mediterranean sea which is known for gambling. This name made its way to the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) in the middle of the 20'th century to describe computational methods that involve randomness or pseudo randomness. So in general when you "use Monte Carlo" it means you use some form of randomness (or typical pseudo randomness) as part of an algorithm or computation.
+[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhatten Project by Stan Ulam, John von Neuman and Nicholas Metropilis to describe a new type of statistical sampling method they devised for performing calculations on the ENIAC (the first programmable, electronic computer) — and they chose the name on the basis of where Ulam's uncle spent considerable time gambling.
 
-Discrete event simulation is one form of simulation of mathematical models. It can be viewed as one of many components of Monte Carlo methods, however we note that Monte Carlo is a much broader field. In fact, UQ has multiple researchers known for their contributions to Monte Carlo including [Dirk Kroese](https://people.smp.uq.edu.au/DirkKroese/). The choice to cover discrete event simulation as part of this unit is because of the programming complexity that it entails. As is made evident in this unit, the development of a **discrete event simulation engine** requires some structured programming and design.
+The concept of statistical sampling from a distribution was not new — it was known how to solve a problem involving randomness or uncertainty by running a series of deterministic calculations over e.g. different initial conditions chosen from a distribution at random. The new insight was that there are a wide range of deterministic problems that could be solved via random simulations (such as simulated annealing), which became known as the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method). These days, for either case it is common to say you "use Monte Carlo" whenever you use some form of randomness (or more typically, pseudorandomness) as part of an algorithm or computation.
+
+Discrete event simulation is one form of simulation of mathematical models. It can be viewed as one type of Monte Carlo method, however we note that Monte Carlo is a much broader field. In fact, UQ has multiple researchers known for their contributions to Monte Carlo including [Dirk Kroese](https://people.smp.uq.edu.au/DirkKroese/). The choice to cover discrete event simulation as part of this unit is because of the programming complexity that it entails. As is made evident in this unit, the development of a **discrete event simulation engine** requires some structured programming and design.
 
 The mathematics and modelling concepts that this unit covers are:
 
-* A light introduction to (uniform) pseudo random numbers. How they are generated and what to expect from them.
-* Generation of random quantities from arbitrary distributions based on (uniform) pseudo random numbers.
-* A light overview of multiple applications of pseudo random numbers including the bootstrap method in statistics and MCMC (Monte Carlo Markov Chains) - this is just an overview.
+* A light introduction to (uniform) pseudorandom numbers. How they are generated and what to expect from them.
+* Generation of random quantities from arbitrary distributions based on (uniform) pseudorandom numbers.
+* A light overview of multiple applications of pseudorandom numbers including the bootstrap method in statistics and MCMC (Markov chain Monte Carlo) — this is just an overview.
 * Discrete event simulation modelling and the structure of a discrete event simulation engine.
 * Understanding the heap data structure which is the best known implementation of a priority queue (needed for discrete event simulation engine).
 
-In addition to the mathematical and modelling concepts that you'll pick up in this unit, you will also further your understanding of programming, data structures, and Julia. Specifically you will cover
+In addition to the mathematical and modelling concepts that you'll pick up in this unit, you will also further your understanding of programming, data structures, and Julia. Specifically you will cover:
 
 * The heap data structure and its inner workings.
 * Parametric types in greater depth.
-* Working with Julia modules and creating your own package.
+* Working with Julia modules and structuring a larger program.
 * Further understanding how to benchmark and optimize code.
 * Gain further experience in designing types (`struct`s).
 
-In terms of Monte Carlo and discrete event simulation 
+In terms of Monte Carlo and discrete event simulation, you will be learning different way sto run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
 ## True Random Number generators
 
-We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator).
+We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarentees of "true" randomness!
 
 ## (Pseudo)-Random Numbers
 
-The main player in this discussion is the `rand()` function. When used without input arguments, `rand()` generates a ``random'' number in the interval $[0,1]$.  Several questions can be asked. How is it random? What does random within the interval $[0,1]$ really mean? How can it be used as an aid for statistical and scientific computation? For this we discuss pseudorandom numbers in a bit more generality.
+The main player in this discussion is the `rand()` function. When used without input arguments, `rand()` generates a ``random'' number in the interval $[0, 1)$. Several questions can be asked. How is it random? What does random within the interval $[0, 1)$ really mean? How can it be used as an aid for statistical and scientific computation? For this we discuss pseudorandom numbers in a bit more generality.
 
 The "random" numbers we generate using Julia, as well as most "random" numbers used in any other scientific computing platform, are actually pseudorandom. That is, they aren't really random but rather appear random. For their generation, there is some deterministic (non-random and well defined) sequence, $\{x_n\}$, specified by
 
 $$
-x_{n+1} = f(x_n, x_{n-1},\ldots),
+x_{n+1} = f(x_n, x_{n-1}, \ldots),
 $$
 
 originating from some specified **seed**, $x_0$. The mathematical function, $f(\cdot)$ is often (but not always) quite a complicated function, designed to yield desirable properties for the sequence $\{x_n\}$ that make it appear random. Among other properties we wish for the following to hold:
@@ -45,11 +47,17 @@ originating from some specified **seed**, $x_0$. The mathematical function, $f(\
 * (iii) The range covered by $\{x_n\}$ should be well defined. 
 * (iv) The sequence should repeat itself as rarely as possible.
 
-Typically, a mathematical function such as $f(\cdot)$ is designed to produce integers in the range $\{0,\ldots,2^{\ell}-1\}$ where $\ell$ is typically 16, 32, 64 or 128 (depending on the number of bits used to represent an integer). Hence $\{x_n\}$ is a sequence of pseudorandom integers. Then if we wish to have a pseudorandom number in the range $[0,1]$ (represented via a floating point number), we normalize via,
+Typically, a mathematical function such as $f(\cdot)$ is designed to produce integers in the range $\{0, \ldots, 2^{\ell}-1\}$ where $\ell$ is typically 16, 32, 64 or 128 (depending on the number of bits used to represent an integer). Hence $\{x_n\}$ is a sequence of pseudorandom integers. Then if we wish to have a pseudorandom number in the range $[0, 1)$ (represented via a floating point number), we normalize via,
 
 $$
-U_n = \frac{x_n}{2^\ell-1}.
+U_n = \frac{x_n}{2^\ell}.
 $$
+
+In practice it is faster not to divide integers, but instead to randomly generate the mantissa of a floating-point number and set the exponent to zero. E.g. `rand()` in Julia will construct 52 random bits to fill in the mantissa of a `Float64` (giving a number in the range $[1, 2)$), and then subtract `1.0` to remove the implicit most-significant bit:
+
+```julia
+rand(rng, ::Type{Float64}) = reinterpret(Float64, 0x3ff0000000000000 | rand(rng, UInt52())) - 1.0
+```
 
 When calling `rand()` in Julia (as well as in many other programming languages), what we are doing is effectively requesting the system to present us with $U_n$. Then, in the next call, $U_{n+1}$, and in the call after this $U_{n+2}$ etc. As a user, we don't care about the actual value of $n$, we simply trust the computing system that the next pseudorandom number will differ and adhere to the properties (i)--(iv) mentioned above.
 
@@ -60,16 +68,16 @@ One may ask, where does the sequence start? For this we have a special name that
 First lets not confuse the term "random" with "arbitrary" or "non-deterministic". Here is for example a "non-deterministic number":
 
 ```julia
-a = Array{Int}(undef,10^4)
+a = Array{Int}(undef, 10^4)
 non_deterministic_number = sum(a)
 @show non_deterministic_number
 ```
 
 This number is arbitrary but we have no guarantee that it comes from some distribution, or that if we create it twice then each instance is statistically independent of the other.
 
-Back to (pseudo)-random numbers, number theory and related fields play a central role in the mathematical study of pseudorandom number generation, the internals of which are determined by the specifics of $f(\cdot)$ of the recursion above. Typically this is not of direct interest to statisticians or users. For exploratory purposes we illustrate how one can make a simple pseudorandom number generator.  
+Back to (pseudo)-random numbers, number theory and related fields play a central role in the mathematical study of pseudorandom number generation, the internals of which are determined by the specifics of $f(\cdot)$ of the recursion above. Typically this is not of direct interest to statisticians or users. For exploratory purposes we illustrate how one can make a simple pseudorandom number generator.
 
-A simple to implement class of (now classic and outdated) pseudo-random number generators is the class of [Linear Congruential Generators](https://en.wikipedia.org/wiki/Linear_congruential_generator) (LCG). These types of LCGs are common in older systems. Here the function $f(\cdot)$ is nothing but an affine (linear) transformation modulo $m$,
+A simple to implement class of (now classic and outdated) pseudorandom number generators is the class of [Linear Congruential Generators](https://en.wikipedia.org/wiki/Linear_congruential_generator) (LCG). These types of LCGs are common in older systems. Here the function $f(\cdot)$ is nothing but an affine (linear) transformation modulo $m$,
 
 $$
 x_{n+1} = (a \,x_n + c ) ~\mbox{mod}~ m.
@@ -111,13 +119,13 @@ The [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) is a popu
 ```julia
 using Random 
 rng = MersenneTwister(27)
-@show rand(rng,Int)
-@show rand(rng,Complex{Float64})
+@show rand(rng, Int)
+@show rand(rng, Complex{Float64})
 
 println("After creating an RNG with same seed:")
 rng = MersenneTwister(27)
-@show rand(rng,Int)
-@show rand(rng,Complex{Float64});
+@show rand(rng, Int)
+@show rand(rng, Complex{Float64});
 ```
 
 There are several reasons for using multiple random number generators, but before these are understood it is good to understand the concept of **common random numbers**. The general idea is that you want to do some task, or compute some function which depends both on a random sequence and some parameter, say $\alpha$. Sometimes you would want to vary $\alpha$ a bit and see the effect on the task and the function. If you keep the same random numbers (the same seed) then the effect will often be more apparat.
@@ -137,9 +145,9 @@ function path(rng::AbstractRNG, α::Real, n::Int=5000)
         elseif flip == 2
             y += 1
         elseif flip == 3
-            x -= (2+α)*rand(rng)
+            x -= (2+α) * rand(rng)
         elseif flip == 4
-            y -= (2+α)*rand(rng)
+            y -= (2+α) * rand(rng)
         end
         push!(xDat,x)
         push!(yDat,y)
@@ -148,7 +156,7 @@ function path(rng::AbstractRNG, α::Real, n::Int=5000)
 end
 
 alpha_range = [0.2, 0.21, 0.22]
-args = (xlabel = "x", ylabel = "y", xlims=(-200,50), ylims=(-250,50))
+args = (xlabel = "x", ylabel = "y", xlims=(-200, 50), ylims=(-250, 50))
 
 #Plot runs with same random numbers (common random numbers)
 p1 = plot(path(MersenneTwister(27), alpha_range[1]), c=:blue)
@@ -211,7 +219,7 @@ mean(data), std(data)
 In fact, in with the `Distributions` package you can query the distribution object directly about things like the mean and standard deviation:
 
 ```julia
-mean(dist),std(dist)
+mean(dist), std(dist)
 ```
 
 The study of Monte Carlo methods includes a collection of algorithms for generating random variables from desired distributions. For example for the geometric distribution (describing the number of independent Bernoulli trials until success), and similarly for the negative binomial distribution (until $k$ successes), we can just write code based the Bernoulli coin flips (for example: [geometric.jl](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/3_chapter/geometric.jl) or [negativeBinomial.jl](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/3_chapter/negativeBinomial.jl)).
