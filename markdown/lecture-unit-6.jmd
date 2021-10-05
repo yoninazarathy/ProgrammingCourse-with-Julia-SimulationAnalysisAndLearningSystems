@@ -340,71 +340,75 @@ Here is a very simple example, just designed to illustrate the concept:
 
 * Assume that $5$ workers at a donation call centre make telephone calls continuously for $1$ hour. 
 * The duration of each call is exponentially distributed with a mean of $7$ minutes. 
-* Assume that a call which takes less than 1.5 minutes ends without a donation and that calls that take more than $1.5$ minutes end with a donation proportional to the call time (with a factor of $2.5$). 
+* Assume that a call which takes less than $1.5$ minutes ends without a donation and that calls that take more than $1.5$ minutes end with a donation proportional to the call time (with a factor of \$$2.5$ per minute). 
 
 We can simulate the revenue curve of the call center using discrete event simulation. Side note: Under the simplistic assumptions above the revenue is actually a [compound Poisson process](https://en.wikipedia.org/wiki/Compound_Poisson_process) and many questions about its behavior can be answered without simulation. However, the simulation here is worthwhile to consider from a pedagogical perspective. 
 
-The following code creates three **realizations** of the revenue curve.
+The following code creates three **realizations** (or **trajectories**) of the revenue as a function of time.
 
 ```julia
 using Distributions, Random, Plots
 Random.seed!(0)
 
 call_duration() = rand(Exponential(7.0))
-money_made(duration::Float64)::Float64 = duration ≤ 1.5 ? 0.0 : 2.5duration
+money_made(duration::Float64)::Float64 = duration ≤ 1.5 ? 0.0 : 2.5 * duration
 
-function do_sim()
-    current_worker_calls = [call_duration() for _ in 1:5] #initialize with everyone calling at start
+function simulate()
+    current_worker_calls = [call_duration() for _ in 1:5] # initialize: all workers start a call at t=0
 
     event_list = copy(current_worker_calls) 
     revenue = 0.0
     t = 0.0
 
-    times_log, revenue_log = Float64[], Float64[]
+    times_log = Float64[]
+    revenue_log = Float64[]
 
     while true
-        #find the worker that has just finished their call
-        i = argmin(event_list)
-        t = event_list[i] #advance time to that call
-        if t ≥ 60
-            push!(times_log,60)
-            push!(revenue_log,revenue)
+        # find the worker that has just finished their call
+        i = argmin(event_list) # note - performance bottleneck
+        # advance time to that call
+        t = event_list[i]
+        if t ≥ 60 # trigger simulation end
+            push!(times_log, 60)
+            push!(revenue_log, revenue)
             break
         end
-        push!(times_log,t)
+        # record the event
+        push!(times_log, t)
         revenue += money_made(current_worker_calls[i])
         push!(revenue_log,revenue)
-        current_worker_calls[i] = call_duration() #engage worker in new call
-        event_list[i] = t + current_worker_calls[i] #set the event for this worker
+        # engage worker in new call and set the call-finish event
+        current_worker_calls[i] = call_duration()
+        event_list[i] = t + current_worker_calls[i]
     end
-    return (times_log,revenue_log)
+    return (times_log, revenue_log)
 end
 
 """
 This function is designed to stich_steps of a discrete event curve.
 """
-function stich_steps(epochs,values)
+function stich_steps(epochs, values)
     n = length(epochs)
     new_epochs  = [epochs[1]]
     new_values = [values[1]]
     for i in 2:n
-        push!(new_epochs,epochs[i])
-        push!(new_values,values[i-1])
-        push!(new_epochs,epochs[i])
-        push!(new_values,values[i])
+        push!(new_epochs, epochs[i])
+        push!(new_values, values[i-1])
+        push!(new_epochs, epochs[i])
+        push!(new_values, values[i])
     end
     return (new_epochs, new_values)
 end
 
-plot(stich_steps(do_sim()...)..., label = false, 
+plot(stich_steps(simulate()...)..., label = false, 
      xlabel = "Time", ylabel = "Revenue")
-plot!(stich_steps(do_sim()...)..., label = false)
-plot!(stich_steps(do_sim()...)..., label = false)
+plot!(stich_steps(simulate()...)..., label = false)
+plot!(stich_steps(simulate()...)..., label = false)
 ```
 
 As you can see, in a discrete event simulation, at each discrete time point $T_i$ the system state is modified due to an **event** that causes such a state change. 
 
-This type of simulation is often suitable for models occurring in logistics, social service, and communication. However it can also be useful for physical systems, e.g. consider a simulation of a tumbling boulder down a nearly vertical cliff, in between points of time during which it hits the cliff it follows standard Newtonian dynamics, however whenever a piece hits the cliff (at a discrete specific point of time which can be approximated as an exact instance), it potentially shatters and splits into multiple pieces. 
+This type of simulation is often suitable for models occurring in logistics, social service, and communication. However it can also be useful for physical systems, e.g. consider [a simulation of the kinetic model of an ideal gas](https://www.youtube.com/watch?v=AEFBtKoiQhA) where the events are gas particles colliding (and between events the particles simply move with constant velocity). These types of similators are sometimes used to study phase transitions, chaos theory, etc.
 
 Going back to logistics applications, as an illustrative hypothetical example, consider a **health clinic** with a waiting room for patients. 
 
@@ -436,8 +440,8 @@ Beyond the introductory example above, one of the most simple examples to consid
 
 As a simple example we consider one of the simplest queueing models called [the M/D/1 queue](https://en.wikipedia.org/wiki/M/D/1_queue). The name of this model "M/D/1" signifies:
 
-* "M" =  customers arrive to the system according to one of the simplest possible arrival process, a [Poisson process](https://en.wikipedia.org/wiki/Poisson_point_process). Note that "M" also stands for Markovian or Memory less.
-* "D" = the service durations of customers are deterministic fixed values. 
+* "M" =  customers arrive to the system according to one of the simplest possible arrival process, a [Poisson process](https://en.wikipedia.org/wiki/Poisson_point_process). Note that "M" also stands for *Markovian* or *memoryless*.
+* "D" = the service durations of customers are *deterministic* fixed values. 
 * "1" = there is a single server serving the customers (as opposed to say customers arriving to a queue in K-mart where there maybe multiple tellers/machines serving one big queue).
 
 Queueing theory provides many results and formulas for models such as M/D/1 and beyond. Some key questions answered include:
@@ -462,54 +466,71 @@ The following code presents a discrete event simulation of M/D/1, M/M/1, and M/M
 using Distributions, Random
 Random.seed!(1)
 
-function queueDES(T, arrF, serF, capacity = Inf, initQ = 0)
-    t, q, qL = 0.0, initQ, 0.0
+function queue_simulator(T, arrival_function, service_function, capacity = Inf, init_queue = 0)
+    t = 0.0
+    queue = init_queue
+    queue_integral = 0.0
 
-    nextArr, nextSer = arrF(), q == 0 ? Inf : serF()
+    next_arrival = arrival_function()
+    next_service = queue == 0 ? Inf : service_function()
+
     while t < T
-        tPrev, qPrev = t, q
-        if nextSer < nextArr
-            t = nextSer
-            q -= 1
-            if q > 0
-                nextSer = t + serF()
+        t_prev = t
+        q_prev = queue
+        if next_service < next_arrival
+            t = next_service
+            queue -= 1
+            if queue > 0
+                next_service = t + service_function()
             else
-                nextSer = Inf
+                next_service = Inf
             end
         else
-            t = nextArr
-            if q == 0
-                nextSer = t + serF()
+            t = next_arrival
+            if queue == 0
+                next_service = t + service_function()
             end
-            if q < capacity
-                q += 1
+            if queue < capacity
+                queue += 1
             end
-            nextArr = t + arrF()
+            next_arrival = t + arrival_function()
         end
-        qL += (t - tPrev)*qPrev
+        queue_integral += (t - t_prev) * q_prev
     end
-    return qL/t
+    return queue_integral / t
 end
 
-λ, μ, K = 0.82, 1.3, 5
-ρ = λ/μ    #\rho + [TAB]
+λ = 0.82   # \lamda + [TAB]
+μ = 1.3    # \mu + [TAB]
+K = 5
+ρ = λ / μ  # \rho + [TAB]
 T = 10^6
 
-#These are formulas from queueing theory 
-mm1Theor = ρ/(1-ρ)
-md1Theor = ρ/(1-ρ)*(2-ρ)/2
-mm1kTheor = ρ/(1-ρ)*(1-(K+1)*ρ^K+K*ρ^(K+1))/(1-ρ^(K+1))
+# These are formulas from queueing theory 
+mm1_theory = ρ/(1-ρ)
+md1_theory = ρ/(1-ρ)*(2-ρ)/2
+mm1k_theory = ρ/(1-ρ)*(1-(K+1)*ρ^K+K*ρ^(K+1))/(1-ρ^(K+1))
 
-mm1Est = queueDES(T,()->rand(Exponential(1/lam)),
-            			  ()->rand(Exponential(1/mu)))
-md1Est = queueDES(T,()->rand(Exponential(1/lam)),
-                                   ()->1/mu)
-mm1kEst = queueDES(T,()->rand(Exponential(1/lam)),
-                                      ()->rand(Exponential(1/mu)), K)
+mm1_estimate = queue_simulator(
+    T,
+    () -> rand(Exponential(1/λ)),
+    () -> rand(Exponential(1/μ))
+)
+md1_estimate = queue_simulator(
+    T,
+    () -> rand(Exponential(1/λ)),
+    () -> 1/μ
+)
+mm1k_estimate = queue_simulator(
+    T,
+    () -> rand(Exponential(1/λ)),
+    () -> rand(Exponential(1/μ)),
+    K
+)
 
-println("The load on the system: ",ρ)
-println("Queueing theory: ", (mm1Theor,md1Theor,mm1kTheor) )
-println("Via simulation: ", (mm1Est,md1Est,mm1kEst) )
+println("The load on the system: $(p)")
+println("Queueing theory: $((mm1_theory, md1_theory, mm1k_theory))")
+println("Via simulation: $((mm1_estimate, md1_estimate, mm1k_estimate))")
 ```
 
 Note: We simulate M/D/1 again below using a different software approach and there we present a trajectory of the queue size (see figure below).
@@ -529,88 +550,104 @@ import Base: isless
 abstract type Event end
 abstract type State end
 
-#Captures an event and the time it takes place
+# Captures an event and the time it takes place
 struct TimedEvent
     event::Event
     time::Float64
 end
 
-#Comparison of two timed events - this will allow us to use them in a heap/priority-queue
-isless(te1::TimedEvent,te2::TimedEvent) = te1.time < te2.time
+# Comparison of two timed events - this will allow us to use them in a heap/priority-queue
+isless(te1::TimedEvent, te2::TimedEvent) = te1.time < te2.time
 
-#This is an abstract function 
 """
-It will generally be called as 
-       new_timed_events = process_event(time, state, event)
-It will generate 0 or more new timed events based on the current event
-"""
-function process_event end
+    new_timed_events = process_event(time, state, event)
 
-#Generic events that we can always use
+Generate an array of 0 or more new `TimedEvent`s based on the current `event` and `state`.
+"""
+function process_event end # This defines a function with zero methods (to be added later)
+
+# Generic events that we can always use
+
+"""
+    EndSimEvent()
+
+Return an event that ends the simulation.
+"""
 struct EndSimEvent <: Event end
-struct LogStateEvent <: Event end
 
 function process_event(time::Float64, state::State, es_event::EndSimEvent)
     println("Ending simulation at time $time.")
     return []
 end
 
+"""
+    LogStateEvent()
+
+Return an event that prints a log of the current simulation state.
+"""
+struct LogStateEvent <: Event end
+
 function process_event(time::Float64, state::State, ls_event::LogStateEvent)
     println("Logging state at time $time.")
     println(state)
     return []
-end;
+end
 ```
 
-With abstractions such as above in place, we can write the general simulation function, `do_sim`. It uses a Heap datatype (also appeared in heap sort in unit 2 and in Project 1). As discussed in Unit 2, the heap is a very good mechanism for a priority queue. In our case it is a priority queue of events. 
+With abstractions such as above in place, we can write the general simulation function, `simulate`. It uses a heap datatype (also appeared in heap sort in unit 2 and in Project 1). As discussed in Unit 2, the heap is a very good mechanism for a priority queue. In our case it is a priority queue of events. 
 
 ```julia
 """
-The main simulation function gets an initial state and an initial event that gets things going.
-Optional arguments are the maximal time for the simulation, times for logging events, and a call back function.
+The main simulation function gets an initial state and an initial event
+that gets things going. Optional arguments are the maximal time for the
+simulation, times for logging events, and a call-back function.
 """
-function do_sim(init_state::State, init_timed_event::TimedEvent
+function simulate(init_state::State, init_timed_event::TimedEvent
                     ; 
                     max_time::Float64 = 10.0, 
                     log_times::Vector{Float64} = Float64[],
-                    call_back = (time,state) -> nothing)
+                    callback = (time, state) -> nothing)
 
-    #The event queue
+    # The event queue
     priority_queue = BinaryMinHeap{TimedEvent}()
 
-    #Put the standard events in the queue
+    # Put the standard events in the queue
     push!(priority_queue, init_timed_event)
-    push!(priority_queue, TimedEvent(EndSimEvent(),max_time))
-    for lt in log_times
-        push!(priority_queue,TimedEvent(LogStateEvent(),lt))
+    push!(priority_queue, TimedEvent(EndSimEvent(), max_time))
+    for log_time in log_times
+        push!(priority_queue, TimedEvent(LogStateEvent(), log_time))
     end
 
-    #initilize the state
+    # initilize the state
     state = deepcopy(init_state)
     time = 0.0
 
-    call_back(time,state)
+    # Callback at simulation start
+    callback(time, state)
 
-    #The main discrete event simulation loop - SIMPLE!
+    # The main discrete event simulation loop - SIMPLE!
     while true
-        #Get the next event
+        # Get the next event
         timed_event = pop!(priority_queue)
 
-        #advance the time
+        # Advance the time
         time = timed_event.time
 
-        #Act on the event
+        # Act on the event
         new_timed_events = process_event(time, state, timed_event.event) 
 
-        #if the event was an end of simulation then stop
-        isa(timed_event.event, EndSimEvent) && break 
+        # If the event was an end of simulation then stop
+        if timed_event.event isa EndSimEvent
+            break 
+        end
 
-        #The event may spawn 0 or more events which we put in the priority queue 
+        # The event may spawn 0 or more events which we put in the priority queue 
         for nte in new_timed_events
             push!(priority_queue,nte)
         end
 
-        call_back(time,state)
+        # Callback for each simulation event
+        callback(time, state)
     end
 end;
 ```
@@ -621,37 +658,39 @@ The above code can be used for many applications and it can serve as the basis f
 using Distributions, Random
 Random.seed!(0)
 
-λ, μ = 1.8, 2.0
+λ = 1.8
+μ = 2.0
  
 mutable struct QueueState <: State
-    number_in_system::Int #If ≥ 1 then server is busy, If = 0 server is idle.
+    number_in_system::Int # If ≥ 1 then server is busy, If = 0 server is idle.
 end
 
 struct ArrivalEvent <: Event end
 struct EndOfServiceEvent <: Event end
 
-#Process an arrival event
-function process_event(time::Float64, state::State, arrival_event::ArrivalEvent)
-    state.number_in_system += 1     #increase number in system
+# Process an arrival event
+function process_event(time::Float64, state::State, ::ArrivalEvent)
+    # Increase number in system
+    state.number_in_system += 1
     new_timed_events = TimedEvent[]
 
-    #prepare next arrival
+    # Prepare next arrival
     push!(new_timed_events,TimedEvent(ArrivalEvent(),time + rand(Exponential(1/λ))))
 
-    #if this is the only job on the server
+    # If this is the only job on the server
     state.number_in_system == 1 && push!(new_timed_events,TimedEvent(EndOfServiceEvent(), time + 1/μ))
     return new_timed_events
 end
 
-#Process an end of service event 
-function process_event(time::Float64, state::State, eos_event::EndOfServiceEvent)
-    #release a customer from the system
+# Process an end of service event 
+function process_event(time::Float64, state::State, ::EndOfServiceEvent)
+    # Release a customer from the system
     state.number_in_system -= 1 
     @assert state.number_in_system ≥ 0
     return state.number_in_system ≥ 1 ? [TimedEvent(EndOfServiceEvent(), time + 1/μ)] : TimedEvent[]
 end
 
-do_sim(QueueState(0), TimedEvent(ArrivalEvent(),0.0), log_times = [5.3,7.5])
+simulate(QueueState(0), TimedEvent(ArrivalEvent(),0.0), log_times = [5.3,7.5])
 ```
 
 Let's use the call back feature to record the queue state so we can plot it.
@@ -662,13 +701,13 @@ Random.seed!(0)
 
 time_traj, queue_traj = Float64[], Int[]
 
-function record_traj(time::Float64, state::QueueState) 
+function record_trajectory(time::Float64, state::QueueState) 
     push!(time_traj, time)
     push!(queue_traj, state.number_in_system)
     return nothing
 end
 
-do_sim(QueueState(0), TimedEvent(ArrivalEvent(),0.0), max_time = 100.0, call_back = record_traj)
+simulate(QueueState(0), TimedEvent(ArrivalEvent(),0.0), max_time = 100.0, callback = record_trajectory)
 
 plot(stich_steps(time_traj, queue_traj)... ,
              label = false, xlabel = "Time", ylabel = "Queue size (number in system)" )
@@ -679,24 +718,31 @@ Instead of running a short simulation let's run a long one and compute the avera
 ```julia
 Random.seed!(0)
 
-λ, μ = 1.8, 2.0
+λ = 1.8
+μ = 2.0
 
-prev_time, prev_state, integral = 0.0, 0, 0.0
+prev_time = 0.0
+prev_state = 0
+integral = 0.0
 
 function add_to_integral(time::Float64, state::QueueState) 
+    # Make sure to use the variables above
     global prev_time, prev_state, integral
+
     diff = time - prev_time
     integral += prev_state * diff
-    prev_time, prev_state = time, state.number_in_system
+    prev_time = time
+    prev_state = state.number_in_system
+
     return nothing
 end
 
-do_sim(QueueState(0), TimedEvent(ArrivalEvent(),0.0), max_time = 10.0^6, call_back = add_to_integral)
+simulate(QueueState(0), TimedEvent(ArrivalEvent(),0.0), max_time = 10.0^6, callback = add_to_integral)
 println("Simulated mean queue length: ", integral / 10^6 )
 
 ρ = λ / μ
-md1Theor = ρ/(1-ρ)*(2-ρ)/2
-println("Theoretical mean queue length: ", md1Theor / 10^6 )
+md1_theory = ρ/(1-ρ)*(2-ρ)/2
+println("Theoretical mean queue length: ", md1_theory)
 ```
 
 # Basic Monte Carlo based statistical analysis
