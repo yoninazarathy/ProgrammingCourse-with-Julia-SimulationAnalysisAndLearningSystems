@@ -1,7 +1,7 @@
 # Project \#2 - Semester 2, 2021
 # Discrete Event Simulation (+ perspective seminar summary)
 
-(last edit: Oct 4, 2021)
+(last edit: Oct 9, 2021)
 
 **Here is an [explainer video for the project](https://youtu.be/dVf-Ss7tq-A)**.
 
@@ -140,7 +140,7 @@ using LinearAlgebra
 #The @with_kw macro comes from the Parameters package
 @with_kw struct NetworkParameters
     L::Int
-    gamma_shape::Float64 #This is constant for all scenarios at 3.0
+    gamma_scv::Float64 #This is constant for all scenarios at 3.0
     λ::Float64 #This is undefined for the scenarios since it is varied
     η::Float64 #This is assumed constant for all scenarios at 4.0
     μ_vector::Vector{Float64} #service rates
@@ -152,7 +152,7 @@ end
 
 ############################
 scenario1 = NetworkParameters(  L=3, 
-                                gamma_shape = 3.0, 
+                                gamma_scv = 3.0, 
                                 λ = NaN, 
                                 η = 4.0, 
                                 μ_vector = ones(3),
@@ -166,7 +166,7 @@ scenario1 = NetworkParameters(  L=3,
 
 ############################
 scenario2 = NetworkParameters(  L=3, 
-                                gamma_shape = 3.0, 
+                                gamma_scv = 3.0, 
                                 λ = NaN, 
                                 η = 4.0, 
                                 μ_vector = ones(3),
@@ -180,7 +180,7 @@ scenario2 = NetworkParameters(  L=3,
 
 ############################
 scenario3 = NetworkParameters(  L=3, 
-                                gamma_shape = 3.0, 
+                                gamma_scv = 3.0, 
                                 λ = NaN, 
                                 η = 4.0, 
                                 μ_vector = ones(3),
@@ -196,7 +196,7 @@ scenario3 = NetworkParameters(  L=3,
 
 ############################
 scenario4 = NetworkParameters(  L=5, 
-                                gamma_shape = 3.0, 
+                                gamma_scv = 3.0, 
                                 λ = NaN, 
                                 η = 4.0, 
                                 μ_vector = collect(5:-1:1),
@@ -216,7 +216,7 @@ scenario4 = NetworkParameters(  L=5,
 
 ############################
 scenario5 = NetworkParameters(  L=20, 
-                                gamma_shape = 3.0, 
+                                gamma_scv = 3.0, 
                                 λ = NaN, 
                                 η = 4.0, 
                                 μ_vector = ones(20),

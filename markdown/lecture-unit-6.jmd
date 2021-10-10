@@ -408,7 +408,7 @@ plot!(stich_steps(simulate()...)..., label = false)
 
 As you can see, in a discrete event simulation, at each discrete time point $T_i$ the system state is modified due to an **event** that causes such a state change. 
 
-This type of simulation is often suitable for models occurring in logistics, social service, and communication. However it can also be useful for physical systems, e.g. consider [a simulation of the kinetic model of an ideal gas](https://www.youtube.com/watch?v=AEFBtKoiQhA) where the events are gas particles colliding (and between events the particles simply move with constant velocity). These types of similators are sometimes used to study phase transitions, chaos theory, etc.
+This type of simulation is often suitable for models occurring in logistics, social service, and communication. However it can also be useful for physical systems, e.g. consider [a simulation of the kinetic model of an ideal gas](https://www.youtube.com/watch?v=AEFBtKoiQhA) where the events are gas particles colliding (and between events the particles simply move with constant velocity). These types of simulators are sometimes used to study phase transitions, chaos theory, etc.
 
 Going back to logistics applications, as an illustrative hypothetical example, consider a **health clinic** with a waiting room for patients. 
 
@@ -745,12 +745,358 @@ md1_theory = ρ/(1-ρ)*(2-ρ)/2
 println("Theoretical mean queue length: ", md1_theory)
 ```
 
+# Under the hood: The Heap Datastructure
+
+We have seen that we need to use a **priority queue** for discrete event simulation. Priority queues were already discussed in Unit 2, where have shown a naive implementation and indicated that the best known implementation is a **heap data structure** (not to be confused with the heap also known as the "free store" where memory is allocated). 
+
+Our expectation of a heap is to be able to **push** and **pop** elements that have an order (priority). We should be able to push any element quickly and to pop the element with the lowest (alt. highest) priority at any time quickly and efficiently as well. Simple implementations of priority queues via arrays (either sorted or unsorted) will have $O(n)$ complexity for either pushing or popping.
+
+A heap will allow us to do pushing and popping in $O(log~n)$ time.
+
+A heap is based on an **(almost) complete balanced binary tree** data structure. Before we deal with heaps explicitly, let us look at these trees. Tree data structure are ubiquitous in computer science and come in many shapes and forms. A balanced binary tree is one specific form. Schematically we can represent it as follows:
+
+![Almost Complete Binary Tree](../web_img/tree1.jpg)
+
+Here we numbered the node in binary sequentially where the root is $1$, it's two leafs are $10$, and $11$, the third layer has $100$, $101$, $110$, and $111$, and so fourth. In this example there are $12$ nodes all together. Notice they are compacted on the final layer to the left. 
+
+If we had $1$, $3$, $7$, $15$, $31$, or $63$ nodes (etc.) the tree would be complete. Otherwise it is in general called almost complete. 
+
+A nice thing about this layout of the tree is that the **path** to any node is determined by it's binary representation. To do this omit the MSB (most significant bit) of the number of the node. Then we take the bits from left to right (starting one bit to the right of the MSB), and consider "0" as going left, and "1" as going right. So for example the path to the node $1010$ goes left $\rightarrow$ right $\rightarrow$ left.
+
+Almost complete binary arrays are special in that they can actually be laid out in memory sequentially:
+
+![Almost Complete Binary Tree in memory](../web_img/tree2.png)
+
+With this layout you can easily find the array index **left child**, **right child**, or **parent** of each node. In fact, there is $O(1)$ access to any numbered node. This differs from most other trees (not necessarily almost complete binary trees) where a **dangled** implementation is needed. In such a dangled implementation, pointers or references need to be kept between nodes. Here is for example a struct for such a node which keeps a string inside it:
+
+```julia
+mutable struct Node
+    parent::Union{Node, Nothing}
+    lchild::Union{Node, Nothing}
+    rchild::Union{Node, Nothing}
+    value::String
+    Node(value::String) = new(nothing, nothing, nothing, value)
+end
+```
+
+Since in this course we didn't get a chance to see such dangled implementations elsewhere, and since they are ubiquitous with classical and useful dat structures such as general balanced trees, linked lists, graphs, and more, we now present an implementation of such a complete binary tree using the `Node` struct above. We then use it for a heap, which we describe below. 
+
+This specific case stores `value` elements of type `String`. However this can be generalized to store any types of values.
+
+This is the tree structure:
+
+```julia
+mutable struct BalancedBinaryTree
+    num_nodes::Int
+    root::Union{Node,Nothing}
+    BalancedBinaryTree() = new(0,nothing)
+end
+```
+
+We can compute the depth:
+```julia
+depth(tree::BalancedBinaryTree) = tree.num_nodes > 0 ?  Int(floor(log2(tree.num_nodes)))+1 : 0 
+```
+
+Here is a way to print the values. It illustrates the usage of the `lchild` and `rchild` references(pointers) in each node:
+
+```julia
+function print(tree::BalancedBinaryTree)
+    function print(node::Node, indent::Int)
+        println("-"^indent, node.value)
+        if node.lchild != nothing
+            print(node.lchild, indent + 1)
+        end
+        if node.rchild != nothing
+            print(node.rchild, indent + 1)
+        end
+    end
+
+    if tree.num_nodes == 0
+        println("Empty tree")
+    else
+        print(tree.root,0)
+    end
+end
+```
+
+Now lets implement the most important methods of this tree: `push!()` and `pop!()`. The key logic in these functions is to find the "next available spot" in push and to put an element there. Similarly in `pop!()` we remove the element from the last spot and put it in place of the root, which is removed:
+
+```julia
+import Base: push!
+
+function push!(tree::BalancedBinaryTree, value::String)::BalancedBinaryTree
+    new_node = Node(value)
+    
+    #If tree is empty just add a root
+    if tree.num_nodes == 0
+        tree.root = new_node
+        tree.num_nodes = 1
+        return tree
+    end
+
+    #Otherwise, walk the tree based on the bit representation 
+    tree.num_nodes += 1 
+    num = tree.num_nodes #This is the new node number we want to put in
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0 #If bit is "1" then go right
+            # println("right")
+            if mask == 1
+                #println("last on right")
+                current_node.rchild = new_node
+                new_node.parent = current_node
+                break
+            else #not last one on the right
+                current_node = current_node.rchild 
+            end
+        else #If here then bit is "0" and go left
+            # println("left")
+            # current_node = current_node.rchild
+            if mask == 1
+                # println("last on left")
+                current_node.lchild = new_node
+                new_node.parent = current_node
+                break
+            else #not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+    return tree
+end
+```
+
+```julia
+import Base: pop!
+function pop!(tree::BalancedBinaryTree)::String
+    ret_val = tree.root.value
+    
+    #if there is only the root then remove it
+    if tree.num_nodes == 1
+        tree.root = nothing
+        tree.num_nodes = 0
+        return ret_val
+    end
+
+    #Otherwise, find the last node and put it in place of the root 
+    num = tree.num_nodes
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0 #If bit is "1" then go right
+            if mask == 1
+                node_to_replace_with_root = current_node.rchild
+                current_node.rchild = nothing
+                node_to_replace_with_root.parent = nothing
+                node_to_replace_with_root.rchild = tree.root.rchild
+                node_to_replace_with_root.lchild = tree.root.lchild
+                tree.root = node_to_replace_with_root
+                break
+            else #not last one on the right
+                current_node = current_node.rchild 
+            end
+        else #If here then bit is "0" and go left
+            if mask == 1
+                node_to_replace_with_root = current_node.lchild
+                current_node.lchild = nothing
+                node_to_replace_with_root.parent = nothing
+                node_to_replace_with_root.rchild = tree.root.rchild
+                node_to_replace_with_root.lchild = tree.root.lchild
+                tree.root = node_to_replace_with_root                
+                break
+            else #not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+
+    tree.num_nodes -=1
+
+    return ret_val
+end
+```
+
+With this basic functionality, here is the tree in action. First let's push some elements:
+
+```julia
+tree = BalancedBinaryTree()
+push!(tree,"one")
+push!(tree,"two")
+push!(tree,"three")
+push!(tree,"four")
+push!(tree,"five")
+push!(tree,"six")
+push!(tree,"seven")
+push!(tree,"eight")
+push!(tree,"nine")
+
+print(tree)
+```
+
+Now look what happens when we pop an element:
+
+```julia
+println("Popping element:")
+@show pop!(tree)
+
+println("Now the tree is:")
+print(tree)
+```
+
+This is all nice and good, but now lets use this type of tree for a **heap**. The heap is an almost complete binary tree with values that can be compared and with the critical **partial order**: Each node is larger (not smaller) than its children. This then allows to pop in $O(1)$ time since the maximum is the root. But it also allows to insert in $O(log~n)$ time!  
+
+Let's look at an implementation using the tree we constructed above:
+
+```julia
+struct MaxHeap
+    tree::BalancedBinaryTree
+    MaxHeap() = new(BalancedBinaryTree())
+end
+```
+
+There are now two key operations we must do "sift up" and "sift down". These are basically exchanges of nodes to maintain the partial order. Let's start with the simpler one, "sift up" which we'll use to push new elements to the heap:
+
+```julia
+function sift_up!(node::Node)::Nothing
+    if node.parent != nothing && node.parent.value < node.value 
+            temp = node.value
+            node.value = node.parent.value
+            node.parent.value = temp
+            sift_up!(node.parent)
+    end
+end
+```
+
+And here is how we use it to push:
+
+```julia
+function push!(heap::MaxHeap, value::String)::MaxHeap
+    push!(heap.tree, value)
+    sift_up!(last_node(heap.tree))
+    return heap
+end
+```
+
+Note that it uses a way to find the "last node" of the tree, so we'll need that in the tree (it uses similar logic to push! of the tree and would have been simpler in an array implementation:
+
+```julia
+function last_node(tree::BalancedBinaryTree)::Node
+    (tree.num_nodes == 1) && (return tree.root)
+
+    num = tree.num_nodes
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0 #If bit is "1" then go right
+            if mask == 1 
+                return current_node.rchild
+            else #not last one on the right
+                current_node = current_node.rchild 
+            end
+        else #If here then bit is "0" and go left
+            if mask == 1
+                return current_node.lchild
+            else #not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+end
+```
+
+Now when we pop an element we know we remove it from the root and then put another element in place of the root. This requires "sift down" which is as follows:
+
+```julia
+function sift_down!(node::Node)::Nothing
+    #if there are no children then nothing to do
+    (node.lchild == nothing && node.rchild == nothing) && return
+
+    #if there is only a left child...
+    if node.lchild != nothing && node.rchild == nothing
+        if  node.lchild.value > node.value 
+            temp = node.value
+            node.value = node.lchild.value
+            node.lchild.value = temp
+            sift_down!(node.lchild)
+        end
+        return
+    end
+
+    #if here then there are two children
+
+    #if node is larger than both children then return
+    (node.value > node.rchild.value && node.value > node.lchild.value) && return 
+    
+    #if here then at least one of the children is larger than the node - swap now with the larger one
+    if node.rchild.value > node.lchild.value #if the right one is larger
+        temp = node.value
+        node.value = node.rchild.value
+        node.rchild.value = temp
+        sift_down!(node.rchild)
+    else #if the left on is larger
+        temp = node.value
+        node.value = node.lchild.value
+        node.lchild.value = temp
+        sift_down!(node.lchild)
+    end
+end
+```
+
+We can now use it in `pop!`:
+
+```julia
+function pop!(heap::MaxHeap)::String
+    ret_val = pop!(heap.tree)
+    heap.tree.root != nothing && sift_down!(heap.tree.root)
+    return ret_val
+end
+```
+
+This is it. We have a basic heap and as you can argue, both the push and pop operations are $O(log~n)$.  Here it is in action:
+
+```julia
+heap = MaxHeap()
+push!(heap,"eleven")
+push!(heap,"three")
+push!(heap,"nine")
+push!(heap,"four")
+push!(heap,"twenty five")
+push!(heap,"one hundred")
+push!(heap,"five")
+push!(heap,"million")
+push!(heap,"seven")
+push!(heap,"eight")
+push!(heap,"two billion")
+push!(heap,"ten")
+push!(heap,"six")
+push!(heap,"zero")
+
+println("Tree of heap:")
+print(heap.tree)
+
+println("Printing in reverse order: ")
+
+while heap.tree.num_nodes !=0 
+    println(pop!(heap))
+end
+```
+
+Now obviously in the context of discrete event simulation our heap is not with values which are strings, but rather with values which are floating point numbers (times of events). Further the order is that the smallest element is on top and not the largest. You can see how the heap in `DataStructures.jl` is [implemented](https://github.com/JuliaCollections/DataStructures.jl/blob/master/src/heaps/minmax_heap.jl). Note that "sift up" is sometimes called "bubble up", etc...
+
+You may consider how to make a [parametric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) to our tree and heap above so that the value is not necessarily a `String` but rather any type `T` that can be compared. 
+
+
 # Basic Monte Carlo based statistical analysis
 
-**NOTE:** Content from here down is not yet fully updated.
-
-* Bootstrap confidence intervals..
-* MCMC
+We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. One such technique is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example:
 
 ```julia
 using Distributions, Plots
@@ -806,7 +1152,9 @@ plot!(lamRange, closedFormPosterior.(lamRange),
     xlabel=L"\lambda",ylabel="Density")
 ```
 
-# Markov Chains (back to it from HW2 question)
+# Other simulations
+
+In addition to discrete event simulation, there are many other forms of simulations. For example here we go back to Markov Chains (that appeared in HW2):
 
 ```julia
 using LinearAlgebra, Statistics, StatsBase, Plots
@@ -856,28 +1204,72 @@ scatter!(4:33,c2[1:30],
 	c=:red, ms=5, msw=0, shape=:cross, 
 	label="Stochastic recursive formula", xlabel="Time", ylabel="Probability")
 ```
-* Markov chain simulation
-* Continuous time
 
+Or here is a simulation of a stochastic epidemic model:
 
-### A few more tid-bits
+```julia
+using Distributions, Random, Plots
+Random.seed!(0)
 
-* Epidemic simulation (skim)
-* Basic manipulation of dates/times `using Dates`
+beta, delta, gamma = 0.25, 0.4, 0.1
+initialInfect = 0.025
+M = 1000
+I0 = Int(floor(initialInfect*M))
+N = 30
 
-# Under the hood: The Heap Datastructure
+function simulateSIRDoobGillespie(beta,delta,gamma,I0,M,T)
+    t, S, E, I, R = 0.0, M-I0, 0, I0, 0
+    tValues, sValues, eValues, iValues, rValues = [0.0], [S], [E], [I], [R]
+    while t<T
+        infectionRate = beta*I*S
+        symptomRate = delta*E
+        removalRate = gamma*I
+        totalRate = infectionRate + symptomRate + removalRate
+        probs = [infectionRate, symptomRate, removalRate]/totalRate
+        t += rand(Exponential(1/(totalRate)))
+        u = rand()
+        if u < probs[1]
+            S -= 1; E += 1
+        elseif u < probs[1] + probs[2]
+            E -=1; I+=1
+        else
+            I -= 1; R += 1
+        end
+        push!(tValues,t)
+        push!(sValues,S);push!(eValues,E);push!(iValues,I);push!(rValues,R)
+        I == 0 && break
+    end
+    return [tValues, sValues, eValues, iValues, rValues]
+end
 
-* Now understanding the heap datastructue (and implementing one)...
-* Generic interfaces again... (Put "anything" in a heap...)
+tV,sV,eV,iV,rV = simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)
+lastT = tV[end]
+
+finals = [simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)[5][end] 
+                for _ in 1:N]/M
+
+p1 = plot(tV,sV/M,label = "Susceptible", c=:green)
+plot!(tV,eV/M,label = "Exposed", c=:blue)
+plot!(tV,iV/M,label = "Infected",c=:red)
+plot!(tV,rV/M,label = "Removed", c=:yellow,
+    xlabel = "Time", ylabel = "Proportion",
+    legend = :topleft, xlim = (0,lastT*1.05))
+scatter!(lastT*1.025*ones(N),finals, c = :yellow,label= "Final Infected")
+```
 
 # Modular software design
 
-* Modules
-* Packages
+Lets now get a feel for modular software design. First lets introduce a Julia feature we haven't touched upon previously: [Modules](https://docs.julialang.org/en/v1/manual/modules/).
 
-# More on Julia and programming
+Now lets discuss packaged development in general. Here are a few packages developed by the lecturer Andy Ferris. We shall discuss their philosophy and the work that goes into such package development and maintenance:
 
-* Meta-programming and further understanding of the compilation process. 
+* [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
+* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we will use this package in the next unit as well.
+* [Dictionaries.jl](https://github.com/andyferris/Dictionaries.jl)
+* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl)
+
+# More on Julia and programming (with demonstration)
+
+* A few bits about Meta-programming and further understanding of the compilation process. 
 * More on type inference and performance implications. `@code_warntype`
 * More on profiling and performance optimization. `BenchmarkTools.jl`
-* Examples of using macros and very basic creation (e.g. package GLM, LaTeXStrings).

@@ -8,8 +8,15 @@
 
 # Dataframes
 
+* QQQQ - Get dataset:
+- Not too many rows, not too little.
+- 3-5 correleatd variables.  
+- Categorical
+- Missing
+- Two datasets for join
+
 * Beyond arrays, dictionaries, and such... but not yet in a DB.
-* The dataframes package - basic usage:
+* The dataframes package/typedtables.jl - basic usage:
  - Filtering rows.
  - Accessing.
  - Modifying.
@@ -17,6 +24,8 @@
 * Spliting, apply, and `by()`
 * Join... 
 * Missing values and basic imputation.
+
+* EDA (Exploratory data analysis) StatsPlots.jl
 
 # Memory management
 
