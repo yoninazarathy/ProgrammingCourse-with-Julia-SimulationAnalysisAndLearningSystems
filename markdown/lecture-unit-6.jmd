@@ -1096,9 +1096,33 @@ Now obviously in the context of discrete event simulation our heap is not with v
 You may consider how to make a [parametric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) to our tree and heap above so that the value is not necessarily a `String` but rather any type `T` that can be compared. 
 
 
+
+# Modular software design
+
+Lets now get a feel for modular software design. First lets introduce a Julia feature we haven't touched upon previously: [Modules](https://docs.julialang.org/en/v1/manual/modules/).
+
+Now lets discuss packaged development in general. Here are a few packages developed by the lecturer Andy Ferris. We shall discuss their philosophy and the work that goes into such package development and maintenance:
+
+* [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
+* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we will use this package in the next unit as well.
+* [Dictionaries.jl](https://github.com/andyferris/Dictionaries.jl)
+* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl)
+
+# More on Julia and programming (with demonstration)
+
+* A few bits about Meta-programming and further understanding of the compilation process. 
+* More on type inference and performance implications. `@code_warntype`
+* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl)
+
 # Basic Monte Carlo based statistical analysis
 
-We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. One such technique is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example:
+We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. One such technique is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example from the world of Bayesian statistics.
+
+$$
+\text { posterior }=\frac{\text { likelihood } \times \text { prior }}{\text { evidence }} \quad \text { or } \quad f(\theta \mid x)=\frac{f(x \mid \theta) \times f(\theta)}{\int f(x \mid \theta) f(\theta) d \theta}
+$$
+
+
 
 ```julia
 using Distributions, Plots
@@ -1258,20 +1282,3 @@ plot!(tV,rV/M,label = "Removed", c=:yellow,
     legend = :topleft, xlim = (0,lastT*1.05))
 scatter!(lastT*1.025*ones(N),finals, c = :yellow,label= "Final Infected")
 ```
-
-# Modular software design
-
-Lets now get a feel for modular software design. First lets introduce a Julia feature we haven't touched upon previously: [Modules](https://docs.julialang.org/en/v1/manual/modules/).
-
-Now lets discuss packaged development in general. Here are a few packages developed by the lecturer Andy Ferris. We shall discuss their philosophy and the work that goes into such package development and maintenance:
-
-* [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
-* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we will use this package in the next unit as well.
-* [Dictionaries.jl](https://github.com/andyferris/Dictionaries.jl)
-* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl)
-
-# More on Julia and programming (with demonstration)
-
-* A few bits about Meta-programming and further understanding of the compilation process. 
-* More on type inference and performance implications. `@code_warntype`
-* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl)
