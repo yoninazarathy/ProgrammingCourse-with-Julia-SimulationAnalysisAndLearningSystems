@@ -777,6 +777,7 @@ mutable struct Node
     lchild::Union{Node, Nothing}
     rchild::Union{Node, Nothing}
     value::String
+
     Node(value::String) = new(nothing, nothing, nothing, value)
 end
 ```
@@ -790,34 +791,47 @@ This is the tree structure:
 ```julia
 mutable struct BalancedBinaryTree
     num_nodes::Int
-    root::Union{Node,Nothing}
-    BalancedBinaryTree() = new(0,nothing)
+    root::Union{Node, Nothing}
+
+    BalancedBinaryTree() = new(0, nothing)
 end
 ```
 
 We can compute the depth:
 ```julia
-depth(tree::BalancedBinaryTree) = tree.num_nodes > 0 ?  Int(floor(log2(tree.num_nodes)))+1 : 0 
+depth(tree::BalancedBinaryTree) = tree.num_nodes > 0 ? floor(Int, log2(tree.num_nodes)) + 1 : 0 
+```
+
+Instead of using floating-point operations, we can make this faster using bit manipulation:
+```julia
+depth(tree::BalancedBinaryTree) = 8*sizeof(Int) - leading_zeros(tree.num_nodes)
 ```
 
 Here is a way to print the values. It illustrates the usage of the `lchild` and `rchild` references(pointers) in each node:
 
 ```julia
-function print(tree::BalancedBinaryTree)
-    function print(node::Node, indent::Int)
-        println("-"^indent, node.value)
-        if node.lchild != nothing
-            print(node.lchild, indent + 1)
-        end
-        if node.rchild != nothing
-            print(node.rchild, indent + 1)
+# helper function to show Node
+function show_node(io::IO, node::Node, this_prefix = "", subtree_prefix = "")
+    print(io, "\n", this_prefix, node.lchild === nothing ? "── " : "─┬ ")
+    show(io, node.value)
+
+    # print children
+    if node.lchild !== nothing
+        if node.rchild !== nothing
+            show_node(io, node.lchild, "$(subtree_prefix) ├", "$(subtree_prefix) │")
+        else
+            show_node(io, node.lchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
         end
     end
+    if node.rchild !== nothing
+        show_node(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
+    end
+end
 
-    if tree.num_nodes == 0
-        println("Empty tree")
-    else
-        print(tree.root,0)
+function Base.show(io::IO, tree::BalancedBinaryTree)
+    print(io, "$(tree.num_nodes)-element BalancedBinaryTree")
+    if tree.num_nodes > 0
+        show_node(io, tree.root)
     end
 end
 ```
@@ -830,39 +844,34 @@ import Base: push!
 function push!(tree::BalancedBinaryTree, value::String)::BalancedBinaryTree
     new_node = Node(value)
     
-    #If tree is empty just add a root
+    # If tree is empty just add a root
     if tree.num_nodes == 0
         tree.root = new_node
         tree.num_nodes = 1
         return tree
     end
 
-    #Otherwise, walk the tree based on the bit representation 
+    # Otherwise, walk the tree based on the bit representation 
     tree.num_nodes += 1 
-    num = tree.num_nodes #This is the new node number we want to put in
+    num = tree.num_nodes  # This is the new node number we want to put in
     current_node = tree.root
     bit_position = depth(tree) - 1
-    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    mask = 1 << (bit_position - 1)  # start reading from the (almost) MSB and mask shifts right
     while true
-        if num & mask != 0 #If bit is "1" then go right
-            # println("right")
-            if mask == 1
-                #println("last on right")
+        if num & mask != 0  # If bit is "1" then go right
+            if mask == 1  # last on right
                 current_node.rchild = new_node
                 new_node.parent = current_node
                 break
-            else #not last one on the right
+            else  # not last one on the right
                 current_node = current_node.rchild 
             end
-        else #If here then bit is "0" and go left
-            # println("left")
-            # current_node = current_node.rchild
-            if mask == 1
-                # println("last on left")
+        else  # If here then bit is "0" and go left
+            if mask == 1  # last on left
                 current_node.lchild = new_node
                 new_node.parent = current_node
                 break
-            else #not last one on the left
+            else  # not last one on the left
                 current_node = current_node.lchild
             end
         end
@@ -877,20 +886,20 @@ import Base: pop!
 function pop!(tree::BalancedBinaryTree)::String
     ret_val = tree.root.value
     
-    #if there is only the root then remove it
+    # if there is only the root then remove it
     if tree.num_nodes == 1
         tree.root = nothing
         tree.num_nodes = 0
         return ret_val
     end
 
-    #Otherwise, find the last node and put it in place of the root 
+    # Otherwise, find the last node and put it in place of the root 
     num = tree.num_nodes
     current_node = tree.root
     bit_position = depth(tree) - 1
-    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    mask = 1 << (bit_position - 1)  # start reading from the (almost) MSB and mask shifts right
     while true
-        if num & mask != 0 #If bit is "1" then go right
+        if num & mask != 0  # If bit is "1" then go right
             if mask == 1
                 node_to_replace_with_root = current_node.rchild
                 current_node.rchild = nothing
@@ -899,10 +908,10 @@ function pop!(tree::BalancedBinaryTree)::String
                 node_to_replace_with_root.lchild = tree.root.lchild
                 tree.root = node_to_replace_with_root
                 break
-            else #not last one on the right
+            else  # not last one on the right
                 current_node = current_node.rchild 
             end
-        else #If here then bit is "0" and go left
+        else  # If here then bit is "0" and go left
             if mask == 1
                 node_to_replace_with_root = current_node.lchild
                 current_node.lchild = nothing
@@ -911,7 +920,7 @@ function pop!(tree::BalancedBinaryTree)::String
                 node_to_replace_with_root.lchild = tree.root.lchild
                 tree.root = node_to_replace_with_root                
                 break
-            else #not last one on the left
+            else  # not last one on the left
                 current_node = current_node.lchild
             end
         end
@@ -958,7 +967,15 @@ Let's look at an implementation using the tree we constructed above:
 ```julia
 struct MaxHeap
     tree::BalancedBinaryTree
+
     MaxHeap() = new(BalancedBinaryTree())
+end
+
+function Base.show(io::IO, heap::MaxHeap)
+    print(io, "$(heap.tree.num_nodes)-element MaxHeap")
+    if heap.tree.num_nodes > 0
+        show_node(io, heap.tree.root)
+    end
 end
 ```
 
@@ -966,11 +983,11 @@ There are now two key operations we must do "sift up" and "sift down". These are
 
 ```julia
 function sift_up!(node::Node)::Nothing
-    if node.parent != nothing && node.parent.value < node.value 
-            temp = node.value
-            node.value = node.parent.value
-            node.parent.value = temp
-            sift_up!(node.parent)
+    if node.parent !== nothing && node.parent.value < node.value 
+        temp = node.value
+        node.value = node.parent.value
+        node.parent.value = temp
+        sift_up!(node.parent)
     end
 end
 ```
@@ -994,18 +1011,18 @@ function last_node(tree::BalancedBinaryTree)::Node
     num = tree.num_nodes
     current_node = tree.root
     bit_position = depth(tree) - 1
-    mask = 1 << (bit_position-1) #start reading from the (almost) MSB and mask shifts right
+    mask = 1 << (bit_position-1)  # start reading from the (almost) MSB and mask shifts right
     while true
-        if num & mask != 0 #If bit is "1" then go right
+        if num & mask != 0  # If bit is "1" then go right
             if mask == 1 
                 return current_node.rchild
-            else #not last one on the right
+            else  # not last one on the right
                 current_node = current_node.rchild 
             end
-        else #If here then bit is "0" and go left
+        else  # If here then bit is "0" and go left
             if mask == 1
                 return current_node.lchild
-            else #not last one on the left
+            else  # not last one on the left
                 current_node = current_node.lchild
             end
         end
@@ -1018,10 +1035,10 @@ Now when we pop an element we know we remove it from the root and then put anoth
 
 ```julia
 function sift_down!(node::Node)::Nothing
-    #if there are no children then nothing to do
+    # if there are no children then nothing to do
     (node.lchild == nothing && node.rchild == nothing) && return
 
-    #if there is only a left child...
+    # if there is only a left child...
     if node.lchild != nothing && node.rchild == nothing
         if  node.lchild.value > node.value 
             temp = node.value
@@ -1032,18 +1049,18 @@ function sift_down!(node::Node)::Nothing
         return
     end
 
-    #if here then there are two children
+    # if here then there are two children
 
-    #if node is larger than both children then return
+    # if node is larger than both children then return
     (node.value > node.rchild.value && node.value > node.lchild.value) && return 
     
-    #if here then at least one of the children is larger than the node - swap now with the larger one
-    if node.rchild.value > node.lchild.value #if the right one is larger
+    # if here then at least one of the children is larger than the node - swap now with the larger one
+    if node.rchild.value > node.lchild.value  # if the right one is larger
         temp = node.value
         node.value = node.rchild.value
         node.rchild.value = temp
         sift_down!(node.rchild)
-    else #if the left on is larger
+    else  # if the left on is larger
         temp = node.value
         node.value = node.lchild.value
         node.lchild.value = temp
@@ -1066,23 +1083,23 @@ This is it. We have a basic heap and as you can argue, both the push and pop ope
 
 ```julia
 heap = MaxHeap()
-push!(heap,"eleven")
-push!(heap,"three")
-push!(heap,"nine")
-push!(heap,"four")
-push!(heap,"twenty five")
-push!(heap,"one hundred")
-push!(heap,"five")
-push!(heap,"million")
-push!(heap,"seven")
-push!(heap,"eight")
-push!(heap,"two billion")
-push!(heap,"ten")
-push!(heap,"six")
-push!(heap,"zero")
+push!(heap, "Morrison, Scott")
+push!(heap, "Turnbull, Malcolm")
+push!(heap, "Abbott, Tony")
+push!(heap, "Rudd, Kevin")
+push!(heap, "Gillard, Julia")
+push!(heap, "Howard, John")
+push!(heap, "Keating, Paul")
+push!(heap, "Hawke, Bob")
+push!(heap, "Fraser, Malcolm")
+push!(heap, "Whitlam, Gough")
+push!(heap, "McMahon, William")
+push!(heap, "Gorton, John")
+push!(heap, "McEwen, John")
+push!(heap, "Holt, Harold")
 
 println("Tree of heap:")
-print(heap.tree)
+print(heap)
 
 println("Printing in reverse order: ")
 
@@ -1093,8 +1110,7 @@ end
 
 Now obviously in the context of discrete event simulation our heap is not with values which are strings, but rather with values which are floating point numbers (times of events). Further the order is that the smallest element is on top and not the largest. You can see how the heap in `DataStructures.jl` is [implemented](https://github.com/JuliaCollections/DataStructures.jl/blob/master/src/heaps/minmax_heap.jl). Note that "sift up" is sometimes called "bubble up", etc...
 
-You may consider how to make a [parametric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) to our tree and heap above so that the value is not necessarily a `String` but rather any type `T` that can be compared. 
-
+You may consider how to make a [parametric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) to our tree and heap above so that the value is not necessarily a `String` but rather any type `T` that can be compared. We'll consider this next.
 
 
 # Modular software design
