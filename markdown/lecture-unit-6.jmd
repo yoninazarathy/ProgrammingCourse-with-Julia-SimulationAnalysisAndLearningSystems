@@ -1036,11 +1036,11 @@ Now when we pop an element we know we remove it from the root and then put anoth
 ```julia
 function sift_down!(node::Node)::Nothing
     # if there are no children then nothing to do
-    (node.lchild == nothing && node.rchild == nothing) && return
+    (node.lchild === nothing && node.rchild === nothing) && return
 
     # if there is only a left child...
-    if node.lchild != nothing && node.rchild == nothing
-        if  node.lchild.value > node.value 
+    if node.lchild !== nothing && node.rchild === nothing
+        if node.lchild.value > node.value 
             temp = node.value
             node.value = node.lchild.value
             node.lchild.value = temp
@@ -1074,7 +1074,7 @@ We can now use it in `pop!`:
 ```julia
 function pop!(heap::MaxHeap)::String
     ret_val = pop!(heap.tree)
-    heap.tree.root != nothing && sift_down!(heap.tree.root)
+    heap.tree.root !== nothing && sift_down!(heap.tree.root)
     return ret_val
 end
 ```
@@ -1115,16 +1115,348 @@ You may consider how to make a [parametric type](https://docs.julialang.org/en/v
 
 # Modular software design
 
-Lets now get a feel for modular software design. First lets introduce a Julia feature we haven't touched upon previously: [Modules](https://docs.julialang.org/en/v1/manual/modules/).
+Let's now get a feel for modular software design. Large software is easier to write and understand when it is written in small, self-contained pieces.
 
-Now lets discuss packaged development in general. Here are a few packages developed by the lecturer Andy Ferris. We shall discuss their philosophy and the work that goes into such package development and maintenance:
+While some software is written for end users, much software is reusable and a lot of code is written to be used by other programmers. Julia comes with a large standard library (with arrays, dictionaries, etc) and an ecosystem of packages that you can use to build your software. We're going to dig in and see how you can make your code modular and "release" code as packages.
+
+## Modules
+
+First lets introduce a Julia feature we haven't touched upon previously: [Modules](https://docs.julialang.org/en/v1/manual/modules/).
+
+A module is a "namespace" - it is a place to hold variables, functions and types. When Julia starts up there are three modules to be aware of:
+
+ * `Core` contains essential built-in types like `Int64`, functions like `typeof`, and the compiler.
+ * `Base` is the standard library defining much of the functionality for arrays, dictionaries, strings, etc.
+ * `Main` is created at startup and by default all the variables and function you define in the REPL lives here.
+
+You can a new module with the `module` keyword:
+
+```julia
+module MyModule
+
+variable = "Some variable"
+
+function hi()
+    println("Hello world")
+end
+
+end  # module
+```
+
+You can access things inside the module using `.` syntax, like for `struct`s (you can think of a module as a bit like a dynamically typed struct).
+
+```julia
+MyModule.variable 
+```
+
+```julia
+MyModule.hi() 
+```
+
+By default, the module will be `using Base` (this can be removed by using `baremodule` instead - you only need this for writing the compiler, etc). Modules can be nested inside of each other, as a form of hierachical code organization.
+
+Modules have a set of `export`s. While some code is intended to be "internal" to the module, the export statement signals which types, functions and variables are intended for users of the module, and things marked with `export` are automatically imported with the `using` statement.
+
+By default, `using` and `import` will consult the package manager to look up the name (we will discuss this later). To avoid this and use a locally defined module in the current scope prefix with a single `.`, such as `using .MyModule`. Since modules have a `parentmodule()`, you can navigate to any other module in the hierarchy by adding more `.`s, such as `using ..MyModule`.
+
+A good module name describes the topic covered by the module. The module name shouldn't clash with one of it's exports, so if the module is about a particular datatype it is common to pluralize it (e.g. the `DataFrames` module deals with the `DataFrame` type).
+
+## Modular `MaxHeap`
+
+As an example, we can take our `MaxHeap` and place it in a module. If we want it to be more reusable, we will also make the heap work with multiple datatypes other than `String`. To achieve this will add a type parameter `T` to `Node{T}`, `BalancedBinaryTree{T}` and `MaxHeap{T}`.
+
+It might have structure something like this:
+
+```julia
+"""
+Module documentation here...
+"""
+module MaxHeaps
+
+# Generally, put the exports at the top so they are easy to discover
+export MaxHeap
+
+mutable struct Node{T}
+    parent::Union{Node{T}, Nothing}
+    lchild::Union{Node{T}, Nothing}
+    rchild::Union{Node{T}, Nothing}
+    value::T
+
+    Node{T}(value) where {T} = new(nothing, nothing, nothing, convert(T, value))
+end
+
+function sift_up!(node::Node)::Nothing
+    if node.parent !== nothing && isless(node.parent.value, node.value)
+        temp = node.value
+        node.value = node.parent.value
+        node.parent.value = temp
+        sift_up!(node.parent)
+    end
+end
+
+function sift_down!(node::Node)::Nothing
+    # if there are no children then nothing to do
+    if node.lchild === nothing && node.rchild === nothing
+        return
+    end
+
+    # if there is only a left child...
+    if node.lchild !== nothing && node.rchild === nothing
+        if isless(node.value, node.lchild.value)
+            temp = node.value
+            node.value = node.lchild.value
+            node.lchild.value = temp
+            sift_down!(node.lchild)
+        end
+        return
+    end
+
+    # if here then there are two children
+
+    # if node is larger than both children then return
+    if isless(node.rchild.value, node.value) && isless(node.lchild.value, node.value)
+        return
+    end
+    
+    # if here then at least one of the children is larger than the node - swap now with the larger one
+    if isless(node.lchild.value, node.rchild.value)  # if the right one is larger
+        temp = node.value
+        node.value = node.rchild.value
+        node.rchild.value = temp
+        sift_down!(node.rchild)
+    else  # if the left on is larger
+        temp = node.value
+        node.value = node.lchild.value
+        node.lchild.value = temp
+        sift_down!(node.lchild)
+    end
+end
+
+function show_node(io::IO, node::Node, this_prefix = "", subtree_prefix = "")
+    print(io, "\n", this_prefix, node.lchild === nothing ? "── " : "─┬ ")
+    show(io, node.value)
+
+    # print children
+    if node.lchild !== nothing
+        if node.rchild !== nothing
+            show_node(io, node.lchild, "$(subtree_prefix) ├", "$(subtree_prefix) │")
+        else
+            show_node(io, node.lchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
+        end
+    end
+    if node.rchild !== nothing
+        show_node(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
+    end
+end
+
+mutable struct BalancedBinaryTree{T}
+    num_nodes::Int
+    root::Union{Node{T}, Nothing}
+
+    BalancedBinaryTree{T}() where {T} = new(0, nothing)
+end
+
+depth(tree::BalancedBinaryTree) = 8*sizeof(Int) - leading_zeros(tree.num_nodes)
+
+function last_node(tree::BalancedBinaryTree)::Node
+    (tree.num_nodes == 1) && (return tree.root)
+
+    num = tree.num_nodes
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position-1)  # start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0  # If bit is "1" then go right
+            if mask == 1 
+                return current_node.rchild
+            else  # not last one on the right
+                current_node = current_node.rchild 
+            end
+        else  # If here then bit is "0" and go left
+            if mask == 1
+                return current_node.lchild
+            else  # not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+end
+
+function Base.push!(tree::BalancedBinaryTree, value::String)::BalancedBinaryTree
+    new_node = Node(value)
+    
+    # If tree is empty just add a root
+    if tree.num_nodes == 0
+        tree.root = new_node
+        tree.num_nodes = 1
+        return tree
+    end
+
+    # Otherwise, walk the tree based on the bit representation 
+    tree.num_nodes += 1 
+    num = tree.num_nodes  # This is the new node number we want to put in
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position - 1)  # start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0  # If bit is "1" then go right
+            if mask == 1  # last on right
+                current_node.rchild = new_node
+                new_node.parent = current_node
+                break
+            else  # not last one on the right
+                current_node = current_node.rchild 
+            end
+        else  # If here then bit is "0" and go left
+            if mask == 1  # last on left
+                current_node.lchild = new_node
+                new_node.parent = current_node
+                break
+            else  # not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+    return tree
+end
+
+function Base.pop!(tree::BalancedBinaryTree)::String
+    ret_val = tree.root.value
+    
+    # if there is only the root then remove it
+    if tree.num_nodes == 1
+        tree.root = nothing
+        tree.num_nodes = 0
+        return ret_val
+    end
+
+    # Otherwise, find the last node and put it in place of the root 
+    num = tree.num_nodes
+    current_node = tree.root
+    bit_position = depth(tree) - 1
+    mask = 1 << (bit_position - 1)  # start reading from the (almost) MSB and mask shifts right
+    while true
+        if num & mask != 0  # If bit is "1" then go right
+            if mask == 1
+                node_to_replace_with_root = current_node.rchild
+                current_node.rchild = nothing
+                node_to_replace_with_root.parent = nothing
+                node_to_replace_with_root.rchild = tree.root.rchild
+                node_to_replace_with_root.lchild = tree.root.lchild
+                tree.root = node_to_replace_with_root
+                break
+            else  # not last one on the right
+                current_node = current_node.rchild 
+            end
+        else  # If here then bit is "0" and go left
+            if mask == 1
+                node_to_replace_with_root = current_node.lchild
+                current_node.lchild = nothing
+                node_to_replace_with_root.parent = nothing
+                node_to_replace_with_root.rchild = tree.root.rchild
+                node_to_replace_with_root.lchild = tree.root.lchild
+                tree.root = node_to_replace_with_root                
+                break
+            else  # not last one on the left
+                current_node = current_node.lchild
+            end
+        end
+        mask >>= 1
+    end
+
+    tree.num_nodes -=1
+
+    return ret_val
+end
+
+function Base.show(io::IO, tree::BalancedBinaryTree{T}) where {T}
+    print(io, "$(tree.num_nodes)-element BalancedBinaryTree{$T}")
+    if tree.num_nodes > 0
+        show_node(io, tree.root)
+    end
+end
+
+"""
+    MaxHeap{T}()
+
+Return an empty `MaxHeap` that can hold elements of type `T` (which defaults to `Any`).
+
+Items can be added using `push!` and removed using `pop!`. The maximum item is always
+returned by `pop!`.
+"""
+struct MaxHeap{T}
+    tree::BalancedBinaryTree{T}
+
+    MaxHeap{T}() where {T} = new(BalancedBinaryTree{T}())
+end
+
+MaxHeap() = MaxHeap{Any}()
+
+function Base.push!(heap::MaxHeap, value::String)::MaxHeap
+    push!(heap.tree, value)
+    sift_up!(last_node(heap.tree))
+    return heap
+end
+
+function Base.pop!(heap::MaxHeap)::String
+    ret_val = pop!(heap.tree)
+    heap.tree.root !== nothing && sift_down!(heap.tree.root)
+    return ret_val
+end
+
+function Base.show(io::IO, tree::BalancedBinaryTree{T}) where {T}
+    print(io, "$(tree.num_nodes)-element BalancedBinaryTree{$T}")
+    if tree.num_nodes > 0
+        show_node(io, tree.root)
+    end
+end
+
+end  # module
+```
+
+It is good practice to use "docstrings" rather than comments to describe your types and functions.
+
+## Files and modules
+
+In Julia, files and modules are decoupled. This gives you great freedom in how you want to organise your code.
+
+If you feel like it, a file can contain multiple top-level module definitions (as well as nested modules). The `end` statement must appear in the same file that the module is defined.
+
+A file is loaded by using `include` such as `include("file.jl")`, which evaluates the code in context the current module. If the file contains modules then they become submodules of the current module. 
+
+## Packages
+
+Packages are designed for sharing code - either open-source code in the community, or private code within an organization. A package has a small set of rules to help the Julia and the package manager to load your code:
+
+ * A package `Foo` must contain a module defined called `Foo` in the file `src/Foo.jl`.
+ * The root directory must contain a `Package.toml` file with the name of the package and a UUID of the package, plus any *direct* package dependencies.
+
+There are a number of optional things that a package might contain, which the package manager knows how to deal with. Most importantly:
+
+ * A `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
+ * A git repository (tracked by the package registry).
+ * A unit test suite (Julia and github can help you automate testing).
+
+When you use a `Manifest.toml` you are "locking" your code to use certain versions of packages. Otherwise when you install packages you will get the latest version compatible version of Julia and other dependencies. While using the latest version of code is generally good, occassiionally packages introduce bugs or change the API in a breaking way, and for complex, production-grade code it is necessary to have a high degree of stability to ensure your code continues to function and doesn't break unexpectedly. (This issue becomes more important the larger the codebase and number of dependencies).
+
+## Creating packages - demonstration
+
+Let's construct a package live in VS Code and the REPL!
+
+## Package development lifecycle
+
+Now lets discuss the packag development process in general.
+
+Here are a few packages developed by myself (Andy Ferris). We shall discuss their philosophy and the work that goes into such package development and maintenance:
 
 * [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
-* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we will use this package in the next unit as well.
+* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we may use this package in the next unit
+* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl) - we may use this package in the next unit
 * [Dictionaries.jl](https://github.com/andyferris/Dictionaries.jl)
-* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl)
 
-# More on Julia and programming (with demonstration)
+# More on Julia and programming - demonstration
 
 * A few bits about Meta-programming and further understanding of the compilation process. 
 * More on type inference and performance implications. `@code_warntype`
