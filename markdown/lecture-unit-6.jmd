@@ -747,6 +747,8 @@ println("Theoretical mean queue length: ", md1_theory)
 
 # Under the hood: The Heap Datastructure
 
+In this section we deal with **binary heaps**. As an introduction you can watch this [short video](https://www.youtube.com/watch?v=AE5I0xACpZs).
+
 We have seen that we need to use a **priority queue** for discrete event simulation. Priority queues were already discussed in Unit 2, where have shown a naive implementation and indicated that the best known implementation is a **heap data structure** (not to be confused with the heap also known as the "free store" where memory is allocated). 
 
 Our expectation of a heap is to be able to **push** and **pop** elements that have an order (priority). We should be able to push any element quickly and to pop the element with the lowest (alt. highest) priority at any time quickly and efficiently as well. Simple implementations of priority queues via arrays (either sorted or unsorted) will have $O(n)$ complexity for either pushing or popping.
@@ -1272,4 +1274,4 @@ Now lets discuss packaged development in general. Here are a few packages develo
 
 * A few bits about Meta-programming and further understanding of the compilation process. 
 * More on type inference and performance implications. `@code_warntype`
-* More on profiling and performance optimization. `BenchmarkTools.jl`
+* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl)
