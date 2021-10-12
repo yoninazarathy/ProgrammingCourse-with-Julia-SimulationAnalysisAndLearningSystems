@@ -1464,12 +1464,19 @@ Here are a few packages developed by myself (Andy Ferris). We shall discuss thei
 
 # Basic Monte Carlo based statistical analysis
 
-We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. One such technique is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example from the world of Bayesian statistics.
-
+he field of simulation goes beyond simulation of complex systems via discrete event simulation. There are mutiple techniques that are used to carry out simulations. A goal is often to estimate performance measures in a more efficient manner than just **naive Monte Carlo**. In a nutshell, naive Monte Carlo is estimation of $E[f(X)]$ via repeated sampling of i.i.d. values of $X_i$, and,
+ 
 $$
-\text { posterior }=\frac{\text { likelihood } \times \text { prior }}{\text { evidence }} \quad \text { or } \quad f(\theta \mid x)=\frac{f(x \mid \theta) \times f(\theta)}{\int f(x \mid \theta) f(\theta) d \theta}
+\frac{1}{n} \sum_{i=1}^n f(X_i).
 $$
-
+ 
+We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. More ideas from this field are found in advanced statistics and probability courses.
+ 
+One theme of techniques deals with improving the estimation via generating different random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wiki/Importance_sampling). It can sometimes improve the performance of the estimator signficantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be signficantly improved.
+ 
+For example: Consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths. However, with smart importance sampling techniques, you may simulate a different system and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. We don't discuss the details further.
+ 
+A different avenue which we briefly explore is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example from the world of Bayesian statistics.
 
 
 ```julia

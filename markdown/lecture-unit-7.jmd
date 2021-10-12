@@ -8,6 +8,38 @@
 
 # Dataframes
 
+Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a collumn would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images).
+
+The datafile `small_olympics.csv` is based on a random sample of rows from a larger dataset avaialbe via [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results). The original data size in Kaggle, `athlette_events.csv` has over 27,000 rows of data. The `small_olympics.csv` file is a randomly selected subset of 500 rows where we also modified some of the formats of the data file.
+
+We will use `small_olympics.csv` to show basic functionallity of the [DataFrames.jl](https://dataframes.juliadata.org/stable/) and [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) packages. In a sense these packages are alternatives. Seeing some functionallity from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using [pandas](https://pandas.pydata.org/) is the common alternative. Similarly if you work with the R language then the built in dataframes are common.
+
+
+```julia
+using DataFrames, CSV
+df = CSV.File("../data/small_olympics.csv") |> DataFrame #In Julia f(x) |> g is like g(f(x))
+println("Data size: ", size(df))
+println("Columns in the data: ", names(df))
+```
+
+Here are some data rows:
+
+
+```julia
+df.Event
+```
+
+```julia
+df.Height
+```
+
+As you can see from above, some data can be missing. How many heights are missing?
+
+```julia
+ismissing.(df.Height) |> sum
+```
+
+
 * QQQQ - Get dataset:
 - Not too many rows, not too little.
 - 3-5 correleatd variables.  
@@ -35,7 +67,7 @@
 
 # Basic regression and classification Problems
 
-```julia
+```
 using Flux, Flux.Data.MNIST, LinearAlgebra
 using Flux: onehotbatch
 
@@ -66,7 +98,7 @@ println("Accuracy: ", accuracy, "\nConfusion Matrix:")
 show(stdout, "text/plain", confusionMatrix)
 ```
 
-```julia
+```
 using Flux.Data.MNIST, DecisionTree, Random
 Random.seed!(0)
 
@@ -96,7 +128,7 @@ accuracy = sum(predicted_labels .== testLabels)/nTest
 println("\nPrediction accuracy (measured on test set of size $nTest): ",accuracy)
 ```
 
-```julia
+```
 using Flux, Flux.Data.MNIST, Statistics, BSON, Random, Plots
 using Flux: onehotbatch, onecold, crossentropy
 Random.seed!(0)
