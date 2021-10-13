@@ -8,25 +8,46 @@
 
 # Dataframes
 
-Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a collumn would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images).
+Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a column would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images).
 
-The datafile `small_olympics.csv` is based on a random sample of rows from a larger dataset avaialbe via [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results). The original data size in Kaggle, `athlette_events.csv` has over 27,000 rows of data. The `small_olympics.csv` file is a randomly selected subset of 500 rows where we also modified some of the formats of the data file.
+The datafile `athlete_events.csv` is a moderately sized dataset avaialbe from [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results) covering all athletes that have participated the Summer or Winter Olympics between 1896 and 2016. The CSV file contains 40MB of data over 15 columns and more than 27,000 rows, which is "small data" for a modern computer (but would have been challenging in the 1980's). In this context, "big data" is too large to be handled by a single machine, and we'll discuss "big data" and "medium data" later.
 
-We will use `small_olympics.csv` to show basic functionallity of the [DataFrames.jl](https://dataframes.juliadata.org/stable/) and [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) packages. In a sense these packages are alternatives. Seeing some functionallity from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using [pandas](https://pandas.pydata.org/) is the common alternative. Similarly if you work with the R language then the built in dataframes are common.
+We will use `athlete_events.csv` to show basic functionallity of the [DataFrames.jl](https://dataframes.juliadata.org/stable/) and [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) packages. In a sense these packages are alternatives. Seeing some functionality from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using [pandas](https://pandas.pydata.org/) is the common alternative. Similarly if you work with the R language then the built-in dataframes are common.
 
+## Basic data exploration
+
+Whenever you receive a dataset, it takes some time to understand its contents. This process is generally known as "data exploration". To do so, we generally load (a subset of) the data from disk and do some basic analysis in a Jupyter notebook or at the REPL.
 
 ```julia
 using DataFrames, CSV
-df = CSV.File("../data/small_olympics.csv") |> DataFrame #In Julia f(x) |> g is like g(f(x))
+csv_file = CSV.File("../data/athlete_events.csv"; missingstring = "NA")
+df = DataFrame(csv_file)
 println("Data size: ", size(df))
 println("Columns in the data: ", names(df))
 ```
 
-Here are some data rows:
-
+Since the data is large, we don't usually want to print it all. The `first` and `last` functions can be helpful:
 
 ```julia
-df.Event
+first(df, 10)
+```
+
+```julia
+last(df, 10)
+```
+
+This dataset appears to be sorted by last name. Each row corresponds to an entrant to an event. The ID column identifies each unique athelete.
+
+A `DataFrame` is indexed like a 2D container of rows and columns. The `:` symbol means "all".
+
+```julia
+df[1:10, :]
+```
+
+Internally, a dataframe stores one vector of data per column. You can access any of them conveniently as "properties" with `.` syntax:
+
+```julia
+df.ID
 ```
 
 ```julia
@@ -36,9 +57,93 @@ df.Height
 As you can see from above, some data can be missing. How many heights are missing?
 
 ```julia
-ismissing.(df.Height) |> sum
+ismissing.(df.Height) |> count # Piping: `f(x) |> g` syntax means `g(f(x))`
 ```
 
+The `count` function counts the number of `true` values.
+
+How many unique atheletes are there?
+
+```julia
+unique(df.ID) |> length
+```
+
+The `unique` operation has extra methods defined for `DataFrame`s. We can get the athelete data like so:
+
+```julia
+athlete_df = unique(df, :ID)
+```
+
+It keeps all columns of the first row containing each distinct ID, which will we take as representative (for their Sex, Height, Weight, etc).
+
+## Simple analysis
+
+Now we are becoming familiar with the dataset, we might like to see what insights we can gain. For example, let's see how many men and women have competed.
+
+```julia
+count(==("M"), athlete_df.Sex)  # `==(x)` creates a function `y -> y == x`
+```
+
+```julia
+count(==("F"), athlete_df.Sex)
+```
+
+The `count` function is useful, but this gets tiresome for many "groups" of data. The [SplitApplyCombine package](https://github.com/JuliaData/SplitApplyCombine.jl) containers useful functions for grouping data.
+
+```julia
+using SplitApplyCombine
+
+groupcount(athlete_df.Sex)
+```
+
+Which allows us to explore at other groupings
+
+```julia
+# How many athletes by country
+team_sizes = groupcount(athlete_df.Team)
+```
+One of the most powerful tricks in data analysis is to sort your data.
+
+```julia
+sort(team_sizes)
+```
+
+Note that `groupcount` is a specialization of the more flexible `group(keys, values)` function:
+
+```julia
+group(athlete_df.Team, athlete_df.Name)
+```
+
+Rather than acting at the level of vectors, you can group an entire `DataFrame` into a `GroupedDataFrame` with the `groupby` function provided by *DataFrames.jl*:
+
+```julia
+gdf = groupby(athelete_df, :Team)
+```
+
+You can apply a operation to each group and bring the data together into a single `DataFrame` via the `combine` function
+
+```julia
+combine(gdf, nrow => :Count)
+```
+
+The `nrow => :Count` syntax is a convenience provided by *Dataframes.jl*. We'll explain how it works below.
+
+## Manipulating DataFrames
+
+Now go through all the things you can do with dataframes.
+
+## More analysis
+
+Create some plots to analyze some trends
+
+ * Mean athlete height by year.
+ * Gender statistics? E.g. most successful womens teams?
+ * Country success vs time.
+ * A table to join with would be good. Perhaps country statistics? Show correlation between population vs gold medals, GDP vs gold medals, etc.
+
+Emphasis on plots.
+
+## Notes
 
 * QQQQ - Get dataset:
 - Not too many rows, not too little.
