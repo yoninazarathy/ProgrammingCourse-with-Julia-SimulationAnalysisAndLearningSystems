@@ -1,18 +1,23 @@
 # Unit 7: Working with heterogenous datasets and a view towards machine learning
 
+In this unit we learn how to deal with heterogenous datasets using data frames. We then explore basic concepts of machine learning. A deep dive into deep learning at UQ is in the [STAT3007 course](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007). Theory of machine learning (and statistical learning) is also studied in [STAT3006](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006). Other aspects of applied statistics and data analysis are studied in [STAT3500](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3500). Our purpose with this unit is just to touch the tip of the iceberg on issues of data analysis and machine learning. The Julia language knowledge acquired in the previous units should help.
+
 # Databases
 
-* Relational databases as a concept... 
-* Andy to show an example...
-* There is a language: SQL....
+This course doesn't touch databases, a rich topic of its own. (Do not confuse the term database with data structures or data frames). A database is a system that stores information in an organized and flexible manner. Many databases are **relational databases** and this means that they are comprised of multiple data tables that are associated via relations. The most common language for dealing with such databases is [SQL](https://en.wikipedia.org/wiki/SQL). It is not a general programming language but rather a language for querying, modifying, and managing databases. At UQ you can study more about databases in the [INFS2200 course](https://my.uq.edu.au/programs-courses/course.html?course_code=infs2200) as well as several other more advanced courses. 
+
+We now show you an example of database and a few things you may expect from SQL.
+
 
 # Dataframes
 
 Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a column would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images).
 
-The datafile `athlete_events.csv` is a moderately sized dataset avaialbe from [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results) covering all athletes that have participated the Summer or Winter Olympics between 1896 and 2016. The CSV file contains 40MB of data over 15 columns and more than 27,000 rows, which is "small data" for a modern computer (but would have been challenging in the 1980's). In this context, "big data" is too large to be handled by a single machine, and we'll discuss "big data" and "medium data" later.
+The datafile `athlete_events.csv` is a moderately sized dataset available from [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results) covering all athletes that have participated the Summer or Winter Olympics between 1896 and 2016. The CSV file contains 40MB of data over 15 columns and more than 27,000 rows, which is "small data" for a modern computer (but would have been challenging in the 1980's). In this context, "big data" is too large to be handled by a single machine, and we'll discuss "big data" and "medium data" later.
 
-We will use `athlete_events.csv` to show basic functionallity of the [DataFrames.jl](https://dataframes.juliadata.org/stable/) and [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) packages. In a sense these packages are alternatives. Seeing some functionality from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using [pandas](https://pandas.pydata.org/) is the common alternative. Similarly if you work with the R language then the built-in dataframes are common.
+You have already seen how to read and write from CSV files in Unit 3 where you also explored JSON files. You may recall using the `DataFrames.jl` package in that unit. We now take a deeper dive into the concept of dataframes.
+
+We will use `athlete_events.csv` to show basic functionality of the [DataFrames.jl](https://dataframes.juliadata.org/stable/) and [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) packages. In a sense these packages are alternatives. Seeing some functionality from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using [pandas](https://pandas.pydata.org/) is the common alternative. Similarly if you work with the R language then the built-in dataframes are common.
 
 ## Basic data exploration
 
@@ -36,7 +41,7 @@ first(df, 10)
 last(df, 10)
 ```
 
-This dataset appears to be sorted by last name. Each row corresponds to an entrant to an event. The ID column identifies each unique athelete.
+This dataset appears to be sorted by last name. Each row corresponds to an entrant to an event. The ID column identifies each unique athlete.
 
 A `DataFrame` is indexed like a 2D container of rows and columns. The `:` symbol means "all".
 
@@ -62,13 +67,13 @@ ismissing.(df.Height) |> count # Piping: `f(x) |> g` syntax means `g(f(x))`
 
 The `count` function counts the number of `true` values.
 
-How many unique atheletes are there?
+How many unique athletes are there?
 
 ```julia
 unique(df.ID) |> length
 ```
 
-The `unique` operation has extra methods defined for `DataFrame`s. We can get the athelete data like so:
+The `unique` operation has extra methods defined for `DataFrame`s. We can get the athlete data like so:
 
 ```julia
 athlete_df = unique(df, :ID)
@@ -88,7 +93,7 @@ count(==("M"), athlete_df.Sex)  # `==(x)` creates a function `y -> y == x`
 count(==("F"), athlete_df.Sex)
 ```
 
-The `count` function is useful, but this gets tiresome for many "groups" of data. The [SplitApplyCombine package](https://github.com/JuliaData/SplitApplyCombine.jl) containers useful functions for grouping data.
+The `count` function is useful, but this gets tiresome for many "groups" of data. The [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl) package contains useful functions for grouping data.
 
 ```julia
 using SplitApplyCombine
@@ -117,10 +122,10 @@ group(athlete_df.Team, athlete_df.Name)
 Rather than acting at the level of vectors, you can group an entire `DataFrame` into a `GroupedDataFrame` with the `groupby` function provided by *DataFrames.jl*:
 
 ```julia
-gdf = groupby(athelete_df, :Team)
+gdf = groupby(athlete_df, :Team)
 ```
 
-You can apply a operation to each group and bring the data together into a single `DataFrame` via the `combine` function
+You can apply an operation to each group and bring the data together into a single `DataFrame` via the `combine` function.
 
 ```julia
 combine(gdf, nrow => :Count)
@@ -137,7 +142,7 @@ Now go through all the things you can do with dataframes.
 Create some plots to analyze some trends
 
  * Mean athlete height by year.
- * Gender statistics? E.g. most successful womens teams?
+ * Gender statistics? E.g. most successful women's teams?
  * Country success vs time.
  * A table to join with would be good. Perhaps country statistics? Show correlation between population vs gold medals, GDP vs gold medals, etc.
 
@@ -147,7 +152,7 @@ Emphasis on plots.
 
 * QQQQ - Get dataset:
 - Not too many rows, not too little.
-- 3-5 correleatd variables.  
+- 3-5 correlated variables.  
 - Categorical
 - Missing
 - Two datasets for join
@@ -168,7 +173,7 @@ Emphasis on plots.
 
 * More on the heap vs. stack. 
 * The garbage collector.
-* Out-of-core example - working/fetching files.... (DataFrames works with "arrow format" (https://en.wikipedia.org/wiki/Apache_Arrow). Example that implements line by line CSV... and then discuss modern pardigms such as Arrow
+* Out-of-core example - working/fetching files.... (DataFrames works with "arrow format" (https://en.wikipedia.org/wiki/Apache_Arrow). Example that implements line by line CSV... and then discuss modern paradigms such as Arrow
 
 # Basic regression and classification Problems
 
@@ -292,7 +297,7 @@ plot(accuracyPaths,label = ["Dense" "Convolutional"],
 * Basic stuff with GLM (again) - examples of Metaprogramming here.
 * Usage of black box neural network `MetalHead.jl`  (motivation - we won't do more with Neural Networks)
 * Least squares `pinv()` on MNIST or similar.
-* Quantifing accuracy for classfication (accuracy, precision, recall, F1, confusion matrix)
+* Quantifying accuracy for classification (accuracy, precision, recall, F1, confusion matrix)
 
 # Tree based models 
 
@@ -301,7 +306,7 @@ plot(accuracyPaths,label = ["Dense" "Convolutional"],
 * Boosting 
 * Random forests
 
-# Tips for impelmenting random forests.
+# Tips for implementing random forests.
 
 * ???
 
