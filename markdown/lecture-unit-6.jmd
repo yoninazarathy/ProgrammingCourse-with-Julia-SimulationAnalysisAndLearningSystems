@@ -1464,19 +1464,77 @@ Here are a few packages developed by myself (Andy Ferris). We shall discuss thei
 
 # Basic Monte Carlo based statistical analysis
 
-he field of simulation goes beyond simulation of complex systems via discrete event simulation. There are mutiple techniques that are used to carry out simulations. A goal is often to estimate performance measures in a more efficient manner than just **naive Monte Carlo**. In a nutshell, naive Monte Carlo is estimation of $E[f(X)]$ via repeated sampling of i.i.d. values of $X_i$, and,
+The field of simulation goes beyond simulation of complex systems via discrete event simulation. There are multiple techniques that are used to carry out simulations. A goal is often to estimate performance measures in a more efficient manner than just **naive Monte Carlo**. In a nutshell, naive Monte Carlo is estimation of ${\mathbb E}[g(X)]$ via repeated sampling of i.i.d. values of some random variable $X_i$, and the usage of the estimator,
  
 $$
-\frac{1}{n} \sum_{i=1}^n f(X_i).
+\hat{g} = \frac{1}{n} \sum_{i=1}^n g(X_i).
+$$
+
+This is the just the "straightforward approach" for estimation. However there are more advanced methods that often yield much better statistical properties.
+ 
+One theme of techniques deals with improving the estimation via generation of alternative random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wikithis/Importance_sampling). With such a technique a different estimator which still gives unbiased results is used. This alternative estimator can sometimes improve the estimation performance significantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be significantly improved.
+ 
+Without going into the full details, one example is to consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Hence here the function $g(\cdot)$ may be an indicator (1 or 0) marking when queues are higher than some given level. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths and hence the naive Monte Carlo estimator will have very high variance. However, with smart importance sampling techniques, you may simulate a different system (related to the original system) and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. We don't discuss the details further but they may be studied in more advanced applied probability courses.
+
+#### Markov Chain Monte Carlo
+
+In a different context, we briefly explore is [Markov Chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics - but not restricted only to this context. With MCMC, the goal is not necessarily to estimate a quantity, but rather to simulate random variables from an (approximate) target distribution. 
+
+In the world of Bayesian statistical inference, one often knows a distributional form without knowing the **normalizing constant**. To see what this means, consider an overly simplistic example of the exponential distribution's density function for a case with mean $1/\lambda$). Here the density function is $f(x) = \lambda e^{-\lambda x}$ (for $x \ge 0$). Here we know that the normalizing constant (dividing $e^{-\lambda x}$) is $1/\lambda$. However, imagine we were told that we want a distribution with a density of the form
+
+$$
+f(x) = \frac{1}{K} e^{-\lambda x}
+$$
+
+where we don't know $K$. This can be written as, 
+
+$$
+f(x) \propto e^{-\lambda x},
+$$
+
+where the "proprotional to" symbol, $\propto$ indicates there is an unknown constant $1/K$.
+
+In the case of the exponential distribution it is an elementary calculus exercise to integrate over $[0,\infty)$ and see that $K=1/\lambda$. However in more complex cases (also often when the distribution is multi-dimensional), the normalizing constant is not known. This type of scenario exactly appears in Bayesian statistical inference (we skip the details).
+
+In such a case, there are algorithms for generating random variables that are approximaltly distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribtuion, even without knowing $K$.
+
+MCMC algorithms implictly construct a Markov chain that has a steady state distribution which adheres to the target probability distribution. Then generation of random sequences from this Markov chain approxiimate the target distribution. Without going into the details of the algorithm, lets see this in action in the context of Bayesian statistics.
+
+Bayes' rule in probability is typically presented for two events $A$ and $B$:
+
+$$
+\mathbb{P}(A \mid B)=\frac{\mathbb{P}(B \mid A) \mathbb{P}(A)}{\mathbb{P}(B)},
 $$
  
-We don't discuss advanced (mathematical) Monte Carlo techniques in this course, but only present a few key ideas. More ideas from this field are found in advanced statistics and probability courses.
- 
-One theme of techniques deals with improving the estimation via generating different random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wiki/Importance_sampling). It can sometimes improve the performance of the estimator signficantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be signficantly improved.
- 
-For example: Consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths. However, with smart importance sampling techniques, you may simulate a different system and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. We don't discuss the details further.
- 
-A different avenue which we briefly explore is [Markov Chain Monte Carlo](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics. Here is an example from the world of Bayesian statistics.
+The statistical field of Bayesian statistics uses this rule to update knoweldge about parameters of distributions. As a simplistic example assume you are an insurance company with a probabilistic model for the number of fires per month:
+
+$$
+\mathbb{P}(\text{Number of fires} = k) = e^{-\theta} \frac{\theta^k}{k!},
+\qquad
+k = 0, 1, 2, \ldots.
+$$
+
+Having such a model allows to compute probabilities such as $\mathbb{P}(\text{Number of fires} > 5)$ etc.
+
+This is a Poisson distribution with parameter $\theta > 0$ (which is also the mean number of fires). If we were to carry out classical [(frequentist) statistics](https://en.wikipedia.org/wiki/Frequentist_inference) for the parameter $\theta$ then a typical way to do so is [maximum likelihood estimation (MLE)](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation) where we would use the available data to get the most likely estimate of $\theta$. However such an approach does not use prior knoweldge about $\theta$.
+
+An alternative Bayesian approach is to treat $\theta$ as a random quantity and have a **prior distribution** for $\theta$ which is then updated via the data to reach a **posterior distribution** after inference takes place. The key benefit here is that the posterior distribution (of the parameter $\theta$) captures both the prior knowledge and new data. For this we can use Bayes's rule to have,
+
+$$
+\text { posterior }=\frac{\text { likelihood } \times \text { prior }}{\text { evidence }} \quad \text { or } \quad f(\theta \mid x)=\frac{f(x \mid \theta) \times f(\theta)}{\int f(x \mid \theta) f(\theta) d \theta}.
+$$
+
+This key equations presents the posterior distribution (of $\theta$ given the data), $f(\theta~|~x)$ as proportional to the product of the likelihood $f(x~|~\theta)$ and the prior distribution $f(\theta)$. Namely, 
+
+$$
+f(\theta \mid x) \propto f(x \mid \theta) \times f(\theta).
+$$
+
+The normalizing constant $K$, sometimes called the "evidence" involves integration over $\theta$. In the case of a single parameter like the Poisson distribution this is numerically possible, but if $\theta$ is high dimensional then not. 
+
+To draw samples from the posterior distribtuion $f(\theta \mid x)$, we can use MCMC.
+
+Consider a scenario with just a few data points `[2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]` and a Gamma prior distribution with two **hyper-parameters**, $\alpha$ and $\beta$. We then have `posteriorUpToK()` which represents the posterior distribution (up to a normalizing constant):
 
 
 ```julia
@@ -1488,7 +1546,11 @@ data = [2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]
 
 like(lam) = *([pdf(Poisson(lam),x) for x in data]...)
 posteriorUpToK(lam) = like(lam)*prior(lam)
+```
 
+Now an MCMC technique (with details omitted here) uses a proposal density (`foldedNormalPDF` here) and implements the `sampler()` function which magically samples from the posterior (unormalized probability distribution).
+
+```julia
 sig = 0.5
 foldedNormalPDF(x,mu) = (1/sqrt(2*pi*sig^2))*(exp(-(x-mu)^2/2sig^2)
                                                 + exp(-(x+mu)^2/2sig^2))
@@ -1516,9 +1578,18 @@ function sampler(piProb,qProp,rvProp)
     return samples
 end
 
-mcmcSamples = sampler(posteriorUpToK,foldedNormalPDF,foldedNormalRV)
-println("MCMC Bayes Estimate: ",mean(mcmcSamples))
+mcmcSamples = sampler(posteriorUpToK,foldedNormalPDF,foldedNormalRV);
+```
 
+If we want now a point estimate we can use the mean:
+
+```julia
+println("MCMC Bayes Estimate: ",mean(mcmcSamples))
+```
+
+We can also plot the whole distribution of the posterior distribution. Note that for this example there is actually a closed form solution for the posterior, so we compare the sampled data in `mcmcSamples` to `closedFormPosterior()` obtained via [conjugacy](https://en.wikipedia.org/wiki/Conjugate_prior) - the details are not important at the moment:
+
+```julia
 stephist(mcmcSamples, bins=100, 
 	c=:black, normed=true, label="Histogram of MCMC samples")
 
@@ -1533,60 +1604,26 @@ plot!(lamRange, closedFormPosterior.(lamRange),
     xlabel=L"\lambda",ylabel="Density")
 ```
 
+The interpretation of the plot above is that prior to collecting the data, the insurance comapny's belief about the parameter $\theta$ (mean number of fires per month) is given by the blue curve. After collecting the data, these prior belief is updated to the posterior which is represented by the stop histogram (computed via MCMC) or alternativly the red curve. 
+
+In this simple example, MCMC is not needed. But in other examples, MCMC or more advanced technqiues such as [Hamiltonian Monte Carlo](https://en.wikipedia.org/wiki/Hamiltonian_Monte_Carlo) are crucial for the statistical analysis.
+
+
 # Other simulations
 
-In addition to discrete event simulation, there are many other forms of simulations. For example here we go back to Markov Chains (that appeared in HW2):
+In addition to discrete event simulation, there are many other forms of simulations. For example you may consider simple Markov chain simulations as appearing in HW2. But you can also consider [https://en.wikipedia.org/wiki/Continuous-time_Markov_chain](Continuous-time Markov chain) which can be simulated via the [Doob-Gillespie algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm). In such models the state space is represented by a countable (or finite) set, and at any point of time there is an instentanious chance from a transition from one state to another. 
 
-```julia
-using LinearAlgebra, Statistics, StatsBase, Plots
+As an example consider a [stochastic SEIR epidemic model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) with transition rates,
 
-n, N = 5, 10^6
-P = diagm(-1 => fill(1/3,n-1),
-           0 => fill(1/3,n),
-           1 => fill(1/3,n-1))
-P[1,n], P[n,1] = 1/3, 1/3
+$$
+\begin{aligned}
+&(s, e, i, r) \rightarrow(s-1, e+1, i, r) \quad \text { at rate } \quad \frac{\beta}{M} \times s \times i \\
+&(s, e, i, r) \rightarrow(s, e-1, i+1, r) \quad \text { at rate } \quad \delta \times e \\
+&(s, e, i, r) \rightarrow(s, e, i-1, r+1) \quad \text { at rate } \quad \gamma \times i
+\end{aligned}
+$$
 
-A = UpperTriangular(ones(n,n))
-C = P*A
-
-function f1(x,u)
-    for xNew in 1:n
-        if u <= C[x+1,xNew]
-            return xNew-1
-        end
-    end
-end
-
-f2(x,xi) = mod(x + xi , n)
-
-function countTau(f,rnd)
-    t = 0
-    visits = fill(false,n)
-    state = 0
-    while sum(visits) < n
-        state = f(state,rnd())
-        visits[state+1] |= true
-        t += 1
-    end
-    return t-1
-end
-
-data1 = [countTau(f1,rand) for _ in 1:N]
-data2 = [countTau(f2,()->rand([-1,0,1]) ) for _ in 1:N]
-est1, est2 = mean(data1), mean(data2)
-c1, c2 = counts(data1)/N,counts(data2)/N
-println("Estimated mean value of tau using f1: ",est1)
-println("Estimated mean value of tau using f2: ",est2)
-println("\nThe matrix P:", P)
-scatter(4:33,c1[1:30], 
-	c=:blue, ms=5, msw=0, 
-	label="Transition probability matrix")
-scatter!(4:33,c2[1:30], 
-	c=:red, ms=5, msw=0, shape=:cross, 
-	label="Stochastic recursive formula", xlabel="Time", ylabel="Probability")
-```
-
-Or here is a simulation of a stochastic epidemic model:
+Below is the simulation code for it. The key property of the Doob-Gillespie algorithm is that holding times in every state $(s, e, i, r)$ are exponentially distributed and then the transition to the next state is drawn from a probability distribution and is independent of the holding times. 
 
 ```julia
 using Distributions, Random, Plots
