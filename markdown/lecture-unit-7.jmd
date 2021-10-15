@@ -175,129 +175,200 @@ Emphasis on plots.
 * The garbage collector.
 * Out-of-core example - working/fetching files.... (DataFrames works with "arrow format" (https://en.wikipedia.org/wiki/Apache_Arrow). Example that implements line by line CSV... and then discuss modern paradigms such as Arrow
 
-# Basic regression and classification Problems
+# ML Datasets
 
+There are some datasets used in machine learning learning, exploration, and (sometimes) practice that are very popular. This [YouTube video](https://www.youtube.com/watch?v=jrtxL5JHpTk) overviews a few such datasets. 
+
+One of the most common datasets is the [MNIST Digits dataset](https://en.wikipedia.org/wiki/MNIST_database). It is composed of monochrome digits of $28 \times 28$ pixels and **labels** indicating each digit. There are $60,000$ digits that are called the **training set** and $10,000$ additional digits that are called the **test set**. In Julia you can access this dataset via the `MLDatasets.jl` package.
+
+
+```julia
+using MLDatasets
+train_data = MLDatasets.MNIST.traindata(Float64)
+
+imgs = train_data[1]
+@show typeof(imgs)
+@show size(imgs)
+
+labels = train_data[2]
+@show typeof(labels);
 ```
-using Flux, Flux.Data.MNIST, LinearAlgebra
+
+```julia
+test_data = MLDatasets.MNIST.testdata(Float64)
+test_imgs = test_data[1]
+test_labels = test_data[2]
+@show size(test_imgs);
+```
+
+```julia
+n_train, n_test = length(labels), length(test_labels)
+```
+
+```julia
+using Plots
+println("The first 12 digits: ", labels[1:12])
+plot([heatmap(train_data[1][:,:,k]',
+            yflip=true,legend=false,c=cgrad([:black, :white])) for k in 1:12]...)
+```
+It is sometimes useful to "compact" each image into a vector. This then yields a matrix of $60,000 \times 784$ (each image has $784$ features since $784 = 28 \times 28$. We can plot that matrix as well.
+
+```julia
+X = vcat([vec(imgs[:,:,k])' for k in 1:last(size(imgs))]...)
+@show size(X)
+heatmap(X,legend=false)
+```
+
+# Unsupervised learning
+
+In general, **unsupervised learning** is the process of learning attributes of the data based only on relationships between features (pixels in the the context of images) and not based on data labels $Y$. So in unsupervised learning we only have $X$.
+
+One type of unsupervised learning focusing on **data reduction** is **principal component analysis (PCA)**. Here the data is projected from a 784 dimensional space into a smaller dimension of our choice. So for example if we choose the smaller dimension to be $2$ then we can "plot" each data point on this new plane. Doing so and comparing some of the digits we can get a feel for how PCA can be useful.
+
+```julia
+using MultivariateStats
+pca = fit(PCA, X'; maxoutdim=2)
+M = projection(pca)
+
+args = (ms=0.8, msw=0, xlims=(-5,12.5), ylims=(-7.5,7.5),
+            legend = :topright, xlabel="PC 1", ylabel="PC 2")
+
+function compareDigits(dA,dB)
+    xA = X[labels .== dA, :]'
+    xB = X[labels .== dB, :]'
+    zA, zB = M'*xA, M'*xB
+    
+    scatter(zA[1,:], zA[2,:], c=:red, label="Digit $(dA)"; args...)
+    scatter!(zB[1,:], zB[2,:], c=:blue, label="Digit $(dB)"; args...)
+end
+
+plots = []
+for k in 1:5
+    push!(plots,compareDigits(2k-2,2k-1))
+end
+plot(plots...,size = (800, 500), margin = 5mm)
+```
+
+Another common form of unsupervised learning is **clustering**. The goal of clustering is to find data samples that are homogenous and group them together. Within such group (or cluster) you can also find a representative data point or an average of data points in the group. This is sometimes called a **centroid** or **centre**. The most basic clustering algorithm is $k$-means. It operates by iterating the search of the centres of clusters and the data points that are in the cluster. The parameter $k$ is given before hand as the number of clusters. 
+
+Here we use the `Clustering.jl` package to apply $k$-means to MNIST. We then plot the resulting centroids. 
+
+```julia
+using Clustering, Random
+Random.seed!(0)
+clusterResult = kmeans(X',10)
+heatmap(hcat([reshape(clusterResult.centers[:,k],28,28)' for k in 1:10]...),
+    yflip=true,legend=false,aspectratio = 1,ticks=false,c=cgrad([:black, :white]))
+```
+
+# Supervised learning
+
+A much more common form of machine learning is **supervised learning** where the data is comprised of the features (or independent variables) $X$ and the labels (or dependent variables or response varibles) $Y$. 
+
+In cases where the variable to be predicted, $Y$, is a continuos or numerical variable, the problem is typically called a **regression problem**. Otherwise, in cases where $Y$ comes from some finite set of label values the problem is called a **classification problem**. For example in the case of MNIST digits, it is a classification problem since we need to look at an image and determine the respective digit.
+
+## A taste of deep learning
+
+Before we deal with a few basic introductory methods, let us get a glimpse of methods that are near the current "state of the art". These are generally **deep learning** methods which are based on multi-layer (deep) neural networks. See for example the material in the course, [The Mathematical Engineering of Deep Learning](https://deeplearningmath.org/index.html) as well as linked material from there.
+
+To demonstrate we use the package `Metalhead.jl` which supplies "out of the box" deep learning models ready to use. The VGG deep convolutional neural network architecture is one classic model. 
+
+This code downloads the pre-trained VGG19 model which is about 0.5Gb (!!!) of data. It then prints the layers of this deep neural network.
+
+```julia
+using Metalhead
+
+#downloads about 0.5Gb of a pretrained neural network from the web
+vgg = VGG19();
+vgg = VGG19();
+for (i,layer) in enumerate(vgg.layers)
+    println(i,":\t", layer)
+end
+```
+
+We don't cover the meaning of such a model in this course. See for example [this AMSI summer school course](https://deeplearningmath.org/) or the [UQ course on deep learning](https://www.nan-ye.com/teach/stat4402/). But we can use this pretrained model.
+
+```julia
+#download an arbitrary image and try to classify it
+download("https://deeplearningmath.org/data/images/appleFruit.jpg","appleFruit.jpg");
+img = load("appleFruit.jpg")
+```
+
+```julia
+classify(vgg,img)
+```
+
+The image is actually not of "Granny Smith" apple, but rather a different type of apple. Still it is pretty close! VGG19 was trained on the famous [Image net database](https://www.image-net.org/).
+
+
+
+## The basics: linear models
+
+
+
+
+```julia
+using LinearAlgebra
 using Flux: onehotbatch
 
-imgs   = Flux.Data.MNIST.images()
-labels = Flux.Data.MNIST.labels()
-nTrain = length(imgs)
-trainData = vcat([hcat(float.(imgs[i])...) for i in 1:nTrain]...)
-trainLabels = labels[1:nTrain]
-testImgs = Flux.Data.MNIST.images(:test)
-testLabels = Flux.Data.MNIST.labels(:test)
-nTest = length(testImgs)
-testData = vcat([hcat(float.(testImgs[i])...) for i in 1:nTest]...)
-
-A = [ones(nTrain) trainData]
-Adag = pinv(A)
+A = [ones(n_train) X]
+Adag = pinv(A)  
 tfPM(x) = x ? +1 : -1
-yDat(k) = tfPM.(onehotbatch(trainLabels,0:9)'[:,k+1])
+yDat(k) = tfPM.(onehotbatch(labels,0:9)'[:,k+1])
 bets = [Adag*yDat(k) for k in 0:9]
 
-classify(input) = findmax([([1 ; input])'*bets[k] for k in 1:10])[2]-1
+linear_classify(square_image) = findmax([([1 ; vec(square_image)])'*bets[k] for k in 1:10])[2]-1
+```
 
-predictions = [classify(testData[k,:]) for k in 1:nTest]
-confusionMatrix = [sum((predictions .== i) .& (testLabels .== j))
-				for i in 0:9, j in 0:9]
-accuracy = sum(diag(confusionMatrix))/nTest
+```julia
+predictions = [linear_classify(test_imgs[:,:,k]) for k in 1:n_test]
+confusionMatrix = [sum((predictions .== i) .& (test_labels .== j)) for i in 0:9, j in 0:9]
+acc = sum(diag(confusionMatrix))/n_test
 
-println("Accuracy: ", accuracy, "\nConfusion Matrix:")
+println("Accuracy: ", acc, "\nConfusion Matrix:")
 show(stdout, "text/plain", confusionMatrix)
 ```
 
-```
-using Flux.Data.MNIST, DecisionTree, Random
-Random.seed!(0)
+## Getting a feel for gradient based learning
 
-trainImgs   = MNIST.images()
-trainLabels = MNIST.labels()
-nTrain = length(trainImgs)
-trainData = vcat([hcat(float.(trainImgs[i])...) for i in 1:nTrain]...)
 
-testImgs = MNIST.images(:test)
-testLabels = MNIST.labels(:test)
-nTest = length(testImgs)
-testData = vcat([hcat(float.(testImgs[i])...) for i in 1:nTest]...)
 
-numFeaturesPerTree = 10
-numTrees = 40
-portionSamplesPerTree = 0.7
-maxTreeDepth = 10
+```julia
+using Random, Distributions, Plots, Measures, LaTeXStrings
+Random.seed!(1)
 
-model = build_forest(trainLabels, trainData, 
-                    numFeaturesPerTree, numTrees, 
-                    portionSamplesPerTree, maxTreeDepth)
-println("Trained model:")
-println(model)
+n = 10^3
+beta0, beta1, sigma = 2.0, 1.5, 2.5
+eta = 10^-3
 
-predicted_labels = [apply_forest(model, testData[k,:]) for k in 1:nTest]
-accuracy = sum(predicted_labels .== testLabels)/nTest
-println("\nPrediction accuracy (measured on test set of size $nTest): ",accuracy)
-```
+xVals = rand(0:0.01:5,n)
+yVals = beta0 .+ beta1*xVals + rand(Normal(0,sigma),n)
 
-```
-using Flux, Flux.Data.MNIST, Statistics, BSON, Random, Plots
-using Flux: onehotbatch, onecold, crossentropy
-Random.seed!(0)
-
-epochs = 30
-eta = 5e-3
-batchSize = 1000
-trainRange, validateRange = 1:5000, 5001:10000
-
-function minibatch(x, y, indexRange)
-    xBatch = Array{Float32}(undef, size(x[1])..., 1, length(indexRange))
-    for i in 1:length(indexRange)
-        xBatch[:, :, :, i] = Float32.(x[indexRange[i]])
-    end
-    return (xBatch, onehotbatch(y[indexRange], 0:9))
+pts, b = [], [0, 0]
+push!(pts,b)
+for k in 1:10^4
+    i = rand(1:n)
+    g = [   2(b[1] + b[2]*xVals[i]-yVals[i]),
+            2*xVals[i]*(b[1] + b[2]*xVals[i]-yVals[i])  ]
+    global b -= eta*g
+    push!(pts,b)
 end
 
-trainLabels = MNIST.labels()[trainRange]
-trainImgs = MNIST.images()[trainRange]
-mbIdxs = Iterators.partition(1:length(trainImgs), batchSize)
-trainSet = [minibatch(trainImgs, trainLabels, bi) for bi in mbIdxs]
+p1 = plot(first.(pts),last.(pts), c=:black,lw=0.5,label="SGD path")
+     scatter!([b[1]],[b[2]],c=:blue,ms=5,label="SGD")
+     scatter!([beta0],[beta1],
+        c=:red,ms=5,label="Actual",
+        xlabel=L"\beta_0", ylabel=L"\beta_1",
+        ratio=:equal, xlims=(0,2.5), ylims=(0,2.5))
 
-validateLabels = MNIST.labels()[validateRange]
-validateImgs = MNIST.images()[validateRange]
-validateSet = minibatch(validateImgs, validateLabels, 1:length(validateImgs))
+p2 = scatter(xVals,yVals, c=:black, ms=1, label="Data points")
+     plot!([0,5],[b[1],b[1]+5b[2]], c=:blue,label="SGD")
+     plot!([0,5],[beta0,beta0+5*beta1],	c=:red, label="Actual",
+            xlims=(0,5), ylims=(-5,15), xlabel = "x", ylabel = "y")
 
-model1= Chain(flatten, Dense(784, 200,relu),Dense(200, 100,tanh),
-				Dense(100, 10,sigmoid), softmax)
-
-model2= Chain(Conv((5, 5), 1=>8, relu), MaxPool((2,2)),
-                Conv((3, 3), 8=>16, relu), MaxPool((2,2)),
-                flatten, Dense(400, 10), softmax)
-
-opt1 = ADAM(eta); opt2 = ADAM(eta)
-accuracyPaths = [[],[]]
-accuracy(x, y, model) = mean(onecold(model(x)) .== onecold(y))
-loss(x, y, model) = crossentropy(model(x), y)
-cbF1() = push!(accuracyPaths[1],accuracy(validateSet..., model1))
-cbF2() = push!(accuracyPaths[2],accuracy(validateSet..., model2))
-
-model1(trainSet[1][1]); model2(trainSet[1][1])
-for _ in 1:epochs
-    Flux.train!((x,y)->loss(x,y,model1), params(model1), trainSet, opt1, cb=cbF1)
-    Flux.train!((x,y)->loss(x,y,model2), params(model2), trainSet, opt2, cb=cbF2)
-	print(".")
-end
-
-println("\nModel1 (Dense) accuracy = ", accuracy(validateSet..., model1))
-println("Model2 (Convolutional) accuracy = ", accuracy(validateSet..., model2))
-plot(accuracyPaths,label = ["Dense" "Convolutional"],
-	ylim=(0.7,1.0), xlabel="Batch number", ylabel = "Validation Accuracy")
+plot(p1, p2, legend=:topleft, size=(800, 400), margin = 5mm)
 ```
 
-
-
-* Basic stuff with GLM (again) - examples of Metaprogramming here.
-* Usage of black box neural network `MetalHead.jl`  (motivation - we won't do more with Neural Networks)
-* Least squares `pinv()` on MNIST or similar.
-* Quantifying accuracy for classification (accuracy, precision, recall, F1, confusion matrix)
 
 # Tree based models 
 
@@ -307,7 +378,5 @@ plot(accuracyPaths,label = ["Dense" "Convolutional"],
 * Random forests
 
 # Tips for implementing random forests.
-
-* ???
 
 
