@@ -300,12 +300,9 @@ classify(vgg,img)
 
 The image is actually not of "Granny Smith" apple, but rather a different type of apple. Still it is pretty close! VGG19 was trained on the famous [Image net database](https://www.image-net.org/).
 
-
-
 ## The basics: linear models
 
-
-
+We don't have time in this course to get into the full details of deep learning. But we can start with a (degenerate) neural network - a linear model.
 
 ```julia
 using LinearAlgebra
