@@ -206,7 +206,7 @@ n_train, n_test = length(labels), length(test_labels)
 ```
 
 ```julia
-using Plots
+using Plots, Measures, LaTeXStrings
 println("The first 12 digits: ", labels[1:12])
 plot([heatmap(train_data[1][:,:,k]',
             yflip=true,legend=false,c=cgrad([:black, :white])) for k in 1:12]...)
@@ -331,7 +331,7 @@ show(stdout, "text/plain", confusionMatrix)
 
 
 ```julia
-using Random, Distributions, Plots, Measures, LaTeXStrings
+using Random, Distributions
 Random.seed!(1)
 
 n = 10^3
