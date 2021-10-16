@@ -163,7 +163,7 @@ Emphasis on plots.
  - Accessing.
  - Modifying.
  - Copy, DeepCopy, etc....
-* Spliting, apply, and `by()`
+* Splitting, apply, and `by()`
 * Join... 
 * Missing values and basic imputation.
 
@@ -263,7 +263,7 @@ heatmap(hcat([reshape(clusterResult.centers[:,k],28,28)' for k in 1:10]...),
 
 # Supervised learning
 
-A much more common form of machine learning is **supervised learning** where the data is comprised of the features (or independent variables) $X$ and the labels (or dependent variables or response varibles) $Y$. 
+A much more common form of machine learning is **supervised learning** where the data is comprised of the features (or independent variables) $X$ and the labels (or dependent variables or response variables) $Y$. 
 
 In cases where the variable to be predicted, $Y$, is a continuos or numerical variable, the problem is typically called a **regression problem**. Otherwise, in cases where $Y$ comes from some finite set of label values the problem is called a **classification problem**. For example in the case of MNIST digits, it is a classification problem since we need to look at an image and determine the respective digit.
 
@@ -302,20 +302,95 @@ The image is actually not of "Granny Smith" apple, but rather a different type o
 
 ## The basics: linear models
 
-We don't have time in this course to get into the full details of deep learning. But we can start with a (degenerate) neural network - a linear model.
+We don't have time in this course to get into the full details of deep learning. But we can start with a (degenerate) neural network - a linear model. 
+
+With MNIST we can reach $86\%$ classification accuracy with a linear model. This is by no means the 99%+ accuracy that you can obtain with neural network models, but it is still an impressive measures for such a simple model. In discussing this we also explore basic aspects of classification problems.
+
+Our data is comprised of images $x^{(1)},\ldots,x^{(n)}$ where we treat each image as $x^{(i)} \in {\mathbb R}^{784}$. There are then labels $y^{(1)},\ldots,y^{(n)}$ where $y^{(i)} \in \{0,1,2,\ldots,9\}$. For us $n=60,000$.
+
+One approach for such **multi-class classification** (more than just **binary classification**) is to break the problem up into $10$ different binary classification problems. In each of the $10$ cases we train a classifier to classify if a digit is $0$ or not, $1$ or not, $2$ or not, etc... 
+
+If for example we train a classifier to detect $0$ or not, we set a new set of labels $\tilde{y}^{(i)}$ as $+1$ if $y^{(i)}$ is a $0$ and $-1$ if $y^{(i)}$ is not $0$. We can call this a **positive sample** and **negative sample** respectively. 
+
+To predict if a sample is positive or negative we use the basic linear model,
+
+$$
+\hat{y}^{(i)} = \beta_0 + \sum_{j=1}^{784} \beta_j x_j^{(i)}. 
+$$
+
+To find a "good"  $\beta \in {\mathbb R}^{785}$, our aim is to minimize the **quadratic loss** $\big(\hat{y}^{(i)} - \tilde{y}^{(i)}\big)^2$. Summing over all observations, we have the **loss function**:
+
+$$
+L(\beta) = \sum_{i=1}^n \big( [1 ~~ {x^{(i)}}^\top ]^\top  ~ \beta - \tilde{y}^{(i)} \big)^2.
+$$
+
+Now we can define the $n\times p$ where $p=785$ **design matrix** which has a first column of $1$'s and the remaining columns each corresponding individual features (or pixels). 
+
+$$
+A=\left[\begin{array}{ccccc}
+1 & x_{1}^{(1)} & x_{2}^{(1)} & \cdots & x_{p}^{(1)} \\
+1 & x_{1}^{(2)} & x_{2}^{(2)} & \cdots & x_{p}^{(2)} \\
+\vdots & \vdots & \vdots & & \vdots \\
+1 & x_{1}^{(n)} & x_{2}^{(n)} & \cdots & x_{p}^{(n)}
+\end{array}\right]
+$$
+
+```julia
+A = [ones(n_train) X];
+```
+
+With the matrix $A$ at hand the loss can be represented as,
+
+$$
+L(\beta) = ||A \beta - \tilde{y}||^2 = (A \beta - \tilde{y})^\top (A \beta - \tilde{y}).
+$$
+
+The gradient of $L(\beta)$ is 
+
+$$
+\nabla L(\beta) = 2 A^{\top}(A \beta - \tilde{y}).
+$$
+
+We could use it for **gradient descent** (as we illustrate below) or directly equating to the $0$ vector we have the **normal equations**:
+
+$$
+A^\top A \beta = A^\top \tilde{y}.
+$$
+
+These equations are solved via 
+$$
+\beta = A^\dagger \tilde{y},
+$$
+
+where $A^\dagger$ is the [Moore-Penrose pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse), which can be represented as $A^\dagger = (A^\top A)^{-1} A^\top$ if $A$ is skinny and full rank, but can also be computed in other cases. In any case, using the `LinearAlgebra` package we may obtain it via `pinv()`:
 
 ```julia
 using LinearAlgebra
+Adag = pinv(A);
+@show size(Adag);
+```
+
+See also Unit 3 where we illustrated solutions of such least squares problems using multiple linear algebraic methods.
+
+We can now find $\beta$ coefficients matching each digit. Interestingly we only need to compute the pseudo-inverse once. This is done in the code below using `onehotbatch()` supplied via the `Flux.jl` package. This function simply converts a label (0-9) to a unit vector. 
+
+```julia
 using Flux: onehotbatch
 
-A = [ones(n_train) X]
-Adag = pinv(A)  
 tfPM(x) = x ? +1 : -1
 yDat(k) = tfPM.(onehotbatch(labels,0:9)'[:,k+1])
-bets = [Adag*yDat(k) for k in 0:9]
-
-linear_classify(square_image) = findmax([([1 ; vec(square_image)])'*bets[k] for k in 1:10])[2]-1
+bets = [Adag*yDat(k) for k in 0:9]; #this is the trained model (a list of 10 beta coeff vectors)
 ```
+
+A binary classifier to then decide if a digit is say $0$ or not would be based on the sign (positive or negative) of the inner product of the corresponding coefficient vector in `bets` and $[1 ~~ {x^{(i)}}^\top ]$. If the inner product is positive the classifier would conclude it is a $0$ digit, otherwise not.
+
+To convert such binary classifier into a multi-class classifier via a **one-vs-rest** approach we simply try the inner products with all $10$ coefficient vectors and choose the digit that maximizes this inner product. Here is the actual function we would use.
+
+```julia
+linear_classify(square_image) = argmax([([1 ; vec(square_image)])'*bets[k] for k in 1:10])-1
+```
+
+We can now try `linear_classify()` on the 10,000 test images. In addition to computing the accuracy, we also print the **confusion matrix**:
 
 ```julia
 predictions = [linear_classify(test_imgs[:,:,k]) for k in 1:n_test]
@@ -326,9 +401,13 @@ println("Accuracy: ", acc, "\nConfusion Matrix:")
 show(stdout, "text/plain", confusionMatrix)
 ```
 
+Note that with unbalanced data, accuracy is a poor performance measure. However MNIST digits are roughly balanced.
+
 ## Getting a feel for gradient based learning
 
+The type of model training we used above relied on an explicit characterization of minimizers of the loss function: solutions of the normal equations. However in more general settings such as deep neural networks, or even in the linear setting with higher dimensions, explicit solution of the first order conditions for minimization (normal equations in the case of linear models) is not possible. For this we often use **iterative optimization** of which the most basic form is based on **first order methods** that move in the direction of local best descent.
 
+We already saw a simple example of **gradient descent** in Unit 3. This can work fine for small or moderate problems but in cases where there is huge data, multiple local minima, or other problems, one often uses **stochastic gradient descent**(SGD) or variants. As a simple illustration, the example below (approximately) optimizes a simple linear regression problem with SGD. Note that another very common which we don't show here is the use of **mini-batches**.
 
 ```julia
 using Random, Distributions
