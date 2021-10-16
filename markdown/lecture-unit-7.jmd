@@ -8,6 +8,81 @@ This course doesn't touch databases, a rich topic of its own. (Do not confuse th
 
 We now show you an example of database and a few things you may expect from SQL.
 
+## Relations
+
+A "relation" is a mathematical term for a set over _tuples_, and is a generalization of a function.
+
+For example, consider the function $y = f(x)$. An equivalent relation $f$ can be constructed as a set of tuples of the form $(x, y)$. A particular tuple $(x, y)$ is in the relation $f$ if an only if $y = f(x)$.
+
+Other things which are not strictly functions may be relations. For example, we can construct a relation of real numbers $(x, y)$ where $x = y^2$. Or, equivalently, $y = \pm\sqrt{x}$. Positive values of $x$ correspond to two values of $y$ (positive or negative square root). When $x$ equals zero, there is only one solution for $y$ (also zero). And for negative $x$ there are no real $y$ that satisfy the relation. Note that I say "relation" and not "function" here - functions are only a subset of relations.
+
+Just like functions may have multiple inputs ($x = f(a, b, c)$), a relation may consist of tuples of any size (including zero!). And both functions and relations can exist over finite, discrete sets. There are precisely two relations over tuples of size zero (i.e. $()$) - the empty relation, and the relation containing the empty tuple $()$. You can use this fact to build up a kind of boolean logic in the language of relations, where the empty relation is `false` and the relation containing $()$ is `true`.
+
+Outside of mathematics, the kinds of relations normally modelled in databases are of the discrete, finite-sized variety. A relation over tuples $(a, b, c)$ is equivalent to table with three columns $a$, $b$ and $c$. In a _strictly_ relational databases, the ordering of the rows is irrelevant, and you cannot have two identical rows in the database (though in practice many databases in use may also deal with "bags" rather than "sets" of tuples, where rows can be repeated). The fields $a$, $b$ and $c$ are drawn from their own set of possibilities, or _datatype_. For example, you might have `(name, birthdate, is_adult)` where `name` may be a string, `birthdate` may be a date, and `is_adult` may be a boolean.
+
+| `name` | `birthdate` | `is_adult` |
+|-|-|-|
+| `"Alice"` | `1999-05-13` | `true` |
+| `"Bob"` | `2001-12-10` | `false` |
+| `"Charlie"` | `2000-09-21` | `true` |
+
+Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`. In many relations, there are uniqueness constraints - for example the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier for a row is called the "primary key".
+
+## Relational schema
+
+A single relation is a restrictive way to model your data. However, by allowing multiple relations, we can capture the various sets of data in the system, and piece them together by their _relationships_. 
+
+For example, each person in the table above might be related to other things. They might have jobs, bank accounts, etc. Within a single business a person might be a customer, a supplier and an employee, and for different purposes we might want data associated with that person (e.g. their birthdate might relate to promotions for customers, payrates for employees, etc).
+
+Generally, to make keeping track of data easy, in a relational database you would store that person _just once_ and create relationships between that person and other things. That way, if something changes about that person, it only needs to be updated in one place, and data remains consistent everywhere.
+
+Here is an example of a more complex example - an imagining of how _LinkedIn_ might store their data in a relational database.
+
+![From _Designing Data-Intensive Applications_ by Martin Kleppmann](../web_img/schema.png)
+
+## SQL
+
+The most popular way to interact with relational data is with via a language called SQL (originally "SEQUEL", pronounced that way, backronymed to "structured query language").
+
+The language is from 1973 and doesn't look like most other programming languages. With it, you declare a "query" and the database will find the best way to return the results. It is a form of "declaritive programming". Here is an example of getting some columns of data from the `users` table:
+
+```sql
+SELECT user_id, first_name, last_name
+FROM users
+```
+
+You can filter the rows via a `WHERE` clause. Let's say you knew the `user_id` for Bill Gates and you wanted just his data:
+
+```sql
+SELECT user_id, first_name, last_name
+FROM users
+WHERE user_id = 251
+```
+
+Data in different tables are related via the `JOIN` statement
+
+```sql
+SELECT users.user_id, first_name, last_name, organization
+INNER JOIN positions ON positions.user_id = users.user_id
+FROM users
+```
+
+Note we have to prefix the shared column names with the corresponding table (although in this case the difference is not particularly important, your query cannot be ambiguous).
+
+But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such a query could even bring down a large system!
+
+Generally, you have something more precise in mind. Like - which organizations did Bill Gates work at?
+
+```sql
+SELECT users.user_id, first_name, last_name, organization
+INNER JOIN positions ON positions.user_id = users.user_id
+FROM users
+WHERE users.user_id = 251
+```
+
+This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client.
+
+We won't be using SQL in this course but it is so pervasive in industry that is essential that you know that it exists, and not to be afraid to use it! (It is a very useful and desirable skill!).
 
 # Dataframes
 
@@ -101,7 +176,7 @@ using SplitApplyCombine
 groupcount(athlete_df.Sex)
 ```
 
-Which allows us to explore at other groupings
+Which allows us to explore larger sets of groupings:
 
 ```julia
 # How many athletes by country
