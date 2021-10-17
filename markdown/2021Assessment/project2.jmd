@@ -1,7 +1,7 @@
 # Project \#2 - Semester 2, 2021
 # Discrete Event Simulation (+ perspective seminar summary)
 
-(last edit: Oct 9, 2021)
+(last edit: Oct 17, 2021)
 
 **Here is an [explainer video for the project](https://youtu.be/dVf-Ss7tq-A)**.
 
@@ -221,7 +221,7 @@ scenario5 = NetworkParameters(  L=20,
                                 η = 4.0, 
                                 μ_vector = ones(20),
                                 P = zeros(20,20),
-                                Q = diagm(3=>ones(19), -19=>ones(3)),                             
+                                Q = diagm(3=>0.8*ones(17), -17=>ones(3)), #Fixed on Oct 17                          
                                 p_e = vcat(1,zeros(19)),
                                 K = fill(5,20))
 @show scenario5 
