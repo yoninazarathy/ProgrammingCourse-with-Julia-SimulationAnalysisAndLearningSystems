@@ -440,7 +440,9 @@ mean(skipmissing(athlete_df.Height[athlete_df.Sex .== "F"]))
 
 The males are a bit more than 10cm taller, on average.
 
-OK, now let's perform a slightly more complex analysis. We will answer the question - has athlete height has changed over time? We can plot the average height as a function of `Year`. To see how to do that, first we'll repeat the above using the tools of _DataFrames.jl_:
+OK, now let's perform a slightly more complex analysis. We will answer the question - has athlete height has changed over time? What do you think?
+
+We can plot the average height as a function of `Year`. To see how to do that, first we'll repeat the above using the tools of _DataFrames.jl_:
 
 ```julia
 athlete_by_gender = groupby(athlete_df, :Sex)
@@ -493,7 +495,7 @@ plot(gender_by_games.Year, gender_by_games.Fraction_Female, ylim = [0, 1]; ylabe
 
 Note that we could have given up our analysis with the first plot, above, and arrived at completely the wrong conclusion!
 
-Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data.
+Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data. It is just as useful to debunk a myth or assumption as it is to find a hitherto unknown correlation.
 
 <!--
 ### Question 2 - Team success
