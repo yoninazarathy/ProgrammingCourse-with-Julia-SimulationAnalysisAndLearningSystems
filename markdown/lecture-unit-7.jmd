@@ -21,12 +21,13 @@ Just like functions may have multiple inputs ($x = f(a, b, c)$), a relation may 
 Outside of mathematics, the kinds of relations normally modelled in databases are of the discrete, finite-sized variety. A relation over tuples $(a, b, c)$ is equivalent to table with three columns $a$, $b$ and $c$. In a _strictly_ relational databases, the ordering of the rows is irrelevant, and you cannot have two identical rows in the database (though in practice many databases in use may also deal with "bags" rather than "sets" of tuples, where rows can be repeated). The fields $a$, $b$ and $c$ are drawn from their own set of possibilities, or _datatype_. For example, you might have `(name, birthdate, is_adult)` where `name` may be a string, `birthdate` may be a date, and `is_adult` may be a boolean.
 
 | `name` | `birthdate` | `is_adult` |
-|-|-|-|
+|---|---|----|
 | `"Alice"` | `1999-05-13` | `true` |
 | `"Bob"` | `2001-12-10` | `false` |
 | `"Charlie"` | `2000-09-21` | `true` |
 
-Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`. In many relations, there are uniqueness constraints - for example the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier for a row is called the "primary key".
+Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`. In many relations, there are uniqueness constraints - for example 
+the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier for a row is called the "primary key".
 
 ## Relational schema
 
@@ -36,7 +37,7 @@ For example, each person in the table above might be related to other things. Th
 
 Generally, to make keeping track of data easy, in a relational database you would store that person _just once_ and create relationships between that person and other things. That way, if something changes about that person, it only needs to be updated in one place, and data remains consistent everywhere.
 
-Here is an example of a more complex example - an imagining of how _LinkedIn_ might store their data in a relational database.
+Here is an example of a more complex example - an imagining of how _LinkedIn_ might store their data in a relational database (taken from "Designing Data-Intensive Applications" by Martin Kleppmann).
 
 ![From _Designing Data-Intensive Applications_ by Martin Kleppmann](../web_img/schema.png)
 
@@ -44,7 +45,7 @@ Here is an example of a more complex example - an imagining of how _LinkedIn_ mi
 
 The most popular way to interact with relational data is with via a language called SQL (originally "SEQUEL", pronounced that way, backronymed to "structured query language").
 
-The language is from 1973 and doesn't look like most other programming languages. With it, you declare a "query" and the database will find the best way to return the results. It is a form of "declaritive programming". Here is an example of getting some columns of data from the `users` table:
+The language is from 1973 and doesn't look like most other programming languages. With it, you declare a "query" and the database will find the best way to return the results. It is a form of [declarative programming](https://en.wikipedia.org/wiki/Declarative_programming). Here is an example of getting some columns of data from the `users` table:
 
 ```sql
 SELECT user_id, first_name, last_name
