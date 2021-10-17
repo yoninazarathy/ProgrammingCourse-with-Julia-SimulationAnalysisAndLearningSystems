@@ -70,7 +70,7 @@ FROM users
 
 Note we have to prefix the shared column names with the corresponding table (although in this case the difference is not particularly important, your query cannot be ambiguous).
 
-But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such a query could even bring down a large system!
+But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such ,a query could even bring down a large system!
 
 Generally, you have something more precise in mind. Like - which organizations did Bill Gates work at?
 
@@ -81,7 +81,7 @@ FROM users
 WHERE users.user_id = 251
 ```
 
-This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client.
+This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client. In real-world settings, complex joins could link data in dozens of tables.
 
 We won't be using SQL in this course but it is so pervasive in industry that is essential that you know that it exists, and not to be afraid to use it! (It is a very useful and desirable skill!).
 
@@ -98,6 +98,22 @@ We will use `athlete_events.csv` to show basic functionality of the [DataFrames.
 ## Basic data exploration
 
 Whenever you receive a dataset, it takes some time to understand its contents. This process is generally known as "data exploration". To do so, we generally load (a subset of) the data from disk and do some basic analysis in a Jupyter notebook or at the REPL.
+
+We were introduced to CSV files earlier in the course. Here's the first few lines of our file:
+
+```julia
+open("../data/athlete_events.csv") do io
+    i = 0
+    while i < 5
+        println(readline(io))
+        i += 1
+    end
+end
+```
+
+The `do` syntax here injects a function which takes `io::IO` (a I/O stream for our file) into the first argument of the `open` function. It is syntax sugar. The `open` function is designed such that if the inner function throws an error, `open` will automatically close the file to avoid resource leakage.
+
+We can use the _CSV.jl_ package to read the data and the _DataFrames.jl_ package to hold the tabular data. We note in the above the appearance of `"NA"` for missing data, which we can use to help load the file.
 
 ```julia
 using DataFrames, CSV
@@ -209,47 +225,333 @@ combine(gdf, nrow => :Count)
 
 The `nrow => :Count` syntax is a convenience provided by *Dataframes.jl*. We'll explain how it works below.
 
-## Manipulating DataFrames
+## Row- and column-based storage
 
-Now go through all the things you can do with dataframes.
+What is a dataframe?
+
+It is a data structure containing rows and columns. Internally it keeps each column of data as its own vector, which you can access as a property with `.`
+
+```julia
+athlete_df.Height
+```
+
+To construct a row, you need to grab the corresponding element from each vector.
+
+```julia
+first(rows(df))
+```
+
+Or, you can use 2D indexing, as before
+
+```julia
+df[1, :]
+```
+
+In this case there are 15 columns, so the computer must fetch data from 15 different places. This means that, for dataframes, operating with columns is faster than with rows. DataFrames are specialized for whole-of-table analytics, where each individual step in your analysis probably only involves a small number of columns.
+
+There are other data structures you can use which store the data as rows. Most SQL databases will store their data like this. Traditional "transactional" databases are typically driven with reads and writes to one (or a few) rows at a time, and row-based storage is more efficient for such workloads. Some of the modern "analytics" databses will use column-based storage.
+
+In Julia, perhaps the simplest such data structure is a `Vector` of `NamedTuple`s. We can create one straightforwardly from a `CSV.File`:
+
+```julia
+NamedTuple.(csv_file)
+```
+
+The above constructs a `NamedTuple` for each row of the CSV file and and returns it as a `Vector`.
+
+This is a great data structure that you can use "out of the box" with no packages, and your "everyday" analysis work will usually be fast so long as you do not have many, many columns. 
+
+If you want to use an identical interface with row-based storage, there is the [TypedTables](https://github.com/JuliaData/TypedTables.jl) package. In this package, a `Table` is an `AbstractArray{<:NamedTuple}`, each colunn is stored as its own vector, and when you index the table `table[i]` it assembles the row  as a `NamedTuple` for you.
+
+```julia
+TypedTable(csv_file)
+```
+
+Sometimes plain vectors or (typed) tables may be more convenient or faster than dataframes, and sometimes dataframes will be more convenient and faster than plain vectors or typed tables. Another popular approach is to use _Query.jl_. For your assessment you may use whichever approach you like best.
+
+## DataFrames
+
+For now we will double-down on DataFrames.jl.
+
+Here is a [nice cheatsheet for the syntax of DataFrames](https://www.ahsmart.com/assets/pages/data-wrangling-with-data-frames-jl-cheat-sheet/DataFramesCheatSheet_v1.x_rev1.pdf), and I recommend downloading and possibly even printing it out for your convenience.
+
+### Constructing dataframes
+
+A `DataFrame` can be constructed directly from data columns.
+
+```julia
+df = DataFrame(a = [1, 2, 3], b = [2.0, 4.0, 6.0])
+```
+
+You can get or set columns to the dataframe with `.` property syntax.
+
+```julia
+df.a
+```
+
+```julia
+df.c = ["A", "B", "C"]
+df
+```
+
+### Indexing dataframes
+
+A dataframe is indexed a bit like a 2D matrix - the first index is the row and the second is the column.
+
+```julia
+df[1, :c]
+```
+
+The `:c` here is a `Symbol`, which is a kind of "compiler string". The compiler stores the names of your types, fields, variables, modules and functions as `Symbol`. In fact, the syntax `df.c` is just sugar for `getproperty(df, :c)`. You can get multiple rows and/or columns.
+
+```julia
+df[1, :]
+```
+
+```julia
+df[:, :c]
+```
+
+```julia
+df[1:2, [:a, :c]]
+```
+
+### Filtering dataframes
+
+The `filter` function returns a collection where the elements satisfy some predicate function (i.e. a function that returns a `Bool`). We can grab just the odd-numbered rows from `df` by running `filter` over each row.
+
+```julia
+filter(row -> isodd(row.a), df)
+```
+
+Unfortunately, in this case this is quite inefficient. For each row the program must
+
+ 1. construct a `DataFrameRow`
+ 2. access the `a` field _dynamically_
+ 3. compute `isodd`
+
+This is slower than we'd like because the compiler doesn't really know what columns are in a `DataFrame` (or a `DataFrameRow`) and what type they may be. Every time we do step 2 there is a lot of overhead.
+
+To fix this problem _DataFrames.jl_ introduced special syntax of the form:
+
+```julia
+filter(:a => isodd, df)
+```
+
+This will automatically extract the `:a` column _just once_ and use it to construct a fast & fully compiled predicate function. Another way to think about how this works is via indexing:
+
+```julia
+df[isodd.(df.a), :]
+```
+
+So first we find:
+
+```julia
+iseven(df.a)
+```
+
+And afterwards we take a subset of the rows.
+
+```julia
+df[[1,3], :]
+```
+
+### `select` and `transform`
+
+You can grab one-or-more columns via `select`:
+
+```julia
+select(df, [:a, :c])
+```
+
+The columns can be modified or even renamed as a part of this process. This is more useful
+with `transform`, which keeps the existing columns and lets you add new ones:
+
+```julia
+transform(df, :b => mean => :mean_b)
+```
+
+You can read this as "take column `b`, do `mean` on it, and put the result in column `mean_b`". A new dataframe is constructed, and `df` is unmodified.
+
+Note that the transformation applies to whole columns. If you want to transform just a single row at a time,
+wrap the function in a `ByRow`.
+
+```julia
+transform!(df, :a => ByRow(isodd) => a_isodd, :c => ByRow(lowercase) => :c_lowercase)
+```
+
+Here we used `transform!` (note the `!`) which mutates `df`.
+
+### `groupby` and `combine`
+
+The `groupby` function will group a `DataFrame` into a collection of `SubDataFrame`s:
+
+```julia
+gdf = groupby(df, :a_isodd)
+```
+
+You can combine these together by applying a bulk transformation to each group
+
+```julia
+combine(gdf, :b => sum, :c => join)
+```
+
+This is known as the split-apply-combine strategy, and the pattern comes up frequently.
+
+### `innerjoin`
+
+We won't use this a lot in this course, but you can perform a relational join between dataframes with the `innerjoin` function. (Note that the `join` function is for joining strings together into longer strings)
+
+```julia
+names = DataFrame(ID = [1, 2, 3], Name = ["John Doe", "Jane Doe", "Joe Blogs"])
+```
+
+```julia
+jobs = DataFrame(ID = [1, 2, 4], Job = ["Lawyer", "Doctor", "Farmer"])
+```
+
+```julia
+DataFrames.innerjoin(names, jobs; on = :ID)
+```
+
+Only rows with matching `:ID`s are kept.
 
 ## More analysis
 
-Create some plots to analyze some trends
+Now that we know a little bit more about the tools, let's use them to see what insights we can glean from our Olympic athlete data.
 
- * Mean athlete height by year.
- * Gender statistics? E.g. most successful women's teams?
- * Country success vs time.
- * A table to join with would be good. Perhaps country statistics? Show correlation between population vs gold medals, GDP vs gold medals, etc.
+### Athelete height
 
-Emphasis on plots.
+We can see that, on average, male competitors are taller than female competitors.
 
-## Notes
+```julia
+mean(athlete_df.Height[athlete_df.Sex .== "M"])
+```
 
-* QQQQ - Get dataset:
-- Not too many rows, not too little.
-- 3-5 correlated variables.  
-- Categorical
-- Missing
-- Two datasets for join
+Oops. Not all atheletes have a `Height` attribute.
 
-* Beyond arrays, dictionaries, and such... but not yet in a DB.
-* The dataframes package/typedtables.jl - basic usage:
- - Filtering rows.
- - Accessing.
- - Modifying.
- - Copy, DeepCopy, etc....
-* Splitting, apply, and `by()`
-* Join... 
-* Missing values and basic imputation.
+```julia
+mean(skipmissing(athlete_df.Height[athlete_df.Sex .== "M"]))
+```
 
-* EDA (Exploratory data analysis) StatsPlots.jl
+```julia
+mean(skipmissing(athlete_df.Height[athlete_df.Sex .== "F"]))
+```
+
+The males are a bit more than 10cm taller, on average.
+
+OK, now let's perform a slightly more complex analysis. We will answer the question - has athlete height has changed over time? What do you think?
+
+We can plot the average height as a function of `Year`. To see how to do that, first we'll repeat the above using the tools of _DataFrames.jl_:
+
+```julia
+athlete_by_gender = groupby(athlete_df, :Sex)
+combine(athlete_by_gender, :Height => mean ∘ skipmissing => :Height)
+```
+
+Given that, it's pretty straightforward to do this as a function of year.
+
+```julia
+athlete_by_year = groupby(athlete_df, :Year)
+height_by_year = combine(athlete_by_year, :Height => mean ∘ skipmissing => :Height)
+plot(height_by_year.Year, height_by_year.Height, ylim = [155, 182]; ylabel = "Height (cm)", xlabel = "Year", legend = false)
+```
+
+This doesn't show anything interesting. Yet. There are a few confounding factors to elliminate first.
+
+First, there is something going on strange with the years, which started at 4-year increments and changed to 2-year increments. This is due to Winter Olympics moving to a different year to the Summer Olympics in 1994.
+
+```julia
+athlete_by_games = groupby(athlete_df, [:Year, :Season])
+height_by_games = combine(athlete_by_games, :Height => mean ∘ skipmissing => :Height)
+plot(height_by_games.Year, height_by_games.Height, ylim = [155, 182]; ylabel = "Height (cm)", xlabel = "Year", group = height_by_games.Season, legend = :bottomright)
+```
+
+The type of sport might affect the height of the competitors (think basketball players vs jockeys) so it's good to split these groups. Here it seems that winter competitors are slightly shorter than summer competitors.
+
+The second confounding factor is that women have increasingly became a larger fraction of the competitors at the Olympics, so we will split also by gender.
+
+```julia
+athlete_by_cohort = groupby(athlete_df, [:Year, :Season, :Sex])
+height_by_cohort = combine(athlete_by_cohort, :Height => mean ∘ skipmissing => :Height)
+plot(height_by_cohort.Year, height_by_cohort.Height, ylim = [155, 182]; ylabel = "Height (cm)", xlabel = "Year", group = tuple.(height_by_cohort.Season, height_by_cohort.Sex), legend = :bottomright)
+```
+
+Whoa! Now we clearly see that heights have trended up at least 5cm since 1900!
+
+What's going on here? I suspect it is a combination of several facts:
+
+ 1. On average, people born before the end of World War 2 were shorter, due to nutritional changes.
+ 2. Sport has become more elite and competitive over the years, and height may correlate with success in many Olympic sports.
+ 3. Women competitors have become more prevalent over time, reducing the average height of _all_ competitors.
+ 3. Similarly, winter competitors may have become more prevalent over time, who appear to be shorter than the summer cohorts.
+
+We can easily verify #3 above.
+
+```julia
+gender_by_games = combine(athlete_by_games, :Sex => (s -> count(==("F"), s) / length(s)) => :Fraction_Female)
+plot(gender_by_games.Year, gender_by_games.Fraction_Female, ylim = [0, 1]; ylabel = "Fraction female", xlabel = "Year", group = gender_by_games.Season, legend = :topright)
+```
+
+Note that we could have given up our analysis with the first plot, above, and arrived at completely the wrong conclusion!
+
+Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data. It is just as useful to debunk a myth or assumption as it is to find a hitherto unknown correlation.
+
+<!--
+### Question 2 - Team success
+
+Now we'll discover which teams (countries) have done the best, over time. For this we use the original dataset, but we limit ourselves to the summer season for simplicity.
+
+```julia
+summer_df = filter(:Season => ==("Summer"), df);
+```
+
+Let's define success as recieve any medal.
+
+```julia
+transform!(summer_df, :Medal => ByRow(!ismissing) => :Success);
+```
+
+We can next split by team and year and count "success".
+
+```julia
+summer_by_team = groupby(summer_df, [:Team, :Year])
+success_by_team = combine(summer_by_team, :Success => count => :Success);
+```
+
+Finally we'll make a fancy stacked area plot of the results. We need to use `cumsum` to create the stacks.
+
+```julia
+filter!(:Success => >(0), success_by_team)
+sort!(success_by_team, :Team) # Teams in the same order each year
+success_by_team_by_year = groupby(success_by_team, :Year)
+stacked_success_by_team = combine(success_by_team_by_year, :Team, :Success, :Success => cumsum => :SuccessStacked);
+```
+
+TODO - get the `areaplot` to work.
+-->
+
+### Further questions
+
+We could analysise this data another hundred ways. Some questions that come to mind are:
+
+ * How does team success relate to socioecomic indicators of their home country, such as GDP per capita? Do richer countries do comparitively better than poorer countries? To do this, we would need to _join_ the data with country data.
+ * Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia recieved a lot of medals during the Sydney 2000 Olympics.
+ * Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning, which will cover next.
 
 # Memory management
 
-* More on the heap vs. stack. 
-* The garbage collector.
-* Out-of-core example - working/fetching files.... (DataFrames works with "arrow format" (https://en.wikipedia.org/wiki/Apache_Arrow). Example that implements line by line CSV... and then discuss modern paradigms such as Arrow
+Generally, when we deal with data we have three rough "sizes" to worry about.
+
+ 1. Small data: data fits in RAM. Just load it up and process it all at once. We are doing this in this course.
+ 2. Medium data: data is too big for RAM, but it fits on disk. Incrementally load "chunks" from disk, save the results, and load the next chunk, etc - known as "out-of-core" processing. Multiple such steps might be required in a "pipeline". Reading and writing to disk is slower than RAM, and processing might take so long that restarting from scratch (after a fault or power blackout, for example) is not realistic, so you generally need to be able to save and restore your intermediate state, or update your data incrementally. A typical SQL database is in this category, handling the persistence, fault-tolerance and pipelining for you automatically.
+ 3. Big data: data is too big to fit on the hard drive of a single computer. Generally requires a distributed solution for both storage and processing. At this scale, it is "business as usual" for computers to die and hard drives or RAM to corrupt, and you can't have your multi-million-dollar operation brought down by a single rogue bitflip. These days it is common and convenient to use cloud services for these situations - like those provided by Amazon (AWS), Microsft (Azure) or Google (GCP).
+
+The boundaries between these regimes depends on your computer hardware. As you get step up, the complexity increases rapidly, especially with respect to fault tolerance.
+
+At my previous job with Fugro we processed petabytes of LiDAR, imagery and positioning data to create a 3D model of the world. We used AWS to store and index the data, as well as process it. The effort in "data engineering" was as much as was required in the "data science". Generally, it pays to have your data sorted out before attempting any higher-order analytics at scale (such as machine learning, below).
+
+We'll go to the REPL for a practical demonstration of out-of-core techniques.
 
 # ML Datasets
 
