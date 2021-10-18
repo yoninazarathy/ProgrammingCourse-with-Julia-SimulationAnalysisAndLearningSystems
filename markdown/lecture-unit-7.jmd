@@ -10,24 +10,27 @@ We now show you an example of database and a few things you may expect from SQL.
 
 ## Relations
 
-A "relation" is a mathematical term for a set over _tuples_, and is a generalization of a function.
+A "relation" is a mathematical term for a set over _tuples_ (or _named_ tuples), and is a generalization of a function.
 
-For example, consider the function $y = f(x)$. An equivalent relation $f$ can be constructed as a set of tuples of the form $(x, y)$. A particular tuple $(x, y)$ is in the relation $f$ if an only if $y = f(x)$.
+For example, consider the function $y = f(x)$. (The _names_ here are $x$ and $y$). An equivalent relation $f$ can be constructed as a set of tuples of the form $(x, y)$. A particular tuple $(x, y)$ is in the relation $f$ if and only if $y = f(x)$.
 
 Other things which are not strictly functions may be relations. For example, we can construct a relation of real numbers $(x, y)$ where $x = y^2$. Or, equivalently, $y = \pm\sqrt{x}$. Positive values of $x$ correspond to two values of $y$ (positive or negative square root). When $x$ equals zero, there is only one solution for $y$ (also zero). And for negative $x$ there are no real $y$ that satisfy the relation. Note that I say "relation" and not "function" here - functions are only a subset of relations.
 
-Just like functions may have multiple inputs ($x = f(a, b, c)$), a relation may consist of tuples of any size (including zero!). And both functions and relations can exist over finite, discrete sets. There are precisely two relations over tuples of size zero (i.e. $()$) - the empty relation, and the relation containing the empty tuple $()$. You can use this fact to build up a kind of boolean logic in the language of relations, where the empty relation is `false` and the relation containing $()$ is `true`.
+Just like functions may have multiple inputs ($x = f(a, b, c)$), a relation may consist of tuples of any size (including zero!). And both functions and relations can exist over finite, discrete sets.
+
+There are precisely two relations over tuples of size zero (i.e. $()$) - the empty relation, and the relation containing the empty tuple $()$. You can use this fact to build up a kind of boolean logic in the language of relations, where the empty relation is `false` and the relation containing $()$ is `true`.
 
 Outside of mathematics, the kinds of relations normally modelled in databases are of the discrete, finite-sized variety. A relation over tuples $(a, b, c)$ is equivalent to table with three columns $a$, $b$ and $c$. In a _strictly_ relational databases, the ordering of the rows is irrelevant, and you cannot have two identical rows in the database (though in practice many databases in use may also deal with "bags" rather than "sets" of tuples, where rows can be repeated). The fields $a$, $b$ and $c$ are drawn from their own set of possibilities, or _datatype_. For example, you might have `(name, birthdate, is_adult)` where `name` may be a string, `birthdate` may be a date, and `is_adult` may be a boolean.
 
 | `name` | `birthdate` | `is_adult` |
 |---|---|----|
-| `"Alice"` | `1999-05-13` | `true` |
-| `"Bob"` | `2001-12-10` | `false` |
-| `"Charlie"` | `2000-09-21` | `true` |
+| `"Alice"` | `2001-05-13` | `true` |
+| `"Bob"` | `2003-12-10` | `false` |
+| `"Charlie"` | `2002-09-21` | `true` |
 
-Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`. In many relations, there are uniqueness constraints - for example 
-the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier for a row is called the "primary key".
+Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`.
+
+In many relations, there are uniqueness constraints - for example  the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier that you might use to fetch a particular row is called the "primary key".
 
 ## Relational schema
 
@@ -70,9 +73,9 @@ FROM users
 
 Note we have to prefix the shared column names with the corresponding table (although in this case the difference is not particularly important, your query cannot be ambiguous).
 
-But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such ,a query could even bring down a large system!
+But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such a query could bring down a large system!
 
-Generally, you have something more precise in mind. Like - which organizations did Bill Gates work at?
+Generally, you have something more precise in mind. Like - which organizations has Bill Gates worked at?
 
 ```sql
 SELECT users.user_id, first_name, last_name, organization
@@ -81,13 +84,13 @@ FROM users
 WHERE users.user_id = 251
 ```
 
-This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client. In real-world settings, complex joins could link data in dozens of tables.
+This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client. In real-world settings, complex joins could link data spanning dozens of tables.
 
 We won't be using SQL in this course but it is so pervasive in industry that is essential that you know that it exists, and not to be afraid to use it! (It is a very useful and desirable skill!).
 
 # Dataframes
 
-Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a column would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images).
+Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a column would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g. images, arrays or dictionaries).
 
 The datafile `athlete_events.csv` is a moderately sized dataset available from [Kaggle](https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results) covering all athletes that have participated the Summer or Winter Olympics between 1896 and 2016. The CSV file contains 40MB of data over 15 columns and more than 27,000 rows, which is "small data" for a modern computer (but would have been challenging in the 1980's). In this context, "big data" is too large to be handled by a single machine, and we'll discuss "big data" and "medium data" later.
 
@@ -111,7 +114,7 @@ open("../data/athlete_events.csv") do io
 end
 ```
 
-The `do` syntax here injects a function which takes `io::IO` (a I/O stream for our file) into the first argument of the `open` function. It is syntax sugar. The `open` function is designed such that if the inner function throws an error, `open` will automatically close the file to avoid resource leakage.
+The `do` syntax here injects a function which takes `io::IO` (an I/O stream for our file) into the first argument of the `open` function. It is syntax sugar. The `open` function is designed such that when the inner function returns or throws an error, `open` will automatically close the file to avoid resource leakage.
 
 We can use the _CSV.jl_ package to read the data and the _DataFrames.jl_ package to hold the tabular data. We note in the above the appearance of `"NA"` for missing data, which we can use to help load the file.
 
@@ -499,6 +502,17 @@ plot(gender_by_games.Year, gender_by_games.Fraction_Female, ylim = [0, 1]; ylabe
 Note that we could have given up our analysis with the first plot, above, and arrived at completely the wrong conclusion!
 
 Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data. It is just as useful to debunk a myth or assumption as it is to find a hitherto unknown correlation.
+
+### Histograms
+
+These are just the means, we can also compare the statistic distribution (for the 2016 games, say):
+
+```julia
+histogram(collect(skipmissing(athlete_by_cohort[(2016, "Summer", "M")].Height)), xlabel = "Height (cm)", opacity = 0.5, label = "Male")
+histogram!(collect(skipmissing(athlete_by_cohort[(2016, "Summer", "F")].Height)), opacity = 0.5, label = "Female")
+```
+
+The `histogram` function is useful for identifying features of distributions (e.g. if it is bimodal).
 
 ### Further questions
 

@@ -1474,13 +1474,13 @@ This is the just the "straightforward approach" for estimation. However there ar
  
 One theme of techniques deals with improving the estimation via generation of alternative random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wikithis/Importance_sampling). With such a technique a different estimator which still gives unbiased results is used. This alternative estimator can sometimes improve the estimation performance significantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be significantly improved.
  
-Without going into the full details, one example is to consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Hence here the function $g(\cdot)$ may be an indicator (1 or 0) marking when queues are higher than some given level. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths and hence the naive Monte Carlo estimator will have very high variance. However, with smart importance sampling techniques, you may simulate a different system (related to the original system) and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. We don't discuss the details further but they may be studied in more advanced applied probability courses.
+Without going into the full details, one example is to consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Hence here the function $g(\cdot)$ may be an indicator (1 or 0) marking when queues are higher than some given level. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths and hence the naive Monte Carlo estimator will have very high variance. However, with smart importance sampling techniques, you may simulate a different system (related to the original system) and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. In the modified system, the probability of drawing a low-likelihood event is boosted, but the "weighting" of the result is reduced proportionally. We don't discuss the details further but they may be studied in more advanced applied probability courses.
 
 #### Markov Chain Monte Carlo
 
-In a different context, we briefly explore is [Markov Chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in Bayesian statistics - but not restricted only to this context. With MCMC, the goal is not necessarily to estimate a quantity, but rather to simulate random variables from an (approximate) target distribution. 
+In a different context, we briefly explore [Markov Chain Monte Carlo (MCMC)](https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo), often used in physics and Bayesian statistics - but not restricted only to this context. With MCMC, the goal is not necessarily to estimate a quantity, but rather to simulate random variables from an (approximate) target distribution. 
 
-In the world of Bayesian statistical inference, one often knows a distributional form without knowing the **normalizing constant**. To see what this means, consider an overly simplistic example of the exponential distribution's density function for a case with mean $1/\lambda$). Here the density function is $f(x) = \lambda e^{-\lambda x}$ (for $x \ge 0$). Here we know that the normalizing constant (dividing $e^{-\lambda x}$) is $1/\lambda$. However, imagine we were told that we want a distribution with a density of the form
+In both statistical physics and Bayesian statistical inference, one often knows a distributional form without knowing the **normalizing constant**. To see what this means, consider an overly simplistic example of the exponential distribution's density function for a case with mean $1/\lambda$). Here the density function is $f(x) = \lambda e^{-\lambda x}$ (for $x \ge 0$). Here we know that the normalizing constant (dividing $e^{-\lambda x}$) is $1/\lambda$. However, imagine we were told that we want a distribution with a density of the form
 
 $$
 f(x) = \frac{1}{K} e^{-\lambda x}
@@ -1494,11 +1494,17 @@ $$
 
 where the "proprotional to" symbol, $\propto$ indicates there is an unknown constant $1/K$.
 
-In the case of the exponential distribution it is an elementary calculus exercise to integrate over $[0,\infty)$ and see that $K=1/\lambda$. However in more complex cases (also often when the distribution is multi-dimensional), the normalizing constant is not known. This type of scenario exactly appears in Bayesian statistical inference (we skip the details).
+In the case of the exponential distribution it is an elementary calculus exercise to integrate over $[0,\infty)$ and see that $K=1/\lambda$. However in more complex cases (also often when the distribution is multi-dimensional), the normalizing constant is not known. This type of scenario exactly appears in Bayesian statistical inference and physics. For example, in a physical system at thermal equilibrium, the relative probability of different states depends on their energy and the temperature, and we have the relationship:
+
+$$
+p(\mathbf{x}) \propto e^{- E_{\mathbf{x}} / k_B T}
+$$
+
+The state space for $\mathbf{x}$ may be huge. Calculating the constant of proportionality (the "partition function") analytically is difficult but with it you can trivially calculate the macroscopic quantities of the system (mean energy, entropy, etc) via differentiation. Similarly, if we can sample the "microstates" it is straightforward to estimate the physical properties. So this is our goal here.
 
 In such a case, there are algorithms for generating random variables that are approximaltly distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribtuion, even without knowing $K$.
 
-MCMC algorithms implictly construct a Markov chain that has a steady state distribution which adheres to the target probability distribution. Then generation of random sequences from this Markov chain approxiimate the target distribution. Without going into the details of the algorithm, lets see this in action in the context of Bayesian statistics.
+MCMC algorithms implictly construct a Markov chain that has a steady-state distribution which is equal to the target probability distribution. Then, generation of random sequences from this new Markov chain allows us to approximately sample the target distribution. Without going into the details of the algorithm, let's see this in action in the context of Bayesian statistics.
 
 Bayes' rule in probability is typically presented for two events $A$ and $B$:
 
@@ -1541,11 +1547,11 @@ Consider a scenario with just a few data points `[2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,
 using Distributions, Plots
 
 alpha, beta = 8, 2
-prior(lam) = pdf(Gamma(alpha, 1/beta), lam)
+prior(theta) = pdf(Gamma(alpha, 1/beta), theta)
 data = [2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]
 
-like(lam) = *([pdf(Poisson(lam),x) for x in data]...)
-posteriorUpToK(lam) = like(lam)*prior(lam)
+like(theta) = *([pdf(Poisson(theta),x) for x in data]...)
+posteriorUpToK(theta) = like(theta)*prior(theta)
 ```
 
 Now an MCMC technique (with details omitted here) uses a proposal density (`foldedNormalPDF` here) and implements the `sampler()` function which magically samples from the posterior (unormalized probability distribution).
@@ -1557,19 +1563,19 @@ foldedNormalPDF(x,mu) = (1/sqrt(2*pi*sig^2))*(exp(-(x-mu)^2/2sig^2)
 foldedNormalRV(mu) = abs(rand(Normal(mu,sig)))
 
 function sampler(piProb,qProp,rvProp)
-    lam = 1
+    theta = 1
     warmN, N = 10^5, 10^6
     samples = zeros(N-warmN)
 
     for t in 1:N
         while true
-            lamTry = rvProp(lam)
-            L = piProb(lamTry)/piProb(lam)
-            H = min(1,L*qProp(lam,lamTry)/qProp(lamTry,lam))
+            lamTry = rvProp(theta)
+            L = piProb(lamTry)/piProb(theta)
+            H = min(1,L*qProp(theta,lamTry)/qProp(lamTry,theta))
             if rand() < H
-                lam = lamTry
+                theta = lamTry
                 if t > warmN
-                    samples[t-warmN] = lam
+                    samples[t-warmN] = theta
                 end
                 break
             end
@@ -1593,15 +1599,15 @@ We can also plot the whole distribution of the posterior distribution. Note that
 stephist(mcmcSamples, bins=100, 
 	c=:black, normed=true, label="Histogram of MCMC samples")
 
-lamRange = 0:0.01:10
-plot!(lamRange, prior.(lamRange), 
+thetaRange = 0:0.01:10
+plot!(thetaRange, prior.(thetaRange), 
 	c=:blue, label="Prior distribution")
 
 closedFormPosterior(lam)=pdf(Gamma(alpha + sum(data),1/(beta+length(data))),lam)
-plot!(lamRange, closedFormPosterior.(lamRange), 
+plot!(thetaRange, closedFormPosterior.(thetaRange), 
 	c=:red, label="Posterior distribution", 
 	xlims=(0, 10), ylims=(0, 1.2),
-    xlabel=L"\lambda",ylabel="Density")
+    xlabel=L"\theta",ylabel="Density")
 ```
 
 The interpretation of the plot above is that prior to collecting the data, the insurance comapny's belief about the parameter $\theta$ (mean number of fires per month) is given by the blue curve. After collecting the data, these prior belief is updated to the posterior which is represented by the stop histogram (computed via MCMC) or alternativly the red curve. 
