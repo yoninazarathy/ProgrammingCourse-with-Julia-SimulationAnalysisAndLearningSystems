@@ -577,14 +577,23 @@ It is sometimes useful to "compact" each image into a vector. This then yields a
 ```julia
 X = vcat([vec(imgs[:,:,k])' for k in 1:last(size(imgs))]...)
 @show size(X)
-heatmap(X,legend=false)
+heatmap(X, legend=false)
 ```
+
+Although this looks a bit random, we can detect some trends in the pattern visually if we sort the labels first:
+
+```julia
+X_sorted = vcat([vec(imgs[:,:,k])' for k in sortperm(labels]...)
+heatmap(X_sorted, legend=false)
+```
+
+The data is now sorted into vertical "bands" of the digits $0, 1, \dots, 9$. It is not inconceivable that a computer could be able to determine to which segment a given piece of input data belongs.
 
 # Unsupervised learning
 
 In general, **unsupervised learning** is the process of learning attributes of the data based only on relationships between features (pixels in the the context of images) and not based on data labels $Y$. So in unsupervised learning we only have $X$.
 
-One type of unsupervised learning focusing on **data reduction** is **principal component analysis (PCA)**. Here the data is projected from a 784 dimensional space into a smaller dimension of our choice. So for example if we choose the smaller dimension to be $2$ then we can "plot" each data point on this new plane. Doing so and comparing some of the digits we can get a feel for how PCA can be useful.
+One type of unsupervised learning focusing on **data reduction** is **principal component analysis (PCA)**. Here the data is projected from a 784-dimensional space into a smaller dimension of our choice. So for example if we choose just $2$ orthogonal basis vectors to project the above data onto, then we can "plot" each data point on this new 2D plane. Doing so and comparing some of the digits we can get a feel for how PCA can be useful.
 
 ```julia
 using MultivariateStats
@@ -610,6 +619,8 @@ end
 plot(plots...,size = (800, 500), margin = 5mm)
 ```
 
+With just a few more basis vectors, it might be possible to distinguish the majority of the numerals. However more complex techniques would be required to reach a high degree of accuracy.
+
 Another common form of unsupervised learning is **clustering**. The goal of clustering is to find data samples that are homogenous and group them together. Within such group (or cluster) you can also find a representative data point or an average of data points in the group. This is sometimes called a **centroid** or **centre**. The most basic clustering algorithm is $k$-means. It operates by iterating the search of the centres of clusters and the data points that are in the cluster. The parameter $k$ is given before hand as the number of clusters. 
 
 Here we use the `Clustering.jl` package to apply $k$-means to MNIST. We then plot the resulting centroids. 
@@ -621,6 +632,8 @@ clusterResult = kmeans(X',10)
 heatmap(hcat([reshape(clusterResult.centers[:,k],28,28)' for k in 1:10]...),
     yflip=true,legend=false,aspectratio = 1,ticks=false,c=cgrad([:black, :white]))
 ```
+
+Some characters are identified as quite distinct from the others, while others (like 4, 7 and 9) appear to be blended together. There are a variety of more advanced unsupervised learning algorithms that we will not cover here.
 
 # Supervised learning
 
