@@ -238,7 +238,7 @@ athlete_df.Height
 To construct a row, you need to grab the corresponding element from each vector.
 
 ```julia
-first(rows(df))
+first(eachrow(df))
 ```
 
 Or, you can use 2D indexing, as before
@@ -261,10 +261,11 @@ The above constructs a `NamedTuple` for each row of the CSV file and and returns
 
 This is a great data structure that you can use "out of the box" with no packages, and your "everyday" analysis work will usually be fast so long as you do not have many, many columns. 
 
-If you want to use an identical interface with row-based storage, there is the [TypedTables](https://github.com/JuliaData/TypedTables.jl) package. In this package, a `Table` is an `AbstractArray{<:NamedTuple}`, each colunn is stored as its own vector, and when you index the table `table[i]` it assembles the row  as a `NamedTuple` for you.
+If you want to use an identical interface with row-based storage, there is the [TypedTables](https://github.com/JuliaData/TypedTables.jl) package. In this package, a `Table` is an `AbstractArray{<:NamedTuple}`, each column is stored as its own vector, and when you index the table `table[i]` it assembles the row  as a `NamedTuple` for you.
 
 ```julia
-TypedTable(csv_file)
+using TypedTables
+Table(csv_file)
 ```
 
 Sometimes plain vectors or (typed) tables may be more convenient or faster than dataframes, and sometimes dataframes will be more convenient and faster than plain vectors or typed tables. Another popular approach is to use _Query.jl_. For your assessment you may use whichever approach you like best.
@@ -347,7 +348,7 @@ df[isodd.(df.a), :]
 So first we find:
 
 ```julia
-iseven(df.a)
+iseven.(df.a)
 ```
 
 And afterwards we take a subset of the rows.
@@ -368,6 +369,7 @@ The columns can be modified or even renamed as a part of this process. This is m
 with `transform`, which keeps the existing columns and lets you add new ones:
 
 ```julia
+using Statistics
 transform(df, :b => mean => :mean_b)
 ```
 
@@ -377,7 +379,7 @@ Note that the transformation applies to whole columns. If you want to transform 
 wrap the function in a `ByRow`.
 
 ```julia
-transform!(df, :a => ByRow(isodd) => a_isodd, :c => ByRow(lowercase) => :c_lowercase)
+transform!(df, :a => ByRow(isodd) => :a_isodd, :c => ByRow(lowercase) => :c_lowercase)
 ```
 
 Here we used `transform!` (note the `!`) which mutates `df`.
@@ -403,7 +405,7 @@ This is known as the split-apply-combine strategy, and the pattern comes up freq
 We won't use this a lot in this course, but you can perform a relational join between dataframes with the `innerjoin` function. (Note that the `join` function is for joining strings together into longer strings)
 
 ```julia
-names = DataFrame(ID = [1, 2, 3], Name = ["John Doe", "Jane Doe", "Joe Blogs"])
+names_df = DataFrame(ID = [1, 2, 3], Name = ["John Doe", "Jane Doe", "Joe Blogs"])
 ```
 
 ```julia
@@ -411,7 +413,7 @@ jobs = DataFrame(ID = [1, 2, 4], Job = ["Lawyer", "Doctor", "Farmer"])
 ```
 
 ```julia
-DataFrames.innerjoin(names, jobs; on = :ID)
+DataFrames.innerjoin(names_df, jobs; on = :ID)
 ```
 
 Only rows with matching `:ID`s are kept.
@@ -420,7 +422,7 @@ Only rows with matching `:ID`s are kept.
 
 Now that we know a little bit more about the tools, let's use them to see what insights we can glean from our Olympic athlete data.
 
-### Athelete height
+### Athlete height
 
 We can see that, on average, male competitors are taller than female competitors.
 
@@ -428,7 +430,7 @@ We can see that, on average, male competitors are taller than female competitors
 mean(athlete_df.Height[athlete_df.Sex .== "M"])
 ```
 
-Oops. Not all atheletes have a `Height` attribute.
+Oops. Not all athletes have a `Height` attribute.
 
 ```julia
 mean(skipmissing(athlete_df.Height[athlete_df.Sex .== "M"]))
@@ -452,12 +454,13 @@ combine(athlete_by_gender, :Height => mean ∘ skipmissing => :Height)
 Given that, it's pretty straightforward to do this as a function of year.
 
 ```julia
+using Plots
 athlete_by_year = groupby(athlete_df, :Year)
 height_by_year = combine(athlete_by_year, :Height => mean ∘ skipmissing => :Height)
 plot(height_by_year.Year, height_by_year.Height, ylim = [155, 182]; ylabel = "Height (cm)", xlabel = "Year", legend = false)
 ```
 
-This doesn't show anything interesting. Yet. There are a few confounding factors to elliminate first.
+This doesn't show anything interesting. Yet. There are a few confounding factors to eliminate first.
 
 First, there is something going on strange with the years, which started at 4-year increments and changed to 2-year increments. This is due to Winter Olympics moving to a different year to the Summer Olympics in 1994.
 
@@ -497,46 +500,12 @@ Note that we could have given up our analysis with the first plot, above, and ar
 
 Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data. It is just as useful to debunk a myth or assumption as it is to find a hitherto unknown correlation.
 
-<!--
-### Question 2 - Team success
-
-Now we'll discover which teams (countries) have done the best, over time. For this we use the original dataset, but we limit ourselves to the summer season for simplicity.
-
-```julia
-summer_df = filter(:Season => ==("Summer"), df);
-```
-
-Let's define success as recieve any medal.
-
-```julia
-transform!(summer_df, :Medal => ByRow(!ismissing) => :Success);
-```
-
-We can next split by team and year and count "success".
-
-```julia
-summer_by_team = groupby(summer_df, [:Team, :Year])
-success_by_team = combine(summer_by_team, :Success => count => :Success);
-```
-
-Finally we'll make a fancy stacked area plot of the results. We need to use `cumsum` to create the stacks.
-
-```julia
-filter!(:Success => >(0), success_by_team)
-sort!(success_by_team, :Team) # Teams in the same order each year
-success_by_team_by_year = groupby(success_by_team, :Year)
-stacked_success_by_team = combine(success_by_team_by_year, :Team, :Success, :Success => cumsum => :SuccessStacked);
-```
-
-TODO - get the `areaplot` to work.
--->
-
 ### Further questions
 
-We could analysise this data another hundred ways. Some questions that come to mind are:
+We could analyse this data another hundred ways. Some questions that come to mind are:
 
- * How does team success relate to socioecomic indicators of their home country, such as GDP per capita? Do richer countries do comparitively better than poorer countries? To do this, we would need to _join_ the data with country data.
- * Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia recieved a lot of medals during the Sydney 2000 Olympics.
+ * How does team success relate to socioeconomic indicators of their home country, such as GDP per capita? Do richer countries do comparatively better than poorer countries? To do this, we would need to _join_ the data with country data.
+ * Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia received a lot of medals during the Sydney 2000 Olympics.
  * Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning, which will cover next.
 
 # Memory management
@@ -545,11 +514,11 @@ Generally, when we deal with data we have three rough "sizes" to worry about.
 
  1. Small data: data fits in RAM. Just load it up and process it all at once. We are doing this in this course.
  2. Medium data: data is too big for RAM, but it fits on disk. Incrementally load "chunks" from disk, save the results, and load the next chunk, etc - known as "out-of-core" processing. Multiple such steps might be required in a "pipeline". Reading and writing to disk is slower than RAM, and processing might take so long that restarting from scratch (after a fault or power blackout, for example) is not realistic, so you generally need to be able to save and restore your intermediate state, or update your data incrementally. A typical SQL database is in this category, handling the persistence, fault-tolerance and pipelining for you automatically.
- 3. Big data: data is too big to fit on the hard drive of a single computer. Generally requires a distributed solution for both storage and processing. At this scale, it is "business as usual" for computers to die and hard drives or RAM to corrupt, and you can't have your multi-million-dollar operation brought down by a single rogue bitflip. These days it is common and convenient to use cloud services for these situations - like those provided by Amazon (AWS), Microsft (Azure) or Google (GCP).
+ 3. Big data: data is too big to fit on the hard drive of a single computer. Generally requires a distributed solution for both storage and processing. At this scale, it is "business as usual" for computers to die and hard drives or RAM to corrupt, and you can't have your multi-million-dollar operation brought down by a single rogue bitflip. These days it is common and convenient to use cloud services for these situations - like those provided by Amazon (AWS), Microsoft (Azure) or Google (GCP).
 
 The boundaries between these regimes depends on your computer hardware. As you get step up, the complexity increases rapidly, especially with respect to fault tolerance.
 
-At my previous job with Fugro we processed petabytes of LiDAR, imagery and positioning data to create a 3D model of the world. We used AWS to store and index the data, as well as process it. The effort in "data engineering" was as much as was required in the "data science". Generally, it pays to have your data sorted out before attempting any higher-order analytics at scale (such as machine learning, below).
+At my previous job with [Fugro](https://www.fugro.com/) we processed petabytes of LiDAR, imagery and positioning data to create a 3D model of the world. We used AWS to store and index the data, as well as process it. The effort in "data engineering" was as much as was required in the "data science". Generally, it pays to have your data sorted out before attempting any higher-order analytics at scale (such as machine learning, below).
 
 We'll go to the REPL for a practical demonstration of out-of-core techniques.
 
@@ -656,7 +625,7 @@ This code downloads the pre-trained VGG19 model which is about 0.5Gb (!!!) of da
 ```julia
 using Metalhead
 
-#downloads about 0.5Gb of a pretrained neural network from the web
+#downloads about 0.5Gb of a pre-trained neural network from the web
 vgg = VGG19();
 vgg = VGG19();
 for (i,layer) in enumerate(vgg.layers)
@@ -664,7 +633,7 @@ for (i,layer) in enumerate(vgg.layers)
 end
 ```
 
-We don't cover the meaning of such a model in this course. See for example [this AMSI summer school course](https://deeplearningmath.org/) or the [UQ course on deep learning](https://www.nan-ye.com/teach/stat4402/). But we can use this pretrained model.
+We don't cover the meaning of such a model in this course. See for example [this AMSI summer school course](https://deeplearningmath.org/) or the [UQ course on deep learning](https://www.nan-ye.com/teach/stat4402/). But we can use this pre-trained model.
 
 ```julia
 #download an arbitrary image and try to classify it
