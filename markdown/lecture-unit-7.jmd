@@ -583,7 +583,7 @@ heatmap(X, legend=false)
 Although this looks a bit random, we can detect some trends in the pattern visually if we sort the labels first:
 
 ```julia
-X_sorted = vcat([vec(imgs[:,:,k])' for k in sortperm(labels]...)
+X_sorted = vcat([vec(imgs[:,:,k])' for k in sortperm(labels)]...)
 heatmap(X_sorted, legend=false)
 ```
 
