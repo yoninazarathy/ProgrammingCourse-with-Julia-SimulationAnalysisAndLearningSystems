@@ -207,21 +207,22 @@ mutable struct DecisionTreeNodeWithData
     X::Matrix{Float64}
     y::Vector{Int}
 
-    #Indicate which bits are in the node
-    data_bits::BitVector
-
     #This is either a class decision (1, 2, or 3 when there are three classes)
     #or a function that returns false for "left" and true for "right" 
-    decision::Union{Int, Function} 
+    #or nothing if the node isn't initlized yet
+    decision::Union{Int, Function, Nothing} 
 
     #Children
     lchild::Union{DecisionTreeNodeWithData, Nothing}
     rchild::Union{DecisionTreeNodeWithData, Nothing}
+
+    #Counts the depth of the tree
+    depth::Int
 end
 ```
 
 ```julia
-tree = DecisionTreeNodeWithData(X,y,BitVector(fill(true,length(y))),0,nothing,nothing);
+tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing, 1);
 ```
 
 
@@ -229,7 +230,7 @@ tree = DecisionTreeNodeWithData(X,y,BitVector(fill(true,length(y))),0,nothing,no
 using StatsBase: mode
 
 function find_splitting_rule(node::DecisionTreeNodeWithData)
-    X, y = node.X[node.data_bits,:], node.y[node.data_bits]
+    X, y = node.X, node.y
     n, d = size(X)
     loss, τ, feature = Inf, NaN, -1
     pred_left_choice, pred_right_choice = -1, -1
@@ -241,10 +242,11 @@ function find_splitting_rule(node::DecisionTreeNodeWithData)
         for i in 1:n
             τ_candidate = X[i,j]
             left_bits = X[:,j] .≤ τ_candidate
-            (sum(left_bits) == 0 || sum(left_bits) == n) && break
+            (sum(left_bits) == 0 || sum(left_bits) == n) && continue
             pred_left =  mode(y[left_bits])
             pred_right =  mode(y[.!left_bits])
             new_loss = mean(y[left_bits] .== pred_left) + mean(y[.!left_bits] .== pred_right)
+            #if found a better split than previously then retain it
             if new_loss < loss
                 final_left_bits = copy(left_bits)
                 pred_left_choice = pred_left
@@ -261,27 +263,8 @@ function find_splitting_rule(node::DecisionTreeNodeWithData)
             feature = feature, 
             τ = τ,
             left_bits = final_left_bits)
-end
+end;
 ```
-
-```julia
-splitting_result = find_splitting_rule(tree)
-@show splitting_result
-tree.decision = splitting_result.rule
-tree.lchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        splitting_result.left_bits, 
-                                        splitting_result.left_value,
-                                        nothing,
-                                        nothing)
-tree.rchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        .!splitting_result.left_bits, 
-                                        splitting_result.right_value,
-                                        nothing,
-                                        nothing)
-```
-
 
 ```julia
 function predict(tree::DecisionTreeNodeWithData, data::Vector{Float64})
@@ -291,29 +274,7 @@ function predict(tree::DecisionTreeNodeWithData, data::Vector{Float64})
     else
         return predict(tree.rchild, data)
     end
-end
-```
-
-```julia
-plot_decision()
-```
-
-```julia
-splitting_result = find_splitting_rule(tree.rchild)
-@show splitting_result
-tree.rchild.decision = splitting_result.rule
-tree.rchild.lchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        splitting_result.left_bits, 
-                                        splitting_result.left_value,
-                                        nothing,
-                                        nothing)
-tree.rchild.rchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        .!splitting_result.left_bits, 
-                                        splitting_result.right_value,
-                                        nothing,
-                                        nothing)
+end;
 ```
 
 ```julia
@@ -333,33 +294,99 @@ function Base.show(io::IO, node::DecisionTreeNodeWithData, this_prefix = "", sub
     if node.rchild !== nothing
         show(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
     end
+end;
+```
+
+```julia
+function split_node!(node::DecisionTreeNodeWithData)
+    splitting_result = find_splitting_rule(node)
+    node.decision = splitting_result.rule
+    node.lchild = DecisionTreeNodeWithData( node.X[splitting_result.left_bits,:], 
+                                            node.y[splitting_result.left_bits], 
+                                            splitting_result.left_value,
+                                            nothing,
+                                            nothing,
+                                            node.depth+1)
+    right_bits = .!splitting_result.left_bits
+    node.rchild = DecisionTreeNodeWithData( node.X[right_bits,:], 
+                                            node.y[right_bits],  
+                                            splitting_result.right_value,
+                                            nothing,
+                                            nothing,
+                                            node.depth+1);
+end;
+```
+
+Let's do some splitting:
+
+```julia
+split_node!(tree);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.lchild);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.rchild);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.lchild.lchild);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.lchild.rchild);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.rchild.lchild);
+println(tree)
+plot_decision()
+```
+
+```julia
+split_node!(tree.rchild.rchild);
+println(tree)
+plot_decision()
+```
+
+So now lets fully train the tree...
+
+```julia
+function build_tree!(node::DecisionTreeNodeWithData; max_depth = Inf)::Nothing
+    length(unique(node.y)) == 0 && return
+    length(node.y)==1 && return
+    (node.depth ≥ max_depth) && return 
+
+    split_node!(node)
+    build_tree!(node.lchild, max_depth=max_depth)
+    build_tree!(node.rchild, max_depth=max_depth)
+end;
+
+tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing,1);
+build_tree!(tree,max_depth=12)
+plot_decision()
+```
+
+```julia
+anim = Animation()
+for d in 2:15
+    global tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing,1);
+    build_tree!(tree, max_depth = d)
+    plot_decision()
+    frame(anim)
 end
 
-tree
-```
-
-```julia
-plot_decision()
-```
-
-```julia
-splitting_result = find_splitting_rule(tree.rchild.rchild)
-@show splitting_result
-tree.rchild.rchild.decision = splitting_result.rule
-tree.rchild.rchild.lchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        splitting_result.left_bits, 
-                                        splitting_result.left_value,
-                                        nothing,
-                                        nothing)
-tree.rchild..rchild.rchild = DecisionTreeNodeWithData( tree.X, 
-                                        tree.y, 
-                                        .!splitting_result.left_bits, 
-                                        splitting_result.right_value,
-                                        nothing,
-                                        nothing)
-```
-
-```julia
-plot_decision()
+gif(anim, "decision_tree.gif", fps = 1)
 ```
