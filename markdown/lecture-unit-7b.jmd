@@ -6,7 +6,7 @@ When we develop or train machine learning models we use the **seen** data. We of
 
 We then can choose a model to fit the data. And we want to "fit the data well". This sounds sensible, but is clearly subject to abuse. We can effectively have a model that fits every data point exactly!
 
-Here is one example of this where our data consists of $(x,y)$ pairs and we use a [Vandermonde Matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix) to fit it exactly.
+Here is one example of this where our data consists of $(x,y)$ pairs and we use a [Vandermonde Matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix) to fit a polynomial that goes through each training point exactly.
 
 The example also has a linear fit using the pseudo-inverse.  Which model is better? 
 
