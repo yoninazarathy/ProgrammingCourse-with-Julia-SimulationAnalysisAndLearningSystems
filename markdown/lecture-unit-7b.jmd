@@ -1,10 +1,10 @@
 # Unit 7 continuation: Machine Learning with Decision trees and Random Forests
 
-### Fitting, overfitting, generalization, and model choice
+### Fitting, over-fitting, generalization, and model choice
 
 When we develop or train machine learning models we use the **seen** data. We often assume it is i.i.d. data and if we have reason to believe it isn't we shuffle it, or collect it in a way where it is likely to be i.i.d.
 
-We then can coose a model to fit the data. And we want to "fit the data well". This sounds sensible, but is clearly subject to abuse. We can effectivly have a model that fits every data point exactly!
+We then can choose a model to fit the data. And we want to "fit the data well". This sounds sensible, but is clearly subject to abuse. We can effectively have a model that fits every data point exactly!
 
 Here is one example of this where our data consists of $(x,y)$ pairs and we use a [Vandermonde Matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix) to fit it exactly.
 
@@ -43,15 +43,15 @@ scatter!(x_unseen,y_unseen,
     	xlabel = "x", ylabel = "y")
 ```
 
-So in general it is obvious that a model that "fits our data exactly" is typically not the best model. Much of machine learning theory attempts to quantify this tradeoff between an **overfit** of the training data and a good model. Sometimes this falls under the title of the [Bias Variance tradeoff](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff) in machine learning theory where the **bias** of a model (or estimator) is associated with **underfitting** and the **variance** of a model is associated with **overfitting**. 
+So in general it is obvious that a model that "fits our data exactly" is typically not the best model. Much of machine learning theory attempts to quantify this tradeoff between an **over-fit** of the training data and a good model. Sometimes this falls under the title of the [Bias Variance tradeoff](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff) in machine learning theory where the **bias** of a model (or estimator) is associated with **under-fitting** and the **variance** of a model is associated with **over-fitting**. 
 
-We don't get into the full mathematical details of overfitting/underfitting, generalization error and the bias variance tradeooff. A good introductory resource for the theory of this is the book [Data Science and Machine Learning: Mathematical and Statistical Methods
+We don't get into the full mathematical details of over-fitting/under-fitting, generalization error and the bias variance tradeoff. A good introductory resource for the theory of this is the book [Data Science and Machine Learning: Mathematical and Statistical Methods
 ](https://people.smp.uq.edu.au/DirkKroese/DSML/). A much lighter book is [The hundred page machine learning book](http://themlbook.com/).
 
 
 ### Handling the data
 
-In view of overfitting and underfitting considerations, a first thing to consider is how to handle the data. Here is an overview:
+In view of over-fitting and under-fitting considerations, a first thing to consider is how to handle the data. Here is an overview:
 
 ![Splitting the data](../web_img/data-splits.png)
 
@@ -61,44 +61,49 @@ Sometimes instead of using a validation set we can do [k-fold cross validation](
 
 ![k-fold cross validation](../web_img/k-fold-cross-validation.png)
 
-In any case, our purpuse fo the training/validation/cross-validation data is to select the right model, train the model, and tune-hyperparameters.
+In any case, our purpose fo the training/validation/cross-validation data is to select the right model, train the model, and tune hyper-parameters.
 
 ### Tree based models
 
 We now focus on tree based models. [Decision trees](https://en.wikipedia.org/wiki/Decision_tree_learning) for machine learning have a long history a
 nd constitute a set of models that is still very much in use today. These models are enhanced with [Random forest](https://en.wikipedia.org/wiki/Random_forest) models which use a general machine learning technique [Ensemble Method](https://en.wikipedia.org/wiki/Ensemble_learning), or [bagging](https://en.wikipedia.org/wiki/Bootstrap_aggregating) also known as bootstrap aggregation.
 
-We first introduce and explore basics of decision trees both for regression and classification. We then see that on their own, decision trees are somewhat limited because they can easily overfit. We then consider random forests which constitue a much more versatile algorithm.
+We first introduce and explore basics of decision trees both for regression and classification. We then see that on their own, decision trees are somewhat limited because they can easily over-fit. We then consider random forests which constitute a much more versatile algorithm.
 
 #### Basic Decision trees
 
-To illustrate we'll first consider a classification problem with $d=2$ features and $k=3$. For simplicity we generate synthetic data via a mixture of bivariate normals.
+To illustrate we'll first consider a classification problem with $d=2$ features and $k=3$. For simplicity we generate synthetic data via a mixture of bi-variate normals.
 
 ```julia
-using Distributions, Random, LaTeXStrings
-Random.seed!(0)
+using Distributions, Random, LaTeXStrings, Plots
+Random.seed!(1)
 
 d, k = 2, 3 #d features and k label types
 
-X = vcat(   rand(MvNormal([1,1],[1 0.7; 0.7 1]), 50)', 
-            rand(MvNormal([4,2],[1 -0.7; -0.7 1]), 30)', 
-            rand(MvNormal([2,4],[1 0.7; 0.7 1]), 20)')
-y = vcat(fill(1,50), fill(2,30),fill(3,20))
+make_data(class1 = 50, class2 = 30, class3 = 20) = 
+                (vcat(   rand(MvNormal([1,1],[3 0.7; 0.7 3]), class1)', 
+                        rand(MvNormal([4,2],[2.5 -0.7; -0.7 2.5]), class2)', 
+                        rand(MvNormal([2,4],[2 0.7; 0.7 2]), class3)')
+                        ,
+                        vcat(fill(1,class1), fill(2,class2), fill(3,class3))
+                        )
+
+X, y = make_data()
 n = length(y)
 label_colors = [:red :green :blue]
-xlim, ylim = (-3,7),(-3,7)
+xlim, ylim = (-3,8),(-3,8)
 
 #We'll plot points again below, so putting it in in a function
-plot_points(plt_function) = plt_function(X[:,1], X[:,2], c = label_colors, ms=5,
+plot_points(plt_function, X, y) = plt_function(X[:,1], X[:,2], c = label_colors, ms=5,
                                             group = y, xlabel=L"X_1", ylabel=L"X_2",
                                             xlim = xlim, ylim = ylim,legend=:topleft)
-plot_points(scatter)
+plot_points(scatter, X, y)
 ```
-A decision tree classifier splits the input space (in this case $\mathbb{R}^2$) into disjoint regions based on a sequence of decision rules. For example a node in such a decision tree can be implemented as:
+
+A decision tree classifier splits the input space (in this case $\mathbb{R}^2$) into disjoint regions based on a sequence of decision rules. We illustrate this directly using code. For example, a node in such a decision tree can be implemented with nodes such as:
 
 ```julia
 mutable struct DecisionTreeNode
-    
     #This is either a class decision (1, 2, or 3 when there are three classes)
     #or a function that returns false for "left" and true for "right" 
     decision::Union{Int, Function} 
@@ -109,58 +114,59 @@ mutable struct DecisionTreeNode
 end
 ```
 
-Lets first manually construct such a tree, starting at first with a single decision based on $X_1$:
+Lets first manually construct such a tree with (somewhat) arbitrary cut-offs, starting at first with a single decision based on $X_1$:
 
 ```julia
-tree = DecisionTreeNode(    (x)->x[1]<2, #This is the decision rule
-                            DecisionTreeNode(1, nothing,nothing), 
-                            DecisionTreeNode(2, nothing,nothing));
+manual_tree = DecisionTreeNode(     (x)->x[1]<2, #This is the decision rule
+                                    DecisionTreeNode(1, nothing,nothing), 
+                                    DecisionTreeNode(2, nothing,nothing));
 ```
 
-Now prediction can be done by recusivly running down the tree:
+Now prediction can be done by recursively running down the tree:
 
 ```julia
-function predict(tree::DecisionTreeNode, data::Vector{Float64})
+function predict(tree::DecisionTreeNode, features::Vector{Float64})
     isa(tree.decision, Int) && return tree.decision
-    if tree.decision(data)
-        return predict(tree.lchild, data)
+    if tree.decision(features)
+        return predict(tree.lchild, features)
     else
-        return predict(tree.rchild, data)
+        return predict(tree.rchild, features)
     end
-end
+end;
 ```
 
 Here is our (simple) tree's prediction visually:
 
 ```julia
-training_accuracy() = mean(predict(tree, X[i,:]) == y[i] for i in 1:n)
+tree_accuracy(tree, X, y) = mean(predict(tree, X[i,:]) == y[i] for i in 1:size(X)[1])
 
 x1_grid, x2_grid = xlim[1]:0.005:xlim[2], ylim[1]:0.005:ylim[2]
 ccol = cgrad([RGB(1,0,0), RGB(0,1,0), RGB(0,0,1)])
-function plot_decision()
+
+function plot_decision(tree, X, y)
     contour(x1_grid, x2_grid, (x1,x2)->predict(tree,[x1,x2]), 
             f=true, nlev=3, c=ccol, legend = :none,
-            title = "Training Accuracy = $(training_accuracy())")
-    plot_points(scatter!)
+            title = "Training Accuracy = $(tree_accuracy(tree, X, y))")
+    plot_points(scatter!, X, y)
 end
 
-plot_decision()
+plot_decision(manual_tree, X, y)
 ```
 
-Now we can add more rules (let's still do this manually):
+Now we can add more rules by adding more nodes (let's still do this manually):
 
 ```julia
-tree.rchild.decision = (x)->x[2]>4
-tree.rchild.lchild = DecisionTreeNode(3,nothing,nothing)
-tree.rchild.rchild = DecisionTreeNode(2,nothing,nothing)
+#Split the right child
+manual_tree.rchild.decision = (x)->x[2]>4
+manual_tree.rchild.lchild = DecisionTreeNode(3,nothing,nothing)
+manual_tree.rchild.rchild = DecisionTreeNode(2,nothing,nothing)
 
-plot_decision()
+plot_decision(manual_tree, X, y)
 ```
 
-We can also print the tree (similar code appeared with heaps in the previous unit):
+We can also print the tree (similar code appeared for heaps in the previous unit):
 
 ```julia
-# helper function to show Node
 function Base.show(io::IO, node::DecisionTreeNode, this_prefix = "", subtree_prefix = "")
     print(io, "\n", this_prefix, node.lchild === nothing ? "── " : "─┬ ")
     show(io, node.decision)
@@ -178,27 +184,30 @@ function Base.show(io::IO, node::DecisionTreeNode, this_prefix = "", subtree_pre
     end
 end
 
-tree
+manual_tree
 ```
 
-With the above printout since decision rules are functions they don't "display nicely".
+With the above printout since decision rules are functions they don't "display nicely" but with a better implementation this can be overcome.
 
-And one more rule:
+Here is one more rule:
 
 ```julia
-tree.lchild.decision = (x)-> x[2]>1.9
-tree.lchild.lchild = DecisionTreeNode(3,nothing,nothing)
-tree.lchild.rchild = DecisionTreeNode(1,nothing,nothing)
-tree
+#split the right child
+manual_tree.lchild.decision = (x)-> x[2]>1.9
+manual_tree.lchild.lchild = DecisionTreeNode(3,nothing,nothing)
+manual_tree.lchild.rchild = DecisionTreeNode(1,nothing,nothing)
+manual_tree
 ```
 
 ```julia
-plot_decision()
+plot_decision(manual_tree, X, y)
 ```
 
-You can now see that with more and more additions to the tree the traning accuracy can increase since each observation can eventually lie in the correct spot. However careful: **we are overfitting!**. You can in principlie mitage overfitting by finding the right balance for how deep a tree should be using for example cross validiation. 
+You can now see that with more and more additions to the tree the training accuracy can increase since in principle, each observation can eventually lie in the correct spot. However be careful **we are over-fitting!**. You can in principle mitigate over-fitting by finding the right balance for how deep a tree should be using for example cross validation. But below, we'll use a more general technique called random forests.
 
-Before we deal with random forests that improve accuracy and allow to mitage overfitting, lets see how to algorithmically build the decision tree. There are multiple ways and methods, we will focus on one method based on a greedy algorithm with information gain. This is sometimes called a "top-down" construction. 
+Still, before we deal with random forests that improve accuracy and allow to mitigate over-fitting, lets see one way to build the decision tree. There are multiple ways and methods, we will focus on one method based on a greedy algorithm. This is sometimes called a "top-down" construction. 
+
+For this we'll use a slightly different struct for each node that doesn't only keep the decision rule, but also keeps the data available up to that node. We'll also keep the depth of the node in each node.
 
 ```julia
 mutable struct DecisionTreeNodeWithData
@@ -209,7 +218,7 @@ mutable struct DecisionTreeNodeWithData
 
     #This is either a class decision (1, 2, or 3 when there are three classes)
     #or a function that returns false for "left" and true for "right" 
-    #or nothing if the node isn't initlized yet
+    #or nothing if the node isn't initialized yet
     decision::Union{Int, Function, Nothing} 
 
     #Children
@@ -222,12 +231,19 @@ end
 ```
 
 ```julia
-tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing, 1);
+#make an empty tree
+init_tree(X, y) = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing, 1); 
+auto_split_tree = init_tree(X, y) 
 ```
 
+Now this splitting rule function is the most important function since it takes a node and decides how to split it. Here decision tree algorithms could use different measures, sometimes called **impurity functions**. In our case (and so far focusing on classification) we'll decide to split based on the feature and value that minimizes.
+
+$$
+QQQQ
+$$
 
 ```julia
-using StatsBase: mode
+using StatsBase: mode #used here for finding the most common label 
 
 function find_splitting_rule(node::DecisionTreeNodeWithData)
     X, y = node.X, node.y
@@ -242,13 +258,18 @@ function find_splitting_rule(node::DecisionTreeNodeWithData)
         for i in 1:n
             τ_candidate = X[i,j]
             left_bits = X[:,j] .≤ τ_candidate
+            right_bits = .!left_bits
+            pred_left, pred_right = 0, 0
+
             (sum(left_bits) == 0 || sum(left_bits) == n) && continue
-            pred_left =  mode(y[left_bits])
-            pred_right =  mode(y[.!left_bits])
-            new_loss = mean(y[left_bits] .== pred_left) + mean(y[.!left_bits] .== pred_right)
+
+            pred_left = mode(y[left_bits])
+            pred_right = mode(y[right_bits]) 
+            new_loss = mean(y[left_bits] .!= pred_left) + mean(y[right_bits] .!= pred_right)
+
             #if found a better split than previously then retain it
             if new_loss < loss
-                final_left_bits = copy(left_bits)
+                final_left_bits = left_bits
                 pred_left_choice = pred_left
                 pred_right_choice = pred_right
                 feature = j
@@ -257,33 +278,30 @@ function find_splitting_rule(node::DecisionTreeNodeWithData)
             end
         end
     end
+
     return (rule = (x)->x[feature] ≤ τ, 
             left_value = pred_left_choice, 
             right_value = pred_right_choice, 
-            feature = feature, 
-            τ = τ,
             left_bits = final_left_bits)
 end;
 ```
 
+Here is prediction function for this type just like above (only written more tightly): 
+
 ```julia
-function predict(tree::DecisionTreeNodeWithData, data::Vector{Float64})
+function predict(tree::DecisionTreeNodeWithData, features::Vector{Float64})
     isa(tree.decision, Int) && return tree.decision
-    if tree.decision(data)
-        return predict(tree.lchild, data)
-    else
-        return predict(tree.rchild, data)
-    end
+    tree.decision(features) && return predict(tree.lchild, features)
+    return predict(tree.rchild, features)
 end;
 ```
 
+Here is a printing function, also just like above:
+
 ```julia
-# helper function to show Node
 function Base.show(io::IO, node::DecisionTreeNodeWithData, this_prefix = "", subtree_prefix = "")
     print(io, "\n", this_prefix, node.lchild === nothing ? "── " : "─┬ ")
-    show(io, node.decision)
-
-    # print children
+    show(io, isa(node.decision,Int) ? node.decision : "Splitting rule")
     if node.lchild !== nothing
         if node.rchild !== nothing
             show(io, node.lchild, "$(subtree_prefix) ├", "$(subtree_prefix) │")
@@ -291,102 +309,148 @@ function Base.show(io::IO, node::DecisionTreeNodeWithData, this_prefix = "", sub
             show(io, node.lchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
         end
     end
-    if node.rchild !== nothing
-        show(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
-    end
+    node.rchild !== nothing && show(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
 end;
 ```
 
-```julia
-function split_node!(node::DecisionTreeNodeWithData)
-    splitting_result = find_splitting_rule(node)
-    node.decision = splitting_result.rule
-    node.lchild = DecisionTreeNodeWithData( node.X[splitting_result.left_bits,:], 
-                                            node.y[splitting_result.left_bits], 
-                                            splitting_result.left_value,
-                                            nothing,
-                                            nothing,
-                                            node.depth+1)
-    right_bits = .!splitting_result.left_bits
-    node.rchild = DecisionTreeNodeWithData( node.X[right_bits,:], 
-                                            node.y[right_bits],  
-                                            splitting_result.right_value,
-                                            nothing,
-                                            nothing,
-                                            node.depth+1);
-end;
-```
-
-Let's do some splitting:
-
-```julia
-split_node!(tree);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.lchild);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.rchild);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.lchild.lchild);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.lchild.rchild);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.rchild.lchild);
-println(tree)
-plot_decision()
-```
-
-```julia
-split_node!(tree.rchild.rchild);
-println(tree)
-plot_decision()
-```
-
-So now lets fully train the tree...
+We can then do this recursively. But careful if `max_depth` is infinity` then this is a seriously over-fitted tree because it exactly describes the the training data:
 
 ```julia
 function build_tree!(node::DecisionTreeNodeWithData; max_depth = Inf)::Nothing
-    length(unique(node.y)) == 0 && return
-    length(node.y)==1 && return
+    length(node.y) == 1 && return
+    length(unique(node.y)) ≤ 1 && return
     (node.depth ≥ max_depth) && return 
 
-    split_node!(node)
+    splitting_result = find_splitting_rule(node)
+    right_bits = .!splitting_result.left_bits #.! flips the bits
+
+    node.decision = splitting_result.rule
+
+    node.lchild = DecisionTreeNodeWithData( node.X[splitting_result.left_bits,:], 
+                                                node.y[splitting_result.left_bits], 
+                                                splitting_result.left_value,
+                                                nothing,
+                                                nothing,
+                                                node.depth + 1)
+    
+    node.rchild = DecisionTreeNodeWithData( node.X[right_bits,:], 
+                                                node.y[right_bits],  
+                                                splitting_result.right_value,
+                                                nothing,
+                                                nothing,
+                                                node.depth + 1);
+    
     build_tree!(node.lchild, max_depth=max_depth)
     build_tree!(node.rchild, max_depth=max_depth)
 end;
-
-tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing,1);
-build_tree!(tree,max_depth=12)
-plot_decision()
 ```
+
+Let's build a tree:
+```julia
+auto_split_tree = init_tree(X, y);
+build_tree!(auto_split_tree)
+plot_decision(auto_split_tree, X, y)
+```
+
+Let's count how many nodes we have (this is called "walking the tree"):
+
+```julia
+function num_nodes(node::DecisionTreeNodeWithData; count = 0)
+    count += 1
+    node.lchild != nothing && (count = num_nodes(node.lchild; count = count))
+    node.rchild != nothing && (count = num_nodes(node.rchild; count = count))
+    return count
+end
+num_nodes(auto_split_tree)
+```
+
+Similarly we can look at the depth of the tree (this implementation use the fact here that every node has a `depth` field):
+
+```julia
+function depth(node::DecisionTreeNodeWithData; max_depth = 1)
+    (node.lchild == nothing && node.rchild == nothing) && return node.depth
+    (node.lchild != nothing && node.rchild == nothing) && return max(max_depth, depth(node.lchild))
+    (node.lchild == nothing && node.rchild != nothing) && return max(max_depth, depth(node.rchild))
+    return max(max_depth, depth(node.lchild), depth(node.rchild))
+end
+depth(auto_split_tree)
+```
+
+Instead lets incrementally build trees with more depth
+
+```julia
+for d = 2:100
+    tree = init_tree(X, y)
+    build_tree!(tree, max_depth = d)
+    tree_summary = (max_depth = d, 
+                    actual_depth = depth(tree), 
+                    num = num_nodes(tree), 
+                    acc = tree_accuracy(tree, X, y))
+    println(tree_summary)
+end
+```
+
+Here is an animation of this:
 
 ```julia
 anim = Animation()
-for d in 2:15
-    global tree = DecisionTreeNodeWithData(X, y, nothing, nothing, nothing,1);
+for d in union(2:3,10:10:70)
+    tree = init_tree(X, y);
     build_tree!(tree, max_depth = d)
-    plot_decision()
+    plot_decision(tree, X, y)
     frame(anim)
 end
 
-gif(anim, "decision_tree.gif", fps = 1)
+gif(anim, "decision_tree.gif", fps = 3)
 ```
+
+Now such over-fitting is obviously not good. Let's increase the number of points from $100$ to $1000$ and consider (an hypothetical) validation dataset in addition to the training dataset.
+
+```julia
+Random.seed!(1)
+X, y = make_data(100,100,100) #training dataset
+X_validate, y_validate = make_data(40,40,40)
+
+p_train = plot_points(scatter, X, y)
+          plot!(p_train, title = "Training data")
+p_validate = plot_points(scatter, X_validate, y_validate)
+          plot!(p_validate, title = "Validation data")
+plot(p_train, p_validate)
+```
+
+By construction, the validation data above seems similar to the training data, however as we can see fitting a decision tree with a depth of more than about $10$ decreases validation accuracy. We are over-fitting!
+
+```julia
+train_acc = Float64[]
+validation_acc = Float64[]
+
+for d = 2:150
+    tree = init_tree(X, y)
+    build_tree!(tree, max_depth = d)
+    push!(train_acc, tree_accuracy(tree, X, y))
+    push!(validation_acc, tree_accuracy(tree, X_validate, y_validate))
+end
+
+plot(2:150, [train_acc validation_acc], 
+    label = ["training" "validation"],
+    ylim =(0, 1.1), legend = :bottomleft, shape = :circle,
+    xlabel = "Max Depth", ylabel = "Accuracy")
+```
+
+### Trees for regression
+
+You can use decision trees for regression instead of classification. The key idea is to use a loss that quantifies the regression error at every split. Here typically we would need a stopping rule for how deep to go. More on this is in the practical.
+
+### Dealing with categorical features
+
+
+
+
+### Using a package
+
+Now that we understood the basics of decision trees, lets use a package with more versatile and optimized code. We'll use [DecisionTree.jl](https://github.com/bensadeghi/DecisionTree.jl). Another popular package is [XGBoost.jl](https://github.com/dmlc/XGBoost.jl) which wraps the popular [XGBoost](https://en.wikipedia.org/wiki/XGBoost) library code. In any case, when working with machine learning with Julia you will often use a framework such as [MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/). Similarly in Python the most popular choice is [scikit-learn](https://scikit-learn.org/stable/). Note that Julia also has the adapted, [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl). We won't use these but rather create code directly or use `DecisionTree.jl`.
+
+
+
+
+### Random forests
