@@ -406,7 +406,7 @@ end
 gif(anim, "decision_tree.gif", fps = 1)
 ```
 
-Now such over-fitting is obviously not good. Let's increase the number of points from $100$ to $1000$ and consider (an hypothetical) validation dataset in addition to the training dataset.
+Now such over-fitting is obviously not good. Let's consider (an hypothetical) validation dataset in addition to the training dataset.
 
 ```julia
 Random.seed!(1)
@@ -507,7 +507,7 @@ println("\nPrediction accuracy (measured on test set of size $n_test): ",accurac
 ```
 ### Random forests
 
-The idea of the random forest algorithm is to build an ensemble of trees, not just one tree. It builds on a more general idea studied in machine learning theory called "bagging". (There is also an idea of "boosting" that we don't discuss here). The general idea of bagging is to create an a model,
+The idea of the random forest algorithm is to build an ensemble of trees, not just one tree. It builds on a more general idea studied in machine learning theory called "bagging". (There is also an idea of "boosting" that we don't discuss here). The general idea of bagging is to create a model,
 
 $$
 \hat{f}(x) = \frac{1}{b} \sum_{i=1}^b \hat{f}_i(x),
