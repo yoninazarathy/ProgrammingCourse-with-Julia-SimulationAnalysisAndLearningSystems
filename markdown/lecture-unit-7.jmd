@@ -1,3 +1,5 @@
+Note that since this page is long, [the unit is continued in a second page](https://courses.smp.uq.edu.au/MATH2504/lectures_html/lecture-unit-7b.html).
+
 # Unit 7: Working with heterogenous datasets and a view towards machine learning
 
 In this unit we learn how to deal with heterogenous datasets using data frames. We then explore basic concepts of machine learning. A deep dive into deep learning at UQ is in the [STAT3007 course](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007). Theory of machine learning (and statistical learning) is also studied in [STAT3006](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006). Other aspects of applied statistics and data analysis are studied in [STAT3500](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3500). Our purpose with this unit is just to touch the tip of the iceberg on issues of data analysis and machine learning. The Julia language knowledge acquired in the previous units should help.
@@ -819,14 +821,9 @@ p2 = scatter(xVals,yVals, c=:black, ms=1, label="Data points")
 plot(p1, p2, legend=:topleft, size=(800, 400), margin = 5mm)
 ```
 
+# Continuation...
 
-# Tree based models 
+[The unit is continued in a second page](https://courses.smp.uq.edu.au/MATH2504/lectures_html/lecture-unit-7b.html)
 
-* Hand made decision tree on simple dataset.
-* Decision trees
-* Boosting 
-* Random forests
-
-# Tips for implementing random forests.
 
 

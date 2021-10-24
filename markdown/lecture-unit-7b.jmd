@@ -1,5 +1,7 @@
 # Unit 7 continuation: Machine Learning with Decision trees and Random Forests
 
+This is a continuation of [Unit 7](https://courses.smp.uq.edu.au/MATH2504/lectures_html/lecture-unit-7.html).
+
 ### Fitting, over-fitting, generalization, and model choice
 
 When we develop or train machine learning models we use the **seen** data. We often assume it is i.i.d. data and if we have reason to believe it isn't we shuffle it, or collect it in a way where it is likely to be i.i.d.
@@ -238,8 +240,8 @@ auto_split_tree = init_tree(X, y)
 Now this splitting rule function is the most important function since it takes a node and decides how to split it. Here decision tree algorithms could use different measures, sometimes called **impurity functions**. In our case (and so far focusing on classification) we'll decide to split based on the feature and value that minimizes.
 
 $$
-\frac{1}{\text{num left}} \sum_{\text{left}} {\mathbf 1}\{ mismatch in prediction \} + 
-\frac{1}{\text{num right}} \sum_{\text{right}} {\mathbf 1}\{ mismatch in prediction \} + 
+\frac{1}{\text{num left}} \sum_{\text{left}} {\mathbf 1}\{ \text{mismatch in prediction} \} + 
+\frac{1}{\text{num right}} \sum_{\text{right}} {\mathbf 1}\{ \text{mismatch in prediction} \}. 
 $$
 
 ```julia
@@ -394,14 +396,14 @@ Here is an animation of this:
 
 ```julia
 anim = Animation()
-for d in union(2:3,10:10:70)
+for d in union(2:3,10:5:80)
     tree = init_tree(X, y);
     build_tree!(tree, max_depth = d)
     plot_decision(tree, X, y)
     frame(anim)
 end
 
-gif(anim, "decision_tree.gif", fps = 3)
+gif(anim, "decision_tree.gif", fps = 1)
 ```
 
 Now such over-fitting is obviously not good. Let's increase the number of points from $100$ to $1000$ and consider (an hypothetical) validation dataset in addition to the training dataset.
