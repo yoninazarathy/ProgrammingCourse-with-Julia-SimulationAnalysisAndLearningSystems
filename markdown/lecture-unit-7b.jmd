@@ -7,7 +7,6 @@ When we develop or train machine learning models we use the **seen** data. We of
 We then can choose a model to fit the data. And we want to "fit the data well". This sounds sensible, but is clearly subject to abuse. We can effectively have a model that fits every data point exactly!
 
 Here is one example of this where our data consists of $(x,y)$ pairs and we use a [Vandermonde Matrix](https://en.wikipedia.org/wiki/Vandermonde_matrix) to fit a polynomial that goes through each training point exactly.
-
 The example also has a linear fit using the pseudo-inverse.  Which model is better? 
 
 As you answer this question, consider also the fact that there is unseen data which we don't get to see as we develop the model (red points in the curve).
@@ -239,7 +238,8 @@ auto_split_tree = init_tree(X, y)
 Now this splitting rule function is the most important function since it takes a node and decides how to split it. Here decision tree algorithms could use different measures, sometimes called **impurity functions**. In our case (and so far focusing on classification) we'll decide to split based on the feature and value that minimizes.
 
 $$
-QQQQ
+\frac{1}{\text{num left}} \sum_{\text{left}} {\mathbf 1}\{ mismatch in prediction \} + 
+\frac{1}{\text{num right}} \sum_{\text{right}} {\mathbf 1}\{ mismatch in prediction \} + 
 $$
 
 ```julia
@@ -443,14 +443,167 @@ You can use decision trees for regression instead of classification. The key ide
 
 ### Dealing with categorical features
 
-
-
+When we deal with categorical features the typical thing to do is one hot encoding. That is, if there is a categorical features with say three possible values, we will create three binary columns for this categorical feature where in each row, there is only a single $1$ in one of these columns and the other two will be $0$.
 
 ### Using a package
 
 Now that we understood the basics of decision trees, lets use a package with more versatile and optimized code. We'll use [DecisionTree.jl](https://github.com/bensadeghi/DecisionTree.jl). Another popular package is [XGBoost.jl](https://github.com/dmlc/XGBoost.jl) which wraps the popular [XGBoost](https://en.wikipedia.org/wiki/XGBoost) library code. In any case, when working with machine learning with Julia you will often use a framework such as [MLJ](https://alan-turing-institute.github.io/MLJ.jl/dev/). Similarly in Python the most popular choice is [scikit-learn](https://scikit-learn.org/stable/). Note that Julia also has the adapted, [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl). We won't use these but rather create code directly or use `DecisionTree.jl`.
 
 
+Back to MNIST:
 
+```julia
+using MLDatasets
+train_data = MLDatasets.MNIST.traindata(Float64)
+train_imgs = train_data[1]
+train_labels = train_data[2]
 
+test_data = MLDatasets.MNIST.testdata(Float64)
+test_imgs = test_data[1]
+test_labels = test_data[2];
+
+n_train, n_test = length(train_labels), length(test_labels)
+
+y_train = train_labels
+y_test = test_labels
+
+X_train = vcat([vec(train_imgs[:,:,k])' for k in 1:n_train]...)
+X_test = vcat([vec(test_imgs[:,:,k])' for k in 1:n_test]...);
+
+size(X_train), size(X_test)
+```
+
+Let's build a tree using the default API of `DecisionTree.jl`:
+
+```julia
+using DecisionTree, Statistics
+
+# set of classification parameters and respective default values
+# pruning_purity: purity threshold used for post-pruning (default: 1.0, no pruning)
+# max_depth: maximum depth of the decision tree (default: -1, no maximum)
+# min_samples_leaf: the minimum number of samples each leaf needs to have (default: 1)
+# min_samples_split: the minimum number of samples in needed for a split (default: 2)
+# min_purity_increase: minimum purity needed for a split (default: 0.0)
+# n_subfeatures: number of features to select at random (default: 0, keep all)
+# keyword rng: the random number generator or seed to use (default Random.GLOBAL_RNG)
+n_subfeatures=0; max_depth=-1; min_samples_leaf=1; min_samples_split=2
+min_purity_increase=0.0; pruning_purity = 1.0; seed=3
+
+tree_model    =   build_tree(y_train, X_train,
+                        n_subfeatures,
+                        max_depth,
+                        min_samples_leaf,
+                        min_samples_split,
+                        min_purity_increase;
+                        rng = seed)
+```
+
+```julia
+predicted_labels = apply_tree(tree_model, X_test)
+accuracy = mean(predicted_labels .== y_test)
+println("\nPrediction accuracy (measured on test set of size $n_test): ",accuracy)
+```
 ### Random forests
+
+The idea of the random forest algorithm is to build an ensemble of trees, not just one tree. It builds on a more general idea studied in machine learning theory called "bagging". (There is also an idea of "boosting" that we don't discuss here). The general idea of bagging is to create an a model,
+
+$$
+\hat{f}(x) = \frac{1}{b} \sum_{i=1}^b \hat{f}_i(x),
+$$
+
+where each $\hat{f}_i(\cdot)$ is a model trained on a random subset of the data. The way the random subset is selected is by choosing random observations from the data **with replacement**. So the data used to train each $\hat{f}_i(\cdot)$ is the original data, but typically with some observations missing and some observations repeated. This randomization yields better performance.
+
+The above averaging is for regression models and in classification a majority vote can be taken. 
+
+Random forests use the idea of bagging but also go beyond it: Each time that a decision tree $\hat{f}_i(\cdot)$ is trained, it isn't only trained on bagged observations, but is also trained with only a small random set of features available. It is typical (and has some supporting theory) to choose $\sqrt{d}$ random features in cases where there are $d$ features available. 
+
+So if the data available for training is the the vector $y$ and the $n\times d$ matrix $X$, then in a random forest each tree is trained with some random $n \times \lceil \sqrt{d}\rceil$ matrix $\tilde{X}$ which has rows randomly selected from the original $X$ with repetitions, and columns selected randomly from the original $X$ as well. The combination of many (or several) such trees then yields better prediction performance without danger of over-fitting.
+
+Without getting into all the details, here is the heart of the random forest implementation (for classification) taken from `DecisionTree.jl`. This is from the file [https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/classification/main.jl](https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/classification/main.jl). Note that the `build_tree` function already implements selecting a random features. 
+
+This is also an example to see some multi-threaded code. A concept we completely didn't discuss in this course:
+
+```
+function build_forest(
+        labels              :: AbstractVector{T},
+        features            :: AbstractMatrix{S},
+        n_subfeatures       = -1,
+        n_trees             = 10,
+        partial_sampling    = 0.7,
+        max_depth           = -1,
+        min_samples_leaf    = 1,
+        min_samples_split   = 2,
+        min_purity_increase = 0.0;
+        rng                 = Random.GLOBAL_RNG) where {S, T}
+
+    if n_trees < 1
+        throw("the number of trees must be >= 1")
+    end
+    if !(0.0 < partial_sampling <= 1.0)
+        throw("partial_sampling must be in the range (0,1]")
+    end
+
+    if n_subfeatures == -1
+        n_features = size(features, 2)
+        n_subfeatures = round(Int, sqrt(n_features))
+    end
+
+    t_samples = length(labels)
+    n_samples = floor(Int, partial_sampling * t_samples)
+
+    forest = Vector{LeafOrNode{S, T}}(undef, n_trees)
+
+    entropy_terms = util.compute_entropy_terms(n_samples)
+    loss = (ns, n) -> util.entropy(ns, n, entropy_terms)
+
+    if rng isa Random.AbstractRNG
+        Threads.@threads for i in 1:n_trees
+            inds = rand(rng, 1:t_samples, n_samples)
+            forest[i] = build_tree(
+                labels[inds],
+                features[inds,:],
+                n_subfeatures,
+                max_depth,
+                min_samples_leaf,
+                min_samples_split,
+                min_purity_increase,
+                loss = loss,
+                rng = rng)
+        end
+    elseif rng isa Integer # each thread gets its own seeded rng
+        Threads.@threads for i in 1:n_trees
+            Random.seed!(rng + i)
+            inds = rand(1:t_samples, n_samples)
+            forest[i] = build_tree(
+                labels[inds],
+                features[inds,:],
+                n_subfeatures,
+                max_depth,
+                min_samples_leaf,
+                min_samples_split,
+                min_purity_increase,
+                loss = loss)
+        end
+    else
+        throw("rng must of be type Integer or Random.AbstractRNG")
+    end
+
+    return Ensemble{S, T}(forest)
+end
+
+function apply_forest(forest::Ensemble{S, T}, features::AbstractVector{S}) where {S, T}
+    n_trees = length(forest)
+    votes = Array{T}(undef, n_trees)
+    for i in 1:n_trees
+        votes[i] = apply_tree(forest.trees[i], features)
+    end
+
+    if T <: Float64
+        return mean(votes)
+    else
+        return majority_vote(votes)
+    end
+end
+```
+
+With this, we have touched only the tip of the iceberg in terms of machine learning models. However we hope it is clear that the software component of machine learning is a central one: executing machine learning effectively requires solid coding skills. Other aspects dealing with the mathematics of machine learning can be learned in STAT3006, STAT3007, and other UQ courses. Enjoy. 
