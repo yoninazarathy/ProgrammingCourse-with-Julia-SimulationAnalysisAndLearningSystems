@@ -36,13 +36,16 @@ Random.seed!(1)
 
 d, k = 2, 3 #d features and k label types
 
-make_data(class1 = 50, class2 = 30, class3 = 20) = 
-                (vcat(   rand(MvNormal([1,1],[3 0.7; 0.7 3]), class1)', 
-                        rand(MvNormal([4,2],[2.5 -0.7; -0.7 2.5]), class2)', 
-                        rand(MvNormal([2,4],[2 0.7; 0.7 2]), class3)')
-                        ,
-                        vcat(fill(1,class1), fill(2,class2), fill(3,class3))
-                        )
+function make_data(class1 = 50, class2 = 30, class3 = 20)
+    return (
+        vcat(
+            rand(MvNormal([1,1],[3 0.7; 0.7 3]), class1)',
+            rand(MvNormal([4,2],[2.5 -0.7; -0.7 2.5]), class2)',
+            rand(MvNormal([2,4],[2 0.7; 0.7 2]), class3)'
+        ),
+        vcat(fill(1,class1), fill(2,class2), fill(3,class3))
+    )
+end
 
 X, y = make_data()
 n = length(y)
@@ -50,10 +53,15 @@ label_colors = [:red :green :blue]
 xlim, ylim = (-3,8),(-3,8)
 
 #We'll plot points again below, so putting it in in a function
-plot_points(plt_function, X, y) = plt_function(X[:,1], X[:,2], c = label_colors, ms=5,
-                                            group = y, xlabel=L"X_1", ylabel=L"X_2",
-                                            xlim = xlim, ylim = ylim,legend=:topleft)
+function plot_points(plt_function, X, y)
+    plt_function(X[:,1], X[:,2], c = label_colors, ms = 5,
+        group = y, xlabel = L"X_1", ylabel = L"X_2",
+        xlim = xlim, ylim = ylim, legend = :topleft
+    )
+end
+
 plot_points(scatter, X, y)
+
 
 
 
@@ -81,21 +89,14 @@ manual_tree = DecisionNode(
 
 
 
-
+predict(leaf::Int64, ::Vector{Float64}) = leaf
 function predict(node::AbstractDecisionNode, features::Vector{Float64})
     if features[node.feature] <= node.cutoff
-        child = node.lchild
+        return predict(node.lchild, features)
     else
-        child = node.rchild
-    end
-
-    if child isa AbstractDecisionNode
-        return predict(child, features)
-    else
-        return child
+        return predict(node.rchild, features)
     end
 end;
-
 
 
 
@@ -108,11 +109,24 @@ x2_grid = ylim[1]:0.005:ylim[2]
 ccol = cgrad([RGB(1,0,0), RGB(0,1,0), RGB(0,0,1)])
 
 function plot_decision(tree, X, y)
-    contour(x1_grid, x2_grid, (x1,x2) -> predict(tree, [x1,x2]), 
+    contour(x1_grid, x2_grid, (x1, x2) -> predict(tree, [x1, x2]), 
             f = true, nlev = 3, c = ccol, legend = :none,
             title = "Training Accuracy = $(tree_accuracy(tree, X, y))")
     plot_points(scatter!, X, y)
 end
+
+plot_decision(manual_tree, X, y)
+
+
+
+
+#Split the right child
+manual_tree.rchild = DecisionNode(
+    2,
+    4.0,
+    2,
+    3
+)
 
 plot_decision(manual_tree, X, y)
 
@@ -144,16 +158,16 @@ manual_tree
 manual_tree.lchild = DecisionNode(
     2,
     1.9,
-    3,
-    1
-)
-manual_tree.rchild = DecisionNode(
-    2,
-    1.9,
-    3,
-    2
+    1,
+    3
 )
 manual_tree
+
+
+
+
+plot_decision(manual_tree, X, y)
+
 
 
 
@@ -183,13 +197,13 @@ end
 
 
 Base.show(io::IO, leaf::DecisionWithData) = Base.show(io, leaf.value)
-predict(leaf::DecisionWithData, x) = leaf.value
+predict(leaf::DecisionWithData, ::Vector{Float64}) = leaf.value
 
 
 
 #make an empty tree
-init_tree(X, y) = DecisionWithData(X, y, 1); 
-auto_split_tree = init_tree(X, y)
+initial_tree(X, y) = DecisionWithData(X, y, 1); 
+auto_split_tree = initial_tree(X, y)
 
 
 
@@ -279,5 +293,64 @@ end;
 
 
 
-auto_split_tree = build_tree(init_tree(X, y))
+auto_split_tree = build_tree(initial_tree(X, y))
 plot_decision(auto_split_tree, X, y)
+
+
+
+
+num_nodes(leaf::DecisionWithData) = 1
+function num_nodes(node::DecisionNodeWithData)
+    return 1 + num_nodes(node.lchild) + num_nodes(node.rchild)
+end
+num_nodes(auto_split_tree)
+
+
+
+
+depth(leaf::DecisionWithData) = 1
+function depth(node::DecisionNodeWithData; max_depth = 1)
+    return 1 + max(depth(node.lchild), depth(node.rchild))
+end
+depth(auto_split_tree)
+
+
+
+
+for d = 2:100
+    tree = build_tree(initial_tree(X, y), max_depth = d)
+    tree_summary = (max_depth = d, 
+                    actual_depth = depth(tree), 
+                    num_nodes = num_nodes(tree), 
+                    accuracy = tree_accuracy(tree, X, y))
+    println(tree_summary)
+end
+
+
+
+
+anim = Animation()
+for d in union(2:3,10:5:80)
+    tree = build_tree(initial_tree(X, y), max_depth = d)
+    plot_decision(tree, X, y)
+    frame(anim)
+end
+
+gif(anim, "decision_tree.gif", fps = 1)
+
+
+
+
+train_accuracy = Float64[]
+validation_accuracy = Float64[]
+
+for d = 2:150
+    tree = build_tree(initial_tree(X, y), max_depth = d)
+    push!(train_accuracy, tree_accuracy(tree, X, y))
+    push!(validation_acc, tree_accuracy(tree, X_validate, y_validate))
+end
+
+plot(2:150, [train_accuracy validation_accuracy], 
+    label = ["training" "validation"],
+    ylim =(0, 1.1), legend = :bottomleft, shape = :circle,
+    xlabel = "Max Depth", ylabel = "Accuracy")
