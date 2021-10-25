@@ -157,21 +157,6 @@ manual_tree
 
 
 
-
-mutable struct DecisionNodeWithData <: AbstractDecisionNode
-    # The data available to the node
-    X::Matrix{Float64}
-    y::Vector{Int}
-
-    # Cutoff logic
-    feature::Int
-    cutoff::Float64
-
-    # Children - either another decision node
-    lchild::Union{DecisionNodeWithData, DecisionWithData}
-    rchild::Union{DecisionNodeWithData, DecisionWithData}
-end
-
 mutable struct DecisionWithData
     # The data available to the leaf
     X::Matrix{Float64}
@@ -180,6 +165,22 @@ mutable struct DecisionWithData
     # Cutoff logic
     value::Int64
 end
+
+mutable struct DecisionNodeWithData <: AbstractDecisionNode
+    # The data available to the node
+    X::Matrix{Float64}
+    y::Vector{Int64}
+
+    # Cutoff logic
+    feature::Int64
+    cutoff::Float64
+
+    # Children - either another decision node
+    lchild::Union{DecisionNodeWithData, DecisionWithData}
+    rchild::Union{DecisionNodeWithData, DecisionWithData}
+end
+
+
 
 Base.show(io::IO, leaf::DecisionWithData) = Base.show(io, leaf.value)
 predict(leaf::DecisionWithData, x) = leaf.value
@@ -198,6 +199,7 @@ using StatsBase: mode #used here for finding the most common label
 function find_splitting_rule(leaf::DecisionWithData)
     X, y = leaf.X, leaf.y
     n, d = size(X)
+
     loss, τ, feature = Inf, NaN, -1
     pred_left_choice, pred_right_choice = -1, -1
     final_left_bits = BitVector()
