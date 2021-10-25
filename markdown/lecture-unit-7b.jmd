@@ -64,9 +64,9 @@ Sometimes instead of using a validation set we can do [k-fold cross validation](
 
 In any case, our purpose fo the training/validation/cross-validation data is to select the right model, train the model, and tune hyper-parameters.
 
-### Tree based models
+### Tree-based models
 
-We now focus on tree based models. [Decision trees](https://en.wikipedia.org/wiki/Decision_tree_learning) for machine learning have a long history a
+We now focus on tree-based models. [Decision trees](https://en.wikipedia.org/wiki/Decision_tree_learning) for machine learning have a long history a
 nd constitute a set of models that is still very much in use today. These models are enhanced with [Random forest](https://en.wikipedia.org/wiki/Random_forest) models which use a general machine learning technique [Ensemble Method](https://en.wikipedia.org/wiki/Ensemble_learning), or [bagging](https://en.wikipedia.org/wiki/Bootstrap_aggregating) also known as bootstrap aggregation.
 
 We first introduce and explore basics of decision trees both for regression and classification. We then see that on their own, decision trees are somewhat limited because they can easily over-fit. We then consider random forests which constitute a much more versatile algorithm.
@@ -95,13 +95,17 @@ label_colors = [:red :green :blue]
 xlim, ylim = (-3,8),(-3,8)
 
 #We'll plot points again below, so putting it in in a function
-plot_points(plt_function, X, y) = plt_function(X[:,1], X[:,2], c = label_colors, ms=5,
-                                            group = y, xlabel=L"X_1", ylabel=L"X_2",
-                                            xlim = xlim, ylim = ylim,legend=:topleft)
+function plot_points(plt_function, X, y)
+    plt_function(X[:,1], X[:,2], c = label_colors, ms = 5,
+        group = y, xlabel = L"X_1", ylabel = L"X_2",
+        xlim = xlim, ylim = ylim, legend = :topleft
+    )
+end
+
 plot_points(scatter, X, y)
 ```
 
-A decision tree classifier splits the input space (in this case $\mathbb{R}^2$) into disjoint regions based on a sequence of decision rules. We illustrate this directly using code. For example, a node in such a decision tree can be implemented with nodes such as:
+A decision-tree classifier splits the input space (in this case $\mathbb{R}^2$) into disjoint regions based on a sequence of decision rules. We illustrate this directly using code. For example, a node in such a decision tree can be implemented with nodes such as:
 
 ```julia
 mutable struct DecisionTreeNode
