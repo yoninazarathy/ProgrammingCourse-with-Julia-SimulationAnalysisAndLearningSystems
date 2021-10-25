@@ -783,6 +783,8 @@ Note that with unbalanced data, accuracy is a poor performance measure. However 
 
 The type of model training we used above relied on an explicit characterization of minimizers of the loss function: solutions of the normal equations. However in more general settings such as deep neural networks, or even in the linear setting with higher dimensions, explicit solution of the first order conditions for minimization (normal equations in the case of linear models) is not possible. For this we often use **iterative optimization** of which the most basic form is based on **first order methods** that move in the direction of local best descent.
 
+<!-- TODO Add non-stochastic gradient decent example plot, discuss stiffness, then discuss large training sets and lead into minibatch/SGD algorithm -->
+
 We already saw a simple example of **gradient descent** in Unit 3. This can work fine for small or moderate problems but in cases where there is huge data, multiple local minima, or other problems, one often uses **stochastic gradient descent**(SGD) or variants. As a simple illustration, the example below (approximately) optimizes a simple linear regression problem with SGD. Note that another very common which we don't show here is the use of **mini-batches**.
 
 ```julia

@@ -447,12 +447,14 @@ plot(2:150, [train_accuracy validation_accuracy],
 ```
 
 ### Trees for regression
-
+ 
 You can use decision trees for regression instead of classification. The key idea is to use a loss that quantifies the regression error at every split. Here typically we would need a stopping rule for how deep to go. More on this is in the practical.
 
 ### Dealing with categorical features
 
 When we deal with categorical features the typical thing to do is one hot encoding. That is, if there is a categorical features with say three possible values, we will create three binary columns for this categorical feature where in each row, there is only a single $1$ in one of these columns and the other two will be $0$.
+
+<!-- TODO perhaps an example of going from a small dataframe to a matrix? -->
 
 ### Using a package
 
@@ -616,3 +618,5 @@ end
 ```
 
 With this, we have touched only the tip of the iceberg in terms of machine learning models. However we hope it is clear that the software component of machine learning is a central one: executing machine learning effectively requires solid coding skills. Other aspects dealing with the mathematics of machine learning can be learned in STAT3006, STAT3007, and other UQ courses. Enjoy. 
+
+<!-- TODO Rework this a bit. I think first create the random forest example with our code, make a another plot of accuracy vs depth, and then show how easy it is using DecisionTrees, MLJ or SciKitLearn with tree and forest (with more accuracy plots using a similar training set) -->
