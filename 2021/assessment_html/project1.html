@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2021)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <br>
+
+        <h1>Project #1 - Semester 2, 2021</h1>
+<h1>Univariate Polynomials with Integer Coefficients &#40;&#43; perspective seminar summary&#41;</h1>
+<p>&#40;last edit: Sep 13, 2021&#41;</p>
+<p><strong>Due:</strong> End of Day, Friday, 24, September, 2021. Late submissions are not accepted.</p>
+<p><strong>Note:</strong> The teaching staff will only answer questions &#40;via Piazza, consultation hour, or practicals&#41; regarding this assignment up to the late evening of Wednesday 22/9.</p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. There are <strong>10</strong> points for handing in according to the hand-in instructions, including a voice recording, and neat output. There are <strong>10</strong> additional points for setting up the GitHub repo properly. There are <strong>10</strong> points for the summary of Amy Chan&#39;s perspective seminar. The remaining <strong>70</strong> points are for the project with more details to be updated.</p>
+<p><strong>Submission format:</strong> This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. </p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>uqMATH2504</code> be invited as a collaborator. It is also important to name the repo exactly as <code>&lt;&lt;FIRST NAME&gt;&gt;-&lt;&lt;LAST NAME&gt;&gt;-2504-2021-PROJECT1</code>. So for example if your name is &quot;Jeannette Young&quot;, the repo name should be <code>Jeannette-Young-2504-2021-PROJECT1</code>.</p>
+<p>The PDF file should be a nice formatted file that has:</p>
+<ul>
+<li><p>Your name, student number, and assignment title &#40;Project 1 - 2021&#41; on the top.</p>
+</li>
+<li><p>Your answer to the perspective seminar question.</p>
+</li>
+<li><p>A &#40;clickable&#41; link to your GitHub repo.</p>
+</li>
+<li><p>An illustration of the code and output for <code>example_script.jl</code>: Show the lines of the script and display the corresponding output. </p>
+</li>
+<li><p>An illustration of the output of <code>test/runtests.jl</code>. </p>
+</li>
+<li><p>The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do.</p>
+</li>
+</ul>
+<p>The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use <code>include&#40;&#41;</code> to run Julia code if appropriate. You also comment on questions in this PDF &#40;e.g. when asked to answer things not via code&#41;. If desired you could keep this jupyter notebook &#40;<code>.ipynb</code> file&#41; in the repo. However, this Jupyter notebook will not be checked &#40;only the PDF file&#41;, and it isn&#39;t required to be a &quot;runnable&quot; notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word &#40;instead of Jupyter&#41;, make sure the code is clean, formatted, and readable. </p>
+<p>Marking responses will be made by the teaching staff by annotating <strong>selected parts</strong> of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF &#40;or exporting to PDF&#41; there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.</p>
+<p><strong>Individual work</strong>: This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means about how to go about certain tasks.</p>
+<p><strong>Marking Criteria</strong>: </p>
+<ul>
+<li><p>10 points are allocated for following instructions. </p>
+</li>
+<li><p>10 points are allocated for setting up the GitHub hand-in according to the instructions.</p>
+</li>
+<li><p>10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness &#40;the writeup should answer all questions posed&#41;. 2 points of originality and style.</p>
+</li>
+<li><p>70 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task. </p>
+</li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. </p>
+</li>
+</ul>
+<hr />
+<h2>Setting up your GitHub repo for hand-in &#40;10pts&#41;:</h2>
+<ul>
+<li><p>Ideally use the same account you used for HW2. </p>
+</li>
+<li><p>Ideally we would like you to <strong>fork</strong> the GitHub repo <a href="https://github.com/yoninazarathy/2504_2021_project1">https://github.com/yoninazarathy/2504_2021_project1</a>. The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead <strong>duplicate</strong> the repository as described <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository">here</a>. You will first create your new repository and then follow the 4 steps under &quot;Mirroring a repository&quot;.</p>
+</li>
+<li><p>Invite the course GitHub user, <code>uqMATH2504</code> as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.</p>
+</li>
+<li><p>Do <strong>not</strong> make any changes &#40;commits&#41; to the repo after the project due date. </p>
+</li>
+<li><p>Create a local clone of the repo. It is recommended that use use <code>git</code> command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism &#40;VS-Code, GitHub desktop, etc&#41;.</p>
+</li>
+<li><p>If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.</p>
+</li>
+</ul>
+<p>Your GitHub repo should be formatted like the original repo that you forked with additional files and modifications based on the tasks below.</p>
+<ul>
+<li><p>Note: make sure that there aren&#39;t any excessive files in your submission repo. An exception is perhaps a Jupyter <code>.ipynb</code> file if you choose to use it for creating the PDF. Use may use the <code>.gitignore</code> file to ensure <code>git</code> does not commit additional files and output files to your <code>repo</code>.</p>
+</li>
+</ul>
+<h2>Perspective seminar question &#40;10pts&#41;</h2>
+<p>Write a 1-4 paragraph summary of Amy Chan&#39;s perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don&#39;t write &quot;the answer to Q1 is...&quot; etc. Instead incorporate the answers in a flowing writeup report &#40;like a blog post or letter&#41;. You may use first person and refer to the speaker as &quot;Dr. Chan&quot;, or &quot;Amy&quot;, or similar. Present the writeup as part of your PDF file submission &#40;as the first item in the submission&#41;.</p>
+<p>The writeup should address the following questions:</p>
+<ol>
+<li><p>What was Amy’s career path, and her relationship with software, mathematics, and statistics?</p>
+</li>
+<li><p>Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?</p>
+</li>
+<li><p>Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?</p>
+</li>
+<li><p>Have you picked up any tips from Amy’s talk, which you can perhaps use in your career down the road?</p>
+</li>
+<li><p>Feel free to state anything else that you found interesting from the talk.</p>
+</li>
+</ol>
+<h2>Main project task &#40;70pts&#41;</h2>
+<p>You will build your project on top of the <a href="https://github.com/yoninazarathy/2504_2021_project1">project GitHub repository</a> by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that you will make improvements, additions, and cleanups.</p>
+<h3>Task 1 &#40;5 pts&#41; - Getting it to run, improving pretty printing, and creating your own example script.</h3>
+<p>Once you create your own repository you can make sure it works. Run the code of <code>test/runtests.jl</code> and <code>example_script.jl</code>. At this point study the functionality of the repository as a user. That is look at the function signatures but not at the function implementation.  Understand what it can do. </p>
+<p>Now create your own example script, <code>example_script_2.jl</code>, with a few &quot;thoughtful polynomials&quot; of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output &#40;e.g. using <code>println</code>&#41; that describes what is going on. So basically, <code>example_script_2.jl</code> is an improvement over the minimally supplied <code>example_script.jl</code>. With your improved script make sure you illustrate the key functionality of most of the operations available via the software. Make sure you choose sensible example polynomials and residue classes &#40;primes&#41; to work with.</p>
+<p>In addition, as part of this task improve the &quot;pretty printing&quot; of the polynomials. At the moment terms with power <code>0</code> or <code>1</code> are printed as <code>x^0</code> and <code>x^1</code>. Similarly negative coefficients are still preceded by a <code>&#43;</code> symbol. Improve this so that polynomials are displayed as cleanly as possible.</p>
+<h3>Task 2 &#40;10pts&#41; - Refactoring the data structure used</h3>
+<p>As you can see, a heap data structure is used for storing the terms of the polynomial. This can be good in contexts beyond the current application such as polynomials with multiple variables, or polynomials with rational coefficients. However for our purpose, the heap is not really useful. In fact, it is a hinderance at times. </p>
+<p>Your job with this task is to replace the heap with one of &#40;your choice&#41;:</p>
+<ul>
+<li><p>A simple array of terms.</p>
+</li>
+<li><p>A dictionary of terms. </p>
+</li>
+</ul>
+<p>As you do this, make sure that all of the functionality of the project remains intact by re-running the tests as well as creating your own additional tests if needed. Make sure that the invariant of not having two terms of the same degree is kept. Similarly, if the polynomial is <span class="math">$0$</span> then have the array or the dictionary empty. </p>
+<h3>Task 3 &#40;15pts&#41; - Creating a polynomial mod p datatype and further refactoring</h3>
+<p>You may notice that <code>Polynomial</code> datatype does not know the field of the coefficients. Hence operations such as <code>divide</code>, <code>gcd</code>, or <code>factor</code> need to continuously use <code>mod</code> and are often with an &quot;unnatural&quot; interface where they return a function which is then gets <span class="math">$p$</span> &#40;the prime&#41; as an argument. However, for much of the functionality of this project we do consider the polynomials as &quot;mod p&quot;.</p>
+<p>Your task here is to create a type <code>PolynomialModP</code> which has a polynomial &#40;of type <code>Polynomial</code>&#41; as an element as well as a prime number as an element. This <code>PolynomialModP</code> type will then support the same arithmetic operations as <code>Polynomial</code> but will keep all the coefficients in the range <span class="math">$0,1,2,\ldots,p-1$</span> where <span class="math">$p$</span> is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. </p>
+<p>Create units tests for this type just like the ones that currently exist in the package and make sure all of the functionality is kept working &#40;only to this restricted set of polynomials&#41;.</p>
+<p>Your new datatype should still rely on existing functionality of the type <code>Polynomial</code>. But, for example, after doing arithmetic operations, it should ensure that all coefficients are represented mod <span class="math">$p$</span>. </p>
+<p>Once this type is created, &quot;remove&quot; the division and gcd/Euclidean operations out of polynomial. That is, it should no longer be possible to do <code>p1 ÷ p2</code> where <code>p1</code> and <code>p2</code> are of the <code>Polynomial</code> type. This means you should update/trim the units tests for <code>Polynomial</code> and have the new units tests for your new <code>PolynomialModP</code> type.</p>
+<p>With this refactoring, the <code>pow_mod</code> function should no longer be supported for polynomials. Instead make a version of this, using <code>^</code> for <code>PolynomialModP</code>.</p>
+<p>The <code>show</code> method for <code>PolynomialModP</code> should also indicate that it is mod p.</p>
+<h3>Task 4 &#40;10pts&#41; - Improving multiplication</h3>
+<p>The current multiplication implementation is not efficient. Create some benchmarking test that in addition to testing the validity of multiplication also quantifies performance for an increasing size of polynomials. </p>
+<p>Now implement a different better form of multiplication using the <strong>Chinese Remainder Theorem</strong> &#40;CRT&#41; as presented in the lecture &#40;previously it was stated to use &quot;interpolation&quot;, but using the CRT is easier&#41;. Test it and benchmark it against the old multiplication &#40;it is recommended to keep the old form in another function or method&#41;. </p>
+<p>You will need to implement multiplication for your <code>PolynomialModP</code> type first.  Then the generic multiplication algorithm will compute products of a sufficient number of primes using your mod p multiplication, and then use the CRT to construct the solution in <span class="math">$Z[x]$</span>.</p>
+<p>Your tests and benchmarks should also be for the your new <code>PolynomialModP</code> type and its operations. </p>
+<h3>Task 5 &#40;10pts&#41; - Improving power</h3>
+<p>Similarly to multiplication, you may notice the the implementation of the power operator, <code>^</code> as well as <code>pow_mod</code> &#40;or its new version in <code>PolynomialModP</code>&#41;, can be made more efficient. For example if you have a polynomial <code>f</code> and raise it to the power <code>2^n</code> then instead of doing about <code>2^n</code> multiplications you can do about <code>n</code>. This can also be done for powers that are not <code>2^n</code>. Implement this better power and make sure it works via unit tests. Again this should work both for <code>Polynomial</code> and <code>PolynomialModP</code>.</p>
+<p>A method for optimizing the &quot;w^p mod p&quot; calculation for w a polynomial and p a prime, will be covered in the lectures. You should use this method where applicable.</p>
+<h3>Task 6 &#40;20pts&#41; - Factorization mod p</h3>
+<p>Now that you have efficient multiplication, power, and the datatype <code>PolynomialModP</code> together with the other working operations. Adapt the polynomial factorization to use this new functionality. The current code &#40;supplied with the basic project&#41; works for limited cases but can get stuck on certain examples. </p>
+<p>With your new code, test on a wider set of examples including bigger primes. Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer.</p>
+<p>Also, factorization when the prime is <code>3</code> currently doesn&#39;t always work. Find the problem with this factorization, fix it, and make it work.</p>
+<p>Your modification should include modification and enhancement of the current unit tests.</p>
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <p>
+            Published from <a href="project1.jmd">project1.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.8 on 2021-10-04.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>

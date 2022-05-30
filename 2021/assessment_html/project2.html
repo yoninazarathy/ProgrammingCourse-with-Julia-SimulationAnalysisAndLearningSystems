@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2021)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <br>
+
+        <h1>Project #2 - Semester 2, 2021</h1>
+<h1>Discrete Event Simulation &#40;&#43; perspective seminar summary&#41;</h1>
+<p>&#40;last edit: Oct 17, 2021&#41;</p>
+<p><strong>Here is an <a href="https://youtu.be/dVf-Ss7tq-A">explainer video for the project</a></strong>.</p>
+<p><strong>Due:</strong> End of Day, Friday, 22, October, 2021. Late submissions are not accepted. <strong>Work in pairs</strong>. You must let the course coordinator know who your partner is. &#40;Note: The course profile states submission a week earlier than Oct 22, but this is a mistake&#41;.</p>
+<p><strong>Note:</strong> The teaching staff will only answer questions &#40;via Piazza, consultation hour, or practicals&#41; regarding this assignment up to the late evening of Wednesday 20/10.</p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. There are <strong>10</strong> points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are <strong>10</strong> points for the summary of Anna Foeglein&#39;s perspective seminar. The remaining <strong>80</strong> points are for the project with more details to be updated.</p>
+<p><strong>Submission format:</strong> This project should be submitted via a GitHub Repo, a PDF file, and a voice recording via Blackboard. </p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>uqMATH2504</code> be invited as a collaborator. </p>
+<p>The PDF file should be a nice formatted file that has:</p>
+<ul>
+<li><p>Your names, student numbers, and assignment title &#40;Project 2 - 2021&#41; on the top.</p>
+</li>
+<li><p>A &#40;clickable&#41; link to your GitHub repo.</p>
+</li>
+<li><p>Summaries as instructed below.</p>
+</li>
+</ul>
+<p>The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use <code>include&#40;&#41;</code> to run Julia code if appropriate. You also comment on questions in this PDF &#40;e.g. when asked to answer things not via code&#41;. If desired you could keep this jupyter notebook &#40;<code>.ipynb</code> file&#41; in the repo. However, this Jupyter notebook will not be checked &#40;only the PDF file&#41;, and it isn&#39;t required to be a &quot;runnable&quot; notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word &#40;instead of Jupyter&#41;, make sure the code is clean, formatted, and readable. </p>
+<p>Marking responses will be made by the teaching staff by annotating <strong>selected parts</strong> of your PDF file via blackboard. Hence a very readable and clean PDF file is important. Note that in printing Jupyter to PDF &#40;or exporting to PDF&#41; there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.</p>
+<p><strong>Work in pairs</strong>: This is work in pairs. Plagiarism between groups will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means about how to go about certain tasks.</p>
+<p><strong>Marking Criteria</strong>: </p>
+<ul>
+<li><p>10 points are allocated for following instructions and the GitHub repo.</p>
+</li>
+<li><p>10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness &#40;the writeup should answer all questions posed&#41;. 2 points of originality and style.</p>
+</li>
+<li><p>80 points are for the simulation project itself. 60 of the points are allocated for correctness of the results &#40;20 for each of the plot types specified below&#41;. 20 points are allocated for style, design, code organization, and neatness/sensibility of the output.</p>
+</li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. </p>
+</li>
+</ul>
+<hr />
+<h2>Setting up your GitHub repo for hand-in &#40;10pts&#41;:</h2>
+<ul>
+<li><p>Ideally use the same accounts you used for PROJECT1 and HW1. Choose one of the team members to &quot;own&quot; the repo and the other&#40;s&#41; will be invited as collaborators.  </p>
+</li>
+<li><p>Create a new repo for this assignment. Name the repo exactly as <code>&lt;&lt;FIRST NAME1&gt;&gt;-&lt;&lt;LAST NAME1&gt;&gt;-and-&lt;&lt;FIRST NAME2&gt;&gt;-&lt;&lt;LAST NAME2&gt;&gt;-2504-2021-PROJECT2</code>. So for example if your names are &quot;Jeannette Young&quot; and &quot;Julia Gillard&quot;, the repo name should be <code>Jeannette-Young-and-Julia-Gillard-2504-2021-PROJECT2</code>.</p>
+</li>
+<li><p>Make sure the repo is <strong>private</strong>.</p>
+</li>
+<li><p>Invite the course GitHub user, <code>uqMATH2504</code> as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.</p>
+</li>
+<li><p>Do <strong>not</strong> make any changes &#40;commits&#41; to the repo after the project due date. </p>
+</li>
+<li><p>Create a local clone of the repo. It is recommended that use use <code>git</code> command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism &#40;VS-Code, GitHub desktop, etc&#41;.</p>
+</li>
+<li><p>If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.</p>
+</li>
+</ul>
+<p>Your GitHub repo should be formatted as exactly as follows:</p>
+<ul>
+<li><p>Have a <code>README.md</code> file which states your names, the assignment title, and has a &#40;clickable&#41; link to the assignment instructions on the course website &#40;to this document&#41;. </p>
+</li>
+<li><p>Have a <code>LICENSE.md</code> file. Choose a license as you wish &#40;for example the MIT license&#41;. However keep in mind that you must keep the submission private until the end of the semester.</p>
+</li>
+<li><p>Have a <code>.gitignore</code> file. </p>
+</li>
+<li><p>Have basic running instructions on how to run the code. This can be similar to what was provided for Project 1 &#40;polynomials&#41;. </p>
+</li>
+<li><p>Have <code>src</code> and <code>test</code> folders similarly to Project 1.</p>
+</li>
+<li><p>Note: make sure that there aren&#39;t any files in your submission repo except for those mentioned above &#40;with the exception of perhaps a Jupyter <code>.ipynb</code> file if you choose to use it for creating the PDF&#41;. Use may use the <code>.gitignore</code> file to ensure <code>git</code> does not commit additional files and output files to your <code>repo</code>.</p>
+</li>
+</ul>
+<p>Since this project involves work in pairs, it is recommended that you try to use GitHub effectively. You may work on parallel branches with frequent merges, or work on the same branch via peer programming. The way you develop is not being assessed, still it is recommended you make good use of GitHub.</p>
+<h2>Perspective seminar question &#40;10pts&#41;</h2>
+<p>Write a 1-4 paragraph summary of Anna Foeglein&#39;s perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don&#39;t write &quot;the answer to Q1 is...&quot; etc. Instead incorporate the answers in a flowing writeup report &#40;like a blog post or letter&#41;. You may use first person, or similar. Present the writeup as part of your PDF file submission &#40;as the first item in the submission&#41;.</p>
+<p>The writeup should address the following questions:</p>
+<ol>
+<li><p>What was Anna&#39;s career path, and her relationship with software and mathematics?</p>
+</li>
+<li><p>Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?</p>
+</li>
+<li><p>Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, simulation platforms, and the like. Was this the first time that you heard about any of these tools?</p>
+</li>
+<li><p>Have you picked up any tips from Anna&#39;s talk, which you can perhaps use in your career down the road?</p>
+</li>
+<li><p>Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous talk.</p>
+</li>
+</ol>
+<p>Note: Since the submission is in pairs you should only submit a single writeup for the pair/group.</p>
+<h2>Main project task &#40;80pts&#41;</h2>
+<p>Your task is to create a discrete event simulation engine that simulates a complex queueing network system/model. As a very rough motivational example consider an amusement park &#40;e.g. <a href="https://www.dreamworld.com.au/">Dream World</a>&#41;. There are multiple rides and individuals move throughout the park and queue up for rides. After they finish a ride they walk to a different ride and so-fourth. However, this is just a rough motivation and there are several significant differences between the model you will simulate and what may constitute something like an amusement park. Below is a detailed mathematical description of the model.</p>
+<p>In your queueing simulation model there are <span class="math">$L$</span> stations &#40;e.g. <span class="math">$L=5$</span> or <span class="math">$L=100$</span>&#41; and each station has a  <strong>server</strong> and a <strong>waiting buffer</strong>. There are jobs traversing through the network and the stations. Jobs can be numbered <span class="math">$\ell=1,2,3,\ldots$</span> and it is expected that the simulation processes thousands, or millions of jobs. </p>
+<p>A job&#39;s location can be one of:</p>
+<ul>
+<li><p>Out the system prior to arrival &#40;still doesn&#39;t exist&#41;.</p>
+</li>
+<li><p>In the system in a buffer of one of the stations &#40;queueing&#41;.</p>
+</li>
+<li><p>In the system being served by one of the stations.</p>
+</li>
+<li><p>In the system currently moving between stations.</p>
+</li>
+<li><p>Out of the system after leaving.</p>
+</li>
+</ul>
+<p>In this continuous time system, jobs arrive to the system according to a random process &#40;see distributional specification below&#41; and traverse between the stations as we describe now.</p>
+<p>Each station <span class="math">$i=1,\ldots,L$</span> has a service rate <span class="math">$\mu_i > 0$</span> which is the inverse of the mean expected time it takes the server to process a job. It also has a buffer capacity <span class="math">$K_i$</span> which implies the number of jobs that can queue in the buffer. The capacity <span class="math">$K_i$</span> is a non-negative integer or can be <span class="math">$\infty$</span>.</p>
+<p>When a job arrives to station <span class="math">$i$</span>, if the server is free &#40;and this means there are no jobs in the buffer&#41;, the job immediately begins service from the server. If the server is busy and there is waiting room in the buffer, the job queues for service. However if the buffer is full &#40;the current jobs waiting in the buffer is equal to <span class="math">$K_i$</span>&#41;, the job does not enter the buffer and moves according to an <strong>overflow rule</strong> &#40;these rules are described below&#41;.</p>
+<p>Durations of events follow independent random variables. These include</p>
+<ul>
+<li><p>Durations between times of external arrivals. The external rate of arrivals is <span class="math">$\lambda > 0$</span>, so the mean duration between arrivals is <span class="math">$1/\lambda$</span>.</p>
+</li>
+<li><p>Durations of service times. As stated above the mean is <span class="math">$1/\mu_i$</span>.</p>
+</li>
+<li><p>Duration of time moving between stations when overflowing. The mean time is <span class="math">$1/\eta$</span>, fixed for all stations.</p>
+</li>
+<li><p>Duration of time moving between stations after service. The mean is again <span class="math">$1/\eta$</span>.</p>
+</li>
+</ul>
+<p>All of these durations are gamma distributed with a ratio of the mean and variance &#40;squared coefficient of variation&#41; equal to <span class="math">$3$</span>. Hence the parameters for durations are <span class="math">$\lambda$</span>, <span class="math">$\eta$</span>, and <span class="math">$\mu_1,\ldots,\mu_L$</span>.</p>
+<p>When a job completes service at a buffer it either leaves the system immediately, or moves to another buffer. The choice of its destination is based on the routing matrix <span class="math">$P$</span>. Here <span class="math">$P_{i,j}$</span> is probability of going to station j after completing service in station <span class="math">$i$</span>.  It is assumed that <span class="math">$P$</span> has non-negative entries and has a spectral radius less than <span class="math">$1$</span>. Mathematically this means that the maximal absolute value of eigenvalues of <span class="math">$P$</span> is less than unity. The probability of a job leaving the system &#40;immediately&#41; after service at station <span class="math">$i$</span> is <span class="math">$1 - \sum_{j=1}^L P_{i,j}$</span>.</p>
+<p>When a job arrives to buffer <span class="math">$i$</span> that is full &#40;has a job in service and has <span class="math">$K_i$</span> jobs waiting&#41;, it must overflow. This is done by going to a destination buffer <span class="math">$j$</span> &#40;or leaving the system&#41; based on the overflow matrix <span class="math">$Q$</span>. Like <span class="math">$P$</span>, the matrix <span class="math">$Q$</span> has non-negative entries with a maximal eigenvalue value less than unity. The probability of leaving the system &#40;when overflowing from buffer <span class="math">$i$</span>&#41; is <span class="math">$1 - \sum_{j=1}^L Q_{i,j}$</span>. In such a case the job leaves immediately. </p>
+<p>External arrivals decide which station to go to first based on a final input parameter vector <span class="math">$p^e$</span>. This vector of length <span class="math">$L$</span> indicates the probability <span class="math">$p^e_i$</span> of an external arrival joining station <span class="math">$i$</span>. When an external arrival joins the system it directly goes to that station and either enters &#40;service or waiting&#41; or overflows.</p>
+<p>There are two main modes for this discrete event simulation:</p>
+<ol>
+<li><p>Keeping track of all jobs.</p>
+</li>
+<li><p>Keeping track only of the number of jobs in each station &#40;service and waiting buffer&#41;, and the number of jobs circulating between stations. </p>
+</li>
+</ol>
+<p>Your simulation should support both modes. In the first mode only station statistics &#40;and join station&#41; statistics may be collected from a simulation run. In the second mode, individual job trajectories can be collected. </p>
+<p>You are given 5 different input parameter scenarios. These are described in the code below. Each of these scenarios specifies the &quot;network structure&quot; via the matrix <span class="math">$P$</span>, the matrix <span class="math">$Q$</span>, and the input arrivals spread <span class="math">$p^e$</span>. It also specifies the service rates <span class="math">$\mu_i$</span>. In each case take <span class="math">$\eta = 4.0$</span> and vary <span class="math">$\lambda$</span>. In each run the simulation for a long horizon &#40;eventually <span class="math">$T = 10e^7$</span>&#41;.</p>
+<p>Your goal is to vary <span class="math">$\lambda$</span> and simply create three plots for each scenario:</p>
+<ol>
+<li><p>The mean number of items in the total system as a function of <span class="math">$\lambda$</span>. </p>
+</li>
+<li><p>The proportion of jobs that are in orbit &#40;circulating between nodes&#41; as a function of <span class="math">$\lambda$</span>. </p>
+</li>
+<li><p>The empirical distribution of the sojourn time of a job through the system &#40;varied as a function of <span class="math">$\lambda$</span>&#41;.</p>
+</li>
+</ol>
+<p>In each of these cases, simulate a long simulation path and assume the system is ergodic &#40;this may actually not hold in certain cases since with too high of a <span class="math">$\lambda$</span> value the system may be unstable in certain cases&#41;. For each value of <span class="math">$\lambda$</span> over a grid, simulate and collect the results to be plotted.</p>
+<p>Note that in your discrete event simulation you can assume that no two events happen in the same time. There is a small chance for that with floating point numbers &#40;and continuos distributions&#41; but it is low.</p>
+<p>It is recommended that you use the code provided in the lecture and the tutorial for discrete event simulation as a general template. However, you may vary the code and the design of your project as you see fit. </p>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'>#Here are parameters for scenarios 1, 2, 3, 4, 5 for Project 2</span><span class='hljl-t'>
+</span><span class='hljl-cs'>#For convenience they are stored in a struct, NetworkParameters</span><span class='hljl-t'>
+
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Parameters</span><span class='hljl-t'> </span><span class='hljl-cs'>#You need to install the Parameters.jl package: https://github.com/mauro3/Parameters.jl </span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>LinearAlgebra</span><span class='hljl-t'> 
+
+</span><span class='hljl-cs'>#The @with_kw macro comes from the Parameters package</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@with_kw</span><span class='hljl-t'> </span><span class='hljl-k'>struct</span><span class='hljl-t'> </span><span class='hljl-n'>NetworkParameters</span><span class='hljl-t'>
+    </span><span class='hljl-n'>L</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int</span><span class='hljl-t'>
+    </span><span class='hljl-n'>gamma_scv</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is constant for all scenarios at 3.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>λ</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is undefined for the scenarios since it is varied</span><span class='hljl-t'>
+    </span><span class='hljl-n'>η</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is assumed constant for all scenarios at 4.0</span><span class='hljl-t'>
+    </span><span class='hljl-n'>μ_vector</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Vector</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#service rates</span><span class='hljl-t'>
+    </span><span class='hljl-n'>P</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Matrix</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#routing matrix</span><span class='hljl-t'>
+    </span><span class='hljl-n'>Q</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Matrix</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#overflow matrix</span><span class='hljl-t'>
+    </span><span class='hljl-n'>p_e</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Vector</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#external arrival distribution</span><span class='hljl-t'>
+    </span><span class='hljl-n'>K</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Vector</span><span class='hljl-p'>{</span><span class='hljl-n'>Int</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#-1 means infinity </span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>gamma_scv</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NaN</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>η</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>Q</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>p_e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>K</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>scenario1</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>gamma_scv</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NaN</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>η</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>Q</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>p_e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>K</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>scenario2</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario3</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>gamma_scv</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NaN</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>η</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                    </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>Q</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>p_e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>K</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>scenario3</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario4</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>gamma_scv</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NaN</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>η</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-oB'>:-</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>1</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>1</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>1</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>Q</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>                             
+                                </span><span class='hljl-n'>p_e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.6</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>K</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>])</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>scenario4</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario5</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>20</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>gamma_scv</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>NaN</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>η</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.0</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>20</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>20</span><span class='hljl-p'>,</span><span class='hljl-ni'>20</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>Q</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>diagm</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-oB'>=&gt;</span><span class='hljl-nfB'>0.8</span><span class='hljl-oB'>*</span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>17</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>17</span><span class='hljl-oB'>=&gt;</span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>)),</span><span class='hljl-t'> </span><span class='hljl-cs'>#Fixed on Oct 17                          </span><span class='hljl-t'>
+                                </span><span class='hljl-n'>p_e</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>vcat</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-nf'>zeros</span><span class='hljl-p'>(</span><span class='hljl-ni'>19</span><span class='hljl-p'>)),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>K</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>fill</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-ni'>20</span><span class='hljl-p'>))</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>scenario5</span>
+</pre>
+
+
+<pre class="output">
+scenario1 &#61; Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 3
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 1.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 1.0 0.0; 0.0 0.0 1.0; 0.0 0.0 0.0&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 0.0 0.0; 0.0 0.0 0.0; 0.0 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 0.0, 0.0&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;3,&#41;&#41; &#91;5, 5, 5&#93;
+
+scenario2 &#61; Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 3
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 1.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 1.0 0.0; 0.0 0.0 1.0; 0.5 0.0 0.0&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 0.0 0.0; 0.0 0.0 0.0; 0.0 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 0.0, 0.0&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;3,&#41;&#41; &#91;5, 5, 5&#93;
+
+scenario3 &#61; Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 3
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 1.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 1.0 0.0; 0.0 0.0 1.0; 0.5 0.0 0.0&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;3, 3&#41;&#41; &#91;0.0 0.5 0.0; 0.0 0.0 0.5; 0.5 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;3,&#41;&#41; &#91;1.0, 0.0, 0.0&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;3,&#41;&#41; &#91;5, 5, 5&#93;
+
+scenario4 &#61; Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 5
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;5,&#41;&#41; &#91;5.0, 4.0, 3.0, 2.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;5, 5&#41;&#41; &#91;0.0 0.5 … 0.0 0.0; 0.0 0.0 … 1.0 0.0; … ; 0.5 
+0.0 … 0.0 0.0; 0.2 0.2 … 0.2 0.2&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;5, 5&#41;&#41; &#91;0.0 0.0 … 0.0 0.0; 1.0 0.0 … 0.0 0.0; … ; 1.0 
+0.0 … 0.0 0.0; 1.0 0.0 … 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;5,&#41;&#41; &#91;0.2, 0.2, 0.0, 0.0, 0.6&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;5,&#41;&#41; &#91;-1, -1, 10, 10, 10&#93;
+
+scenario5 &#61; Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 20
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;20,&#41;&#41; &#91;1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;20, 20&#41;&#41; &#91;0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.
+0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;20, 20&#41;&#41; &#91;0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.
+0 1.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;20,&#41;&#41; &#91;1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;20,&#41;&#41; &#91;5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+, 5, 5, 5&#93;
+
+Main.##WeaveSandBox#452.NetworkParameters
+  L: Int64 20
+  gamma_scv: Float64 3.0
+  λ: Float64 NaN
+  η: Float64 4.0
+  μ_vector: Array&#123;Float64&#125;&#40;&#40;20,&#41;&#41; &#91;1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 
+1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0&#93;
+  P: Array&#123;Float64&#125;&#40;&#40;20, 20&#41;&#41; &#91;0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.
+0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0&#93;
+  Q: Array&#123;Float64&#125;&#40;&#40;20, 20&#41;&#41; &#91;0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.
+0 1.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0&#93;
+  p_e: Array&#123;Float64&#125;&#40;&#40;20,&#41;&#41; &#91;1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0&#93;
+  K: Array&#123;Int64&#125;&#40;&#40;20,&#41;&#41; &#91;5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+, 5, 5, 5&#93;
+</pre>
+
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <p>
+            Published from <a href="project2.jmd">project2.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.8 on 2021-10-17.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>

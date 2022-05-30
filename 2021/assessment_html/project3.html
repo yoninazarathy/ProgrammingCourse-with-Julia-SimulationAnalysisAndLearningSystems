@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2021)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <br>
+
+        <h1>Project #3 - Semester 2, 2021</h1>
+<h1>Analysis of Datasets and Random Forests &#40;&#43; perspective seminar summary&#41;</h1>
+<p>&#40;last edit: Oct 25, 2021&#41;</p>
+<p><strong>Due:</strong> End of Day, Saturday, 20, November, 2021. Late submissions are absolutely not accepted &#40;the semester is finishing&#41;. Early submissions are acceptable.  </p>
+<p><strong>Note:</strong> The teaching staff will only answer questions &#40;via Piazza, consultation hour, or practicals&#41; regarding this assignment up to the late evening of Wednesday 17/11. Wednesday 5pm consultation hours will be held up until 17/11.</p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. There are <strong>10</strong> points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are <strong>10</strong> points for the summary of Maithili Mehta&#39;s perspective seminar. The remaining <strong>80</strong> points are for the project.</p>
+<p><strong>Submission format:</strong> This project should be submitted via a GitHub Repo, a PDF file, and a voice recording via Blackboard. </p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>uqMATH2504</code> be invited as a collaborator prior to submission and ideally as soon as possible. </p>
+<p>The PDF file should be a nice formatted file that has:</p>
+<ul>
+<li><p>Your name, student number, and assignment title &#40;Project 3 - 2021&#41; on the top.</p>
+</li>
+<li><p>A &#40;clickable&#41; link to your GitHub repo.</p>
+</li>
+<li><p>Summaries as instructed below.</p>
+</li>
+</ul>
+<p>The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use <code>include&#40;&#41;</code> to run Julia code if appropriate. You also comment on questions in this PDF &#40;e.g. when asked to answer things not via code&#41;. If desired you could keep this jupyter notebook &#40;<code>.ipynb</code> file&#41; in the repo. However, this Jupyter notebook will not be checked &#40;only the PDF file&#41;, and it isn&#39;t required to be a &quot;runnable&quot; notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word &#40;instead of Jupyter&#41;, make sure the code is clean, formatted, and readable. </p>
+<p>Marking responses will be made by the teaching staff by annotating <strong>selected parts</strong> of your PDF file via blackboard. Hence a very readable and clean PDF file is important. Note that in printing Jupyter to PDF &#40;or exporting to PDF&#41; there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.</p>
+<p><strong>Individual work</strong>: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means.</p>
+<p><strong>Marking Criteria</strong>: </p>
+<ul>
+<li><p>10 points are allocated for following instructions and the GitHub repo.</p>
+</li>
+<li><p>10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness &#40;the writeup should answer all questions posed&#41;. 2 points of originality and style.</p>
+</li>
+<li><p>80 points are for the project itself. </p>
+</li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. </p>
+</li>
+</ul>
+<hr />
+<h2>Setting up your GitHub repo for hand-in &#40;10pts&#41;:</h2>
+<ul>
+<li><p>Ideally use the same account you used for PROJECT1 and HW1. </p>
+</li>
+<li><p>Create a new repo for this assignment. Name the repo exactly as <code>&lt;&lt;FIRST NAME&gt;&gt;-&lt;&lt;LAST NAME&gt;&gt;-2504-2021-PROJECT3</code>. So for example if your name is &quot;Jeannette Young&quot;, the repo name should be <code>Jeannette-Young-2504-2021-PROJECT3</code>.</p>
+</li>
+<li><p>Make sure the repo is <strong>private</strong>.</p>
+</li>
+<li><p>Invite the course GitHub user, <code>uqMATH2504</code> as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.</p>
+</li>
+<li><p>Do <strong>not</strong> make any changes &#40;commits&#41; to the repo after the project due date. </p>
+</li>
+<li><p>Create a local clone of the repo. It is recommended that use use <code>git</code> command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism &#40;VS-Code, GitHub desktop, etc&#41;.</p>
+</li>
+<li><p>If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.</p>
+</li>
+</ul>
+<p>Your GitHub repo should be formatted as exactly as follows:</p>
+<ul>
+<li><p>Have a <code>README.md</code> file which states your name, the assignment title, and has a &#40;clickable&#41; link to the assignment instructions on the course website &#40;to this document&#41;. </p>
+</li>
+<li><p>Have a <code>LICENSE.md</code> file. Choose a license as you wish &#40;for example the MIT license&#41;. However keep in mind that you must keep the submission private until the end of the semester.</p>
+</li>
+<li><p>Have a <code>.gitignore</code> file. </p>
+</li>
+<li><p>Have basic running instructions on how to run the code. </p>
+</li>
+<li><p>Note: make sure that there aren&#39;t any files in your submission repo except for those mentioned above &#40;with the exception of perhaps a Jupyter <code>.ipynb</code> file if you choose to use it for creating the PDF&#41;. Use may use the <code>.gitignore</code> file to ensure <code>git</code> does not commit additional files and output files to your <code>repo</code>.</p>
+</li>
+</ul>
+<h2>Perspective seminar question &#40;10pts&#41;</h2>
+<p>Write a 1-4 paragraph summary of Maithili Mehta&#39;s perspective seminar similar to the previous two perspective seminar summaries that you wrote. The writeup should answer these questions without treating the questions directly. That is, don&#39;t write &quot;the answer to Q1 is...&quot; etc. Instead incorporate the answers in a flowing writeup report &#40;like a blog post or letter&#41;. You may use first person, or similar. Present the writeup as part of your PDF file submission &#40;as the first item in the submission&#41;.</p>
+<p>The writeup should address the following questions:</p>
+<ol>
+<li><p>What was Maithili&#39;s, career path, and her relationship with software and mathematics?</p>
+</li>
+<li><p>Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?</p>
+</li>
+<li><p>Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, simulation platforms, and the like. Was this the first time that you heard about any of these tools?</p>
+</li>
+<li><p>Have you picked up any tips from Maithili&#39;s talk, which you can perhaps use in your career down the road?</p>
+</li>
+<li><p>Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous two talks.</p>
+</li>
+</ol>
+<h2>Main project task &#40;80 pts total&#41;</h2>
+<p>In this project you deal with a <a href="https://www.kaggle.com/anthonypino/melbourne-housing-market">house prices dataset</a> available from Kaggle. Your overarching purpose is to analyse the dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.</p>
+<p>There are 7 separate tasks below. For each of these tasks write a script in a separate file that executes the task. Call the scripts, <code>task1.jl</code>, <code>task2.jl</code>, etc. Your <code>README.md</code> should have instructions that detail how to run the scripts. For example the instructions should state to run <code>include&#40;&quot;task1.jl&quot;&#41;</code> etc. The scripts should produce output as requested below and the output should be neatly included in the submission PDF. Task 2 asks you to create a movie animation. In this case, include the animation file &#40;in animated gif format&#41; in the submission repo. Output files generated from your code &#40;including the animation&#41; should be in an <code>output</code> folder in the repo.</p>
+<p>All tasks use the <code>Melbourne_housing_FULL.csv</code> file. You may download the file from Kaggle and place it in a <code>data</code> folder in your repo. Your scripts should access this file.</p>
+<p>Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc. </p>
+<p>As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to &#40;don&#39;t drop all rows for all tasks&#41;. In certain cases, if you see a sensible way to impute &#40;replace/make-up data&#41;, feel free to do so and explain your imputation strategy. </p>
+<h3>Task 1 Exploratory data of single variables &#40;10 pts&#41;</h3>
+<p>Create several summaries and plots &#40;e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms&#41; of the following variables: <code>Rooms</code>, <code>Price</code>, <code>Method</code>, <code>Distance</code>, and <code>Landsize</code>. Keep in mind that different type of data requires different plots.</p>
+<h3>Task 2 Exploratory data analysis comparing variables &#40;10 pts&#41;</h3>
+<p>Create several plots that present the house price as a function of distance to the city, house size &#40;e.g. land size, rooms, car ports, etc...&#41;, and some combination of these variables. In presenting these plots, visually search for relationships between variables.</p>
+<h3>Task 3 Exploratory data analysis over time &#40;10 pts&#41;</h3>
+<p>Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold &#40;<code>Type &#61; &quot;h&quot;</code>&#41; over time. </p>
+<h3>Task 4 Postcode, suburb, councils, and regions &#40;10 pts&#41;</h3>
+<p>The dataset has the fields, <code>Suburb</code>, <code>CouncilArea</code>, <code>Regionname</code>, and <code>Postcode</code>. </p>
+<p>Use the data to create a function with several methods that return the postcode&#40;s&#41; of a suburb, council area, or region name. In doing so you&#39;l need to process the data before hand to create some dictionary or similar and handle ambiguities, and/or missing data. </p>
+<h3>Task 5 Making a movie with a map &#40;10 pts&#41;</h3>
+<p>Create a movie that uses the latitude and longitude data to present sales over time overlaid on the Melbourne metropolitan map. Your movie can show the date, and points of sales, and potentially the volume of sales &#40;in dollars&#41;. </p>
+<h3>Task 6 Price prediction using random forests &#40;15 pts&#41;</h3>
+<p>Use the <code>DecisionTrees.jl</code> package to create a price prediction model using random forests. Beforehand, break the data up into a validation set &#40;20&#37;&#41; and training set &#40;80&#37;&#41;. Do not use all of the categorical variables in the data, but only those that you think may make sense.</p>
+<h3>Task 7 Your own Random Forest &#40;using trees from a package&#41; &#40;15pts&#41;</h3>
+<p>Repeat now task 6, only using the decision trees functionality from <code>DecisionTrees.jl</code> but not using the random forest functionality. Instead, write your own code for random forest, potentially by adapting the random forest source code from <code>DecisionTrees.jl</code> and removing the multi-threading functionality in that code. Your performance should not be exactly the same as in task 6 but should be comparable. It is expected that your code will run slower. See <a href="https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/regression/main.jl">https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/regression/main.jl</a> for the <code>build_forest&#40;&#41;</code> function which you may adapt.</p>
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <p>
+            Published from <a href="project3.jmd">project3.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.8 on 2021-10-25.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>
