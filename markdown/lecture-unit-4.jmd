@@ -1,0 +1,953 @@
+# Unit 4: More language features for software architecture
+
+In the previous three units we explored basics of programming and computation (Unit 1), algorithms and data structures (Unit 2), and data files and numerics (Unit 3). In this unit we take a deeper and more thorough approach at basic Julia language features. 
+
+The most important language features that we explore include the type system, user-defined types, and multiple-dispatch. As we do this, we'll also consider several additional minor features. The notes below often refer to the Julia documentation.
+
+# A few more bits from Julia
+
+We have seen Julia functions from the start, e.g.
+
+```julia
+f(x) = x^2
+```
+
+or,
+
+```julia
+f(x::Int)::Int = x^2
+```
+
+or,
+
+```julia
+f(x::T) where T <: Number = x^2
+```
+
+or, in longer form,
+```julia
+function f(x::T) where T <: Number
+    return x^2
+end
+```
+
+The [Julia documentation of functions](https://docs.julialang.org/en/v1/manual/functions/) provides a rich description of all of the details. We now overview a few special features that were perhaps not evident from Units 1--3. There are also links to the documentation for it:
+
+#### [Return nothing](https://docs.julialang.org/en/v1/manual/functions/#Returning-nothing) 
+
+You may have a function that does not have a return value. For example:
+
+```julia
+function hello()
+    println("Hello class")
+    return nothing
+end
+
+x = hello()
+@show x;
+```
+#### [Argument destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
+
+You can specify the names of arguments in a tuple. For example:
+
+```julia
+f((x,y)) = x + y
+make_pair() = (rand(1:5), rand(1:5))
+f(make_pair())
+```
+
+#### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
+
+Sometimes functions have a variable number of arguments
+
+```julia
+using Roots
+
+function polynomialGenerator(a...)
+    n = length(a)-1
+    poly =  function(x)
+                return sum([a[i+1]*x^i for i in 0:n])
+            end
+    return poly
+end
+
+polynomial = polynomialGenerator(1,3,-10)
+zero_vals = find_zeros(polynomial,-10,10)
+println("Zeros of the function f(x): ", zero_vals)
+```
+
+#### [Optional arguments](https://docs.julialang.org/en/v1/manual/functions/#Optional-Arguments)
+
+You can have optional arguments (or default values):
+
+```julia
+using Distributions
+my_density(x::Float64, μ::Float64 = 0.0, σ::Float64 = 1.0) = exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
+x = 1.5
+@show pdf(Normal(),x), my_density(x)
+@show pdf(Normal(0.5),x), my_density(x,0.5);
+```
+
+#### [Keyword arguments](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments)
+
+Arguments following the `;` character in the function definition or the function call are called **keyword arguments**. These are named as they are used.
+
+```julia
+my_density(x::Float64 ; μ::Float64 = 0.0, σ::Float64 = 1.0) = exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
+@show pdf(Normal(0.0,2.5),x), my_density(x,σ=2.5)
+```
+
+```julia
+function my_very_flexible_function(x::Number;kwargs...)
+    println(kwargs)
+    #....
+end
+
+my_very_flexible_function(2.5,a=1,b="two",c=:three)
+```
+
+#### [Do Block Syntax for Function Arguments](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)
+
+As you know, you can pass functions as arguments and sometimes you can use an anonymous function for that. For example,
+
+```julia
+using Random
+Random.seed!(0)
+data = rand(Int,100)
+filter((x)->x%10 == 0,data)
+```
+
+What if the anonymous function has more lines of code?
+
+```julia
+using Primes
+
+filter((x)->begin
+                if !isprime(x%100)
+                    return x < 30
+                else
+                    return x > 50
+                end
+            end
+            ,data)
+```
+
+We can use the `do`--`end` syntax instead:
+
+```julia
+filter(data) do x
+                if !isprime(x%100)
+                    return x < 30
+                else
+                    return x > 50
+                end
+            end
+```
+
+#### [Function composition and piping](https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping)
+
+Just a bit of different syntax for function calls:
+
+```julia
+π/4 |> cos |> acos |> (x)->4x
+```
+
+Here is a function just like `identity`:
+
+```julia
+ii(x) = (cos ∘ acos)(x) #\circ + [TAB]
+ii(π/4), π/4
+```
+
+#### [Dot Syntax for Vectorizing Functions](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized)
+
+You already know the broadcast operator. It uses the `broadcast` function.
+
+```julia
+x_range = 0:0.5:π
+cos.(x_range)
+```
+
+See the docs for a discussion of performance of broadcasting.
+
+You can also use the macro `@.`
+
+```julia
+x_range = 0:0.5:π
+@. cos(x_range + 2)^2
+```
+
+#### More items from control flow
+
+You are already very familiar with conditional statements (`if`, `elseif`, `else`), with loops (`for` and `while`), with short circuit evaluation, and with many other variants. For example `continue` and `break`.
+
+More control flow details are here: [control flow in Julia docs](https://docs.julialang.org/en/v1/manual/control-flow/).
+
+One additional thing to know about is [exception handling](https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling).
+
+```julia
+function my_2_by_2_inv(A::Matrix{Float64})
+    size(A) == (2,2) || error("This function only works for 2x2 matrices")
+    d = A[1,1]*A[2,2] - A[2,1]*A[1,2]
+    d ≈ 0 && throw(ArgumentError("matrix is singular or near singular")) #\approx + [TAB]
+    return [A[2,2] -A[1,2]; -A[2,1] A[1,1]]/d
+end
+
+my_2_by_2_inv(rand(3,3))
+```
+
+```julia
+my_2_by_2_inv([ones(2) ones(2)])
+```
+
+```julia
+using LinearAlgebra
+
+Random.seed!(0)
+A = rand(2,2)
+A_inv = my_2_by_2_inv(A)
+@assert A_inv*A ≈ I
+```
+
+```julia
+Random.seed!(0)
+for _ ∈ 1:10 #\in + [TAB]
+    A = float.(rand(1:5,2,2))
+    try
+        my_2_by_2_inv(A)
+    catch e
+        println(e)
+    end
+end
+```
+
+An exception may be caught way down the call stack:
+
+```julia
+A = ones(2,2)
+f(mat) = 10*my_2_by_2_inv(A)
+g(mat) = f(mat .+ 3)
+h(mat) = 2g(mat)
+h(A)
+```
+```
+ERROR: ArgumentError: matrix is singular or near singular
+Stacktrace:
+ [1] my_2_by_2_inv(A::Matrix{Float64})
+   @ Main ~/git/mine/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/markdown/lecture-unit-4.jmd:5
+ [2] f(mat::Matrix{Float64})
+   @ Main ./REPL[33]:1
+ [3] g(mat::Matrix{Float64})
+   @ Main ./REPL[34]:1
+ [4] h(mat::Matrix{Float64})
+   @ Main ./REPL[35]:1
+ [5] top-level scope
+   @ REPL[36]:1
+```
+
+```julia
+try 
+    h(A)
+catch e
+    println(e)
+end
+```
+
+#### Variable scope
+
+See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
+
+```julia
+data = [1, 2, 3]
+s = 0
+β, γ = 2, 1
+
+for i in 1:length(data)
+    global s    #This usage of the `global` keyword is not needed in Jupyter
+                #But elsewhere without it:
+                #ERROR: LoadError: UndefVarError: s not defined
+    s += β*data[i]
+    data[i] *= -1 #Note that we didn't need 'global' for data
+end
+#print(i)       #Would cause ERROR: LoadError: UndefVarError: i not defined
+@show data
+@show s
+
+function sum_data(β)
+    s = 0           #try adding the prefix global
+    for i in 1:length(data)
+        s += β*(data[i] + γ)
+    end
+    return s
+end
+@show sum_data(β/2)
+@show s
+```
+
+Julia uses Lexical scoping:
+
+```julia
+
+function my_function()
+    x = 10
+    function my_function_inside_a_function()
+        @show x
+    end
+    return my_function_inside_a_function
+end
+
+x = 20
+f_ret = my_function()
+f_ret();
+```
+
+The use of `outer`:
+
+```julia
+function f()
+    i = 0
+    for i = 1:3
+        # empty
+    end
+    return i
+end
+f()
+```
+
+```julia
+function f()
+    i = 0
+    for outer i = 1:3
+        # empty
+    end
+    return i
+end
+f()
+```
+
+
+## Types and the Type System
+
+See [types in the Julia docs](https://docs.julialang.org/en/v1/manual/types/).
+
+Everything has a type:
+
+```julia
+typeof(2.3)
+```
+
+```julia
+typeof(2.3f0)
+```
+
+```julia
+typeof(2)
+```
+
+```julia
+typeof(23//10)
+```
+
+```julia
+typeof(2 + 3im)
+```
+
+```julia
+typeof(2.0 +3im)
+```
+
+```julia
+typeof("Hello!")
+```
+
+```julia
+typeof([1,2,3])
+```
+
+```julia
+typeof([1,2,3.0])
+```
+
+```julia
+typeof([1.0,2,"three"])
+```
+
+```julia
+typeof(1:3)
+```
+
+```julia
+typeof([1 2; 3 4])
+```
+
+```julia
+typeof(Float64)
+```
+
+```julia
+typeof(:Hello)
+```
+
+There is also a type hierarchy (a tree). At the top of the tree is the type `Any`. All types have a supertype (the supertype of `Any` is `Any`). Types that are not leafs of the tree have subtypes. Some types are **abstract** while others are **concrete**. One particularly distinctive feature of Julia's type system is that concrete types may not subtype each other: all concrete types are final and may only have abstract types as their supertypes.  
+
+```julia
+x = 2.3
+@show typeof(x)
+@show supertype(Float64)
+@show supertype(AbstractFloat)
+@show supertype(Real)
+@show supertype(Number);
+@show supertype(Any);
+```
+
+There is an **is a** relationship:
+```julia
+isa(2.3, Number)
+```
+
+```julia
+isa(2.3, String)
+```
+
+```julia
+2.3 isa Float64
+```
+
+```julia
+my_type = Float64
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+```julia
+my_type = Real
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+Some types are not abstract nor concrete:
+
+```julia
+my_type = Complex
+@show isabstracttype(my_type)
+@show isconcretetype(my_type);
+```
+
+```
+help?> Complex
+search: Complex complex ComplexF64 ComplexF32 ComplexF16 precompile __precompile__ componentwise_logpdf
+
+  Complex{T<:Real} <: Number
+
+  Complex number type with real and imaginary part of type T.
+
+  ComplexF16, ComplexF32 and ComplexF64 are aliases for Complex{Float16}, Complex{Float32} and Complex{Float64} respectively.
+```
+
+
+Let's walk down from `Number`:
+
+```julia
+using InteractiveUtils: subtypes
+
+function type_and_children(type, depth::Int = 0)
+    if !isconcretetype(type)
+        #Non-concrete
+        print("-"^depth, type, ": non-concrete")
+        #Types that are not concrete can be abstract or not
+        if isabstracttype(type) 
+            println(", abstract")
+            for c in subtypes(type)
+                type_and_children(c,depth+1)
+            end
+        else
+             println(", non-abstract")
+             @assert isempty(subtypes(type))
+        end
+    else
+        #Concrete
+        @assert isempty(subtypes(type))
+        println("-"^depth, type, ": concrete")
+    end
+end
+
+type_and_children(Number)
+```
+
+A type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
+
+```julia
+x = 7
+@show ismutable(x)
+
+x = [7]
+@show ismutable(x);
+```
+
+When you pass a mutable variable to a function, the function can change the value. When you pass an immutable variable, if you try to change it, Julia will just make another instance.
+
+```julia
+f(z::Int) = begin z = 0 end
+f(z::Array{Int}) = begin z[1] = 0 end
+
+x = 1
+@show typeof(x)
+@show isimmutable(x)
+println("Before call by value: ", x)
+f(x)
+println("After call by value: ", x,"\n")
+
+x = [1]
+@show typeof(x)
+@show isimmutable(x)
+println("Before call by reference: ", x)
+f(x)
+println("After call by reference: ", x)
+```
+
+Making copies, `copy` and `deepcopy`:
+
+```julia
+println("Immutable:")
+a = 10
+b = a
+b = 20
+@show a;
+```
+
+```julia
+println("\nNo copy:")
+a = [10]
+b = a
+b[1] = 20
+@show a;
+```
+
+```julia
+println("\nCopy:")
+a = [10]
+b = copy(a)
+b[1] = 20
+@show a;
+```
+
+```julia
+println("\nShallow copy:")
+a = [[10]]
+b = copy(a)
+b[1][1] = 20
+@show a;
+```
+
+```julia
+println("\nDeep copy:")
+a = [[10]]
+b = deepcopy(a)
+b[1][1] = 20
+@show a;
+```
+
+
+## Defining your Own Types
+
+You can define your own types. Any "serious" programming task would almost always merit that you do that.
+
+In object oriented languages (e.g. C++, Java, Python) types are typically called classes. A class (in such a language) will have both definitions of data and actions, typically called variables and methods respectively. An instance of a class would be called an object. 
+
+Julia is not object oriented. It rather provides a different paradigm based on multiple-dispatch (which we describe below). Nevertheless, there are user defined types, called structs (structures). The name comes from C. 
+
+```julia
+struct Person #Notice the convention of using capital letters for the first letter of a struct
+    height::Float64
+    weight::Float64
+    name::String
+end
+
+person = Person(179.8, 78.6, "Miriam") #A struct comes with a constructor function
+
+@show typeof(person)
+
+@show person.height; #The fields of a struct are accessed via "." - not to be confused with "." used for broadcasting.
+@show person.weight;
+@show person.name;
+```
+
+```julia
+@show ismutable(person)
+person.weight = 85.4 #gained some weight - but this will generate and error
+```
+
+Here is a `mutable struct`
+
+```julia
+mutable struct MutablePerson
+    height::Float64
+    weight::Float64
+    name::String
+end
+
+person = MutablePerson(179.8, 78.6, "Miriam")
+person.weight = 85.4
+println(person)
+```
+
+**Note:** You typically cannot redefine a type during the same Julia session. One workaround for that is to use the [Revise.jl](https://github.com/timholy/Revise.jl) package. We won't use it just yet.
+
+```julia
+struct MyStruct
+    x::Int
+end
+
+struct MyStruct #Will generate an ERROR because redefining a struct
+    x::Int
+    y::Float64
+end
+```
+You can define abstract types (they won't have any fields) and a whole type hierarchy:
+
+```julia
+abstract type Animal end
+
+abstract type Mammal <: Animal end
+abstract type Reptile <: Animal end
+
+struct Human <: Mammal
+    height::Float64
+    weight::Float64
+    religious::Bool
+end    
+
+struct Dog <: Mammal
+    height::Float64
+    weight::Float64
+end
+
+struct FlexDog{T <: Real} <: Mammal
+    height::T
+    weight::T
+end
+
+struct Crocodile <: Reptile
+    length::Float64
+    weight::Float64
+    type::Symbol #Expect to be :salt_water or :fresh_water
+end
+
+type_and_children(Animal)
+```
+
+As stated above, the function that creates an instance of the type is called the **constructor**. Every concrete type comes with a default constructor.
+
+```julia
+methods(Crocodile)
+```
+
+```julia
+tick_tock = Crocodile(2.3, 204,:salt_water)
+```
+
+You can also create other constructor methods:
+
+```julia
+function Crocodile(type::Symbol)
+    if type == :salt_water
+        return Crocodile(2.0,200,:salt_water) #average salt water croc
+    elseif type == :fresh_water
+        return Crocodile(1.5,150,:fresh_water) #average fresh water croc
+    else
+        error("Can't make crocodile of type $type")
+    end
+end
+
+methods(Crocodile)
+```
+
+```julia
+Crocodile(:salt_water) 
+```
+
+```julia
+Crocodile(:fresh_water) 
+```
+
+```julia
+Crocodile(:ice_water) #will generate an error
+```
+
+A bit more on [constructors](https://docs.julialang.org/en/v1/manual/constructors/) will come later.
+
+Notice we had the [parameteric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) `FlexDog`:
+
+```julia
+dash_my_dog = FlexDog(2,4)
+@show typeof(dash_my_dog)
+
+lassy_your_dog = FlexDog(2.3f0,5.7f0)
+@show typeof(lassy_your_dog)
+
+my_dog_array = FlexDog{UInt16}[]
+```
+
+```julia
+my_dog_array = FlexDog{Complex}[] #Will not work because Complex is not a Real
+```
+
+With multiple dispatch we can get a form of polymorphism:
+
+```julia
+animal_noise(animal::Dog) = println("woof")
+animal_noise(animal::Human) = println("hello")
+animal_noise(animal::Crocodile) = println("chchch")
+
+animals = [Crocodile(:salt_water), Human(2.4,2.3,false), Crocodile(:salt_water), Dog(5.3,2.5)]
+animal_noise.(animals);
+```
+
+```julia
+methods(animal_noise)
+```
+
+We can even handle the `FlexDog`:
+
+```julia
+animal_noise(animal::Union{Dog,FlexDog}) = println("woof")
+push!(animals, FlexDog{Int16}(2,4))
+animal_noise.(animals);
+```
+
+### Methods and Multiple Dispatch
+
+[See methods in Julia docs](https://docs.julialang.org/en/v1/manual/methods/).
+
+If there is one key attribute to Julia it is **multiple dispatch** as we have just seen above. 
+
+```julia
+function my_f(x::Int)
+    println("My integer is $x")
+end
+
+function my_f(x::Float64)
+    println("My floating point number is $x")
+end
+
+my_f(2)
+my_f(2.5)
+println(methods(my_f))
+```
+
+It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but then towards the end of the course it is worth to listen to it again and see what makes sense and what not yet.
+
+### Defining more methods for existing functions
+
+Almost any operation in julia is a function. For example,
+
+```julia
+@which 2+3
+```
+
+There are many methods for `+`:
+
+```julia
+methods(+) |> length
+```
+
+So what if we had our own type and wanted to have `+` for it, and say an integer.
+
+```julia
+struct PlayerScore
+    player_name::String
+    score::Int
+end
+
+me = PlayerScore("Johnny", 22)
+```
+
+```julia
+me += 10 #will generate an error since `+` for me and an integer is not defined and `+` is used in `+=`
+```
+
+So let's define it:
+
+```julia
+import Base: + #we do this to let Julia know we will add more methods to `+`
+
+function +(ps::PlayerScore, n::Int)::PlayerScore
+    return PlayerScore(ps.player_name, ps.score + n)
+end
+
+me += 10;
+me
+```
+
+You can do this for every operation and function you want (and makes sense).  What if we wanted "pretty printing"?
+
+```julia
+import Base: show
+
+show(io::IO, ps::PlayerScore) = print(io,"Score for $(ps.player_name) =  $(ps.score)")
+
+println("We have a some score: $me. Pretty good!")
+```
+
+### Some examples...
+
+Lets consider an example where we want to collect data and also have quick running statistics. E.g.
+
+```julia
+using Random, Statistics
+Random.seed!(0)
+get_new_data() = 100*rand() #This will in practice be anything...
+
+data = Float64[]
+
+function collect_and_use_data(data)
+    for t in 1:100 #This will be much bigger 
+
+        #Periodically we collect new data
+        new_data_point = get_new_data()
+        push!(data,new_data_point)
+
+        #Peridoically we look at summary statistics
+        if t%20 == 0
+            println("-------")
+            println("Mean: ", mean(data))
+            println("Max: ", maximum(data))
+        end
+    end
+end
+
+collect_and_use_data(data)
+```
+Think of this scenario repeating often and for `t` being big... so you don't want to recompute the mean and max every time.
+
+```julia
+mutable struct RunningStatsData
+    data::Vector{Float64}
+    mean::Float64
+    max::Float64
+    RunningStatsData() = new([],NaN,NaN)
+end
+
+function show_summary(rsd::RunningStatsData)
+        println("Mean: ", rsd.mean)
+        println("Max: ", rsd.max)
+end
+
+data = RunningStatsData()
+show_summary(data)
+```
+
+We can now make specifics method for `push!`, `max`, and `mean` for this new type:
+
+```julia
+Random.seed!(0)
+
+import Base: push!, maximum
+import Statistics: mean
+
+maximum(rsd::RunningStatsData) = rsd.max
+mean(rsd::RunningStatsData) = rsd.mean
+
+function push!(rsd::RunningStatsData,data_point)
+    #Insert the new datapoint
+    push!(rsd.data, data_point)
+
+    # Update the maximum
+    if data_point > rsd.max || isnan(rsd.max)
+        rsd.max = data_point
+    end
+
+    # Update the mean
+    n = length(rsd.data)
+    if n == 1 
+        rsd.mean = data_point #If first data point just set it
+    else
+        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
+    end
+end
+
+data = RunningStatsData()
+collect_and_use_data(data)
+```
+
+Going a bit more generic we could have also had,
+
+```julia
+mutable struct FlexRunningStatsData{T <: Number}
+    data::Vector{T}
+    mean::Float64
+    max::T
+    FlexRunningStatsData{T}() where T = new([],NaN,typemin(T))
+end
+
+maximum(rsd::FlexRunningStatsData) = rsd.max
+mean(rsd::FlexRunningStatsData) = rsd.mean
+
+function push!(rsd::FlexRunningStatsData,data_point)
+    #Insert the new datapoint
+    push!(rsd.data, data_point)
+
+    # Update the maximum
+    if data_point > rsd.max || isnan(rsd.max)
+        rsd.max = data_point
+    end
+
+    # Update the mean
+    n = length(rsd.data)
+    if n == 1 
+        rsd.mean = data_point #If first data point just set it
+    else
+        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
+    end
+end
+
+Random.seed!(0)
+get_new_data() = rand(0:10^4) 
+
+data = FlexRunningStatsData{Int}()
+collect_and_use_data(data)
+```
+
+```julia
+@which mean(data)
+```
+
+But there is a problem with the above. Should we have done `<: Number` or `<: Real`? What is `T` was `Complex`?
+
+### Using structs for data structures
+
+```julia
+Random.seed!(0)
+
+struct Node
+    id::UInt16
+    friends::Vector{Node}
+    Node() = new(rand(UInt16), [])
+    Node(friend::Node) = new(rand(UInt16),[friend])
+end
+
+"""
+Makes 'n` children to node, each with a single friend
+"""
+function make_children(node::Node, n::Int, friend::Node)
+    for _ in 1:n
+        new_node = Node(friend)
+        push!(node.friends, new_node)
+    end
+end
+
+root = Node()
+make_children(root, 3, root)
+for node in root.friends
+    make_children(node, 2,root)
+end
+root
+```
+
+### More to be covered as part of Unit 6:
+
+[See constructors in Julia docs](https://docs.julialang.org/en/v1/manual/constructors/). More on this in Unit 6.
+
+[See conversion and promotion in Julia docs](https://docs.julialang.org/en/v1/manual/conversion-and-promotion/)
+
+[See interfaces in Julia docs](https://docs.julialang.org/en/v1/manual/interfaces/)
