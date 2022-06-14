@@ -47,7 +47,8 @@
           <a href = "lecture-unit-4.html"> Unit 4 </a> |
           <a href = "lecture-unit-5.html"> Unit 5 </a> |
           <a href = "lecture-unit-6.html"> Unit 6 </a> |
-          <a href = "lecture-unit-7.html"> Unit 7 </a> 
+          <a href = "lecture-unit-7.html"> Unit 7 </a> |
+          <a href = "lecture-unit-8.html"> Unit 8 </a> 
           </center>
           <br>
 
@@ -67,7 +68,8 @@
           <a href = "lecture-unit-4.html"> Unit 4 </a> |
           <a href = "lecture-unit-5.html"> Unit 5 </a> |
           <a href = "lecture-unit-6.html"> Unit 6 </a> |
-          <a href = "lecture-unit-7.html"> Unit 7 </a> 
+          <a href = "lecture-unit-7.html"> Unit 7 </a> |
+          <a href = "lecture-unit-7.html"> Unit 8 </a> 
           </center>
           <br>
 
