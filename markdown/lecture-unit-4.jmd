@@ -735,7 +735,7 @@ my_f(2.5)
 println(methods(my_f))
 ```
 
-It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but then towards the end of the course it is worth to listen to it again and see what makes sense and what not yet.
+It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosophy of multiple dispatch. Some of the content of the video may be a bit advanced, but then towards the end of the course it is worth to listen to it again and see what makes sense and what not yet.
 
 ### Defining more methods for existing functions
 
@@ -807,7 +807,7 @@ function collect_and_use_data(data)
         new_data_point = get_new_data()
         push!(data,new_data_point)
 
-        #Peridoically we look at summary statistics
+        #Periodically we look at summary statistics
         if t%20 == 0
             println("-------")
             println("Mean: ", mean(data))

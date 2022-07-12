@@ -503,7 +503,7 @@ $$
 \int _{a}^{b}f(x)dx
 $$
 
-A simple method for estimating the integral is to use the Reimann sum at some finite width to approximate the integral, i.e.
+A simple method for estimating the integral is to use the Riemann sum at some finite width to approximate the integral, i.e.
 
 $$
 \int _{a}^{b}f(x)dx \approx (b - a)f\left(\frac{a+b}{2}\right)
@@ -657,7 +657,7 @@ $$
 y(t+h) = y(t) + h f\big(y(t)\big),
 $$
 
-A popular Higher Order Method are the Runge-Kutta Methods. These use intermediate points to approximate the derivative that have coefficients chosen to reduce the approximation error. The 4th order Runge-Kutta mthod is of the form
+A popular Higher Order Method are the Runge-Kutta Methods. These use intermediate points to approximate the derivative that have coefficients chosen to reduce the approximation error. The 4th order Runge-Kutta method is of the form
 
 $$
 y(t+h) = y(t) + \frac{h}{6}(k_1 + 2k_2 + 2k_3 +k_4),
@@ -672,7 +672,7 @@ k_{4} &=f\left(y(t) + h\, k_{3}\right) .
 \end{align*}
 $$
 
-Note that if we consider the Fundamental Theorem of Calculus we can recognise that Eulers method and the RK4 method are similar to the Midpoint rule and Simpsons rule for numerical integration.  
+Note that if we consider the Fundamental Theorem of Calculus we can recognise that Euler's method and the RK4 method are similar to the Midpoint rule and Simpsons rule for numerical integration.  
 
 ###  Matrix operations
 

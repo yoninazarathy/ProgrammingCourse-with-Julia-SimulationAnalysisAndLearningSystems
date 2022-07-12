@@ -56,7 +56,7 @@ Your GitHub repo should be formatted as exactly as follows:
 julia src/q3/q3_solution.jl
 ```
 and this will produce your output for question 3. 
-* Have an `other` directory where you can place the animation you create for Q5, and if you wish any other auxiallary material.
+* Have an `other` directory where you can place the animation you create for Q5, and if you wish any other auxillary material.
 
 Note that question 1 is clearly different as it requires you to show evidence of using a few unix commands. For this question just have `q1_solution.txt` as a file in `src/q1/`.
 

@@ -24,11 +24,11 @@ In addition to the mathematical and modelling concepts that you'll pick up in th
 * Further understanding how to benchmark and optimize code.
 * Gain further experience in designing types (`struct`s).
 
-In terms of Monte Carlo and discrete event simulation, you will be learning different way sto run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
+In terms of Monte Carlo and discrete event simulation, you will be learning different way sto run simulations and how interpret the accuracy (statistic significance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
 ## True Random Number generators
 
-We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarentees of "true" randomness!
+We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarantees of "true" randomness!
 
 ## (Pseudo)-Random Numbers
 
@@ -1153,7 +1153,7 @@ MyModule.variable
 MyModule.hi() 
 ```
 
-By default, the module will be `using Base` (this can be removed by using `baremodule` instead - you only need this for writing the compiler, etc). Modules can be nested inside of each other, as a form of hierachical code organization.
+By default, the module will be `using Base` (this can be removed by using `baremodule` instead - you only need this for writing the compiler, etc). Modules can be nested inside of each other, as a form of hierarchical code organization.
 
 Modules have a set of `export`s. While some code is intended to be "internal" to the module, the export statement signals which types, functions and variables are intended for users of the module, and things marked with `export` are automatically imported with the `using` statement.
 
@@ -1492,7 +1492,7 @@ $$
 f(x) \propto e^{-\lambda x},
 $$
 
-where the "proprotional to" symbol, $\propto$ indicates there is an unknown constant $1/K$.
+where the "proportional to" symbol, $\propto$ indicates there is an unknown constant $1/K$.
 
 In the case of the exponential distribution it is an elementary calculus exercise to integrate over $[0,\infty)$ and see that $K=1/\lambda$. However in more complex cases (also often when the distribution is multi-dimensional), the normalizing constant is not known. This type of scenario exactly appears in Bayesian statistical inference and physics. For example, in a physical system at thermal equilibrium, the relative probability of different states depends on their energy and the temperature, and we have the relationship:
 
@@ -1502,7 +1502,7 @@ $$
 
 The state space for $\mathbf{x}$ may be huge. Calculating the constant of proportionality (the "partition function") analytically is difficult but with it you can trivially calculate the macroscopic quantities of the system (mean energy, entropy, etc) via differentiation. Similarly, if we can sample the "microstates" it is straightforward to estimate the physical properties. So this is our goal here.
 
-In such a case, there are algorithms for generating random variables that are approximaltly distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribtuion, even without knowing $K$.
+In such a case, there are algorithms for generating random variables that are approximately distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribution, even without knowing $K$.
 
 MCMC algorithms implictly construct a Markov chain that has a steady-state distribution which is equal to the target probability distribution. Then, generation of random sequences from this new Markov chain allows us to approximately sample the target distribution. Without going into the details of the algorithm, let's see this in action in the context of Bayesian statistics.
 
@@ -1522,7 +1522,7 @@ $$
 
 Having such a model allows to compute probabilities such as $\mathbb{P}(\text{Number of fires} > 5)$ etc.
 
-This is a Poisson distribution with parameter $\theta > 0$ (which is also the mean number of fires). If we were to carry out classical [(frequentist) statistics](https://en.wikipedia.org/wiki/Frequentist_inference) for the parameter $\theta$ then a typical way to do so is [maximum likelihood estimation (MLE)](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation) where we would use the available data to get the most likely estimate of $\theta$. However such an approach does not use prior knoweldge about $\theta$.
+This is a Poisson distribution with parameter $\theta > 0$ (which is also the mean number of fires). If we were to carry out classical [(frequentist) statistics](https://en.wikipedia.org/wiki/Frequentist_inference) for the parameter $\theta$ then a typical way to do so is [maximum likelihood estimation (MLE)](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation) where we would use the available data to get the most likely estimate of $\theta$. However such an approach does not use prior knowledge about $\theta$.
 
 An alternative Bayesian approach is to treat $\theta$ as a random quantity and have a **prior distribution** for $\theta$ which is then updated via the data to reach a **posterior distribution** after inference takes place. The key benefit here is that the posterior distribution (of the parameter $\theta$) captures both the prior knowledge and new data. For this we can use Bayes's rule to have,
 
@@ -1538,7 +1538,7 @@ $$
 
 The normalizing constant $K$, sometimes called the "evidence" involves integration over $\theta$. In the case of a single parameter like the Poisson distribution this is numerically possible, but if $\theta$ is high dimensional then not. 
 
-To draw samples from the posterior distribtuion $f(\theta \mid x)$, we can use MCMC.
+To draw samples from the posterior distribution $f(\theta \mid x)$, we can use MCMC.
 
 Consider a scenario with just a few data points `[2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]` and a Gamma prior distribution with two **hyper-parameters**, $\alpha$ and $\beta$. We then have `posteriorUpToK()` which represents the posterior distribution (up to a normalizing constant):
 

@@ -3,7 +3,7 @@
 To introduce things say you have an array of values and want to find the maximal value. How would you do it? Here is some Julia code:
 
 <!---
-Before anything - a 10-20 minute demo.... e.g. expected number of findings of minimum when searching through an array.... or Resvouir sampling
+Before anything - a 10-20 minute demo.... e.g. expected number of findings of minimum when searching through an array.... or Reservoir sampling
 --->
 ```julia
 using Random
@@ -142,7 +142,7 @@ You are coming to this course after doing several mathematics and statistics cou
 * You know that you can make computers do the same action again and again, by wrapping code in loops, often using conditional statements (`if`) to decide how the program should continue.
 * You have even used and/or written a few functions (or routines) where you specify how some action should be done and describe that action in a function.
 * You certainly know how to use files, directories, and the internet. 
-* Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + several more math electives.
+* Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Multivariable Calculus + some modelling) + several more math electives.
 
 [![Women coding image](../web_img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
 
@@ -475,7 +475,7 @@ What if we wanted to apply square root to several/many elements together? It is 
 
 ```julia
 data = [i^2 for i in 0:10]
-sqrt.(data) # The "." broadcating operator
+sqrt.(data) # The "." broadcasting operator
 ```
 
 How can we compute the square root if we didn't have the `sqrt()` function? Of course one answer is to use another in-built alternative:
@@ -830,7 +830,7 @@ With (software) big integers everything goes:
 n = 10^3
 big_stuff = factorial(big(n));
 num_digits = Int(ceil(log10(big_stuff))) 
-println("The facotrial of $n has $num_digits decimal digits.") 
+println("The factorial of $n has $num_digits decimal digits.") 
 ```
 
 What about factorials of numbers that aren't positive integers?
@@ -958,7 +958,7 @@ uppercase("ramzi")
 
 How would you do that?
 
-To close, here is an example adapted from the SWJ book. It takes the Shakespere corpus and counts frequencies of words.
+To close, here is an example adapted from the SWJ book. It takes the Shakespeare corpus and counts frequencies of words.
 
 ```julia
 using HTTP, JSON

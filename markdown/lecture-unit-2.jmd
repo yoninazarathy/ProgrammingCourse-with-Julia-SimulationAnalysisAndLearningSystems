@@ -386,7 +386,7 @@ for j in 1:n, i in 1:m
 end
 ```
 
-Access of matrix elements is $O(1)$, however this doesn't mean that in practice (certainly in big numerical computations), different ways of accesing the matrix vary:
+Access of matrix elements is $O(1)$, however this doesn't mean that in practice (certainly in big numerical computations), different ways of accessing the matrix vary:
 
 ```julia
 function sum_rows(data, n, m)
@@ -551,7 +551,7 @@ Note: do not confuse the heap data structure with the other computer science usa
 
 Before starting to see what a heap does (we'll continue in more depth in future units on how it works), we'll discuss what we expect it to do - namely implement an efficient **priority queue**. 
 
-Consider for example a hypothetical situation where thousands of individuals attend a mass vaccination centre. As they arrive, each individual is tagged by their name (a `String`), and recieves a priority for vaccination which is a number (say `Float32`). Assume (hypothetically) that the priority is a function of their age, their occupation (essential or not), and their medical condition. Hence there are many possible different priorities. 
+Consider for example a hypothetical situation where thousands of individuals attend a mass vaccination centre. As they arrive, each individual is tagged by their name (a `String`), and receives a priority for vaccination which is a number (say `Float32`). Assume (hypothetically) that the priority is a function of their age, their occupation (essential or not), and their medical condition. Hence there are many possible different priorities. 
 
 Continuing with this example, assume the individuals queue (e.g. wait in a big arena or showgrounds area) and are only called when their priority is the highest (clearly high priority individuals won't queue much while others wait for a long while). The management system will then keep track of the priorities of the individuals and do the following:
 
@@ -559,7 +559,7 @@ Continuing with this example, assume the individuals queue (e.g. wait in a big a
 * Remove the individual with the highest priority (they then get vaccinated and leave).
 * Modify an individual's priority if they complain about waiting too long or in case of other reasons.
 
-There are different alternatives for implementing such a data structure and in all cases the associated "collection" will be called a **priority queue**. It turns out that the heap data structure is the most efficient way to implement a priority (certainly if the number of items is large). But for starters lets consider some naive implemintations.
+There are different alternatives for implementing such a data structure and in all cases the associated "collection" will be called a **priority queue**. It turns out that the heap data structure is the most efficient way to implement a priority (certainly if the number of items is large). But for starters lets consider some naive implementations.
 
 A small digression is to see the Julia type of **named tuples**; which present one way of keeping individuals:
 
@@ -575,16 +575,16 @@ person_B = (priority = 12.6, name = "Lenna")#if there wasn't "priority =" and "n
 @show person_B.priority;
 ```
 
-So the type of this objects is `NamedTuple{(:priority, :name), Tuple{Float64, String}}` and they are just convient to work with.
+So the type of this objects is `NamedTuple{(:priority, :name), Tuple{Float64, String}}` and they are just convenient to work with.
 
 Now back to our naive priority queue. We will just keep an array of the named tuples (the naiveness is not because of the named tuples but because of the fact we are using an array). 
 
 ```julia
-#Create an empty priorty queue as an array of named tuples
+#Create an empty priority queue as an array of named tuples
 naive_priority_queue = NamedTuple{(:priority, :name), Tuple{Float64, String}}[];
 ```
 
-Now in the most naive implemintation, every time we add an individual we'll just `push!` their named tuple to the array. For example,
+Now in the most naive implementation, every time we add an individual we'll just `push!` their named tuple to the array. For example,
 
 ```julia
 new_person = (priority = 123.2, name = "Yarden")
