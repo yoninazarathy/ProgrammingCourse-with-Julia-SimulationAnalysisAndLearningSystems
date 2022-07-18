@@ -1,13 +1,11 @@
-# Homework \#2 - Semester 2, 2022.
-(last edit: July 2, 2022)
+# Homework \#2 - Semester 2, 2021.
+(last edit: Aug 7, 2021)
 
-UNDER CONSTRUCTION
+**Due:** End of Day, Friday, August 27, 2021. Late submissions are not accepted.
 
-**Due:** 
+**Note:** The teaching staff will only answer questions (via Piazza, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday August 25.
 
-**Note:** 
-
-**Weights and marking criteria:** 
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, and neat output. There are **10** additional points for setting up the GitHub repo properly. More on this below. The remaining 80 points are distributed among the five questions based on difficulty **(10, 15, 10, 15, 15, 15)**. See the [general submission instructions information](https://courses.smp.uq.edu.au/MATH2504/#hand-in).
 
 **Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
 
@@ -100,3 +98,344 @@ Your submission should be comprised of the text from the shell including the com
 
 **1o**: Move back to `hw1_q1` and delete the directory `people`. Use either `rm` with a correct flag or `rmdir`.
 
+
+
+## Question 2 (15pt): HTTP, Files, JSON, and CSV
+
+Inspect the Jupyter notebook file for [practical B](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/practicals_jupyter/practical_B_julia_essentials.ipynb), `practical_B_julia_essentials.ipynb`. The source URL is available by clicking "Raw" on the GitHub page. It is in JSON format.
+
+Write a program that reads in the JSON file (directly from the web) of the Jupyter notebook and prints a summary of the notebook including:
+
+* Total number of cells.
+* Number of code cells.
+* Number of markdown cells.
+* A breakdown of the number of code cells to cells that have output and those that don't.
+* Any other summary information you find relevant (you choose what summary to print - must be at least one item).
+
+The program should then create two CSV files, both with header rows and named `markdown_summary.csv` and `code_summary.csv`. Both of these files should contain a data row for each respective markdown or code cell in the notebook. The first column in each of the files should be named `cell_number` and should indicate the cell number in the Jupyter notebook (this is a unique count starting at 1 within the cells). The second and third columns are:
+
+* `character_count` - determines how many characters total are in the cell (include characters such as `\n` and count unique characters as a single character. E.g. `√` is a single character.
+* `line_count` - The number of lines the cell uses.
+
+The remaining columns count frequency of elements within the markdown or code of the cell. These columns will differ for `markdown_summary.csv` and `code_summary.csv`, and are described now.
+
+For the markdown summary file create columns: `#`, `##`, `###`, `####`, each of which count the number of times the respective element appears in the cell. For example if a cell has `#` and `##` in it, each once, then the respective entries in the line for this cell should be `1, 1, 0, 0`.
+
+For the code summary CSV file do so similarly, for the keywords: `return`, `for`, `if`, and `using` (i.e. 4 columns, counting the frequency of these keywords in each of the code cells).
+
+Thus in summary, your program reads in a JSON file representing a Jupyter notebook, displays basic summary information, and then stores additional information to two CSV files which in principle could be further analyzed at a later time. 
+
+(Your PDF output for the assignment should show the first few lines of these CSV files).
+
+## Question 3 (10pt): Numerical derivatives
+
+The lecture notes contain code that illustrates the absolute relative error (as a function of $h$) for numerical derivatives using the **forward difference scheme**,
+
+$$
+f'(x) \approx \frac{f(x+h) - f(x)}{h}.
+$$
+
+An alternative scheme is **the central difference scheme** using,
+
+$$
+f'(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h}.
+$$
+
+Yet another scheme, called the **Complex Variable Method**, is overviewed in [this video](https://www.youtube.com/watch?v=Q9OLOqEhc64&t=134s) (the link is to 2:15 in the video and you should watch for about 4.5 minutes). 
+
+Consider the functions, $f_1(x) = sin(x^2)$ at $x=1/2$, $f_2(x) = e^x$ at $x=1$, and $f_3(x) = atan(x)/(1+e^{-x^2})$ at $x=2$. Evaluate the performance of each of the three schemes (forward, central, and complex) for each of these functions at the given points. In each case plot the error as a function of $h$, and find the optimal $h$. Display your results in a neat manner using one or two plots and a minimal summary.
+
+## Question 4 (15pt): Markov chains and `LinearAlgebra`
+
+A discrete time, time-homogenous, finite state markov chain can be defined as a random sequence $X_0,X_1,X_2,\ldots$ where $X_i \in \{1,2,\ldots,L\}$ with $L$ being the number of states, and where the probability of $X_{n+1} = j$ given that $X_n = i$ is determined by the element $P_{ij}$ of the (stochastic) matrix $P$. This is an $L \times L$ matrix with non-negative entries and, $\sum_{j=1}^L P_{ij} = 1$ for all $i \in \{1,\ldots,L\}$. Hence each row $i$ of the matrix is the probability distribution of the next value in the sequence in case where the current value is $i$. An initial probability of $X_0$ is also given via some vector $p^0$ where $p^0_i = {\mathbb P}(X_0 = i)$. 
+
+Markov chains are very useful models for a variety of applications and at UQ are briefly introduced in [STAT2003](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT2003) and studied in detail in [STAT3004](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3004). Here we will simply use them as a motivating example for practicing using linear algebra and no further background from these courses is needed.
+
+We focus on irreducible, aperiodic, finite state Markov chains. Irreducible means that for every pair $(i,j)$ there exists an $n$ such that $i$-th $j$-th entry of the matrix power $P^n$ is non-negative. Aperiodic is guaranteed when the diagonal entries of $P$ are strictly positive. Irreducibility means that every state $\{1,\ldots,L\}$ is reachable from every other state and being aperiodic implies there aren't times $n$ where only a subset of the states can be visited. For such Markov chains, one important vector quantity is the **stationary probability** (row) $L$-vector. Here it is denoted $\pi$ with $\sum_{i=1}^L \pi_i =1$ and $\pi_i>0$ for every $i$. This vector $\pi$ counts the long term statistical occupancy of states, and can be characterized/computed in several ways:
+
+1. It satisfies $\pi P = \pi$ (note that this is an undetermined system of linear equations because $(I-P)$ is singular; still the additional requirement that $\sum_{i=1}^L \pi_i =1$ ensures uniqueness of $\pi$).
+1. For any $i$,
+$$
+\lim_{n \to \infty} [P^n]_{ij} = \pi_j.
+$$
+3. The theory of non-negative matrices implies that $P$ has a a real eigenvalue equal to $1$. This is the eigenvalue with maximal magnitude among all eigenvalues of $P$. The vector $\pi$ is proportional to the eigenvector associated with this maximal eigenvalue ($\sum_{i=1}^L \pi_i =1$).
+1. Given a sequence of random variables from this Markov chain $\{X_0,X_1,X_2,\ldots\}$ we estimate $\pi_i$ for large $N$ via,
+$$
+\pi_i \approx \frac{1}{N} \sum_{n=1}^N {\mathbf 1} \{X_n = i\}, 
+$$
+where ${\mathbf 1}\{\cdot\}$ is the indicator function equalling $1$ if the argument occurs, and $0$ otherwise. This is true for any initial probability vector $p^{0}$.
+
+In this problem you will compute/estimate $\pi$ using methods 1-4 for a specific class of problems.
+
+The code below generates a very special class of Markov chains where there is an explicit expression for the stationary probability vector $\pi$. The function `structured_P` with input argument `L` creates and $L \times L$ matrix $P$ and the function `structured_π` creates an $L$-vector (column vector) $\pi$ matching this $P$:
+
+```julia
+using LinearAlgebra
+
+function structured_P(L::Int; p::Float64 = 0.45, r::Float64 = 0.01)::Matrix{Float64}
+    q = 1 - p - r
+    P = diagm(fill(r,L)) + diagm(-1=>fill(q,L-1)) + diagm(1 => fill(p,L-1))
+    P[1,1] = 1-p
+    P[L,L] = 1-q
+    return P
+end
+
+structured_π(L::Int; p::Float64 = 0.45, r::Float64 = 0.01)::Vector{Float64} = begin
+    q = 1 - p - r
+    [(p/q)^i  for i in 1:L] * (q-p) / p / (1-(p/q)^L) #Explicit expression (birth death)
+end;
+```
+
+Here is for example the matrix $P$ for $L=5$:
+```julia
+P = structured_P(5)
+```
+
+And here is the vector $\pi$ for $L=5$:
+
+```julia
+π = structured_π(5)
+@show sum(π)
+@show sum(π) ≈ 1.0 #\approx + [TAB]
+π  
+```
+
+We can see that it is a stationary distribution:
+
+```julia
+@show norm(π'*P - π')
+π'*P ≈ π' 
+```
+
+You will now consider $L=2,3,4,5,10,20,30,40,50,100,200,300,400,500,1000$ and in each case use methods 1-4 above to compute/estimate $\pi$. Create 4 functions, one for each method and in each case use the function to compute/estimate $\pi$ and compare your estimated vector with the output of `structured_π`. Note that methods 1-3 will use functions from [LinearAlgebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/) while method 4 requires random variable generation. You may make use of [`sample` from StatsBase.jl](https://juliastats.org/StatsBase.jl/stable/sampling/#StatsBase.sample) for this, or any other means. You may choose for how many steps to run the Markov Chain ($N$). Similarly, since the second method requires you take take matrix powers $P^n$ for high $n$, you may also choose which $n$ to use.
+
+Once your code works for the four methods, create some graphic or tabular output of your choice (one or two plots at most) which evaluates performance of each of the methods in terms of accuracy (and optional: running time). To measure accuracy use the `norm` function to compute the euclidean norm between your calculated $\pi$ and that arising from the explicit solution `structured_π`.
+
+## Question 5 (15pt): Planetary Motion - Part 1
+
+In this problem and the next we deal with ordinary differential equations (ODEs), similar to those associated with planetary motion. Specifically we focus on a very simple two body problem reduced to two one body problems. Here you will implement the [Euler Method](https://en.wikipedia.org/wiki/Euler_method) and the [classic Runge–Kutta method](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) for solving ODEs. You will use these methods on the simple problem and analyze their performance in terms of step size.
+
+In general, take a function $f: {\mathbb R}^d \to {\mathbb R}^d$ which we called the _right hand side_ (RHS). The ODE seeks a function $u(\cdot)$ where $u(t) \in {\mathbb R}^d$, with,
+$$
+\frac{d u}{dt} = f(u),
+\qquad
+\text{and}
+\qquad
+u(0) = u_0.
+$$
+Here $u_0 \in {\mathbb R}^d$ is a given _initial condition_. Note also that in this formulation here, $f(\cdot)$ only depends on the _state_ $u$ and not on time, $t$. A more general formulation allows dependence on time. 
+
+A solution $u(\cdot)$ is a function which for any $t\ge 0$ specifies the state $u(t)$ and satisfies the ODE above.
+
+For a given ODE problem, namely a RHS $f(\cdot)$ and an initial condition $u_0$, an ODE numerical solver is an algorithm that tries to find $u(t)$ over time $t$ in some range $[0,t_{\max}]$. Euler's method works by setting $u(0) = u_0$ and following the key recursion,
+$$
+u(t+h) = u(t) + h f\big(u(t)\big),
+$$
+starting with $t=0$ and incrementing $t$ by $h$ until $t\ge t_{\max}$.
+
+The classic Runge–Kutta method, called also RK4, works via a more intricate scheme where,
+$$
+u(t+h) = u(t) + \frac{h}{6}(k_1 + 2k_2 + 2k_3 +k_4),
+$$
+where,
+$$
+\begin{align*}
+k_{1} &=f\left(u(t)\right) \\
+k_{2} &=f\left(u(t) + h \, \frac{k_{1}}{2}\right), \\
+k_{3} &=f\left(u(t) + h \, \frac{k_{2}}{2}\right) \\
+k_{4} &=f\left(u(t) + h\, k_{3}\right) .
+\end{align*}
+$$
+For both algorithms the step size $h>0$ is a key parameter.
+
+Our example ODE deals with a mass orbiting a much larger mass on a plane (a reasonable approx 
+to the earth around the sun). This is a two body problem reduced to two one body problems. A trivial one for the [barycentre](https://en.wikipedia.org/wiki/Barycenter) and a second order differential equation for the orbit around the centre of mass. We now develop this ODE from simple physical principles (note that the physics of the problem is not crucial for solving this assignment problem).
+
+Newtons Law states that,
+$$
+m \, a = F(r),
+$$
+where $m$ is the mass of earth, $a$ is the acceleration vector, and $F(r)$ is the gravitational force vector acting on earth as a function of $r$, the distance between the earth and the sun (which is the distance between earth and the barycentre). This force, driven by a $1/r$ potential, is given via,
+$$
+F(r) = -\frac{m\, M\, G}{~~r^2} r'
+$$
+where $r'$ is a unit vector pointing at the barycentre, $M$ is the [mass of the sun](https://en.wikipedia.org/wiki/Solar_mass), and $G$ is the [gravitational constant](https://en.wikipedia.org/wiki/Gravitational_constant). Hence the acceleration vector of earth is
+$$
+a = -\frac{M\, G}{~~~r^2}r'.
+$$
+We now describe the location of earth via $x(t)$ and $y(t)$ in Cartesian coordinates, using the standard unit vectors $\hat{i}$ and $\hat{j}$. With this description, the acceleration vector is,
+$$
+a = \frac{d^2x}{dt^2} \hat{i} + \frac{d^2y}{dt^2} \hat{j}.
+$$
+Now since,
+$$
+r = \sqrt{x^2 + y^2}
+\qquad
+\text{and}
+\qquad
+r' = \frac{x}{|r|} \hat{i} + \frac{y}{|r|} \hat{j},
+$$
+we get a system of second order ordinary differential equations:
+$$
+\left\{
+\begin{align*}
+\frac{d^2x}{dt^2} &= -\frac{M\, G\, x}{~~r^{3}},\\
+\frac{d^2y}{dt^2} &= -\frac{M\, G\, y}{~~r^{3}}.
+\end{align*}
+\right.
+$$
+This system has an explicit ellipsoid solution.
+
+We also expect the total energy $E$ to be conserved where $E = T(t) + V(t)$ with the kinetic energy satisfying $T(t) \propto \|v(t)\|^2$ and the potential energy satisfying and $V(t) \propto -1/r(t)$. Here "$\propto$" indicates "proportional to". Here $v(t)$ is the velocity vector comprised of $v_x(t)$ and $v_y(t)$ with,
+$$
+v_x = \frac{dx}{dt},
+\qquad
+\text{and}
+\qquad 
+v_y = \frac{dy}{dt}.
+$$
+
+With such an explicit solution and the invariant of conservation of energy, we can now evaluate the performance of the various numerical schemes and their parameters. To do so, we also convert the system into the ODE form presented above (converting it from a second order ODE to a first order one). This is done by representing the state vector $u(t)$ with $d=4$ as $v_x(t)$, $v_y(t)$, $x(t)$, $y(t)$. Thus,
+$$
+\left\{
+\begin{align*}
+\frac{dv_x}{dt} &= -\frac{M\,G\,x}{~~r^{3}},\\
+\frac{dv_y}{dt} &= -\frac{M\,G\,y}{~~r^{3}},\\
+\frac{dx}{dt} &= v_x, \\
+\frac{dy}{dt} &= v_y.
+\end{align*}
+\right.
+$$
+
+The following code specifies the function `df_dt_one_body` which is the RHS for this ODE. The other four one line functions are convenience accessors to the state variables.
+
+```julia
+#These four convenience functions extract the state variable from the state vector
+#It is assumed the layout of the vector u is u = [v_x, v_y, x, y]
+state_v_x(u::Vector{Float64}) = u[1]
+state_v_y(u::Vector{Float64}) = u[2]
+state_x(u::Vector{Float64}) = u[3]
+state_y(u::Vector{Float64}) = u[4]
+
+"""
+Computes the RHS for the one body problem. 
+"""
+function df_dt_one_body(u::Vector{Float64}, t::Float64)::Vector{Float64}
+    M, G = 1, 1 #We take these constants as normalized. Naturally they would need to be set for physical values.
+    r = sqrt(state_x(u)^2 + state_y(u)^2)
+    return [-M*G*state_x(u)/r^3, -M*G*state_y(u)/r^3, state_v_x(u), state_v_y(u)]
+end;
+```
+
+Once you use it to obtain a solution on a time vector `t` and a state (vector of vectors) `u`, a function such as `plot_solution` below can be used to plot the solution, also allowing you to use a `title` for the plot and a `label` for the series:
+
+```julia
+using Plots, Measures
+
+function plot_solution( t::AbstractArray{T}, 
+                        u::Vector{Vector{Float64}}; 
+                        title::String = "",
+                        label::Union{String, Bool} = false) where T
+    x, y, v_x, v_y = state_x.(u), state_y.(u), state_v_x.(u), state_v_y.(u)
+ 
+    #"Energy"
+    r = @. sqrt(x^2 + y^2)
+    E = @. 0.5*(v_x^2 + v_y^2) - 1.0/r
+
+    p1 = plot(  x, y, label = label, xlabel= "X", ylabel = "Y",
+                title = title*" (position)", aspectratio=1,legend=:topleft,ylim=(-7,7))
+    scatter!([0], [0], ms=15, msw=0, c=:orange, shape =:star, label="Sun")
+    scatter!([x[1]], [y[1]], ms=5, msw=0, c=:blue, shape =:circle, label="Earth initial position")
+
+    p4 = plot(  t, E, xlabel = "Time", ylabel = "Energy",
+                label = label, title = title*" (energy)")
+    plot(p1, p4, margin = 10mm,size=(800,400))
+end;
+```
+
+Here for example we read binary data from a file (from the web), where we previously created `example_trajectory.dat` by running the Euler method on the time-horizon $[0,200]$ with a step size of $h=0.01$, an initial location of $(1.5,0)$, and initial vertical velocity of $1$. We stored the binary data of the trajectory of type `Vector{Vector{Float64}}` in a file using the [serialization](https://docs.julialang.org/en/v1/stdlib/Serialization/) mechanism and the code below reads the binary data back into `u` so it can plot it.
+
+The plot illustrates that that trajectory deviates from the desired ellipsoid solution and that the energy is not kept constant as needed.
+
+```julia
+using Serialization, HTTP
+h = 0.01
+t = 0:h:200
+u_0 = [0., 1, 1.5, 0]
+
+#Note: the data was written to file via serialize("data/example_trajectory.dat", u) and then committed to GitHub
+ode_web = HTTP.request("GET","https://github.com/yoninazarathy/"*
+                            "ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/"*
+                            "raw/e71c6d085e0fcf79e3737c3a1db0fc56904e3f10/data/example_trajectory.dat")
+u = deserialize(IOBuffer(ode_web.body))
+@show typeof(u)
+plot_solution(t,u,title = "Euler's method", label="h=$h")
+```
+
+**5a**: Implement the Euler's method yourself and create similar plots with $h=0.001$ and $h=0.0001$ for the same time range and initial conditions. Plot plots similar to the plot above for the three values of $h$ ($0.01$, $0.001$, and $0.0001$). The trajectory plots should appear separately, but the energy plots should appear on the same plot. 
+
+**5b**: Repeat by implementing the RK4 method for $h=0.01$, $h=0.1$, and $h=0.5$. 
+
+**5c**: Comment on the efficiency of the methods and their ability to predict the trajectory, also as a function of $h$ and comparatively. 
+
+**5d**: Create a single animation which jointly illustrates the trajectory of the worst trajectory and the best trajectory from the 6 trajectories above. It is recommended that the animation display the running time, and trace the path of the earth in both trajectories, ideally using different colors and any other means you find for best visibility. The animation can be placed in your GitHub submission and a link to it provided with your submission.
+
+Note: Your solution to this question does not need to deal with binary data or use serialization as we have. Here it is simply a mechanism for obtaining data for our example plot (which you can reproduce).
+
+## Question 6 (15pt): Planetary Motion - Part 2
+
+The equations of motion described above for a planetary system have the special property of being a [Hamiltonian System](https://en.wikipedia.org/wiki/Hamiltonian_system). Hamiltonian Systems are of great interest to physicists and mathematicians due to their significance in physical modelling and their special properties. A (time invariant) Hamiltonian System is one where the dynamics of the system are completely determined by a smooth scalar function $H(q,p)$, for $q$ and $p \in {\mathbb R}^{\tilde{d}}$, where the dynamics are described by the system of first order differential equations for $i=1,\ldots,{\tilde d}$:
+
+$$
+\left\{
+\begin{align*}
+\frac{dq_{i}}{dt} &= \frac{\partial H}{\partial p_{i}},\\
+\frac{dp_{i}}{dt} &= -\frac{\partial H}{\partial q_{i}}.
+\end{align*}
+\right.
+$$
+
+For the planetary motion example, $\tilde{d} = 2$, and the variables $q$ and $p$ can be interpreted as the position ($x \hat{i} + y \hat{j}$) and momentum ($v_{x} \hat{i} + v_{y} \hat{j}$) vectors respectively. The Hamiltonian can be interpreted as the total energy of the system and has the special separable form in terms of kinetic ($T$) and potential ($V$) energy,
+
+$$
+\begin{align*}
+H(q,p) = T(p) + V(q)
+=
+H(x, y, v_{x},v_{y}) = \frac{1}{2}(v_{x}^2 + v_{y}^2) - \frac{1}{\sqrt{x^2 + y^2}}.
+\end{align*}
+$$
+
+Note that length and time scales have been resized to remove the mass and gravitational constants. It is beyond the scope of this course but a special property of Hamiltonian systems that can be exploited for numerical methods is [Sympletic Geometry](https://en.wikipedia.org/wiki/Symplectic_geometry). The numerical methods for ODE solutions that use this property are correspondingly known as [Symplectic Integrators](https://en.wikipedia.org/wiki/Symplectic_integrator).
+
+A particularly simple and effective symplectic integrator that works for variable time steps ($h$) is a [leapfrog integrator](https://en.wikipedia.org/wiki/Leapfrog_integration) in kick-drift-kick form. This takes a second order ODE for $u(t) \in {\mathbb R}^{\tilde{d}}$ of the form 
+
+$$
+\frac{d^2 u}{dt^2} = f(u),
+\qquad
+\frac{du}{dt} = v,
+\qquad
+\text{and}
+\qquad
+u(0) = u_0,
+\qquad
+\frac{du}{dt}(0) = v_0.
+$$
+The leapfrog integrator uses an intermediate velocity update, $v_{\frac{1}{2}}$, computed as
+$$
+v_{\frac{1}{2}} = v(t) + \frac{h}{2} \, f\big(u(t)\big).
+$$
+This value is then used to update the system via the recursion:
+$$
+\begin{align*}
+u(t + h) &= u(t) + h \, v_{\frac{1}{2}},\\
+v(t + h) &= v_{\frac{1}{2}} + \frac{h}{2}\, f\big(u(t + h)\big).\\
+\end{align*}
+$$
+
+**6a**: Implement the Second Order Leapfrog method above for yourself for the second order form of the dynamics of planetary motion. Create similar plots of the Euler and RK4 methods above with $h=0.01$, $h=0.1$, and $h=0.5$.
+
+**6b**: Compare the computational effort of the Leapfrog method with Euler and RK4 methods by comparing how many floating point operations per time step each method uses in your implementation. (This is not a coding question, but a theoretical question).
+
+**6c**: Chose a range to time horizons to simulate over, comment on the trend of the accuracy of each method for long simulation runs. Summarize this analysis in a single compelling plot.
+
+**6d**: The Julia package [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl) has support for various state of the art techniques, including [symplectic integrators](https://diffeq.sciml.ai/stable/solvers/dynamical_solve/). Choose a state of the art standard ODE solver and a symplectic integrator and use it to find a solution for this ODE system. Compare results with your own implementation of leapfrog and comment on the results.
