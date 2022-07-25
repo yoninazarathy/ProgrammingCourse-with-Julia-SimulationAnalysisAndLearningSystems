@@ -8,17 +8,21 @@
 
 Since this assignment is in **pairs** make sure to have the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three persons requires explicit permission from the course coordinator.
 
-**Submission format:**  The submission format is still under construction and is not yet specified. It will specified before week 2. 
+**Submission format:**  The submission format is via a GitHub repository as described in Question 10. The submission should include the four submissions forms [I](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-I-Q1-Q4.ipynb), [II](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-II-Q5-Q9.ipynb), [III](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-III-Q10-Q12.ipynb), and [IV](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-IV-Q13-Q16.ipynb). 
+
+The submission should also include an audio recording (details to be updated).
 
 **Marking Criteria:** 
 
-* 4 points are allocated for following instructions. This includes proper submission of the voice recording, the `.ipynb` file, having names and student numbers on the hand-in, and most importantly neatly formatting all the answers of the jupyter notebook.
+* 4 points are allocated for following instructions. This includes proper submission of the voice recording, the `.ipynb` file(s), having names and student numbers on the hand-in, and most importantly neatly formatting all the answers of the jupyter notebook.
 
 * There are 16 questions in total, with 6 points allocated for each question. Some questions are easier and some harder. Some require more work and some require less work.
 
 * As this is the first assignment, points will not be deducted for sloppy coding style. However, in future assignments clean and consistent coding style is required.
 
 --- 
+
+# Questions 1--4 are submitted on Jupyter notebook I 
 
 ## Question 1: LaTeX, Jupyter, HTML, and Markdown
 
@@ -40,7 +44,7 @@ Use LaTeX to write a version of it with two additional nested levels. That is, r
 
 
 
-# Question 2: Warming up with quadratic equations
+# Question 2: Warming up with quadratic equations 
 
 The following function uses the quadratic formula to compute the real roots of the quadratic equation $ax^2 + bx + c = 0$. The return value is an array with 0, 1, or 2 roots. 
 
@@ -57,7 +61,7 @@ function real_roots_of_quadratic(a::Number, b::Number, c::Number)
     if Δ < 0 
         roots = []
     elseif Δ == 0
-        roots = -b/(2a)
+        roots = [-b/(2a)]
     else
         roots = [-b + √Δ, -b - √Δ] / (2a) #\sqrt + [TAB]
     end
@@ -124,7 +128,7 @@ using Random
 """
 This function generates `num_tests` random triples of coefficients and checks that the function `real_roots_of_quadratic()` does its job. The return value is `true` if the test passed, otherwise it is `false`.
 """
-function test_real_roots_of_quadratic(num_tests = 10000, seed=42)
+function test_real_roots_of_quadratic(;num_tests = 10000, seed=42)
     Random.seed!(seed)
     test_passed = true
     for _ in 1:num_tests
@@ -243,7 +247,7 @@ plot(step_range, max_vals, xaxis=:log,
     label=false, xlabel="Maximal initial value", ylabel="Maximal number of steps")
 ```
 
-Say we now wish to have a step range that reaches a maximal value of $10^7$ instead of $10^4$. Modifying `10^4` to `10^7` would make that work but it would take an excessively long time to run. Why? 
+**3c**: Say we now wish to have a step range that reaches a maximal value of $10^7$ instead of $10^4$. Modifying `10^4` to `10^7` would make that work but it would take an excessively long time to run. Why? 
 
 Improve the code above to produce a plot similar to the plot above, but up to an initial value of $10^7$.
 
@@ -281,6 +285,8 @@ r_hex_strs = [random_hex_string() for _ in 1:10^3];
 **4b**: Use standard Julia functions to parse these arrays of strings into arrays of numerical values and report the sum of the values (present the result in decimal). So your output should be two decimal numbers, one which is the sum of all of the binary numbers in the array, and the other which is the sum of all of the hex numbers. Prior to checking your output, suggest an estimate (expected value) for the sum - explain why.
 
 **4c**: Now create your own functions (from first principles parsing strings) to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.
+
+# Questions 5--9 are submitted on Jupyter notebook II 
 
 ## Question 5: Perfect numbers
 
@@ -449,7 +455,6 @@ array_table(sorted_names,"Sorted by last name")
 
 **8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner.
 
-
 ## Question 9: Matrix Multiplication
 
 Here is code that creates two random matrices and displays their matrix product:
@@ -516,12 +521,14 @@ So now rank one matrices may be added up.
 
 **9d**: After you have implemented the functions for 9a, 9b, and 9c, it may appear that in each of these cases there is only a single loop while the function provided, `my_mult_inner_products()` has a nested loop. Does this mean that in terms of complexity of the number of the operations, 9a, 9b, and 9c are necessarily much more efficient? Explain your result.
 
+# Questions 10--12 are submitted on Jupyter notebook III 
+
 ## Question 10: Setting up your GitHub repo for hand-in.
 
 THIS QUESTION IS STILL UNDER CONSTRUCTION.
 
 * Create your GitHub account if you don't have one.
-* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2021-HW2`. So for example if your name is "Jeannette Young", the repo name should be `Jeannette-Young-2504-2021-HW2`.
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2022-BigHW`. So for example if your names are "Jeannette Young" and "Kidd Gee" the repo name should be `Jeannette-Young__Kidd-Gee-2504-2022-BigHW`.
 * Make sure the repo is **private**.
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the assignment, and must do this no later than the assignment due date.
 * Do **not** make any changes (commits) to the repo after the assignment due date. 
@@ -608,6 +615,8 @@ For the code summary CSV file do so similarly, for the keywords: `return`, `for`
 Thus in summary, your program reads in a JSON file representing a Jupyter notebook, displays basic summary information, and then stores additional information to two CSV files which in principle could be further analyzed at a later time. 
 
 (Your PDF output for the assignment should show the first few lines of these CSV files).
+
+# Questions 13--16 are submitted on Jupyter notebook IV 
 
 ## Question 13: Numerical derivatives
 
