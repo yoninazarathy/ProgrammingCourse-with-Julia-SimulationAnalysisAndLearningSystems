@@ -24,8 +24,11 @@ The submission should also include an audio recording (details to be updated).
 
 # Questions 1--4 are submitted on Jupyter notebook I 
 
-## Question 1: LaTeX, Jupyter, HTML, and Markdown
 
+## Question 1: LaTeX, Jupyter, HTML, and Markdown
+```html
+<a id="q1">
+```
 This question deals with basic formatting tools.
 
 **1a**: Consider the following continued fraction formula for the golden ratio $\varphi$:
@@ -44,7 +47,7 @@ Use LaTeX to write a version of it with two additional nested levels. That is, r
 
 
 
-# Question 2: Warming up with quadratic equations 
+## Question 2: Warming up with quadratic equations 
 
 The following function uses the quadratic formula to compute the real roots of the quadratic equation $ax^2 + bx + c = 0$. The return value is an array with 0, 1, or 2 roots. 
 
@@ -405,6 +408,8 @@ indexes, plates = prepare_sorted_data()
 @btime find_special_plate(indexes, plates)
 ```
 
+Run this code. Then look a the GitHub repo and documentation of [BencmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl). How many commits has the package had? Find one of the issues in the repo, and copy it here. What is it about? Go to the documentation page of BenchmarkTools.jl (there is a link from the GitHub repo). Based on what you see in the documentation, briefly explain the difference between `@btime` and `@benchmark`? Then replace `@btime` with `@benchmark` and run again.
+
 **7c**: A generally better way to search for an index within a sorted list is via [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm). Implement a binary search procedure by replacing the algorithm in `find_special_plate()`. How much faster is it?
 
 **7d**: In general what is the time complexity for searching via binary search in a sorted array? Explain your answer.
@@ -451,7 +456,7 @@ array_table(sorted_names,"Sorted by last name")
 
 **8b**: Implement your own sort function, say `my_sort_bubble()`, using a Bubble sort algorithm. Your function should also accept a `by=` argument and work in the same way. Show the output on the same list, sorting by last name first.
 
-**8c**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of question 5, using last name first.
+**8c**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of names above, using last name first.
 
 **8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner.
 
@@ -550,7 +555,7 @@ Note that question 1 is clearly different as it requires you to show evidence of
 
 In the future projects you will also need to worry about a `Project.toml` and `Manifest.toml` file in the repo so that your assignment describes the packages you used. However in this assignment you do not need to worry about that.
 
-* Note: make sure that there aren't any files in your submission repo except for those mentioned above (with the exception of perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF). Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+* Note: make sure that there aren't any files in your submission repo except for the submission forms I--IV. Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
 
 ## Question 11: A few unix commands
 
@@ -614,7 +619,7 @@ For the code summary CSV file do so similarly, for the keywords: `return`, `for`
 
 Thus in summary, your program reads in a JSON file representing a Jupyter notebook, displays basic summary information, and then stores additional information to two CSV files which in principle could be further analyzed at a later time. 
 
-(Your PDF output for the assignment should show the first few lines of these CSV files).
+Your relevant submission form for the assignment should show the first few lines of these CSV files.
 
 # Questions 13--16 are submitted on Jupyter notebook IV 
 
