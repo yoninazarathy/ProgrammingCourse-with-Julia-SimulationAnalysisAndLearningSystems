@@ -1,5 +1,5 @@
 # BigHW - Semester 2, 2022.
-(last edit: July 19, 2022)
+(last edit: July 29, 2022)
 
 
 **Due:** End of day August 26, 2022. This assignment is in pairs.
@@ -17,6 +17,8 @@ The submission should also include an audio recording (details to be updated).
 * 4 points are allocated for following instructions. This includes proper submission of the voice recording, the `.ipynb` file(s), having names and student numbers on the hand-in, and most importantly neatly formatting all the answers of the jupyter notebook.
 
 * There are 16 questions in total, with 6 points allocated for each question. Some questions are easier and some harder. Some require more work and some require less work.
+
+* There is an additional bonus question, question 17, dealing with Dr. Amy Chan's perspective seminar. It yields an additonal 7 bonus points.
 
 * As this is the first assignment, points will not be deducted for sloppy coding style. However, in future assignments clean and consistent coding style is required.
 
@@ -250,7 +252,9 @@ plot(step_range, max_vals, xaxis=:log,
     label=false, xlabel="Maximal initial value", ylabel="Maximal number of steps")
 ```
 
-**3c**: Say we now wish to have a step range that reaches a maximal value of $10^7$ instead of $10^4$. Modifying `10^4` to `10^7` would make that work but it would take an excessively long time to run. Why? 
+Are you able to replace `hail_max()` with a one line function? This function does not necessarily need to be efficient in terms of run time and or memory usage. Present your replacement function and show that you obtain the same plot.
+
+**3c**: Say we now wish to have a step range that reaches a maximal value of $10^7$. Modifying `10^4` to `10^7` would make that work but it would take an excessively long time to run. Why? 
 
 Improve the code above to produce a plot similar to the plot above, but up to an initial value of $10^7$.
 
@@ -621,7 +625,7 @@ Thus in summary, your program reads in a JSON file representing a Jupyter notebo
 
 Your relevant submission form for the assignment should show the first few lines of these CSV files.
 
-# Questions 13--16 are submitted on Jupyter notebook IV 
+# Questions 13--17 are submitted on Jupyter notebook IV 
 
 ## Question 13: Numerical derivatives
 
@@ -935,3 +939,22 @@ $$
 **16c**: Chose a range to time horizons to simulate over, comment on the trend of the accuracy of each method for long simulation runs. Summarize this analysis in a single compelling plot.
 
 **16d**: The Julia package [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl) has support for various state of the art techniques, including [symplectic integrators](https://diffeq.sciml.ai/stable/solvers/dynamical_solve/). Choose a state of the art standard ODE solver and a symplectic integrator and use it to find a solution for this ODE system. Compare results with your own implementation of leapfrog and comment on the results.
+
+## Question 17: Perspective seminar (Dr. Amy Chan).
+
+This question presents you with an additional 6 bonus points. 
+
+Write a 1-4 paragraph summary of Amy Chan's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Chan", or "Amy", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions (in paragraph form):
+
+1. What was Amy’s career path, and her relationship with software, mathematics, and statistics?
+
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
+
+1. Have you picked up any tips from Amy’s talk, which you can perhaps use in your career down the road?
+
+1. Feel free to state anything else that you found interesting from the talk.
+
