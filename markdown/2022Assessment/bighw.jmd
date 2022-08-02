@@ -1,5 +1,5 @@
 # BigHW - Semester 2, 2022.
-(last edit: July 29, 2022)
+(last edit: Aug 2, 2022)
 
 
 **Due:** End of day August 26, 2022. This assignment is in pairs.
@@ -8,9 +8,11 @@
 
 Since this assignment is in **pairs** make sure to have the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three persons requires explicit permission from the course coordinator.
 
-**Submission format:**  The submission format is via a GitHub repository as described in Question 10. The submission should include the four submissions forms [I](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-I-Q1-Q4.ipynb), [II](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-II-Q5-Q9.ipynb), [III](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-III-Q10-Q12.ipynb), and [IV](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-IV-Q13-Q16.ipynb). 
+**Submission format:**  The submission format is via a GitHub repository as described in Question 10. The submission should include the four submissions forms [I](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-I-Q1-Q4.ipynb), [II](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-II-Q5-Q9.ipynb), [III](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-III-Q10-Q12.ipynb), and [IV](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-IV-Q13-Q17.ipynb). 
 
-The submission should also include an audio recording (details to be updated).
+The submission should also include an audio recording (30 sec minimum, 3 minutes maximum, 1 minute recommended). The voice recording should have voices of both (all) members of the group. The recording should verify that the work is your own. You can also state how you felt in the assignment. Say what was easy, what was hard, what you found useful, and what less.
+
+To submit, go to Blackboard and submit as instructed there by providing a link to the GitHub repo, naming the partners, and uploading the voice recording (do not upload the voice recording to GitHub - upload it to Blackboard).
 
 **Marking Criteria:** 
 
@@ -18,7 +20,7 @@ The submission should also include an audio recording (details to be updated).
 
 * There are 16 questions in total, with 6 points allocated for each question. Some questions are easier and some harder. Some require more work and some require less work.
 
-* There is an additional bonus question, question 17, dealing with Dr. Amy Chan's perspective seminar. It yields an additonal 7 bonus points.
+* There is an additional bonus question, question 17, dealing with Dr. Amy Chan's perspective seminar. It yields an additional 7 bonus points.
 
 * As this is the first assignment, points will not be deducted for sloppy coding style. However, in future assignments clean and consistent coding style is required.
 
@@ -534,7 +536,6 @@ So now rank one matrices may be added up.
 
 ## Question 10: Setting up your GitHub repo for hand-in.
 
-THIS QUESTION IS STILL UNDER CONSTRUCTION.
 
 * Create your GitHub account if you don't have one.
 * Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2022-BigHW`. So for example if your names are "Jeannette Young" and "Kidd Gee" the repo name should be `Jeannette-Young__Kidd-Gee-2504-2022-BigHW`.
@@ -548,17 +549,7 @@ Your GitHub repo should be formatted as exactly as follows:
 * Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
 * Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
 * Have a `.gitignore` file. 
-* Have a `src` directory and in it have 6 additional directories named `q1`, `q2`,...,`q6`. In each such directory (except for `q1`). Have a single Julia source file named `q<<X>>_solution.jl` where `<<X>>` is one of (`2`,`3`,...,`6`). This file should be runnable via `julia q<<X>>_solution.jl`. So for example if the teaching staff downloads your submission repo. It can run from the main repo directory:
-```
-julia src/q3/q3_solution.jl
-```
-and this will produce your output for question 3. 
-* Have an `other` directory where you can place the animation you create for Q5, and if you wish any other auxillary material.
-
-Note that question 1 is clearly different as it requires you to show evidence of using a few unix commands. For this question just have `q1_solution.txt` as a file in `src/q1/`.
-
-In the future projects you will also need to worry about a `Project.toml` and `Manifest.toml` file in the repo so that your assignment describes the packages you used. However in this assignment you do not need to worry about that.
-
+* Have a `notebooks` directory and in it have the 4 submission forms (notebooks) I--IV. 
 * Note: make sure that there aren't any files in your submission repo except for the submission forms I--IV. Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
 
 ## Question 11: A few unix commands
@@ -641,9 +632,34 @@ $$
 f'(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h}.
 $$
 
-Yet another scheme, called the **Complex Variable Method**, is overviewed in [this video](https://www.youtube.com/watch?v=Q9OLOqEhc64&t=134s) (the link is to 2:15 in the video and you should watch for about 4.5 minutes). 
+**13a**: Consider the functions, $f_1(x) = sin(x^2)$ at $x=1/2$, $f_2(x) = e^x$ at $x=1$, and $f_3(x) = atan(x)/(1+e^{-x^2})$ at $x=2$. Evaluate the performance of each of the schemes (forward and central) for each of these functions at the given points. In each case plot the error as a function of $h$, and find the optimal $h$. Display your results in a neat manner using one or two plots and a minimal summary.
 
-Consider the functions, $f_1(x) = sin(x^2)$ at $x=1/2$, $f_2(x) = e^x$ at $x=1$, and $f_3(x) = atan(x)/(1+e^{-x^2})$ at $x=2$. Evaluate the performance of each of the three schemes (forward, central, and complex) for each of these functions at the given points. In each case plot the error as a function of $h$, and find the optimal $h$. Display your results in a neat manner using one or two plots and a minimal summary.
+**13b**: Consider now a vector valued function of the form, $f: {\mathbb R}^K \to {\mathbb R}^K$, defined as,
+
+$$
+S(z) = \frac{1}{\sum_{i=1}^{K} e^{z_i}} 
+\begin{bmatrix}
+e^{z_1} & \cdots & e^{z_{K}}
+\end{bmatrix}^\top.
+$$
+
+This function is called the [softmax function](https://en.wikipedia.org/wiki/Softmax_function). Its Jacobian is a $K \times K$ matrix with elements of the form,
+
+$$
+J_{ij} = \frac{\partial}{\partial z_j} \frac{e^{z_i}}{\sum_{i=1}^{K} e^{z_i}}%\\
+=
+\begin{cases}
+S(z)_{i}(1-S(z)_{i}), & i = j, \\[10pt]
+-S(z)_{i}S(z)_{j}, & i \neq j.
+\end{cases}
+$$
+
+Assume you do not know the Jacobian expression and wish to compute it for a vector $z$ of dimension $K$. How many softmax evaluations are needed with the forward difference scheme? How many softmax function evaluations are needed with the central difference scheme? Explain your answer.
+
+
+**13c**:  Consider now $z = [1^{1/3}, 2^{1/3}, \ldots, K^{1/3}]^\top$ for $K=10$, $K=20$, and $K=100$. Plot the error of the Jacobian for both the forward difference scheme and the central difference scheme where as error you consider the euclidean distance between the approximated Jacobian and the explicit Jacobian (the square of the sum up the squares of the entries of the matrix). What is the optimal $h$ in each case?
+
+
 
 ## Question 14: Markov chains and `LinearAlgebra`
 
