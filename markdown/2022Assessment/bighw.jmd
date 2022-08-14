@@ -1,5 +1,5 @@
 # BigHW - Semester 2, 2022.
-(last edit: Aug 2, 2022)
+(last edit: Aug 14, 2022)
 
 
 **Due:** End of day August 26, 2022. This assignment is in pairs.
@@ -464,7 +464,7 @@ array_table(sorted_names,"Sorted by last name")
 
 **8c**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of names above, using last name first.
 
-**8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner.
+**8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner. Note that for `my_sort_bubble()` you can stop at at $10^4$ or $10^5$ becuase longer inputs will take too much time. However, try to use the large inputs for `my_sort_quick()` and the system's `sort()`.
 
 ## Question 9: Matrix Multiplication
 
@@ -586,7 +586,7 @@ Your submission should be comprised of the text from the shell including the com
 
 **11n**: Delete all the files in the directory using a single command. Please be very careful when deleting files! 
 
-**11o**: Move back to `hw1_q1` and delete the directory `people`. Use either `rm` with a correct flag or `rmdir`.
+**11o**: Move back to `hw2_q1` and delete the directory `people`. Use either `rm` with a correct flag or `rmdir`.
 
 
 ## Question 12: HTTP, Files, JSON, and CSV
@@ -952,7 +952,7 @@ $$
 
 **16b**: Compare the computational effort of the Leapfrog method with Euler and RK4 methods by comparing how many floating point operations per time step each method uses in your implementation. (This is not a coding question, but a theoretical question).
 
-**16c**: Chose a range to time horizons to simulate over, comment on the trend of the accuracy of each method for long simulation runs. Summarize this analysis in a single compelling plot.
+**16c**: Choose a range to time horizons to simulate over, comment on the trend of the accuracy of each method for long simulation runs. Summarize this analysis in a single compelling plot.
 
 **16d**: The Julia package [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl) has support for various state of the art techniques, including [symplectic integrators](https://diffeq.sciml.ai/stable/solvers/dynamical_solve/). Choose a state of the art standard ODE solver and a symplectic integrator and use it to find a solution for this ODE system. Compare results with your own implementation of leapfrog and comment on the results.
 
