@@ -2,13 +2,246 @@
 
 In the previous three units we explored basics of programming and computation (Unit 1), algorithms and data structures (Unit 2), and data files and numerics (Unit 3). In this unit we take a deeper and more thorough approach at basic Julia language features. 
 
-The most important language features that we explore include the type system, user-defined types, and multiple-dispatch. As we do this, we'll also consider several additional minor features. The notes below often refer to the Julia documentation.
+Programming languages, including Julia, are designed mostly with these aims in mind:
 
-# A few more bits from Julia
+ 1. **Execution speed** - programs should run fast enough to solve the problem at hand. 
+ 2. **Coding speed** - writing programs to solve problems should be quick & easy for the coder.
+ 3. **Scalable engineering** - creating and maintaining large programs with many contributers should be no harder than writing small programs yourself.
+
+Different programming languages have different goals and target audiences, and make different trade-offs and affordances for the above. The trickiest one to get right is the third one - as codebases grow it is _typical_ to get stuck in a tarpit of complexity, where it gets harder and harder to change and improve the code, and progress grinds to a halt. Another corollary of the 3rd is that code in large pieces of software is _read_ far more often than it is _written_, so it becomes crucial to make code that is written easy to understand.
+
+Julia is a high-performance language for solving large mathematical problems, and compiled code needs to run "close to the metal". It makes many affordances to solve mathematical problems quickly and efficiently. But most crucially, it tries to solve these in such a way that is "scalable" - where generic code can be reused and repurposed, and pieces of a program can be connected together elegantly like lego bricks.
+
+The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code. The notes below often refer to the Julia documentation.
+
+## Syntax
+
+Before moving to types and dispatch, we'll cover some fundaments of Julia code syntax so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
+
+### Everything is an expression, and everything has a value
+
+An expression is a piece of code that, when evaluated, returns a value. For example:
+
+```julia
+1 + 1
+```
+
+In Julia, _every_ piece of syntactically valid code is an expression - which means at run time it generates a value which you can assign to a variable. Even things like `if` statements!
+
+```julia
+x = 42
+
+is_x_even = if x % 2 == 0
+   "$x is even"
+else
+   "$x is odd"
+end
+```
+
+Like many languages, Julia has a shorthand "ternary operator" (i.e. operator taking 3 inputs) for _if-else_ using `?` and `:`
+
+```julia
+is_x_even = x % 2 == 0 ? "$x is even" : "$x is odd"
+```
+
+It's worth noting these are 100% identical. We say that `x ? y : z` is "syntax sugar" for the `if` statement - it's a sweetener to make the programmer's life easier, but not an entirely new feature since you can always achieve the same thing with more characters of code. Another piece of syntax sugar is that `x + y` has exactly the same meaning as `+(x, y)`.
+
+### Blocks of code
+
+Above, we saw blocks of code containing values. They didn't really _do_ anything, like assign values to variables.
+
+The rule in Julia is that the last expression in a block of code is the value returned from that block of code. If for some reason you want to create a code block (sometimes useful) you can use `begin` like so:
+
+```julia
+begin
+    1
+    2
+    3
+end
+```
+
+We see blocks of code everywhere in Julia - inside `if` and `else` statements, within `for` and `while` loops, within `function` bodies, etc. Blocks of code can be nested - we can have `if` statements inside `while` loops inside `function` bodies, and we tend to represent this visually with indentation:
+
+```julia
+function f(x)
+    x = 0
+    while x < 10
+        if x % 2 == 0
+            println("$x is even")
+        else
+            println("$x is odd")
+        end
+        x = x + 1
+    end
+    return x
+end
+```
+
+_Note: `for` and `while` loops always return `nothing`!_
+
+If you prefer, you can seperate multiple expressions in a code block with `;` instead of on seperate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
+
+```julia
+x = (1; 2; 3)
+```
+
+### Empty blocks of code return `nothing`
+
+So what happens when the block of code is empty?
+
+```julia
+begin
+end
+```
+
+Since every expression has a value in Julia, it must return _something_! That something is called `nothing`. It is a special builtin value that contains 0 bytes of data and has the builtin type `Nothing`.
+
+```julia
+typeof(nothing)
+```
+
+While the above is contrived, there are some more likely places to see this.
+
+```julia
+half_of_x = if x % 2 == 0
+    x ÷ 2
+end
+```
+
+This is _implicitly_ the same as
+
+```julia
+half_of_x = if x % 2 == 0
+    x ÷ 2
+else
+end
+```
+
+which is _implicitly_ the same as
+
+```julia
+half_of_x = if x % 2 == 0
+    x ÷ 2
+else
+    nothing
+end
+```
+
+So if `x` is odd, then `half_of_x` is `nothing`.
+
+We also use `nothing` as the return value for functions that don't have a value to return - e.g. when the purpose of the function is to perform some action rather that compute some value.
+
+```julia
+function hello()
+    println("Hello class")
+    return nothing
+end
+
+x = hello()
+@show x;
+```
+
+Q: Does anyone know what the equivalent thing in _C_ is?
+
+### Why expressions? Metaprogramming!
+
+Having the syntax rule that "all valid syntax is an expression" makes it easier to analyse and manipulate code than it would be otherwise. It lets you rearrange code much like you can manipulate a mathematical expression with algebra (via substitution, etc), resulting in code that is correct and still compiles.
+
+For human coders, this means it is easier to copy-paste code from one place to another, or refactor it into a function.
+
+A "metaprogram" is a program that writes a program. Julia supports metaprogramming through macros and other advanced techniques. We won't be teaching how to create a macro, but using a macro is pretty easy. A good example is the `@show` macro:
+
+```julia
+x = 10
+@show x + 1
+```
+
+Effectively the macro takes the "expression" `x + 1`, prints the expression, prints equals, and prints the evaluated value. While Julia is busy replacing the builtin syntax sugar (like operators, `x + 1`) with more fundamental expressions (like function calls, `+(x, 1)`), it also "expands" the macro, resulting in code that is roughly:
+
+```julia
+x = 10
+println("x + 1 = ", x + 1)
+```
+
+Each macro can be thought of as like user-defined syntax sugar. We can extend the language with our own ideas of how we can write programs.
+
+### An even better way to metaprogram
+
+Another form of metaprogramming in Julia is multiple dispatch. Multiple dispatch allows us to construct entire classes of programs that depend on the _types_ of values - and Julia will construct on-demand a particular program _specialized_ on the inputs you actually provide. Next we'll learn more about Julia functions, Julia types and how multiple dispatch works.
+
+## A few more bits of Julia syntax
+
+### Writing functions
+
+In Julia there are multiple ways of creating a function. There is the "long form":
+
+```julia
+function f1(x)
+    return x^2
+end
+```
+
+The `return` is optional in this case - why?
+
+There is a "short form":
+
+```julia
+f2(x) = x^2
+```
+
+And there are "anonymous functions" (or "arrow functions"):
+```julia
+const f3 = x -> x^2
+```
+
+In this form `x -> x^2` is an expression that constructs a function which is "anonymous" - it has no name. We have bound it to the variable `f3` so we can use it later. You can even do this in "long form"!
+
+```julia
+const f4 = function (x)
+    return x^2
+end
+```
+
+(Note: the `const` isn't essential - but it will let us attach other methods to `f3` or `f4` later)
+
+### Nested functions - "closures"
+
+In Julia you can define functions within functions.
+
+```julia
+function adder(x)
+    return y -> y + x
+end
+```
+
+This function returns another function! We can use the output to add things.
+
+```julia
+add_2 = adder(2)
+add_2(3)
+```
+
+Such functions are called "closures" because they "close over" (or "capture") the values of variables outside their scope - in this case it captured the value of `x`, `2`, and implicitly stores it inside `add_2`.
+
+Note again it doesn't matter which form of function syntax we use. It's just syntax sugar for the same thing. We could have equally written:
+
+```julia
+function adder(x)
+    return function (y)
+        return y + x
+    end
+end
+```
+
+
+### Function signatures and methods
+
+
 
 We have seen Julia functions from the start, e.g.
 
 ```julia
+
 f(x) = x^2
 ```
 
