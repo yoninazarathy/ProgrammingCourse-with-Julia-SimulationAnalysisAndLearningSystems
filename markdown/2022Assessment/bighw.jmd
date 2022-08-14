@@ -393,7 +393,7 @@ indexes, plates = prepare_sorted_data(N=5) #as an example set N=5
 @show plates;
 ```
 
-**7a**: Investigate the some of the features in this code including the one line function definition (`random_license_plate()`), the concatenation of strings via `*`, multiple uses of `rand()`, the use of a comprehension of the form `[   _ for in ]`, the return value of a function that is a tuple (seperated by a comma), and the in-built function `sortperm()`. For each of these language attributes present a little (short) example of how they work with a brief 1-3 line explanation.
+**7a**: Investigate the some of the features in this code including the one line function definition (`random_license_plate()`), the concatenation of strings via `*`, multiple uses of `rand()`, the use of a comprehension of the form `[  for _ in ]`, the return value of a function that is a tuple (seperated by a comma), and the in-built function `sortperm()`. For each of these language attributes present a little (short) example of how they work with a brief 1-3 line explanation.
 
 **7b**: Assume we now wish to use the indexes to find the license plate matching the index 1234567890. The following code does this when there are $10^7$ license plates. Note that there is a chance for having more than one such index, but it is small (what is it?). We also use the @btime macro to time how long it takes.
 
