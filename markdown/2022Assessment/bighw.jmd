@@ -657,7 +657,7 @@ $$
 Assume you do not know the Jacobian expression and wish to compute it for a vector $z$ of dimension $K$. How many softmax evaluations are needed with the forward difference scheme? How many softmax function evaluations are needed with the central difference scheme? Explain your answer.
 
 
-**13c**:  Consider now $z = [1^{1/3}, 2^{1/3}, \ldots, K^{1/3}]^\top$ for $K=10$, $K=20$, and $K=100$. Plot the error of the Jacobian for both the forward difference scheme and the central difference scheme where as error you consider the euclidean distance between the approximated Jacobian and the explicit Jacobian (the square of the sum up the squares of the entries of the matrix). What is the optimal $h$ in each case?
+**13c**:  Consider now $z = [1^{1/3}, 2^{1/3}, \ldots, K^{1/3}]^\top$ for $K=10$, $K=20$, and $K=100$. Plot the error of the Jacobian for both the forward difference scheme and the central difference scheme where as error you consider the euclidean distance between the approximated Jacobian and the explicit Jacobian (the square root of the sum up the squares of the differences between entries of the numerical derivative and the explicit one). What is the optimal $h$ in each case?
 
 
 
