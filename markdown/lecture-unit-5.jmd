@@ -1,64 +1,139 @@
 # Unit 5: Computer algebra systems and symbolic computation
 
 ```julia
-cd(@__DIR__)
-pwd()
+#cd(@__DIR__)
+#pwd()
 ```
 
 ```julia
-using Pkg;
+#using Pkg;
 # To be able to run this, have the project repository "next to" the course materials repository
-cd("../../2504_2021_project1");
-@show pwd()
-Pkg.activate(".");
+
+#cd("../../2504_2021_project1");
+#@show pwd()
+#Pkg.activate(".");
 # Pkg.instantiate();
-@show pwd()
-include("poly_factorization_project.jl");
+#@show pwd()
+#QQQQ include("poly_factorization_project.jl");
 ```
 
 ## Symbolic Computation
 
-To compute *exactly* means no error is introduced during arithmetic --- something *not* true when working with floats.  In a computer algebra system $\sqrt{2} = \sqrt{2}$ and not $\sqrt{2} = 1.41\ldots$ as one may expect.
 
-Our interest is performing *exact* arithmetic in rings with efficient algorithms.  In particular we are interested in the: *ring of integers* 
-$${\mathbb Z} = \{0, -1, 1, 2, -2, 3, -3, \ldots \}$$
-and *polynomials* 
-$${\mathbb R}[x] = \left\{ \sum_{k=0}^{N} a_kx^k \, : \, k \in {\mathbb N},\, a_k \in {\mathbb R} \right\}.$$
 
----
-## Preliminaries
-Let ${\mathbb N} = \{0,1,2,\ldots\}$ be the set of *natural numbers*, ${\mathbb Z} = \{\ldots,-2,-1,0,1,2,\ldots\}$ be the *integers* and ${\mathbb P}$ be the set of odd primes.
 
-##### Definition (Ring)
 
-A ring ${\mathbb R}$ is a set with addtion $(+)$ and multiplciation $(\cdot)$ satisfying the following conditions called the *ring axioms*:
-
-1. QQQQ $({\mathbb R},+)$ is an abelian group, that is:
-    - QQQQ $(+)$ is associative *and* commutative,
-    - QQQQ $\exists b \in {\mathbb R}$ called the *additive identity* satisfying $\forall a \in {\mathbb R} \; a + b = a$,
-    - QQQQ $\forall a \in {\mathbb R}\; \exists b \in {\mathbb R}$ called the *additive inverse* satisfying $a + b = 0$.
-2.  QQQQ $({\mathbb R},\cdot)$ is a monoid, that is:
-    -  QQQQ $(\cdot)$ is associative, and
-    -  QQQQ $\exists b \in {\mathbb R}$ called the *multiplicative identity* satisfying $\forall a \in {\mathbb R}; \; a \cdot b = b \cdot a = a$
-3.  Multiplication *distributes* over addition.  That is, $\forall a,b,c \in {\mathbb R}$:
-    - QQQQ $a \cdot (b+c) = (a \cdot b) + (a \cdot c)$
-    - QQQQ $(b+c) \cdot a = (b \cdot a) + (c \cdot a)$
----
-
-##### Definition (Field)
-A ring ${\mathbb R}$ is also a *field* when each non-zero element has a *multiplicative inverse*.  Equivalently, ${\mathbb R}$ is a ring when
-$$
-\forall a \in {\mathbb R}^{\neq 0};\; \exists b \in {\mathbb R} \; : \; a \cdot b.
-$$
-
-For instance, the *rationals* $${\mathbb Q} = \left\{ \frac{a}{b} \,:\, a,b \in {\mathbb Z}, \, b \neq 0 \right\}$$
-is a field because $\frac a b \cdot \frac b a = 1$ when $a,b \neq 0$.
-
----
+QQQQ - MISSSING STUFF - QQQQ
 
 ##### Theorem (Division Algorithm)
-Let $a,b \in {\mathbb Z}$ with $b > 0$.  There is *unique* $q$ and $r$ (called the *quotient* and *remainder*) satisfying
-$$a = b \cdot q + r$$
-with $r < |q|$.
+QQQQ - missing text - QQQQ
 
 **Proof (Existence)**
+
+# An example
+
+```julia
+a = 23
+b = 7
+q = a ÷ b # \div + [TAB]
+@show q
+@show Int(floor(a/b))
+
+r = a % 3 
+@show r;
+```
+
+```julia
+function remainder(a::T,b::T) where T <: Int #Note that later we'll extend this to integral domains
+    a < 0 && return remainder(-a,b) #short circuit evalution  #later replace `0` with `zero(T)`
+    a < b && return a
+    return remainder(a-b,b)
+end
+```
+
+```julia
+#note there is an in-built `rem`
+remainder(23,7), rem(23,7), 23 % 7, 23- (23 ÷ 7)*7
+```
+
+```julia
+remainder(15,5), remainder(4,101), remainder(125,4)
+```
+
+```julia
+function quo(a::T,b::T) where T <: Int
+    a < 0 && return -quo(-a,b)
+    a < b && return 0
+    return 1 + quo(a-b, b)
+end
+```
+
+```julia
+quo(15,5), quo(4,101), quo(125,4)
+```
+
+```julia
+for (a,b) in [(15,5), (4,101), (125,4)]
+    q, r = quo(a, b), rem(a, b)
+    @show (a, b, q, r, a == b * q + r)
+end
+```
+
+Of course, in Julia we have `%` and `÷` for remainder and  and quotient.
+
+(Note that in Python `//` is the quotient whereas in Julia `//` defines a rational type).
+
+```julia
+2 // 3, float(2//3)  #The first // is a rational type
+```
+
+## Elementary Number Theory
+
+QQQQ - missing text - QQQQ
+
+```julia
+# We have already seen something similar with overflow, for example:
+UInt8(253) + UInt8(4)
+```
+
+```julia
+UInt8(16) * UInt8(17)
+```
+
+---
+
+#### Example
+
+QQQQ-missing text-QQQQ
+
+```julia
+n = 6
+Z_n = 0:(n-1)
+```
+
+```julia
+typeof(Z_n)
+```
+
+```julia
+A = [(x+y) % n for y in Z_n, x in Z_n]
+```
+
+```julia
+additive_inverses = [findfirst((A .== 0)[:,k+1])-1 for k in Z_n] #Can this be done more nicely?
+println(additive_inverses)
+```
+
+```julia
+M = [(x*y) % n for y in Z_n, x in Z_n]
+```
+
+```julia
+println([(2*y) % n for y in Z_n])
+```
+
+```julia
+mult_inverses = Z_n[[sum((M .== 1)[:,k+1]) > 0 for k in Z_n]] #Can this be done more nicely?
+println("Elements with a multiplicative inverse: ", mult_inverses )
+println("Elements withoout a multiplicative inverse: ", setdiff(Z_n,mult_inverses))
+```
