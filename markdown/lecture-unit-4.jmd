@@ -6,7 +6,7 @@ Programming languages, including Julia, are designed mostly with these aims in m
 
  1. **Execution speed** - programs should run fast enough to solve the problem at hand. 
  2. **Coding speed** - writing programs to solve problems should be quick & easy for the coder.
- 3. **Scalable engineering** - creating and maintaining large programs with many contributers should be no harder than writing small programs yourself.
+ 3. **Scalable engineering** - creating and maintaining large programs with many contributors should be no harder than writing small programs yourself.
 
 Different programming languages have different goals and target audiences, and make different trade-offs and affordances for the above. The trickiest one to get right is the third one - as codebases grow it is _typical_ to get stuck in a tarpit of complexity, where it gets harder and harder to change and improve the code, and progress grinds to a halt. Another corollary of the 3rd is that code in large pieces of software is _read_ far more often than it is _written_, so it becomes crucial to make code that is written easy to understand.
 
