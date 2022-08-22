@@ -4,13 +4,13 @@ In the previous three units we explored basics of programming and computation (U
 
 Programming languages, including Julia, are designed mostly with these aims in mind:
 
- 1. **Execution speed** - programs should run fast enough to solve the problem at hand. 
- 2. **Coding speed** - writing programs to solve problems should be quick & easy for the coder.
- 3. **Scalable engineering** - creating and maintaining large programs with many contributors should be no harder than writing small programs yourself.
+ 1. **Execution speed** — programs should run fast enough to solve the problem at hand. 
+ 2. **Coding speed** — writing programs to solve problems should be quick & easy for the coder.
+ 3. **Scalable engineering** — creating and maintaining large programs with many contributors should be no harder than writing small programs yourself.
 
-Different programming languages have different goals and target audiences, and make different trade-offs and affordances for the above. The trickiest one to get right is the third one - as codebases grow it is _typical_ to get stuck in a tarpit of complexity, where it gets harder and harder to change and improve the code, and progress grinds to a halt. Another corollary of the 3rd is that code in large pieces of software is _read_ far more often than it is _written_, so it becomes crucial to make code that is written easy to understand.
+Different programming languages have different goals and target audiences, and make different trade-offs and affordances for the above. The trickiest one to get right is the third one — as codebases grow it is _typical_ to get stuck in a tarpit of complexity, where it gets harder and harder to change and improve the code, and progress grinds to a halt. A corollary of that is that code in large pieces of software is _read_ far more often than it is _written_, so it becomes crucial to make code that is written easy to understand.
 
-Julia is a high-performance language for solving large mathematical problems, and compiled code needs to run "close to the metal". It makes many affordances to solve mathematical problems quickly and efficiently. But most crucially, it tries to solve these in such a way that is "scalable" - where generic code can be reused and repurposed, and pieces of a program can be connected together elegantly like lego bricks.
+Julia is a high-performance language for solving large mathematical problems, and compiled code needs to run "close to the metal". It makes many affordances to solve mathematical problems quickly and efficiently. But most crucially, it tries to solve these in such a way that is "scalable" — where generic code can be reused and repurposed, and pieces of a program can be connected together elegantly like lego bricks.
 
 The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code. The notes below often refer to the Julia documentation.
 
@@ -26,7 +26,7 @@ An expression is a piece of code that, when evaluated, returns a value. For exam
 1 + 1
 ```
 
-In Julia, _every_ piece of syntactically valid code is an expression - which means at run time it generates a value which you can assign to a variable. Even things like `if` statements!
+In Julia, _every_ piece of syntactically valid code is an expression — which means at run time it generates a value which you can assign to a variable. Even things like `if` statements!
 
 ```julia
 x = 42
@@ -44,7 +44,7 @@ Like many languages, Julia has a shorthand "ternary operator" (i.e. operator tak
 is_x_even = x % 2 == 0 ? "$x is even" : "$x is odd"
 ```
 
-It's worth noting these are 100% identical. We say that `x ? y : z` is "syntax sugar" for the `if` statement - it's a sweetener to make the programmer's life easier, but not an entirely new feature since you can always achieve the same thing with more characters of code. Another piece of syntax sugar is that `x + y` has exactly the same meaning as `+(x, y)`.
+It's worth noting these are 100% identical. We say that `x ? y : z` is "syntax sugar" for the `if` statement — it's a sweetener to make the programmer's life easier, but not an entirely new feature since you can always achieve the same thing with more characters of code. Another piece of syntax sugar is that `x + y` has exactly the same meaning as `+(x, y)`.
 
 ### Blocks of code
 
@@ -60,7 +60,7 @@ begin
 end
 ```
 
-We see blocks of code everywhere in Julia - inside `if` and `else` statements, within `for` and `while` loops, within `function` bodies, etc. Blocks of code can be nested - we can have `if` statements inside `while` loops inside `function` bodies, and we tend to represent this visually with indentation:
+We see blocks of code everywhere in Julia — inside `if` and `else` statements, within `for` and `while` loops, within `function` bodies, etc. Blocks of code can be nested — we can have `if` statements inside `while` loops inside `function` bodies, and we tend to represent this visually with indentation:
 
 ```julia
 function f(x)
@@ -129,7 +129,7 @@ end
 
 So if `x` is odd, then `half_of_x` is `nothing`.
 
-We also use `nothing` as the return value for functions that don't have a value to return - e.g. when the purpose of the function is to perform some action rather that compute some value.
+We also use `nothing` as the return value for functions that don't have a value to return — e.g. when the purpose of the function is to perform some action rather that compute some value.
 
 ```julia
 function hello()
@@ -167,11 +167,13 @@ Each macro can be thought of as like user-defined syntax sugar. We can extend th
 
 ### An even better way to metaprogram
 
-Another form of metaprogramming in Julia is multiple dispatch. Multiple dispatch allows us to construct entire classes of programs that depend on the _types_ of values - and Julia will construct on-demand a particular program _specialized_ on the inputs you actually provide. Next we'll learn more about Julia functions, Julia types and how multiple dispatch works.
+Another form of metaprogramming in Julia is multiple dispatch. Multiple dispatch allows us to construct entire classes of programs that depend on the _types_ of values — and Julia will construct on-demand a particular program _specialized_ on the inputs you actually provide. Next we'll learn more about Julia functions, Julia types and how multiple dispatch works.
 
-## A few more bits of Julia syntax
+## Functions in Julia
 
-### Writing functions
+Functions are at the heart of Julia, and there's lots of ways of expressing different functions. The [Julia documentation of functions](https://docs.julialang.org/en/v1/manual/functions/) provides a rich description of all of the details. We now overview a few special features that were perhaps not evident from Units 1-3. There are also links to the documentation for it.
+
+### [Function syntaxes](https://docs.julialang.org/en/v1/manual/functions/#man-functions)
 
 In Julia there are multiple ways of creating a function. There is the "long form":
 
@@ -181,7 +183,7 @@ function f1(x)
 end
 ```
 
-The `return` is optional in this case - why?
+The `return` is optional in this case — why?
 
 There is a "short form":
 
@@ -194,7 +196,7 @@ And there are "anonymous functions" (or "arrow functions"):
 const f3 = x -> x^2
 ```
 
-In this form `x -> x^2` is an expression that constructs a function which is "anonymous" - it has no name. We have bound it to the variable `f3` so we can use it later. You can even do this in "long form"!
+In this form `x -> x^2` is an expression that constructs a function which is "anonymous" — it has no name. We have bound it to the variable `f3` so we can use it later. You can even do this in "long form"!
 
 ```julia
 const f4 = function (x)
@@ -202,9 +204,9 @@ const f4 = function (x)
 end
 ```
 
-(Note: the `const` isn't essential - but it will let us attach other methods to `f3` or `f4` later)
+(Note: the `const` isn't essential — but it will let us attach other methods to `f3` or `f4` later)
 
-### Nested functions - "closures"
+### Nested functions: "closures"
 
 In Julia you can define functions within functions.
 
@@ -221,9 +223,13 @@ add_2 = adder(2)
 add_2(3)
 ```
 
-Such functions are called "closures" because they "close over" (or "capture") the values of variables outside their scope - in this case it captured the value of `x`, `2`, and implicitly stores it inside `add_2`.
+Such functions are called "closures" because they "close over" (or "capture") the values of variables outside their scope — in this case it captured the value of `x`, `2`, and implicitly stores it inside `add_2`.
 
-Note again it doesn't matter which form of function syntax we use. It's just syntax sugar for the same thing. We could have equally written:
+```julia
+add_2.x
+```
+
+Note again it doesn't matter which form of function syntax we use. It's just different syntax for the same thing. We could have equally written:
 
 ```julia
 function adder(x)
@@ -233,121 +239,198 @@ function adder(x)
 end
 ```
 
-
-### Function signatures and methods
-
-
-
-We have seen Julia functions from the start, e.g.
+In Julia, closures are given their own types and methods. The closure is just an automatically generated `struct` datatype with a method attached.
 
 ```julia
+typeof(add_2)
+```
 
+```julia
+methods(add_2)
+```
+
+Because closures are "just" a convenient way to do things you can already do in Julia with structs and methods, you can think of them as an advanced type of syntax sugar. The above is equivalent to this:
+
+```julia
+struct Adder{T}
+    x::T
+end
+
+function (a::Adder)(y)
+    return a.x + y
+end
+
+function adder(x)
+    return Adder(x)
+end
+
+add_2 = adder(2)
+```
+
+```julia
+add_2(3)
+```
+
+Note that _every_ function in Julia has its own type — e.g. `sin` and `cos` have different types. We'll come back to types and methods later.
+
+### [Type assertions](https://docs.julialang.org/en/v1/manual/types/#Type-Declarations)
+
+The `::` operator has two closely-related meanings.
+
+First is type assertion. In programming an "assertion" is something the programmer asserts to be true, which either the compiler or runtime will check.
+
+```julia
+42::Int
+```
+
+You could read the above as "`42` must be an `Int`". The result is just the value — `::` doesn't normally do _anything_, unless the assertion is false
+
+```julia
+42::String
+```
+
+Julia has an "abstract" `Number` type.
+
+```julia
+42::Number
+```
+
+This is fine since `Int` is a subtype of `Number`, which itself could be written:
+
+```julia
+Int <: Number
+```
+
+(Note that this one returns `true` or `false`.)
+
+The type `Any` is the supertype of every type.
+
+```julia
+42::Any  # always correct!
+```
+
+This type assertion always checks out, and doesn't really have any affect on your program. Therefore `x` and `x::Any` are the same thing. Such code is said to be a "no-op" because it corresponds to "no operation".
+
+### [Argument types](https://docs.julialang.org/en/v1/manual/functions/#Argument-type-declarations)
+
+The second meaning of `::` is in function / method signatures, which constrains the types of arguments the method will accept.
+
+We have seen Julia methods from the start, e.g.
+
+```julia
+f(x::Int) = x^2
+```
+
+or,
+
+```julia
+f(x::Number) = x^2
+```
+
+or simply,
+
+```julia
 f(x) = x^2
 ```
 
-or,
+Remember that `x` and `x::Any` are the same thing. The final method will accept _any_ inputs. Whether or not `x^2` works or throws an error depends on `x`.
+
+In a sense, the third method isn't _safe_ since someone could provide an input like `(1, 2, 3)` that can't be squared. What happens if someone provides a string? Is this expected? On the other hand, the third method provides maximum flexibility — someone can introduce a new type that works with `f` at any point in time, without having to edit the definition of `f` to make it work.
+
+### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
+
+Sometimes functions have a variable number of arguments — sometimes called "varargs" (or "variadic functions").
+
+A simple thing to do might be to add up all the inputs:
 
 ```julia
-f(x::Int)::Int = x^2
-```
-
-or,
-
-```julia
-f(x::T) where T <: Number = x^2
-```
-
-or, in longer form,
-```julia
-function f(x::T) where T <: Number
-    return x^2
-end
-```
-
-The [Julia documentation of functions](https://docs.julialang.org/en/v1/manual/functions/) provides a rich description of all of the details. We now overview a few special features that were perhaps not evident from Units 1--3. There are also links to the documentation for it:
-
-#### [Return nothing](https://docs.julialang.org/en/v1/manual/functions/#Returning-nothing) 
-
-You may have a function that does not have a return value. For example:
-
-```julia
-function hello()
-    println("Hello class")
-    return nothing
+function add_all(inputs...)
+    out = 0
+    for x in inputs
+        out += x
+    end
+    return out
 end
 
-x = hello()
-@show x;
+add_all(1, 2, 3, 4, 5)
 ```
-#### [Argument destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
-
-You can specify the names of arguments in a tuple. For example:
 
 ```julia
-f((x,y)) = x + y
-make_pair() = (rand(1:5), rand(1:5))
-f(make_pair())
+function polynomialGenerator(a...)
+    n = length(a) - 1
+    poly = function(x)
+        return sum([a[i+1]*x^i for i in 0:n])
+    end
+    return poly
+end
+
+polynomial = polynomialGenerator(1, 3, -10)
+
+[polynomial(-1), polynomial(0), polynomial(1)]
 ```
 
-#### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
-
-Sometimes functions have a variable number of arguments
+You could use then use `Roots` package to automatically find out where all the inputs produce zero output:
 
 ```julia
 using Roots
 
-function polynomialGenerator(a...)
-    n = length(a)-1
-    poly =  function(x)
-                return sum([a[i+1]*x^i for i in 0:n])
-            end
-    return poly
-end
-
-polynomial = polynomialGenerator(1,3,-10)
-zero_vals = find_zeros(polynomial,-10,10)
+zero_vals = find_zeros(polynomial, -10, 10)
 println("Zeros of the function f(x): ", zero_vals)
 ```
 
-#### [Optional arguments](https://docs.julialang.org/en/v1/manual/functions/#Optional-Arguments)
+Here you start to see how Julia features like varargs functions, closures, and packages let you solve a wide range of problems without writing very much code.
+
+### [Optional arguments](https://docs.julialang.org/en/v1/manual/functions/#Optional-Arguments)
 
 You can have optional arguments (or default values):
 
 ```julia
 using Distributions
-my_density(x::Float64, μ::Float64 = 0.0, σ::Float64 = 1.0) = exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
+
+function my_density(x::Float64, μ::Float64 = 0.0, σ::Float64 = 1.0)
+    return exp(-(x-μ)^2 / (2σ^2)) / (σ*√(2π))
+end
+
 x = 1.5
-@show pdf(Normal(),x), my_density(x)
-@show pdf(Normal(0.5),x), my_density(x,0.5);
+@show pdf(Normal(), x), my_density(x)
+@show pdf(Normal(0.5), x), my_density(x, 0.5);
 ```
 
-#### [Keyword arguments](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments)
+### [Keyword arguments](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments)
 
 Arguments following the `;` character in the function definition or the function call are called **keyword arguments**. These are named as they are used.
 
 ```julia
-my_density(x::Float64 ; μ::Float64 = 0.0, σ::Float64 = 1.0) = exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
-@show pdf(Normal(0.0,2.5),x), my_density(x,σ=2.5)
+function my_density(x::Float64; μ::Float64 = 0.0, σ::Float64 = 1.0)
+    return exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
+end
+
+@show pdf(Normal(0.0,2.5),x), my_density(x, σ=2.5);
 ```
 
 ```julia
-function my_very_flexible_function(x::Number;kwargs...)
+function my_very_flexible_function(x::Number; kwargs...)
     println(kwargs)
     #....
 end
 
-my_very_flexible_function(2.5,a=1,b="two",c=:three)
+my_very_flexible_function(2.5, a=1, b="two", c=:three)
 ```
 
-#### [Do Block Syntax for Function Arguments](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)
+The standard non-keyword arguments are called "positional" arguments since they are identified by their position not their name.
+
+Note that when _calling_ a function you may either put a `;` or a `,` before the keyword arguments. In a function definition there's an ambiguity between optional arguments and keyword
+
+### [Do Block Syntax for Function Arguments](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)
 
 As you know, you can pass functions as arguments and sometimes you can use an anonymous function for that. For example,
 
 ```julia
 using Random
+
 Random.seed!(0)
-data = rand(Int,100)
-filter((x)->x%10 == 0,data)
+data = rand(Int, 100)
+filter(x -> (x % 10) == 0, data)
 ```
 
 What if the anonymous function has more lines of code?
@@ -355,46 +438,92 @@ What if the anonymous function has more lines of code?
 ```julia
 using Primes
 
-filter((x)->begin
-                if !isprime(x%100)
-                    return x < 30
-                else
-                    return x > 50
-                end
-            end
-            ,data)
+filter(function (x)
+    if !isprime(x % 100)
+        return x < 30
+    else
+        return x > 50
+    end
+end, data)
 ```
 
-We can use the `do`--`end` syntax instead:
+This is a little ugly. It can be hard to see where the function starts and ends, find the second argument, etc.
+
+In Julia there's a standard pattern that higher-order functions accept a function in their _first_ argument. There is a fancy bit of syntax sugar called `do` which lets you inject a function into the _first_ argument of a function call.
+
+This looks like:
 
 ```julia
-filter(data) do x
-                if !isprime(x%100)
-                    return x < 30
-                else
-                    return x > 50
-                end
-            end
+filter(data) do (x)
+    if !isprime(x % 100)
+        return x < 30
+    else
+        return x > 50
+    end
+end
 ```
 
-#### [Function composition and piping](https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping)
+### [Destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
 
-Just a bit of different syntax for function calls:
+In Julia you can _destructure_ tuples (and other iterables) in the reverse way you _construct_ them:
 
 ```julia
-π/4 |> cos |> acos |> (x)->4x
+my_tuple = (42, "abc")  # construct
+(a, b) = my_tuple       # destruct
+
+@show a
+@show b;
+```
+
+A really common pattern here is swapping two variables:
+
+```julia
+x = 1
+y = 2
+(x, y) = (y, x)
+@show x
+@show y;
+```
+
+You can also destructure fields of structs and named tuples in the reverse way you create a named tuple:
+
+```julia
+function f(x::Complex)
+    (; re, im) = x
+    println("Real part: $re")
+    println("Imaginary part: $im")
+end
+
+f(10 + 42im)
+```
+
+One thing you can do is destructure arguments to functions as they come in. For example:
+
+```julia
+f((x,y)) = x + y
+my_pair = (4, 5)
+f(my_pair)
+```
+
+
+### [Function composition and piping](https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping)
+
+Just a little bit of syntax sugar for "piping" values into function calls:
+
+```julia
+π/4 |> cos |> acos |> x -> 4x
 ```
 
 Here is a function just like `identity`:
 
 ```julia
-ii(x) = (cos ∘ acos)(x) #\circ + [TAB]
-ii(π/4), π/4
+const ii = cos ∘ acos #\circ + [TAB]
+(ii(π/4), π/4)
 ```
 
-#### [Dot Syntax for Vectorizing Functions](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized)
+### [Dot syntax for broadcasting functions](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized)
 
-You already know the broadcast operator. It uses the `broadcast` function.
+You already know the broadcast operator. It is syntax sugar for the `broadcast` function.
 
 ```julia
 x_range = 0:0.5:π
@@ -410,19 +539,52 @@ x_range = 0:0.5:π
 @. cos(x_range + 2)^2
 ```
 
-#### More items from control flow
+## More items from control flow
 
-You are already very familiar with conditional statements (`if`, `elseif`, `else`), with loops (`for` and `while`), with short circuit evaluation, and with many other variants. For example `continue` and `break`.
+You are already very familiar with conditional statements (`if`, `elseif`, `else`), with loops (`for` and `while`), with short circuit evaluation, and with many other variants. For example you can use `continue` and `break` in loops, and Julia even supports `@goto` and `@label` for when that isn't enough.
 
-More control flow details are here: [control flow in Julia docs](https://docs.julialang.org/en/v1/manual/control-flow/).
+You can find more control flow details here: [control flow in Julia docs](https://docs.julialang.org/en/v1/manual/control-flow/). We'll just dive into `for` loops and error handling below.
 
-One additional thing to know about is [exception handling](https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling).
+### Iteration and `for` loops
+
+One impressive piece of syntax sugar is the `for` loop. It is in fact a special case of a `while` loop, like so:
+
+```julia; eval = false
+# this loop...
+for x in iterable
+    # <CODE>
+end
+
+# ...is equivalent to
+tmp = iterate(iterable)
+while tmp !== nothing
+    (x, state) = tmp
+
+    # <CODE>
+    
+    tmp = iterate(iterable, state)
+end
+```
+In the above, `tmp` is either `nothing` or it's a tuple of length two — containing the next value and whatever metadata is needed to iterate to the next element.
+
+You can make any of your data types iterable in a `for` loop by implementing a method on the `iterate` function. We won't be doing this in this course, but it is an excellent example of an _interface_ in Julia. We'll talk more about interfaces later.
+
+### [Errors and exceptions](https://docs.julialang.org/en/v1/manual/control-flow/#Exception-Handling)
+
+One additional thing to know about is exception handling.
 
 ```julia
 function my_2_by_2_inv(A::Matrix{Float64})
-    size(A) == (2,2) || error("This function only works for 2x2 matrices")
+    if size(A) != (2,2)
+        error("This function only works for 2x2 matrices")
+    end
+
     d = A[1,1]*A[2,2] - A[2,1]*A[1,2]
-    d ≈ 0 && throw(ArgumentError("matrix is singular or near singular")) #\approx + [TAB]
+
+    if d ≈ 0
+        throw(ArgumentError("matrix is singular or near singular")) #\approx + [TAB]
+    end
+
     return [A[2,2] -A[1,2]; -A[2,1] A[1,1]]/d
 end
 
@@ -437,7 +599,7 @@ my_2_by_2_inv([ones(2) ones(2)])
 using LinearAlgebra
 
 Random.seed!(0)
-A = rand(2,2)
+A = rand(2, 2)
 A_inv = my_2_by_2_inv(A)
 @assert A_inv*A ≈ I
 ```
@@ -486,9 +648,66 @@ catch e
 end
 ```
 
-#### Variable scope
+#### Try, catch and finally
+
+It's possible to catch and handle errors that happened using `try`, `catch` and `finally`.
+
+```julia
+try
+    0 ÷ 0
+catch e
+    @show e
+finally
+    println("done")
+end;
+```
+
+#### Resource cleanup
+
+One place closures, and `do` syntax in particular, gets used is when you want resources to be cleaned up automatically. Here's how one method of `open` is defined in Julia:
+
+```julia; eval = false
+function open(f, x)
+    io = open(f)
+    try    
+        f(io)
+    finally
+        close(io)
+    end
+end
+```
+
+When you want to use this function it is common to use `do` syntax like so:
+
+```julia; eval = false
+open(file) do (io)
+    # Read the first 128 bytes from the file
+    return read(io, 128) # might throw an exception
+end
+```
+
+This way even your code might error out, the file is _always_ closed in the `finally` block above. Using this pattern avoids mistakes and resource leakage.
+
+### Variable scope
 
 See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
+
+Julia actually has two seperate scopes — global or "toplevel" scope, and local scope.
+
+Local scope is the simplest. Variables inside a function body take precedence (or "shadows") any variables of the same name outside the function body.
+
+```julia
+x = 0
+
+function f()
+    x = 1
+    return 2 * x
+end
+
+f()
+```
+
+It gets a little more complicated when things are outside.
 
 ```julia
 data = [1, 2, 3]
@@ -520,7 +739,6 @@ end
 Julia uses Lexical scoping:
 
 ```julia
-
 function my_function()
     x = 10
     function my_function_inside_a_function()
@@ -558,6 +776,13 @@ end
 f()
 ```
 
+My advice:
+
+ * use global variables as little as possible
+ * use distinct names for variables as much as possilbe
+ * the longer a varible hangs around, the longer and more discriptive it's name should be
+
+Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap.
 
 ## Types and the Type System
 
