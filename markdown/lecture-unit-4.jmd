@@ -788,7 +788,7 @@ Remember you want your programs to be _simple_ and _easy to read_. Variable name
 
 See [types in the Julia docs](https://docs.julialang.org/en/v1/manual/types/).
 
-Everything has a type:
+### Everything has a type
 
 ```julia
 typeof(2.3)
@@ -803,7 +803,7 @@ typeof(2)
 ```
 
 ```julia
-typeof(23//10)
+typeof(23 // 10)
 ```
 
 ```julia
@@ -811,7 +811,7 @@ typeof(2 + 3im)
 ```
 
 ```julia
-typeof(2.0 +3im)
+typeof(2.0 + 3im)
 ```
 
 ```julia
@@ -819,15 +819,19 @@ typeof("Hello!")
 ```
 
 ```julia
-typeof([1,2,3])
+typeof([1, 2, 3])
 ```
 
 ```julia
-typeof([1,2,3.0])
+typeof([1, 2, 3.0])
 ```
 
 ```julia
-typeof([1.0,2,"three"])
+typeof([1.0, 2, "three"])
+```
+
+```julia
+typeof((1.0, 2, "three"))
 ```
 
 ```julia
@@ -846,7 +850,194 @@ typeof(Float64)
 typeof(:Hello)
 ```
 
-There is also a type hierarchy (a tree). At the top of the tree is the type `Any`. All types have a supertype (the supertype of `Any` is `Any`). Types that are not leafs of the tree have subtypes. Some types are **abstract** while others are **concrete**. One particularly distinctive feature of Julia's type system is that concrete types may not subtype each other: all concrete types are final and may only have abstract types as their supertypes.  
+## Concrete Types
+
+Every value in Julia has what is called a "concrete" type. Julia also has "abstract" types (like `Any` and `Number`) that we'll discuss below. Only concrete types can have values - abstract types can have subtypes and *those* may be concrete.
+
+### Primitive types
+
+The most _basic_ type in Julia is the primitive type. You can create your own types with the `primitive type` keywords.
+
+ Here's some definitions from `Base`:
+
+```julia; eval = false
+primitive type UInt8
+    8
+end
+
+primitive type Int32
+    32
+end
+
+primitive type Float64
+    64
+end
+```
+
+The number of bits must be a multiple of `8` (i.e. whole bytes).
+
+By default, primitive types have no methods associated with them - you need to define low-level primitive actions for them (e.g. how to add integers). The one thing you can do is `reinterpret` one primtivie type as another with the same number of bits.
+
+```julia
+reinterpret(UInt64, 0.0)
+```
+
+```julia
+reinterpret(UInt64, 1.0)
+```
+
+Primitive types are treated by Julia as _immutable_ — once a value is created, it cannot be modified or "mutated". You don't modify an `Int64` in Julia when you increment it like `i += 1`, this is syntax sugar for `i = i + 1`, where `i + 1` returns a new `Int64` and the variable `i` is bound to a new value. 
+
+(As an optimization, compiled Julia code may actually modify some bit of RAM in-place, but this effect is not visible to the user in any way other than being fast.)
+
+### Structs and mutable structs
+
+Another concrete type in Julia is the `struct`. A simple example is a complex number with a real and complex part (as defined in `Base`):
+
+```julia; eval = false
+struct Complex{T <: Number} <: Number
+    re::T
+    im::T
+end
+```
+
+Here we see a few features of `struct`. A struct — or structure — contains structured data within, having fields with names and types. We again use the type assertion operator `::` to indicate the type, which could be a primitive type, a struct, or an abstract type like `Any` or `Number`. And the type can be _parameterized_ — in this case it has an associated type `T` which must be a subtype of `Number`. Finally, we can define that `Complex` is a subtype of `Number`. We'll talk more about subtypes later.
+
+Generally you _construct_ a struct value using a function call, like:
+
+```julia
+z = Complex{Int64}(2, 3)
+```
+
+Like primitive types, structs are by default immutable. You cannot modify an existing complex number — an operation like `z += 2im` returns a _new_ complex number via a constructor, e.g. `Complex{Int64}(2, 5)`. It is an error to do `z.im = 5`.
+
+If you wanted to, you could create your own _mutable_ struct using the `mutable struct` keywords:
+
+```julia
+mutable struct MutableComplex{T <: Number}
+    re::T
+    im::T
+end
+
+z = MutableComplex{Int64}(2, 3)
+z.im += 2
+z
+```
+
+Note that we haven't yet defined any functions that act on our new `MutableComplex` type. If we wanted it to print like the built-in `Complex` numbers (like `2 + 5im`), we'd need to define a method for `Base.show`.
+
+```julia
+function Base.show(io::IO, z::MutableComplex)
+    print(io, z.re)
+    print(io, " + ")
+    print(io, z.im)
+    print(io, "im")
+end
+
+MutableComplex{Int64}(2, 3)
+```
+
+If we wanted it to add, subtract, multiply or divide we'd need to define methods of `+`, `-`, `*` and `/`. For example:
+
+```julia
+function Base.:+(z1::MutableComplex, z2::MutableComplex)
+    return MutableComplex(z1.re + z2.re, z1.im + z2.im)
+end
+
+MutableComplex{Int64}(2, 3) + MutableComplex{Int64}(10, 6)
+```
+
+There are yet more functions to overload that would allow it to work well with other `Number` types (e.g. add a `MutableComplex{Float64}` and a real `Int64`). We could do that with brute force by defining methods for every possible combination — but we will see a better way when we study generic code and interfaces, later.
+
+### `DataType`
+
+Julia comes with a built-in struct called `DataType`. It has a pretty complex definition:
+
+```julia; eval = false
+mutable struct DataType <: Type
+    name::TypeName
+    super::Type
+    parameters::Tuple
+    names::Tuple
+    types::Tuple
+    ctor::Any
+    instance::Any
+    size::Int32
+    abstract::Bool
+    mutable::Bool
+    pointerfree::Bool
+end
+```
+
+It holds all sorts of details about concrete data types. Every concrete data type is a `DataType`:
+
+```julia
+@show typeof(Int64)
+@show typeof(Complex{Float64})
+@show typeof(Vector{String});
+```
+
+You can poke around in these structures to learn things:
+
+```julia
+@show Int64.size
+@show Complex{Float64}.size
+@show Complex{Float64}.name.names
+@show Complex{Float64}.types;
+```
+
+Given that `DataType` is just a mutable struct, it's type is also a `DataType`:
+
+```julia
+@show typeof(DataType)
+```
+
+It's circular, but logically consistent. Note that all Turing-complete systems require some kind of circular or higher-order logic like this at some point.
+
+### Built-in types
+
+There are a handful of builtin types that are interesting in Julia.
+
+#### `Array`
+
+The (multidimensional) array is Julia's only built-in type of arbitrary size. A primitive type or struct consists of a known set of bits, while an `Array` can be dynamically sized at run time.
+
+Arrays have two type parameters, `Array{T, N}`. Here `T` is the element type, and `N` is the dimensionality of the array.
+
+There are a couple type aliases defined:
+
+```julia; eval = false
+const Vector{T} = Array{T, 1}
+const Matrix{T} = Array{T, 2}
+```
+
+Note that `Vector` is resizable after it is created, but this isn't true for other dimensionalities.
+
+In Julia, arbitrary bytes of data (like the contents of a file) is generally represented by `Vector{UInt8}`.
+
+#### `Tuple`
+
+A tuple is like an immutable struct where the field names are `1`, `2`, `3`, etc.
+
+```julia
+tuple = (42, 3.14, "abc")
+```
+
+When you call a function in Julia, `f(42, 3.14, "abc")`, it is a bit like the function takes a single tuple as its input.
+
+Tuples have some special rules when it comes to _abstract_ types to help with multiple-dispatch, but that is a rather advanced topic. Despite that, every tuple value behaves just like plain old data.
+
+#### `NamedTuple`
+
+The `NamedTuple`, like `(a = 1, b = true, c = "abc")`, is a special built-in type. However, it behaves just like a regular struct with field names you can choose, and is immutable.
+
+```julia
+typeof((a = 1, b = true, c = "abc"))
+```
+
+## Abstract types
+
+Julia has a type hierarchy (a tree). At the top of the tree is the type `Any`. All types have a supertype (the supertype of `Any` is `Any`). Types that are not leaves of the tree have subtypes. Some types are **abstract** while others are **concrete**. One particularly distinctive feature of Julia's type system is that concrete types may not subtype each other: all concrete types are final and may only have abstract types as their supertypes.  
 
 ```julia
 x = 2.3
@@ -854,7 +1045,7 @@ x = 2.3
 @show supertype(Float64)
 @show supertype(AbstractFloat)
 @show supertype(Real)
-@show supertype(Number);
+@show supertype(Number)
 @show supertype(Any);
 ```
 
@@ -871,66 +1062,81 @@ isa(2.3, String)
 2.3 isa Float64
 ```
 
-```julia
-my_type = Float64
-@show isabstracttype(my_type)
-@show isconcretetype(my_type);
-```
+Note that `x isa T` is the same as `typeof(x) <: T`, where we say `<:` as "is a subtype of".
 
 ```julia
-my_type = Real
-@show isabstracttype(my_type)
-@show isconcretetype(my_type);
+@show Float64 <: Number
+@show String <: Number;
 ```
 
-Some types are not abstract nor concrete:
+We can ask whether a given type is abstract or concrete.
 
 ```julia
-my_type = Complex
-@show isabstracttype(my_type)
-@show isconcretetype(my_type);
+@show isabstracttype(Float64)
+@show isconcretetype(Float64);
 ```
 
-```
-help?> Complex
-search: Complex complex ComplexF64 ComplexF32 ComplexF16 precompile __precompile__ componentwise_logpdf
-
-  Complex{T<:Real} <: Number
-
-  Complex number type with real and imaginary part of type T.
-
-  ComplexF16, ComplexF32 and ComplexF64 are aliases for Complex{Float16}, Complex{Float32} and Complex{Float64} respectively.
+```julia
+@show isabstracttype(Real)
+@show isconcretetype(Real);
 ```
 
+Structs with undefined type paremeters are not concrete:
 
-Let's walk down from `Number`:
+```julia
+@show isconcretetype(Complex);
+```
+
+Once we provide the type parameters we do get a concrete type:
+
+```julia
+@show isconcretetype(Complex{Float64});
+```
+
+As mentioned, Julia has a type tree. Let's walk down from `Number`:
 
 ```julia
 using InteractiveUtils: subtypes
 
-function type_and_children(type, depth::Int = 0)
-    if !isconcretetype(type)
-        #Non-concrete
-        print("-"^depth, type, ": non-concrete")
-        #Types that are not concrete can be abstract or not
-        if isabstracttype(type) 
-            println(", abstract")
-            for c in subtypes(type)
-                type_and_children(c,depth+1)
-            end
-        else
-             println(", non-abstract")
-             @assert isempty(subtypes(type))
-        end
-    else
-        #Concrete
+function type_and_children(type, prefix = "", child_prefix = "")
+    if isconcretetype(type)
         @assert isempty(subtypes(type))
-        println("-"^depth, type, ": concrete")
+
+        println(prefix, type, ": concrete")
+    else
+        println(prefix, type, isabstracttype(type) ? ": abstract" : ": parameterized")
+
+        children = subtypes(type)
+        for (i, c) in enumerate(children)
+            if i == length(children)
+                type_and_children(c, "$(child_prefix) └─╴", "$(child_prefix)    ")
+            else
+                type_and_children(c, "$(child_prefix) ├─╴", "$(child_prefix) │  ")
+            end 
+        end
     end
 end
 
 type_and_children(Number)
 ```
+
+In Julia, you can define abstract types with the `abstract type` keywords:
+
+```julia; eval = false
+abstract type Number
+end
+
+abstract type Real <: Number
+end
+
+abstract type AbstractFloat <: Real
+end
+
+primitive type Float64 <: AbstractFloat
+    64
+end
+```
+
 
 A type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
 
