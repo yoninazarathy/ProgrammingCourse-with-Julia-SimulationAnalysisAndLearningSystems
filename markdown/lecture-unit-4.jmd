@@ -408,13 +408,15 @@ end
 @show pdf(Normal(0.0,2.5),x), my_density(x, σ=2.5);
 ```
 
+We can even make a function that takes arbitrary numbers of positional and keyword arguments:
+
 ```julia
-function my_very_flexible_function(x::Number; kwargs...)
-    println(kwargs)
-    #....
+function very_flexible_function(args...; kwargs...)
+    @show args
+    @show kwargs
 end
 
-my_very_flexible_function(2.5, a=1, b="two", c=:three)
+very_flexible_function(2.5, false, a=1, b="two", c=:three)
 ```
 
 The standard non-keyword arguments are called "positional" arguments since they are identified by their position not their name.
@@ -429,7 +431,7 @@ As you know, you can pass functions as arguments and sometimes you can use an an
 using Random
 
 Random.seed!(0)
-data = rand(Int, 100)
+data = rand(-10_000:10_000, 100)
 filter(x -> (x % 10) == 0, data)
 ```
 
@@ -439,15 +441,15 @@ What if the anonymous function has more lines of code?
 using Primes
 
 filter(function (x)
-    if !isprime(x % 100)
-        return x < 30
+    if x >= 0
+        return isprime(x)
     else
-        return x > 50
+        return isprime(-x)
     end
 end, data)
 ```
 
-This is a little ugly. It can be hard to see where the function starts and ends, find the second argument, etc.
+This is a little ugly — it can be hard to see where the function starts and ends, find the second argument, etc.
 
 In Julia there's a standard pattern that higher-order functions accept a function in their _first_ argument. There is a fancy bit of syntax sugar called `do` which lets you inject a function into the _first_ argument of a function call.
 
@@ -455,10 +457,10 @@ This looks like:
 
 ```julia
 filter(data) do (x)
-    if !isprime(x % 100)
-        return x < 30
+    if x >= 0
+        return isprime(x)
     else
-        return x > 50
+        return isprime(-x)
     end
 end
 ```
@@ -883,7 +885,7 @@ reinterpret(UInt64, 0.0)
 ```
 
 ```julia
-reinterpret(UInt64, 1.0)
+reinterpret(UInt64, Float64(π))
 ```
 
 Primitive types are treated by Julia as _immutable_ — once a value is created, it cannot be modified or "mutated". You don't modify an `Int64` in Julia when you increment it like `i += 1`, this is syntax sugar for `i = i + 1`, where `i + 1` returns a new `Int64` and the variable `i` is bound to a new value. 
@@ -923,6 +925,8 @@ z = MutableComplex{Int64}(2, 3)
 z.im += 2
 z
 ```
+
+Part of the reason the built-in `Complex` type is immutable is that means the compiler can produce faster code (as it can make more assumptions about the data in your program).
 
 Note that we haven't yet defined any functions that act on our new `MutableComplex` type. If we wanted it to print like the built-in `Complex` numbers (like `2 + 5im`), we'd need to define a method for `Base.show`.
 
@@ -992,15 +996,15 @@ Given that `DataType` is just a mutable struct, it's type is also a `DataType`:
 @show typeof(DataType)
 ```
 
-It's circular, but logically consistent. Note that all Turing-complete systems require some kind of circular or higher-order logic like this at some point.
+It's circular, but logically consistent. Note that all Turing-complete systems have some kind of circular or higher-order logic like this at some point.
 
 ### Built-in types
 
-There are a handful of builtin types that are interesting in Julia.
+There are a handful of special builtin types in Julia. Below are the _only_ concrete types which are not just regular `primitive type`s, `struct`s and `mutable struct`s.
 
 #### `Array`
 
-The (multidimensional) array is Julia's only built-in type of arbitrary size. A primitive type or struct consists of a known set of bits, while an `Array` can be dynamically sized at run time.
+The (multidimensional) array is Julia's built-in type for storing data of arbitrary size. A primitive type or struct consists of a known set of bits, while an `Array` can be dynamically sized at run time.
 
 Arrays have two type parameters, `Array{T, N}`. Here `T` is the element type, and `N` is the dimensionality of the array.
 
@@ -1011,9 +1015,15 @@ const Vector{T} = Array{T, 1}
 const Matrix{T} = Array{T, 2}
 ```
 
-Note that `Vector` is resizable after it is created, but this isn't true for other dimensionalities.
+Note that `Vector`s are resizable after creation (`push!`, `pop!`, `empty!`, etc), but this isn't true for other dimensionalities.
 
 In Julia, arbitrary bytes of data (like the contents of a file) is generally represented by `Vector{UInt8}`.
+
+#### `String`
+
+Strings represent text of arbitrary length.
+
+In Julia strings are immutable and assumed to be UTF-8 encoded (Windows, Java and JavaScript tend to use UTF-16 endoding). The compiler is allowed to make a few optimizations - e.g. for short strings, etc. You can mostly consider the backing bytes to be like an immutable `Vector{UInt8}`, which is how Julia strings are passed to functions from other programming languages like C.
 
 #### `Tuple`
 
@@ -1023,7 +1033,19 @@ A tuple is like an immutable struct where the field names are `1`, `2`, `3`, etc
 tuple = (42, 3.14, "abc")
 ```
 
-When you call a function in Julia, `f(42, 3.14, "abc")`, it is a bit like the function takes a single tuple as its input.
+Usually you use indexing syntax to get the elements:
+
+```julia
+tuple[3]
+```
+
+There is a special `Tuple` datatype with arbitrary number of type parameters (the only type that supports this).
+
+```julia
+typeof(tuple)
+```
+
+When you call a function in Julia, `f(42, 3.14, "abc")`, it is a bit like the function takes a single tuple as its input. If you want to return more than one thing from a function, it is common to return a tuple.
 
 Tuples have some special rules when it comes to _abstract_ types to help with multiple-dispatch, but that is a rather advanced topic. Despite that, every tuple value behaves just like plain old data.
 
@@ -1033,6 +1055,82 @@ The `NamedTuple`, like `(a = 1, b = true, c = "abc")`, is a special built-in typ
 
 ```julia
 typeof((a = 1, b = true, c = "abc"))
+```
+
+### More on mutation
+
+As we saw earlier, a type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
+
+```julia
+@show ismutable(7)
+@show ismutable([7]);
+```
+
+When you pass a mutable variable to a function, the function can change the data contained within. However, if you bind the input variable to a new value, this will only have an effect on the scope of variables _inside_ the function.
+
+```julia
+f(z::Int) = (z = 0)
+f(z::Array{Int}) = (z[1] = 0)
+
+x = 1
+@show typeof(x)
+@show isimmutable(x)
+println("Before call by value: ", x)
+f(x)
+println("After call by value: ", x, "\n")
+
+x = [1]
+@show typeof(x)
+@show isimmutable(x)
+println("Before call by reference: ", x)
+f(x)
+println("After call by reference: ", x)
+```
+
+The rule is that you can mutate the _inside_ of a mutable value (`Array` or `mutable struct`) and variables and/or data structures with references to that mutable value will be able to see the effect of the mutation.
+
+However variables are _always_ bound to _new_ values with `=` (e.g. `z = 0`) and the usual lexical scoping rules apply.
+
+To help with preserving data that might get modified, we often make a copy with `copy` and `deepcopy`:
+
+```julia
+println("Immutable:")
+a = 10
+b = a
+b = 20
+@show a;
+```
+
+```julia
+println("\nNo copy:")
+a = [10]
+b = a
+b[1] = 20
+@show a;
+```
+
+```julia
+println("\nCopy:")
+a = [10]
+b = copy(a)
+b[1] = 20
+@show a;
+```
+
+```julia
+println("\nShallow copy:")
+a = [[10]]
+b = copy(a)
+b[1][1] = 20
+@show a;
+```
+
+```julia
+println("\nDeep copy:")
+a = [[10]]
+b = deepcopy(a)
+b[1][1] = 20
+@show a;
 ```
 
 ## Abstract types
@@ -1137,108 +1235,59 @@ primitive type Float64 <: AbstractFloat
 end
 ```
 
+### Union types
 
-A type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
+We've seen two types of abstract types — the `abstract type`s that make up the type tree, and the parameterized types (abstract `Complex` vs concrete `Complex{Float64}`).
 
-```julia
-x = 7
-@show ismutable(x)
-
-x = [7]
-@show ismutable(x);
-```
-
-When you pass a mutable variable to a function, the function can change the value. When you pass an immutable variable, if you try to change it, Julia will just make another instance.
+Julia has a third abstract type called `Union` which let's you reasona about a finite set of (abstract or concrete) types.
 
 ```julia
-f(z::Int) = begin z = 0 end
-f(z::Array{Int}) = begin z[1] = 0 end
-
-x = 1
-@show typeof(x)
-@show isimmutable(x)
-println("Before call by value: ", x)
-f(x)
-println("After call by value: ", x,"\n")
-
-x = [1]
-@show typeof(x)
-@show isimmutable(x)
-println("Before call by reference: ", x)
-f(x)
-println("After call by reference: ", x)
-```
-
-Making copies, `copy` and `deepcopy`:
-
-```julia
-println("Immutable:")
-a = 10
-b = a
-b = 20
-@show a;
+42::Union{Int, Float64}
 ```
 
 ```julia
-println("\nNo copy:")
-a = [10]
-b = a
-b[1] = 20
-@show a;
+3.14::Union{Int, Float64}
 ```
 
 ```julia
-println("\nCopy:")
-a = [10]
-b = copy(a)
-b[1] = 20
-@show a;
+"abc"::Union{Int, Float64}
 ```
 
-```julia
-println("\nShallow copy:")
-a = [[10]]
-b = copy(a)
-b[1][1] = 20
-@show a;
-```
+`Union` can handle an arbitrary number of types, `Union{T1, T2, T3, ...}`.
 
-```julia
-println("\nDeep copy:")
-a = [[10]]
-b = deepcopy(a)
-b[1][1] = 20
-@show a;
-```
+As a special case `Union{T}` is just the same as `T`. We also have `Union{T, T} == T`, etc.
 
+The union of no types at all, `Union{}`, is a special builtin type which is the opposite of `Any`. No value can exist with type `Union{}`! Sometimes `Any` is called the "top" type and `Union{}` is called the "bottom" type. It's used internally by the compiler to rule out impossible situations, but it's not something for you to worry about.
 
-## Defining your Own Types
+### Making types for your programs
 
 You can define your own types. Any "serious" programming task would almost always merit that you do that.
+
+#### Concrete `Person`
 
 In object oriented languages (e.g. C++, Java, Python) types are typically called classes. A class (in such a language) will have both definitions of data and actions, typically called variables and methods respectively. An instance of a class would be called an object. 
 
 Julia is not object oriented. It rather provides a different paradigm based on multiple-dispatch (which we describe below). Nevertheless, there are user defined types, called structs (structures). The name comes from C. 
 
 ```julia
-struct Person #Notice the convention of using capital letters for the first letter of a struct
+struct Person # Notice the convention of using capital letters for the first letter of a struct
     height::Float64
     weight::Float64
     name::String
 end
 
-person = Person(179.8, 78.6, "Miriam") #A struct comes with a constructor function
+person = Person(1.79, 78.6, "Miriam") # A struct comes with a constructor function
 
 @show typeof(person)
 
-@show person.height; #The fields of a struct are accessed via "." - not to be confused with "." used for broadcasting.
-@show person.weight;
-@show person.name;
+@show person.height # The fields of a struct are accessed via "." - not to be confused with "." used for broadcasting.
+@show person.weight
+@show person.name
 ```
 
 ```julia
 @show ismutable(person)
-person.weight = 85.4 #gained some weight - but this will generate and error
+person.weight = 85.4 # gained some weight - but this will generate and error
 ```
 
 Here is a `mutable struct`
@@ -1250,7 +1299,7 @@ mutable struct MutablePerson
     name::String
 end
 
-person = MutablePerson(179.8, 78.6, "Miriam")
+person = MutablePerson(1.79, 78.6, "Miriam")
 person.weight = 85.4
 println(person)
 ```
@@ -1262,12 +1311,15 @@ struct MyStruct
     x::Int
 end
 
-struct MyStruct #Will generate an ERROR because redefining a struct
+struct MyStruct # Will generate an ERROR because redefining a struct
     x::Int
     y::Float64
 end
 ```
-You can define abstract types (they won't have any fields) and a whole type hierarchy:
+
+#### Abstract `Animal`
+
+We extends the above to a whole type hierarchy of different types of animals (including humans):
 
 ```julia
 abstract type Animal end
@@ -1278,7 +1330,7 @@ abstract type Reptile <: Animal end
 struct Human <: Mammal
     height::Float64
     weight::Float64
-    religious::Bool
+    name::String
 end    
 
 struct Dog <: Mammal
@@ -1294,7 +1346,7 @@ end
 struct Crocodile <: Reptile
     length::Float64
     weight::Float64
-    type::Symbol #Expect to be :salt_water or :fresh_water
+    type::Symbol # Expect to be :salt_water or :fresh_water
 end
 
 type_and_children(Animal)
@@ -1307,7 +1359,7 @@ methods(Crocodile)
 ```
 
 ```julia
-tick_tock = Crocodile(2.3, 204,:salt_water)
+tick_tock = Crocodile(2.3, 204, :salt_water)
 ```
 
 You can also create other constructor methods:
@@ -1315,9 +1367,9 @@ You can also create other constructor methods:
 ```julia
 function Crocodile(type::Symbol)
     if type == :salt_water
-        return Crocodile(2.0,200,:salt_water) #average salt water croc
+        return Crocodile(4.2, 410, :salt_water) # average male salt water croc
     elseif type == :fresh_water
-        return Crocodile(1.5,150,:fresh_water) #average fresh water croc
+        return Crocodile(2.3, 70, :fresh_water) # average male fresh water croc
     else
         error("Can't make crocodile of type $type")
     end
@@ -1335,7 +1387,7 @@ Crocodile(:fresh_water)
 ```
 
 ```julia
-Crocodile(:ice_water) #will generate an error
+Crocodile(:ice_water) # will generate an error
 ```
 
 A bit more on [constructors](https://docs.julialang.org/en/v1/manual/constructors/) will come later.
@@ -1343,43 +1395,63 @@ A bit more on [constructors](https://docs.julialang.org/en/v1/manual/constructor
 Notice we had the [parameteric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) `FlexDog`:
 
 ```julia
-dash_my_dog = FlexDog(2,4)
+dash_my_dog = FlexDog(2, 4)
 @show typeof(dash_my_dog)
 
-lassy_your_dog = FlexDog(2.3f0,5.7f0)
+lassy_your_dog = FlexDog(2.3f0, 5.7f0)
 @show typeof(lassy_your_dog)
 
 my_dog_array = FlexDog{UInt16}[]
 ```
 
 ```julia
-my_dog_array = FlexDog{Complex}[] #Will not work because Complex is not a Real
+my_dog_array = FlexDog{Complex}[] # Will not work because Complex is not a Real
 ```
 
 With multiple dispatch we can get a form of polymorphism:
 
 ```julia
-animal_noise(animal::Dog) = println("woof")
-animal_noise(animal::Human) = println("hello")
-animal_noise(animal::Crocodile) = println("chchch")
+animal_noise(animal::Dog) = "woof"
+animal_noise(animal::Human) = "hello"
+animal_noise(animal::Crocodile) = "chchch"
 
-animals = [Crocodile(:salt_water), Human(2.4,2.3,false), Crocodile(:salt_water), Dog(5.3,2.5)]
-animal_noise.(animals);
+animals = [Crocodile(:fresh_water), Human(1.79, 78.6, "Miriam"), Crocodile(:salt_water), Dog(0.63, 12.5)]
+animal_noise.(animals)
 ```
 
 ```julia
 methods(animal_noise)
 ```
 
-We can even handle the `FlexDog`:
+We can even handle the `FlexDog` and `Dog` together:
 
 ```julia
-animal_noise(animal::Union{Dog,FlexDog}) = println("woof")
+animal_noise(animal::Union{Dog, FlexDog}) = "woof"
 push!(animals, FlexDog{Int16}(2,4))
-animal_noise.(animals);
+animal_noise.(animals)
 ```
 
-### Methods and Multiple Dispatch
+We can now say that `animal_noise` is a part of the `Animal` interface. Every `animal::Animal` will have an `animal_noise(animal)` which is returns a `String`. This is a guarantee people can use to build programs about `Animal`s.
+
+#### The `Animal` interface
+
+Most interestingly - at any point users could come along and define new types of `Animal`, and so long as the respect the interface the new types will function in pre-existing programs that did not anticipate them.
+
+```julia
+# sometime later...
+struct Cat <: Mammal
+    height::Float64
+    weight::Float64
+end
+
+animal_noise(::Cat) = "meow"
+```
+
+Using interfaces lets you build larger programs by assembling _generic_ logic with different data types like they were Lego bricks. Generic code can be reused - it doesn't need to be rewritten when a new type is added, or a when new field is added to a struct, or when a new interface is introduced.
+
+Interfaces are flexible in two ways — you can add new types of `Animal` or of `AbstractArray`, or you think up new interfaces to `Animal` or add new interfaces to `AbstractArray` (e.g. `LinearAlgebra`).
+
+## Methods and Multiple Dispatch
 
 [See methods in Julia docs](https://docs.julialang.org/en/v1/manual/methods/).
 
@@ -1394,19 +1466,38 @@ function my_f(x::Float64)
     println("My floating point number is $x")
 end
 
-my_f(2)
-my_f(2.5)
-println(methods(my_f))
+@show my_f(2)
+@show my_f(2.5)
+@show methods(my_f);
 ```
 
-It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but then towards the end of the course it is worth to listen to it again and see what makes sense and what not yet.
+It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but perhaps towards the end of the course it would be worth listening to it again to see what makes sense and what not yet.
+
+### Specificity
+
+When a function has multiple methods on it, Julia will automatically use the most specific one:
+
+```julia
+function my_f(x::Number)
+    println("My number is $x")
+end
+
+@show my_f(2)
+@show my_f(2.5)
+@show my_f(2 // 3)
+@show methods(my_f);
+```
+
+Dispatch always uses the _concrete types_ of the input values to find the correct method. This might mean it doesn't actually compile your code until the middle of program execution. (The Julia runtime includes the compiler itself).
 
 ### Defining more methods for existing functions
 
 Almost any operation in julia is a function. For example,
 
 ```julia
-@which 2+3
+using InteractiveUtils
+
+@which 2 + 3
 ```
 
 There are many methods for `+`:
@@ -1427,20 +1518,19 @@ me = PlayerScore("Johnny", 22)
 ```
 
 ```julia
-me += 10 #will generate an error since `+` for me and an integer is not defined and `+` is used in `+=`
+me = me + 10 # will generate an error since `+` for me and an integer is not defined
 ```
 
 So let's define it:
 
 ```julia
-import Base: + #we do this to let Julia know we will add more methods to `+`
+import Base: + # we do this to let Julia know we will add more methods to `+`
 
 function +(ps::PlayerScore, n::Int)::PlayerScore
     return PlayerScore(ps.player_name, ps.score + n)
 end
 
-me += 10;
-me
+me = me + 10
 ```
 
 You can do this for every operation and function you want (and makes sense).  What if we wanted "pretty printing"?
@@ -1448,137 +1538,140 @@ You can do this for every operation and function you want (and makes sense).  Wh
 ```julia
 import Base: show
 
-show(io::IO, ps::PlayerScore) = print(io,"Score for $(ps.player_name) =  $(ps.score)")
+show(io::IO, ps::PlayerScore) = print(io, "Score for $(ps.player_name) = $(ps.score)")
 
 println("We have a some score: $me. Pretty good!")
 ```
 
-### Some examples...
+### Example: online statistics
 
-Lets consider an example where we want to collect data and also have quick running statistics. E.g.
+Lets consider an example where we want to collect some quick running statistics from some data coming in. E.g.:
 
 ```julia
 using Random, Statistics
-Random.seed!(0)
-get_new_data() = 100*rand() #This will in practice be anything...
 
-data = Float64[]
+# A function that returns a data point - could be streamed from disk or the internet
+fetch_new_data() = 100*rand()
 
-function collect_and_use_data(data)
-    for t in 1:100 #This will be much bigger 
+function print_running_stats(n::Integer, running_stats_storage)
+    for i in 1:n
+        # Get some data
+        data_point = fetch_new_data()
 
-        #Periodically we collect new data
-        new_data_point = get_new_data()
-        push!(data,new_data_point)
+        # Collect data for statistics
+        push!(running_stats_storage, data_point)
 
-        #Peridoically we look at summary statistics
-        if t%20 == 0
+        # Peridoically we look at summary statistics
+        if i % 20 == 0
             println("-------")
-            println("Mean: ", mean(data))
-            println("Max: ", maximum(data))
+            println("Count: ", length(running_stats_storage))
+            println("Mean: ", mean(running_stats_storage))
+            println("Max: ", maximum(running_stats_storage))
         end
     end
 end
 
-collect_and_use_data(data)
-```
-Think of this scenario repeating often and for `t` being big... so you don't want to recompute the mean and max every time.
-
-```julia
-mutable struct RunningStatsData
-    data::Vector{Float64}
-    mean::Float64
-    max::Float64
-    RunningStatsData() = new([],NaN,NaN)
-end
-
-function show_summary(rsd::RunningStatsData)
-        println("Mean: ", rsd.mean)
-        println("Max: ", rsd.max)
-end
-
-data = RunningStatsData()
-show_summary(data)
-```
-
-We can now make specifics method for `push!`, `max`, and `mean` for this new type:
-
-```julia
 Random.seed!(0)
+running_stats_storage = Float64[] # Some place to hold the running data
+print_running_stats(100, running_stats_storage)
+```
 
-import Base: push!, maximum
+Consider the scenario where you have a lot of data to stream and `n` gets very big... so you don't want to recompute the mean and max every time. In fact — you might not even want to store the a copy of the data in RAM at all!
+
+Here's an approach to do "online" statistics:
+
+```julia
+mutable struct RunningStats
+    count::Int
+    sum::Float64
+    max::Float64
+
+    RunningStats() = new(0, 0.0, -Inf)
+end
+
+running_stats_storage = RunningStats()
+```
+
+We can now make specific methods for `push!`, `length`, `sum`, `mean` and `maximum` for this new type:
+
+```julia
+import Base: push!, length, sum, maximum
 import Statistics: mean
 
-maximum(rsd::RunningStatsData) = rsd.max
-mean(rsd::RunningStatsData) = rsd.mean
+length(rsd::RunningStats) = rsd.count
+sum(rsd::RunningStats) = rsd.sum
+mean(rsd::RunningStats) = rsd.sum / rsd.count
+maximum(rsd::RunningStats) = rsd.max
 
-function push!(rsd::RunningStatsData,data_point)
-    #Insert the new datapoint
-    push!(rsd.data, data_point)
+function push!(rsd::RunningStats, data_point)
+    # Update the count
+    rsd.count += 1
+
+    # Update the sum
+    rsd.sum += data_point
 
     # Update the maximum
-    if data_point > rsd.max || isnan(rsd.max)
+    if rsd.max < data_point
         rsd.max = data_point
-    end
-
-    # Update the mean
-    n = length(rsd.data)
-    if n == 1 
-        rsd.mean = data_point #If first data point just set it
-    else
-        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
     end
 end
 
-data = RunningStatsData()
-collect_and_use_data(data)
+Random.seed!(0)
+running_stats_storage = RunningStats()
+print_running_stats(100, running_stats_storage)
 ```
+
+#### Running statistics of other types
 
 Going a bit more generic we could have also had,
 
 ```julia
-mutable struct FlexRunningStatsData{T <: Number}
+mutable struct FlexRunningStats{T <: Number}
     data::Vector{T}
-    mean::Float64
+    count::Int
+    sum::T
     max::T
-    FlexRunningStatsData{T}() where T = new([],NaN,typemin(T))
+
+    FlexRunningStats{T}() where {T} = new{T}(T[], 0, zero(T), typemin(T))
 end
 
-maximum(rsd::FlexRunningStatsData) = rsd.max
-mean(rsd::FlexRunningStatsData) = rsd.mean
+length(rsd::FlexRunningStats) = rsd.count
+sum(rsd::FlexRunningStats) = rsd.sum
+mean(rsd::FlexRunningStats) = rsd.sum / rsd.count
+maximum(rsd::FlexRunningStats) = rsd.max
 
-function push!(rsd::FlexRunningStatsData,data_point)
-    #Insert the new datapoint
+function push!(rsd::FlexRunningStats, data_point)
+    # Insert the new datapoint
     push!(rsd.data, data_point)
 
-    # Update the maximum
-    if data_point > rsd.max || isnan(rsd.max)
-        rsd.max = data_point
-    end
+    # Update the count
+    rsd.count += 1
 
-    # Update the mean
-    n = length(rsd.data)
-    if n == 1 
-        rsd.mean = data_point #If first data point just set it
-    else
-        rsd.mean = (1/n)*data_point + ((n-1)/n) * rsd.mean #if more than one data point then do running average.
+    # Update the sum
+    rsd.sum += data_point
+
+    # Update the maximum
+    if rsd.max < data_point
+        rsd.max = data_point
     end
 end
 
-Random.seed!(0)
-get_new_data() = rand(0:10^4) 
+fetch_new_data() = rand(0:10^4) # override this to return integers
 
-data = FlexRunningStatsData{Int}()
-collect_and_use_data(data)
+Random.seed!(0)
+running_stats_storage = FlexRunningStats{Int}()
+print_running_stats(100, running_stats_storage)
 ```
 
 ```julia
-@which mean(data)
+@which mean(running_stats_storage)
 ```
 
-But there is a problem with the above. Should we have done `<: Number` or `<: Real`? What is `T` was `Complex`?
+But there is a problem with the above. What if `T` was `Complex`? Should we have done `<: Number` or `<: Real`?
 
-### Using structs for data structures
+In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the peices of your program together into a coherent whole. 
+
+### Using structs for complex, nested data structures
 
 ```julia
 Random.seed!(0)
