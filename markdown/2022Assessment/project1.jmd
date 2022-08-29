@@ -76,7 +76,7 @@ Your new polynomial type should be called `PolynomialZeroPacked` and should oper
 
 Provide a short discussion of the pros and cons of each of the representation comparing what operations are efficient with the original `Polynomial` type and what operations are efficient with your new `PolynomialZeroPacked`.
 
-### Task 3 (10pts) - Refactoring the coefficient type from 'Int' to 'BigInt'
+### Task 3 (10pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
 Now refactor the polynomial type to use `BigInt` for the coefficient instead of `Int`. Do this by introducing a new type `PolynomialBI` which stands for "Polynomial Big Integer". Note that ideally in Julia we would use parametric types, yet for simplicity of this project just introduce the new type `PolynomialBI`. Again implement methods for all of the functions that exist for `Polynomial` and `PolynomialZeroPacked` for `PolynomialBI`. Note that `PolynomialBI` should have a zero-packed implementation just like `PolynomialZeroPacked`. Write test code of `PolynomialBI` similar to the other types. 
 
