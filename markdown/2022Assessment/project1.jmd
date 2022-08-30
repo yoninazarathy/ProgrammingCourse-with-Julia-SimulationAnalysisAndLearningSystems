@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2022
 # Univariate Polynomials with Integer Coefficients
 
-(last edit: August 28, 2022)
+(last edit: August 30, 2022)
 
 
 **Due:** End of Day, Friday, 23, September, 2022. Late submissions are not accepted.
@@ -58,65 +58,66 @@ Your GitHub repo should be formatted like the original repo that you forked with
 
 You will build your project on top of the [https://github.com/yoninazarathy/2504\_2022\_project1](https://github.com/yoninazarathy/2504_2022_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
 
-Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialBI` etc..). These are suggested so that tasks have backward compatibility so that you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project.
+Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialSparseBI` etc..). These are suggested so that tasks have backward compatibility so that you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project.
 
 ### Task 1 (5 pts) - Getting it to run, improving pretty printing, and creating your own example script.
 
-Once you create your own repository you can make sure it works. Run the code of `test/runtests.jl` and `example_script.jl`. At this point study the functionality of the repository as a user. That is look at the function signatures but not at the function implementation.  Understand what it can do. 
+Once you create your own repository you can make sure it works. Run the code of `test/runtests.jl` and `example_script.jl`. At this point study the functionality of the repository as a user. That is, look at the function signatures but not at the function implementation.  Understand what the repo can do. 
 
-Now create your own example script, `example_script_2.jl`, with a few "thoughtful polynomials" of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output (e.g. using `println`) that describes what is going on. So basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`. With your improved script, make sure you illustrate the key functionality of most of the operations available via the software. Make sure you choose sensible example polynomials and residue classes (primes) to work with.
+Now create your own example script, `example_script_2.jl`, with a few "thoughtful polynomials" of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output (e.g. using `println()`) that describes what is going on. So basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`. With your improved script, make sure you illustrate the key functionality of most of the operations available via the software. Make sure you choose sensible example polynomials and residue classes (primes) to work with.
 
-In addition, as part of this task improve the "pretty printing" of the polynomials. At the moment terms with power `0` or `1` are printed as `x^0` and `x^1`. Similarly negative coefficients are still preceded by a `+` symbol. Improve this so that polynomials are displayed as cleanly as possible.
+In addition, as part of this task improve the "pretty printing" of the polynomials. At the moment terms with power `0` or `1` are printed as `x^0` and `x^1`. Similarly negative coefficients are still preceded by a `+` symbol (e.g. `+ -x^2`. Further, leading terms do not need a `+`. Improve this so that polynomials are displayed as cleanly as possible, similarly to common mathematical conventions. 
 
 ### Task 2 (15pts) - Refactoring the data structure used
 
-As you can see, the current implementation uses a "non-sparse" representation of the coefficients. This is fine for small powers and allows quick access to coefficients, yet for polynomials with a few very high powers, there is a-lot of wasted space. Modify the implementation so that it uses a "zero-packed" array containing a sorted list of tuples of powers and coefficients. 
+As you can see, the current implementation presumes a dense representation of the coefficients (this is sometimes called a "zero-packed" array). This is fine for small powers and allows quick access to coefficients, yet for polynomials with many zero coefficients, there is a-lot of wasted space. Modify the implementation so that it uses an array containing a sorted list of tuples of powers and coefficients, sorted according to the power from highest to lowest. With this new implementation you no longer need to store terms with zero coefficients.  
 
-Your new polynomial type should be called `PolynomialZeroPacked` and should operate just like `Polynomial` in terms of all of the functions that have methods working on `Polynomial`. Test the functionality of `PolynomialZeroPacked` on all these functions by creating tests for `PolynomialZeroPacked`.
+Your new polynomial type should be called `PolynomialSparse` and should operate just like the supplied `Polynomial` in terms of all of the functions that have methods working on `Polynomial`. Test the functionality of `PolynomialSparse` on all these functions by creating tests for it. Further, rename the supplied `Polynomial` type to be called `PolynomialDense` (and rename all the methods that use it). Make sure that the original supplied tests and scripts work for the new renamed type `PolynomialDense`. Also modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
 
-Provide a short discussion of the pros and cons of each of the representation comparing what operations are efficient with the original `Polynomial` type and what operations are efficient with your new `PolynomialZeroPacked`.
+Provide a short discussion of the pros and cons of each of the representations, comparing what operations are efficient (both in terms of memory and time) with the original `PolynomialDense`` type and what operations are efficient with your new `PolynomialSparse`.
 
 ### Task 3 (10pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
-Now refactor the polynomial type to use `BigInt` for the coefficient instead of `Int`. Do this by introducing a new type `PolynomialBI` which stands for "Polynomial Big Integer". Note that ideally in Julia we would use parametric types, yet for simplicity of this project just introduce the new type `PolynomialBI`. Again implement methods for all of the functions that exist for `Polynomial` and `PolynomialZeroPacked` for `PolynomialBI`. Note that `PolynomialBI` should have a zero-packed implementation just like `PolynomialZeroPacked`. Write test code of `PolynomialBI` similar to the other types. 
+From now on we focus on the sparse representation. 
 
-Find example cases where `PolynomialZeroPacked` (with `Int` coefficients) overflows while your new `PolynomialBI` does not. The test code for `PolynomialBI` should have such cases. 
+Refactor the polynomial type (`PolynomialSparse`) to use `BigInt` for the coefficient instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Big Integer". Note that ideally in Julia we would use parametric types, yet for simplicity of this project just introduce the new type `PolynomialSparseBI`. Again implement methods for all of the functions that exist for `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. Write test code of `PolynomialSparseBI` similar to the other types. 
 
-Now empirically contrast run time performance of polynomial multiplication with `PolynomialZeroPacked` and `PolynomialBI`. Do this for cases where `PolynomialZeroPacked` does not overflow. 
+Find example cases where `PolynomialSparse` (with `Int` coefficients) overflows and yields the wrong result, while your new `PolynomialSparseBI` does not. The test code for `PolynomialSparseBI` should have such cases. 
 
-In general, your results should show that `PolynomialZeroPacked` is more efficient, yet may overflow.
+Now empirically compare run-time performance of polynomial multiplication with `PolynomialSparse` and `PolynomialSparseBI`. Do this for cases where `PolynomialSparse` does not overflow. You should exhibit faster performance for `PolynomialSparse`.
+
+Hence in general, your results should show that ``PolynomialSparse`` is faster, yet may overflow.
 
 ### Task 4 (15pts) - Creating a polynomial mod p datatype and further refactoring
 
-Notice that the `Polynomial`, `PolynomialZeroPacked`, and `PolynomialBI` data-types are not aware of the field of the coefficients. Hence operations such as `divide`, `gcd`, or `factor` need to continuously use `mod` and are often with an "unnatural" interface where they return a function which is then gets $p$ (the prime) as an argument. However, sometimes we are interested in polynomials as "mod p".
+Notice that the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types are not aware of the field of the coefficients. Hence operations such as `divide`, `gcd`, or `factor` need to continuously use `mod` and are often with an "unnatural" interface where they return a function which is then gets $p$ (the prime) as an argument. However, sometimes we are interested in polynomials "mod p" where the $p$ is "baked in" into the polynomial.
 
-Your task here is to create a type `PolynomialModP` which has a polynomial (of type `PolynomailZeroPacked`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `PolynomailZeroPacked` but will keep all the coefficients in the range $0,1,2,\ldots,p-1$ where $p$ is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
+Your task here is to create a type `PolynomialModP` which has a polynomial (of type `PolynomialDense`) as a fieldname (data member) as well as a prime number (`Int`) as a field name. This `PolynomialModP` type will then support the same arithmetic operations as `PolynomialDense` but will keep all the coefficients in the range $0,1,2,\ldots,p-1$. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
 
 Create units tests for this type just like the ones that currently exist in the package and make sure all of the functionality is kept working (only to this restricted set of polynomials).
 
-Your new datatype should still rely on existing functionality of the type `PolynomailZeroPacked`. But, for example, after doing arithmetic operations, it should ensure that all coefficients are represented mod $p$. 
+Your new datatype should still rely on existing functionality of the type `PolynomialDense`. But, for example, after doing arithmetic operations, it should ensure that all coefficients are represented mod $p$. 
 
-Once this type is created, "remove" the division and gcd/Euclidean operations out of polynomial. That is, it should no longer be possible to do `p1 ÷ p2` where `p1` and `p2` are of the `Polynomial` type. This means you should update/trim the units tests for `Polynomial` and have the new units tests for your new `PolynomialModP` type.
+Note that once you complete this task, certain operations of `PolynomialDense` such as `p1 ÷ p2`, are better done via `PolynomialModP`. That is, while you may use `p1 ÷ p2` for `p1` and `p2` of types `PolynomialDense`, it is better to use this operation when `p1` and `p2` are of type `PolynomialModP`. The reason for this is that in the `PolynomialDense` case, this operation returns a function which requires $p$ as input, whereas in the `PolynomialModP` case, this operation simply returns the resulting polynomial mod $p$.
 
-With this refactoring, the `pow_mod` function should no longer be supported for polynomials. Instead make a version of this, using `^` for `PolynomialModP`.
+With this addition `PolynomialModP` usage of the `pow_mod` function used for `PolynomialDense` can now be replaced with `^` for `PolynomialModP`. That is, implement `^` for `PolynomialModP`.
 
 The `show` method for `PolynomialModP` should also indicate that it is mod p.
 
 ### Task 5 (20pts) - Improving multiplication using the Chinese Remainder Theorem
 
-The current multiplication implementation is not efficient for `PolynomialBI`. Implement a different better form of multiplication using the **Chinese Remainder Theorem** (CRT) as presented in the lecture. Test it and benchmark it against the old multiplication (it is recommended to keep the old form of multiplication in another function or method). 
+The current multiplication implementation is not efficient for `PolynomialSparseBI`. Implement a different and better form of multiplication using the **Chinese Remainder Theorem** (CRT) as presented in the lecture. Test it and benchmark it against the old multiplication (it is recommended to keep the old form of multiplication in another function or method). 
 
-You will need to implement multiplication for your `PolynomialModP` type first.  Then the generic multiplication algorithm will compute products of a sufficient number of primes using your mod p multiplication, and then use the CRT to construct the solution in $Z[x]$.
+You will need to implement multiplication for your `PolynomialModP` type first.  Then the generic multiplication algorithm will compute products of a sufficient number of primes using your mod p multiplication, and then use the CRT to construct the solution in ${\mathbb Z}[x]$ (where ${\mathbb Z}$ is a `BitInt`).
 
+Present timing benchmarks showing that your CRT based approach is faster for certain examples.
 
 ### Task 6 (15pts) - Factorization mod p and improving power
 
-Now that you have efficient multiplication of `PolynomialBI`, power, and the datatype `PolynomialModP` together with the other working operations. Adapt the polynomial factorization to use this new functionality. The current code (supplied with the basic project) works for limited cases but can get stuck on certain examples. 
+Now you have efficient multiplication of `PolynomialSparseBI`, power, and the datatype `PolynomialModP` together with the other working operations. Adapt the supplied polynomial factorization code to use this new functionality. The current supplied code works for limited cases but may get stuck on certain examples. 
 
-Similarly to multiplication, you may notice the the implementation of the power operator, `^` as well as `pow_mod` (or its new version in `PolynomialModP`), can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `PolynomialBI` and `PolynomialModP`.
+Similarly to multiplication, you may notice the the implementation of the power operator, `^` as well as `pow_mod` (or its new version in `PolynomialModP`), can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `PolynomialSparseBI` and `PolynomialModP`. A method for optimizing the `w^p mod p` calculation for `w` a polynomial and `p` a prime, is covered in the lectures. You should use this method where applicable.
 
-A method for optimizing the `w^p mod p` calculation for `w` a polynomial and `p` a prime, is covered in the lectures. You should use this method where applicable.
+With your new code, test on a wider set of examples including bigger primes. Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer. Note: factorization for small primes may not work and such cases can be ignored.
 
-With your new code, test on a wider set of examples including bigger primes. Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer. Note, factorization when the prime is `3` may not work and can be ignored.
-
-You should also modify and enhance the current unit tests.
+Finally, you should also modify and enhance the current unit tests supplied with the code to support factorization using all of the described components.
