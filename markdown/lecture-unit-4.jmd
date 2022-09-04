@@ -1482,9 +1482,11 @@ function my_f(x::Number)
     println("My number is $x")
 end
 
-@show my_f(2)
-@show my_f(2.5)
-@show my_f(2 // 3)
+my_f(2)
+my_f(2.5)
+my_f(2 // 3)
+
+println()
 @show methods(my_f);
 ```
 
@@ -1671,7 +1673,84 @@ But there is a problem with the above. What if `T` was `Complex`? Should we have
 
 In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the peices of your program together into a coherent whole. 
 
+### Interfaces
+
+So above we used a few interface methods to implement our online-statistics accumulator.
+
+ * `push!` - add an element to a collection (mutates the input)
+ * `length` - the number of element in a collection
+ * `sum` - add up all the element in a collection
+ * `maximum` - the maximum number of elements in a collection
+ * `mean` - the mean of all the elements in a collection
+
+Let's have a look at some common interfaces
+
+#### Numbers
+
+ * Common arithmetic operations `+`, `-`, `*`, `/`, etc.
+ * `promote(x, y)` - take two numbers and return two numbers of the same type, e.g `promote_type(3.14, 1) = (3.14, 1.0)`
+ * `promote_rule(T1, T2)` - e.g. `promote_rule(Float64, Int64) = Float64`.
+
+Some subtypes of `Number` like `AbstractFloat` have more interface methods.
+
+#### Iterables
+
+* `iterate(iter)` - used in `for` loops
+* `length(iter)` - the number of elements to iterate
+* `eltype(iter)` - the type of the elements to iterate
+
+Some things iterate but we might not have known length or element type, so there you can define some *traits* to describe these facts:
+
+* `IteratorSize(iter)` - return whether `length` is known
+* `IteratorEltype(iter)` - return whether `eltype` is known
+
+#### Arrays
+
+Arrays are iterable and satisfy the the above. They are also indexable
+
+* `getindex(a, i)` - the function behind `a[i]`
+* `setindex!(a, v, i)` - the function behind `a[i] = v`
+* `size(a)` - gives a tuple of sizes, e.g. `size([1,2,3]) = (3,)`
+
+In fact you can create a custom array in Julia with just those methods above! Things like ranges `1:10` are subtypes of `AbstractArray`.
+
+Some types like `Vector` are resizable and for these types there are functions like `push!`, `pop!`, `insert!`, `deleteat!`, `append!`, `empty!`, etc to manipulate them as arbitrary-sized lists.
+
+Arrays are also defined as arithmetic objects according to linear algebra, and therefore have `+`, `-`, `*`, `/`, etc defined. The `LinearAlgebra` standard library package has lots of functions to invert or decompose matrices, find eigenvalues, etc.
+
+#### Sets
+
+Julia has a `Set{T}` type and an `AbstractSet{T}` supertype. Sets are iterable and support things like:
+
+ * `in`
+ * `union`
+ * `intersect`
+ * `setdiff`
+ * `symdiff`
+
+Here's where interfaces get interesting. Things like `Array` also support `in`, but it is slow (must check every element). With `Set` lookup is fast (e.g. O(1) instead of O(N)) - so the operations above are fast.
+
+#### Dictionaries
+
+Julia has a `Dict{K, T}` type and an `AbstractDict{K, T}` supertype. Like arrays, dictionaries are iterable and indexable. You can imagine they are like a `Set` but have associate values (in fact their implementation is related).
+
+ * `keys(dict)` - return the set of keys
+ * `haskey(dict, key)` - check if a key exists in the dictionary
+ * `getindex(dict, key)` - get a value associated with a key
+ * `setindex!(dict, value, key)` - insert or update a key
+ * `delete!(dict, key)` - remove a key
+ * `keytype(dict)` - the type of the dictionary keys
+ * `valtype(dict)` - the type of the dictionary values
+
+You generally iterate a dictionary by specifying if you want to iterate the keys, values, or both:
+
+ * `pairs(dict)` - an iterable of `key => value` pairs (the default)
+ * `keys(dict)` - an iterable of the dictionary keys only
+ * `values(dict)` - an iterable of the dictionary values only
+
 ### Using structs for complex, nested data structures
+
+You can make interesting data structures by referencing other instances of yourself, like this tree structure below:
 
 ```julia
 Random.seed!(0)
