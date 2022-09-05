@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2022
 # Univariate Polynomials with Integer Coefficients
 
-(last edit: August 30, 2022)
+(last edit: September 5, 2022)
 
 
 **Due:** End of Day, Friday, 23, September, 2022. Late submissions are not accepted.
@@ -74,13 +74,15 @@ As you can see, the current implementation presumes a dense representation of th
 
 Your new polynomial type should be called `PolynomialSparse` and should operate just like the supplied `Polynomial` in terms of all of the functions that have methods working on `Polynomial`. Test the functionality of `PolynomialSparse` on all these functions by creating tests for it. Further, rename the supplied `Polynomial` type to be called `PolynomialDense` (and rename all the methods that use it). Make sure that the original supplied tests and scripts work for the new renamed type `PolynomialDense`. Also modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
 
-Provide a short discussion of the pros and cons of each of the representations, comparing what operations are efficient (both in terms of memory and time) with the original `PolynomialDense`` type and what operations are efficient with your new `PolynomialSparse`.
+Provide a short discussion of the pros and cons of each of the representations, comparing what operations are efficient (both in terms of memory and time) with the original `PolynomialDense` type and what operations are efficient with your new `PolynomialSparse`.
 
 ### Task 3 (10pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
 From now on we focus on the sparse representation. 
 
-Refactor the polynomial type (`PolynomialSparse`) to use `BigInt` for the coefficient instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Big Integer". Note that ideally in Julia we would use parametric types, yet for simplicity of this project just introduce the new type `PolynomialSparseBI`. Again implement methods for all of the functions that exist for `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. Write test code of `PolynomialSparseBI` similar to the other types. 
+Refactor the polynomial type (`PolynomialSparse`) to use `BigInt` for the coefficient instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Big Integer". Note that ideally in Julia we would use parametric types, yet for simplicity of this project just introduce the new type `PolynomialSparseBI` (still you may use parametric types of you wish). Again implement methods for all of the functions that exist for `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. Write test code of `PolynomialSparseBI` similar to the other types. 
+
+Note that ideally you may also use abstract base types such that functions such as `rand()` and other functions reuse code for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI`. Feel free to do this, yet you are not required to do so.
 
 Find example cases where `PolynomialSparse` (with `Int` coefficients) overflows and yields the wrong result, while your new `PolynomialSparseBI` does not. The test code for `PolynomialSparseBI` should have such cases. 
 
