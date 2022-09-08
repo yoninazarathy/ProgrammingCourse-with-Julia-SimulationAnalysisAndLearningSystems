@@ -56,9 +56,9 @@ Your GitHub repo should be formatted like the original repo that you forked with
 
 ## Project tasks (80pts)
 
-You will build your project on top of the [https://github.com/yoninazarathy/2504\_2022\_project1](https://github.com/yoninazarathy/2504_2022_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
+Build your project on top of the [https://github.com/yoninazarathy/2504\_2022\_project1](https://github.com/yoninazarathy/2504_2022_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
 
-Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialSparseBI` etc..). These are suggested so that tasks have backward compatibility so that you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project.
+Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialSparseBI` etc..). These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project.
 
 ### Task 1 (5 pts) - Getting it to run, improving pretty printing, and creating your own example script.
 
@@ -75,7 +75,7 @@ Create your own example script called `example_script_2.jl` and include polynomi
 Basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`.
 
 #### Pretty Printing
-Improve the "pretty printing" of the polynomials. By incorporating the following rules:
+Improve the "pretty printing" of the polynomials by incorporating the following rules:
 -  Terms of zero degree (constants) should exclude `x^0`, e.g. `2` not `2x^0`.
 -  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
 -  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
@@ -84,15 +84,17 @@ Improve the "pretty printing" of the polynomials. By incorporating the following
 
 ### Task 2 (15pts) - Refactoring the data structure used
 
-The current implementation for polynomials is a vector where the term of degree $k$ is stored at positoin $k+1$.  This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.
+The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.  Therefore,
 
--  Create a new type called `PolynomialSparse` that stores *only* nonzero terms in an array sorted by descending degree.  `PolynomialSparse` should have identical functinoality to `Polynomial` in terms the functionse methods the later provides.
+-  Create a new type called `PolynomialSparse` that stores *only* nonzero terms in an array sorted by descending degree.  `PolynomialSparse` should have identical functionality to `Polynomial` in terms of the functions and methods the later provides.
 
--  Create tests for `PolynomialSparse` and the fuctions and ensure your implementation passes them. 
+-  Create tests for `PolynomialSparse` and associated fuctions and ensure your implementation passes them. 
 
--  Rename the supplied `Polynomial` type to be called `PolynomialDense` (and rename all the methods that use it). Make sure that the original supplied tests and scripts work for the new renamed type `PolynomialDense`. Also modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
+-  Rename the supplied `Polynomial` type to be called `PolynomialDense` and rename all the methods that use it. Make sure the original supplied tests and scripts work for the new renamed type `PolynomialDense`. 
 
--  Provide a short discussion contrasting the pros and cons of the dense and sparse representations.  In particular, which operations are efficient (both in terms of memory and time) with the original `PolynomialDense` type and what operations are efficient with your new `PolynomialSparse`.
+-  Modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
+
+-  Provide a short discussion contrasting the pros and cons of the dense and sparse representations.  In particular, determine which operations are efficient (both in terms of memory and time) with the original `PolynomialDense` type and what operations are efficient with your new `PolynomialSparse`.
 
 ### Task 3 (10pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
@@ -100,29 +102,29 @@ From now on we focus on the sparse representation.
 
 Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`.
 
--  Refactor `PolynomialSparse` to have `BigInt` coefficients instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Big Integer". 
+-  Refactor `PolynomialSparse` to have `BigInt` coefficients instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Sparse Big Integer". 
 
--  Implement methods for all of the functions that exist for `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. 
+-  Duplicate the functionality (functions and methods) of `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. 
 
--  Write test code of `PolynomialSparseBI` similar to the other types. 
+-  Create tests for `PolynomialSparseBI` and associated fuctions and ensure your implementation passes them.
 
--  Find example cases where `PolynomialSparse` (with `Int` coefficients) overflows and yields the wrong result whereas your new `PolynomialSparseBI` does not. The test code for `PolynomialSparseBI` should have such cases. 
+-  Find examples where `PolynomialSparse` (the one with `Int` coefficients) overflows and yields the wrong result whereas your new `PolynomialSparseBI` does not. The test code for `PolynomialSparseBI` should have such cases. 
 
--  Empirically compare the run-time performance of polynomial multiplication with `PolynomialSparse` and `PolynomialSparseBI`. Do this for cases where `PolynomialSparse` does not overflow. You should exhibit faster performance for `PolynomialSparse`. In general, your results should show that ``PolynomialSparse`` is faster, yet may overflow.
+-  Empirically compare the run-time performance of polynomial multiplication for `PolynomialSparse` and `PolynomialSparseBI`.  Do this for cases where `PolynomialSparse` does not overflow (i.e. returns the correct result).  In general, your results should show that ``PolynomialSparse`` is faster, yet may overflow.
 
-Note: Ideally we would use parametric types in Julia but for simplicity we just introduce the new type `PolynomialSparseBI`.  You may also (if you wish) use parametric types and  abstract base types like `rand()` to reuse code for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI`.
+Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialSparseBI`.  You may (if you wish) use parametric types and abstract base types for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI` but it is not required.
 
 ### Task 4 (15pts) - Creating a polynomial mod p datatype and further refactoring
 
-Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently the aforementioned functions must do this reduction themselves, and worse can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behaviour is "baked in" and automated.
+Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must do this reduction themselves, and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behaviour is "baked in" and automated.
 
--  Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) as a fieldname (data member) as well as a prime number (`Int`) as a field name.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. 
+-  Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. 
 
--  Create unit tests for `PolynomialModP` and all the associated functions and methods as you did before and ensure you pass these tests.
+- Create tests for `PolynomialModP` and associated fuctions and ensure your implementation passes them.
 
 Your new datatype should rely on the existing functionality of `PolynomialSparseBI` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
 
-Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `p1 ÷ p2` for `p1` and `p2` of types `PolynomialSparseBI`, it is better to use this operation when `p1` and `p2` are of type `PolynomialModP` because you get an instance of `PolynomialModP` rather than a function.
+Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `p1 ÷ p2` for `p1` and `p2` of types `PolynomialSparseBI`, it is better to only `÷` when `p1` and `p2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
 
 -  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
 
@@ -130,29 +132,38 @@ Once you complete this task, certain operations of `PolynomialSparseBI` like `p1
 
 ### Task 5 (20pts) - Improving multiplication using the Chinese Remainder Theorem
 
-The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive. 
+The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
 
-- Implement multiplication for your `PolynomialModP`.
+- Implement multiplication for `PolynomialModP`.
 
-- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their  `PolynomialModP` counterparts.
+- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
 
-- Test CRT multiplication.
+- Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
 
-- Benchmark `PolynomialSparseBI` CRT multiplication and contract your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrtate the CRT based approach is faster.
+- Benchmark `PolynomialSparseBI` CRT multiplication and constrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrtate the CRT based approach is faster.
 
 ### Task 6 (15pts) - Factorization mod p and improving power
 
-At this point, you have efficient multiplication for `PolynomialSparseBI`, power, and the datatype `PolynomialModP` together with the other working operations. 
+At this point you should have efficient multiplication and power for `PolynomialSparseBI` as well as  `PolynomialModP` and its associated functions and methods.
 
-- Adapt the supplied polynomial factorization code to use the new functionality listed above. The current supplied code works for limited cases but may get stuck on certain examples. 
+#### Power
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using repeated squaring.
 
 -  Re-factor `pow_mod` into something more efficient by using repeated squaring.  Your implemetation should work for both `PolynomialSparseBI` and `PolynomialModP`.
 
--  Test your `pow_mod` for both implementations.
+-  Create tests for `pow_mod` for both implementations and ensure your implementation passes them.
 
--  Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer. Note: factorization for small primes may not work and such cases can be ignored.
+#### Factoring
+
+- Adapt the supplied polynomial factorization code encorporate the new mothods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples. 
+
+-  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck, it is therefore best to choose large primes.
+
+-  Benchmark your factorization algorithm by factoring a database of problems.  Do not use more than 120 seconds of local compute time.
+
+-  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
+
 
 ### Bonus Task
 
