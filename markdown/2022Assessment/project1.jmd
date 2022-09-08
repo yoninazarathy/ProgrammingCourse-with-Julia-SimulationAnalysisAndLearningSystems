@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2022
 # Univariate Polynomials with Integer Coefficients
 
-(last edit: September 8, 2022)
+(last edit: September 9, 2022)
 
 
 **Due:** End of Day, Friday, 23, September, 2022. Late submissions are not accepted.
@@ -20,7 +20,7 @@ The PDF file should be a nice formatted file that has:
 * A (clickable) link to your GitHub repo.
 * An illustration of the code and output for `example_script.jl`: Show the lines of the script and display the corresponding output. 
 * An illustration of the output of `test/runtests.jl`. 
-* The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions.
+* The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
 
 The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
 
@@ -34,7 +34,11 @@ Marking responses will be made by the teaching staff by annotating **selected pa
 
 * 10 points are allocated for setting up the GitHub hand-in according to the instructions.
 
-* 80 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task. 
+* 80 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.
+
+* There is a 5 point bonus question.
+
+* There are also 10 bonus points for a summary of Maithili Mehta's perspective seminar.
 
 * In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
 
@@ -88,13 +92,15 @@ The current implementation for polynomials is a vector where the term of degree 
 
 -  Create a new type called `PolynomialSparse` that stores *only* nonzero terms in an array sorted by descending degree.  `PolynomialSparse` should have identical functionality to `Polynomial` in terms of the functions and methods the later provides.
 
--  Create tests for `PolynomialSparse` and associated fuctions and ensure your implementation passes them. 
+-  Create tests for `PolynomialSparse` and associated functions and ensure your implementation passes them. 
 
 -  Rename the supplied `Polynomial` type to be called `PolynomialDense` and rename all the methods that use it. Make sure the original supplied tests and scripts work for the new renamed type `PolynomialDense`. 
 
 -  Modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
 
 -  Provide a short discussion contrasting the pros and cons of the dense and sparse representations.  In particular, determine which operations are efficient (both in terms of memory and time) with the original `PolynomialDense` type and what operations are efficient with your new `PolynomialSparse`.
+
+Note: You may to creat an abstract base type, say `Polynomial` for `PolynomialSparse` and `PolynomialDense`. However, this is not required. 
 
 ### Task 3 (10pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
@@ -106,25 +112,25 @@ Exact computation requires polynomials with (truly) integer coefficients and the
 
 -  Duplicate the functionality (functions and methods) of `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. 
 
--  Create tests for `PolynomialSparseBI` and associated fuctions and ensure your implementation passes them.
+-  Create tests for `PolynomialSparseBI` and associated functions and ensure your implementation passes them.
 
 -  Find examples where `PolynomialSparse` (the one with `Int` coefficients) overflows and yields the wrong result whereas your new `PolynomialSparseBI` does not. The test code for `PolynomialSparseBI` should have such cases. 
 
--  Empirically compare the run-time performance of polynomial multiplication for `PolynomialSparse` and `PolynomialSparseBI`.  Do this for cases where `PolynomialSparse` does not overflow (i.e. returns the correct result).  In general, your results should show that ``PolynomialSparse`` is faster, yet may overflow.
+-  Empirically compare the run-time performance of polynomial multiplication for `PolynomialSparse` and `PolynomialSparseBI`.  Do this for cases where `PolynomialSparse` does not overflow (i.e. returns the correct result).  In general, your results should show that `PolynomialSparse` is faster, yet may overflow.
 
-Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialSparseBI`.  You may (if you wish) use parametric types and abstract base types for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI` but it is not required.
+Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialSparseBI`. You may (if you wish) use parametric types for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI` but it is not required.
 
 ### Task 4 (15pts) - Creating a polynomial mod p datatype and further refactoring
 
-Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must do this reduction themselves, and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behaviour is "baked in" and automated.
+Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must do this reduction themselves, and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
 
--  Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. 
+-  Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations.  
 
-- Create tests for `PolynomialModP` and associated fuctions and ensure your implementation passes them.
+- Create tests for `PolynomialModP` and associated functions and ensure your implementation passes them.
 
-Your new datatype should rely on the existing functionality of `PolynomialSparseBI` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
+Your new datatype should rely on the existing functionality of `PolynomialSparse` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
 
-Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `p1 ÷ p2` for `p1` and `p2` of types `PolynomialSparseBI`, it is better to only `÷` when `p1` and `p2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
+Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `f1 ÷ f2` for `f1` and `f2` of types `PolynomialSparseBI`, it is better to only `÷` when `f1` and `f2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
 
 -  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
 
@@ -134,13 +140,13 @@ Once you complete this task, certain operations of `PolynomialSparseBI` like `p1
 
 The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
 
-- Implement multiplication for `PolynomialModP`.
+- Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
 
 - Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
 
 - Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
 
-- Benchmark `PolynomialSparseBI` CRT multiplication and constrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrtate the CRT based approach is faster.
+- Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
 
 ### Task 6 (15pts) - Factorization mod p and improving power
 
@@ -150,21 +156,40 @@ At this point you should have efficient multiplication and power for `Polynomial
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using repeated squaring.
 
--  Re-factor `pow_mod` into something more efficient by using repeated squaring.  Your implemetation should work for both `PolynomialSparseBI` and `PolynomialModP`.
+-  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialSparseBI` and `PolynomialModP`.
 
--  Create tests for `pow_mod` for both implementations and ensure your implementation passes them.
+-  Create tests for `pow_mod` and `^` for both implementations and ensure your implementation passes them.
 
 #### Factoring
 
-- Adapt the supplied polynomial factorization code encorporate the new mothods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples. 
+- Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples. 
 
--  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck, it is therefore best to choose large primes.
+-  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.
 
--  Benchmark your factorization algorithm by factoring a database of problems.  Do not use more than 120 seconds of local compute time.
+-  Benchmark your factorization algorithm by factoring a database of problems (e.g. generated by you via `rand`).  Do not use more than 120 seconds of local compute time.
 
 -  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
 
 
-### Bonus Task
+### Bonus Task (5 bonus points)
 
 Use factorization of `PolynomialModP` and CRT to write a factorization algorithm for `PolynomialSparseBI`.
+
+## Bonus Task (10 bonus points): Perspective seminar (Dr. Maithili Mehta).
+
+This question presents you with an additional 10 bonus points. It is recommended to attend the phyiscal lecture or the zoom lecture.
+
+Write a 1-4 paragraph summary of Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Mehta", or "Maithili", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions (in paragraph form):
+
+1. What was Maithili's career path, and her relationship with software and mathematics?
+
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
+
+1. Have you picked up any tips from Maithili's talk, which you can perhaps use in your career down the road?
+
+1. Feel free to state anything else that you found interesting from the talk.
+
