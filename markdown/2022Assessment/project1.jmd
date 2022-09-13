@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2022
 # Univariate Polynomials with Integer Coefficients
 
-(last edit: September 9, 2022)
+(last edit: September 13, 2022)
 
 
 **Due:** End of Day, Friday, 23, September, 2022. Late submissions are not accepted.
@@ -176,11 +176,15 @@ Use factorization of `PolynomialModP` and CRT to write a factorization algorithm
 
 ## Bonus Task (10 bonus points): Perspective seminar (Dr. Maithili Mehta).
 
-This question presents you with an additional 10 bonus points. It is recommended to attend the phyiscal lecture or the zoom lecture.
+This question presents you with an additional 10 bonus points. Watch the [2021 recording](https://www.youtube.com/watch?v=1ca531R1OmU) of Dr. Mehta's talk. We cannot have a live presentation this year due to scheduling changes involving the special Sep 22 holiday. 
 
-Write a 1-4 paragraph summary of Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Mehta", or "Maithili", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+Now post an (anonymous) question to the speaker on this [Google form](https://forms.gle/5h8Dbp15f95m3EH6A). Try to post this no later than Sunday September 18. 
 
-The writeup should address the following questions (in paragraph form):
+Write your question here - and if a response by Dr. Mehta is supplied before you submit the project, write the response here.  
+
+Further write a 1-2 paragraph summary of Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Mehta", or "Maithili", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address some of the following (in paragraph form):
 
 1. What was Maithili's career path, and her relationship with software and mathematics?
 
