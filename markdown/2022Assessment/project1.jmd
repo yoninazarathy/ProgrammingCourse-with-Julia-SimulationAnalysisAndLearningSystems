@@ -82,6 +82,7 @@ Basically, `example_script_2.jl` is an improvement over the minimally supplied `
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
 -  Terms of zero degree (constants) should exclude `x^0`, e.g. `2` not `2x^0`.
 -  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
+-  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
 -  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
 -  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
 -  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
