@@ -24,11 +24,11 @@ In addition to the mathematical and modelling concepts that you'll pick up in th
 * Further understanding how to benchmark and optimize code.
 * Gain further experience in designing types (`struct`s).
 
-In terms of Monte Carlo and discrete event simulation, you will be learning different way sto run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
+In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
 ## True Random Number generators
 
-We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarentees of "true" randomness!
+We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarantees of "true" randomness!
 
 ## (Pseudo)-Random Numbers
 
@@ -56,7 +56,7 @@ $$
 In practice it is faster not to divide integers, but instead to randomly generate the mantissa of a floating-point number and set the exponent to zero. E.g. `rand()` in Julia will construct 52 random bits to fill in the mantissa of a `Float64` (giving a number in the range $[1, 2)$), and then subtract `1.0` to remove the implicit most-significant bit:
 
 ```
-rand(rng, ::Type{Float64}) = reinterpret(Float64, 0x3ff0000000000000 | rand(rng, UInt32())) - 1.0
+rand(rng, ::Type{Float64}) = reinterpret(Float64, 0x3ff0000000000000 | rand(rng, Random.UInt52())) - 1.0
 ```
 
 When calling `rand()` in Julia (as well as in many other programming languages), what we are doing is effectively requesting the system to present us with $U_n$. Then, in the next call, $U_{n+1}$, and in the call after this $U_{n+2}$ etc. As a user, we don't care about the actual value of $n$, we simply trust the computing system that the next pseudorandom number will differ and adhere to the properties (i)--(iv) mentioned above.
