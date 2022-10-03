@@ -2,7 +2,7 @@
 
 In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and simulation, as well as structured software design. 
 
-[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhatten Project by Stan Ulam, John von Neuman and Nicholas Metropilis to describe a new type of statistical sampling method they devised for performing calculations on the ENIAC (the first programmable, electronic computer) — and they chose the name on the basis of where Ulam's uncle spent considerable time gambling.
+[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhattan Project by Stan Ulam, John von Neuman and Nicholas Metropolis to describe a new type of statistical sampling method they devised for performing calculations on the ENIAC (the first programmable, electronic computer) — and they chose the name on the basis of where Ulam's uncle spent considerable time gambling.
 
 The concept of statistical sampling from a distribution was not new — it was known how to solve a problem involving randomness or uncertainty by running a series of deterministic calculations over e.g. different initial conditions chosen from a distribution at random. The new insight was that there are a wide range of deterministic problems that could be solved via random simulations (such as simulated annealing), which became known as the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method). These days, for either case it is common to say you "use Monte Carlo" whenever you use some form of randomness (or more typically, pseudorandomness) as part of an algorithm or computation.
 
@@ -24,7 +24,7 @@ In addition to the mathematical and modelling concepts that you'll pick up in th
 * Further understanding how to benchmark and optimize code.
 * Gain further experience in designing types (`struct`s).
 
-In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
+In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic significance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
 ## Truly random number generators
 
@@ -206,7 +206,7 @@ Another thing we can do is sample discrete distributions such as a Bernoulli dis
 rand_bit(p::Real = 0.5) = rand() <= p ? 1 : 0
 ```
 
-We can generalize this beyond a binary decision (e.g. a weighted dice roll). If we have `n` choices with probabilities `p[n] >= 0` where `sum(p) == 1`, we can construct the cumulative distrubtion function (CDF) using `cumsum`:
+We can generalize this beyond a binary decision (e.g. a weighted dice roll). If we have `n` choices with probabilities `p[n] >= 0` where `sum(p) == 1`, we can construct the cumulative distribution function (CDF) using `cumsum`:
 
 ```julia
 p = [0.1, 0.3, 0.2, 0.4]
@@ -228,7 +228,7 @@ end
 histogram([rand_from_cdf(p_cdf) for _ in 1:10^6], bins=4, normed=true)
 ```
 
-What the above is doing is effectively inverting the CDF. The CDF was a function from $\{1, 2, \ldots, n\}$ to $[0, 1]$ and the inverse of the CDF funciton is a mapping from $[0, 1]$ (the randomly generated number `r` above) to $\{1, 2, \ldots, n\}$ to $[0, 1]$. Knowing the CDF and its inverse is quite powerful, even for continuous distributions. We'll return to using it again below.
+What the above is doing is effectively inverting the CDF. The CDF was a function from $\{1, 2, \ldots, n\}$ to $[0, 1]$ and the inverse of the CDF function is a mapping from $[0, 1]$ (the randomly generated number `r` above) to $\{1, 2, \ldots, n\}$ to $[0, 1]$. Knowing the CDF and its inverse is quite powerful, even for continuous distributions. We'll return to using it again below.
 
 #### Binomial distribution
 
@@ -276,7 +276,7 @@ The study of Monte Carlo methods includes a collection of algorithms for generat
 
 #### Exponential distribution
 
-In other cases, there are seemingly "magical" algorithms for generating random variables from a given distribution. For example take the exponentail distribution $p(x) = \lambda \exp(-\lambda x)$ where $\lambda$ is called the rate parameter (and is the inverse of the "halflife").
+In other cases, there are seemingly "magical" algorithms for generating random variables from a given distribution. For example take the exponential distribution $p(x) = \lambda \exp(-\lambda x)$ where $\lambda$ is called the rate parameter (and is the inverse of the "halflife").
 
 ```julia
 x = 0:0.01:5
@@ -589,7 +589,7 @@ function queue_simulator(T, arrival_function, service_function, capacity = Inf, 
     return queue_integral / t
 end
 
-λ = 0.82   # \lamda + [TAB]
+λ = 0.82   # \lambda + [TAB]
 μ = 1.3    # \mu + [TAB]
 K = 5
 ρ = λ / μ  # \rho + [TAB]
@@ -707,7 +707,7 @@ function simulate(init_state::State, init_timed_event::TimedEvent
         push!(priority_queue, TimedEvent(LogStateEvent(), log_time))
     end
 
-    # initilize the state
+    # initialize the state
     state = deepcopy(init_state)
     time = 0.0
 
