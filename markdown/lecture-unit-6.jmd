@@ -1,18 +1,18 @@
 # Unit 6: Monte Carlo and discrete event simulation
 
-In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and structured software design. 
+In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and simulation, as well as structured software design. 
 
 [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhatten Project by Stan Ulam, John von Neuman and Nicholas Metropilis to describe a new type of statistical sampling method they devised for performing calculations on the ENIAC (the first programmable, electronic computer) — and they chose the name on the basis of where Ulam's uncle spent considerable time gambling.
 
 The concept of statistical sampling from a distribution was not new — it was known how to solve a problem involving randomness or uncertainty by running a series of deterministic calculations over e.g. different initial conditions chosen from a distribution at random. The new insight was that there are a wide range of deterministic problems that could be solved via random simulations (such as simulated annealing), which became known as the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method). These days, for either case it is common to say you "use Monte Carlo" whenever you use some form of randomness (or more typically, pseudorandomness) as part of an algorithm or computation.
 
-Discrete event simulation is one form of simulation of mathematical models. It can be viewed as one type of Monte Carlo method, however we note that Monte Carlo is a much broader field. In fact, UQ has multiple researchers known for their contributions to Monte Carlo including [Dirk Kroese](https://people.smp.uq.edu.au/DirkKroese/). The choice to cover discrete event simulation as part of this unit is because of the programming complexity that it entails. As is made evident in this unit, the development of a **discrete event simulation engine** requires some structured programming and design.
+Discrete event simulation is one form of simulation of mathematical models. It can be viewed as one type of Monte Carlo method, however we note that Monte Carlo is a much broader field (in fact, UQ has multiple researchers known for their contributions to Monte Carlo including [Dirk Kroese](https://people.smp.uq.edu.au/DirkKroese/)). The choice to cover discrete event simulation as part of this unit is because of the programming complexity that it entails. As is made evident in this unit, the development of a **discrete event simulation engine** requires some structured programming and design.
 
 The mathematics and modelling concepts that this unit covers are:
 
 * A light introduction to (uniform) pseudorandom numbers. How they are generated and what to expect from them.
-* Generation of random quantities from arbitrary distributions based on (uniform) pseudorandom numbers.
-* A light overview of multiple applications of pseudorandom numbers including the bootstrap method in statistics and MCMC (Markov chain Monte Carlo) — this is just an overview.
+* Generation of random numbers drawn from arbitrary distributions based on _uniform_ pseudorandom numbers.
+* A light overview of multiple applications of pseudorandom numbers including the bootstrap method in statistics and Markov-chain Monte Carlo (MCMC) — this is just an overview.
 * Discrete event simulation modelling and the structure of a discrete event simulation engine.
 * Understanding the heap data structure which is the best known implementation of a priority queue (needed for discrete event simulation engine).
 
@@ -26,9 +26,9 @@ In addition to the mathematical and modelling concepts that you'll pick up in th
 
 In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic signficance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
-## True Random Number generators
+## Truly random number generators
 
-We won't dwell on this. But there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarantees of "true" randomness!
+We won't dwell on this, but there is an industry for [hardware random number generators](https://en.wikipedia.org/wiki/Hardware_random_number_generator). These days you can even purchase devices that work by collapsing a quantum superposition, providing guarantees of "true" randomness!
 
 ## (Pseudo)-Random Numbers
 
@@ -37,15 +37,18 @@ The main player in this discussion is the `rand()` function. When used without i
 The "random" numbers we generate using Julia, as well as most "random" numbers used in any other scientific computing platform, are actually pseudorandom. That is, they aren't really random but rather appear random. For their generation, there is some deterministic (non-random and well defined) sequence, $\{x_n\}$, specified by
 
 $$
-x_{n+1} = f(x_n, x_{n-1}, \ldots),
+(x_{n+1}, \mathbf{s}_{n+1}) = f(\mathbf{s}_n),
 $$
 
-originating from some specified **seed**, $x_0$. The mathematical function, $f(\cdot)$ is often (but not always) quite a complicated function, designed to yield desirable properties for the sequence $\{x_n\}$ that make it appear random. Among other properties we wish for the following to hold:
+where $\mathbf{s}_n$ is the _hidden state_ of the random-number generator and `f` is a deterministic function that creates the next number in the sequence and advances the hidden state. We will see that in the simplest generators, $\mathbf{s}_n$ is just $x_n$, so you generate $x_{n+1}$ directly from the value of $x_n$. In more complex generators, $\mathbf{s}_n$ may involve quite a bit of auxillary data. The initial value $\mathbf{s}_0$ is called the **seed** and uniquely determines the sequence of values $x_1, x_2, \ldots$.
+
+The mathematical function, $f(\cdot)$ is often (but not always) quite a complicated function, designed to yield desirable properties for the sequence $\{x_n\}$ that make it appear random. Among other properties we wish for the following to hold:
 
 * (i) Elements $x_i$ and $x_j$ for $i \neq j$ should appear statistically independent. That is, knowing the value of $x_i$ should not yield information about the value of $x_j$. 
 * (ii) The distribution of $\{x_n\}$ should appear uniform. That is, there shouldn't be values (or ranges of values) where elements of $\{x_n\}$ occur more frequently than others. 
-* (iii) The range covered by $\{x_n\}$ should be well defined. 
+* (iii) The range covered by $\{x_n\}$ should be well defined.
 * (iv) The sequence should repeat itself as rarely as possible.
+* (v) For cryptographic applications, it should be difficult (nearly impossible) to determine the hidden state $\mathbf{s}_n$ given observations of $x_n, x_{n-1}, \ldots$.
 
 Typically, a mathematical function such as $f(\cdot)$ is designed to produce integers in the range $\{0, \ldots, 2^{\ell}-1\}$ where $\ell$ is typically 16, 32, 64 or 128 (depending on the number of bits used to represent an integer). Hence $\{x_n\}$ is a sequence of pseudorandom integers. Then if we wish to have a pseudorandom number in the range $[0, 1)$ (represented via a floating point number), we normalize via,
 
@@ -55,15 +58,15 @@ $$
 
 In practice it is faster not to divide integers, but instead to randomly generate the mantissa of a floating-point number and set the exponent to zero. E.g. `rand()` in Julia will construct 52 random bits to fill in the mantissa of a `Float64` (giving a number in the range $[1, 2)$), and then subtract `1.0` to remove the implicit most-significant bit:
 
-```
+```julia; eval = false
 rand(rng, ::Type{Float64}) = reinterpret(Float64, 0x3ff0000000000000 | rand(rng, Random.UInt52())) - 1.0
 ```
 
-When calling `rand()` in Julia (as well as in many other programming languages), what we are doing is effectively requesting the system to present us with $U_n$. Then, in the next call, $U_{n+1}$, and in the call after this $U_{n+2}$ etc. As a user, we don't care about the actual value of $n$, we simply trust the computing system that the next pseudorandom number will differ and adhere to the properties (i)--(iv) mentioned above.
+When calling `rand()` in Julia (as well as in many other programming languages), what we are doing is effectively requesting the system to present us with $U_n$. Then, in the next call, $U_{n+1}$, and in the call after this $U_{n+2}$, etc. As a user, we don't care about the actual value of $n$ or the hidden state $\mathbf{s}_n$ — we simply trust the computing system that the next pseudorandom number will differ and adhere to the properties (i)--(iv) mentioned above. In Julia the hidden state is stored inside the mutable `rng` object and there is a default `rng` object provided for each `Task` (i.e. thread of execution) so you don't need to manage it manually.
 
-One may ask, where does the sequence start? For this we have a special name that we call $x_0$. It is known as the **seed** of the pseudorandom sequence. Typically, as a scientific computing system starts up, it sets $x_0$ to be the current time. This implies that on different system startups, $x_0, x_1, x_2, \ldots$ will be different sequences of pseudorandom numbers. However, we may also set the seed ourselves. There are several uses for this and it is often useful for reproducibility of results (as you have already seen throughout this course). 
+One may ask, where does the sequence start? As mentioned — we have a special name for $\mathbf{s}_0$ called the **seed** of the pseudorandom sequence. Typically, as a scientific computing system starts up, it sets $\mathbf{s}_0$ based on the current time. This implies that on different system startups, $x_1, x_2, x_3, \ldots$ will be different sequences of pseudorandom numbers. However, we may also set the seed ourselves. There are several uses for this and it is often useful for _reproducibility_ of results (as you have already seen throughout this course). 
 
-### Inside a Simple Pseudorandom Number Generator
+### Inside a simple pseudorandom number generator
 
 First lets not confuse the term "random" with "arbitrary" or "non-deterministic". Here is for example a "non-deterministic number":
 
@@ -89,11 +92,11 @@ The integer parameters $a$, $c$ and $m$ are fixed and specify the details of the
 ```julia
 using Plots, LaTeXStrings, Measures
 
-a, c, m = 69069, 1, 2^32
+(a, c, m) = (69069, 1, 2^32)
 next(z) = (a*z + c) % m
 
-N = 10^6
-data = Array{Float64,1}(undef, N)
+N = 1_000_000
+data = Vector{Float64}(undef, N)
 
 x = 808
 for i in 1:N
@@ -101,94 +104,133 @@ for i in 1:N
     global x = next(x)
 end
 
-p1 = scatter(1:1000, data[1:1000], 
-    c=:blue, m=4, msw=0, xlabel=L"n", ylabel=L"x_n")
-p2 = histogram(data, bins=50, normed=:true, 
-    ylims=(0,1.1), xlabel="Support", ylabel="Density")
-plot(p1, p2, size=(800, 400), legend=:none, margin = 5mm)
+p1 = scatter(1:1000, data[1:1000];
+    c = :blue, m = 4, msw = 0, xlabel = L"n", ylabel = L"x_n")
+p2 = histogram(data; bins = 50, normed = :true,
+    ylims = (0, 1.1), xlabel = "Support", ylabel = "Density")
+plot(p1, p2; size = (800, 400), legend = :none, margin = 5mm)
 ```
 
 The period of the RNG (random number generator) is the number of steps taken until an entry repeats itself. The quantities $a$, $c$, and $m$ above are chosen so that there is a [full cycle](https://en.wikipedia.org/wiki/Full_cycle) for the LCG.
 
 ### Creating and using an RNG object 
 
-When you typically use methods of `rand`, the default global generator sequence is used. Thus for example when you reset the seed via `Random.seed!`, it affects the global generator. However, sometimes you want to use multiple random sequences. This can be done by passing a random number generator object as the first argument to `rand`. Such an object is of the abstract type `AbstractRNG` and will typically be a `MersenneTwister` object. 
+When you typically use methods of `rand`, the default global generator sequence is used. Thus for example when you reset the seed via `Random.seed!`, it affects the global generator. However, sometimes you want to use multiple random sequences. This can be done by passing a random number generator object as the first argument to `rand`. Such an object is of the abstract type `AbstractRNG` and will typically be a `Xoshiro` object.
 
-The [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister) is a popular advanced generally used RNG algorithm. We won't get into the details of how it is implemented, but here is how you create such an object in Julia.
+The [Xoshiro256++](https://prng.di.unimi.it/) RNG is a relatively new RNG algorithm. We won't get into the details of how it is implemented, but here is how you create such an object in Julia.
 
 ```julia
 using Random 
-rng = MersenneTwister(27)
+rng = Xoshiro(27)
 @show rand(rng, Int)
 @show rand(rng, Complex{Float64})
 
 println("After creating an RNG with same seed:")
-rng = MersenneTwister(27)
+rng = Xoshiro(27)
 @show rand(rng, Int)
 @show rand(rng, Complex{Float64});
 ```
 
 There are several reasons for using multiple random number generators, but before these are understood it is good to understand the concept of **common random numbers**. The general idea is that you want to do some task, or compute some function which depends both on a random sequence and some parameter, say $\alpha$. Sometimes you would want to vary $\alpha$ a bit and see the effect on the task and the function. If you keep the same random numbers (the same seed) then the effect will often be more apparat.
 
-Here is an artificial example:
+Here is an artificial example — consider a random walk (a.k.a. "drunken walk") with a bias toward the upper-left given by `α`:
 
 ```julia
 using Plots, Random, Measures
 
 function path(rng::AbstractRNG, α::Real, n::Int=5000)
-    x, y = 0.0, 0.0
-    xDat, yDat = [], []
+    (x, y) = 0.0, 0.0
+    (xDat, yDat) = Float64[], Float64[]
     for _ in 1:n
-        flip = rand(rng,1:4)
-        if flip == 1
+        # random walk
+        flip = rand(rng, 1:4)
+        if flip == 1 # left
             x += 1
-        elseif flip == 2
+        elseif flip == 2 # up
             y += 1
-        elseif flip == 3
-            x -= (2+α) * rand(rng)
-        elseif flip == 4
-            y -= (2+α) * rand(rng)
+        elseif flip == 3 # right
+            x -= 1
+        elseif flip == 4 # down
+            y -= 1
         end
-        push!(xDat,x)
-        push!(yDat,y)
+
+        # bias toward upper-right
+        x += α
+        y += α
+
+        # 
+        push!(xDat, x)
+        push!(yDat, y)
     end
-    return xDat, yDat
+    return (xDat, yDat)
 end
 
-alpha_range = [0.2, 0.21, 0.22]
-args = (xlabel = "x", ylabel = "y", xlims=(-200, 50), ylims=(-250, 50))
+alpha_range = [0.0, 0.002, 0.004]
+args = (xlabel = "x", ylabel = "y", xlims=(-150, 150), ylims=(-150, 150))
 
-#Plot runs with same random numbers (common random numbers)
-p1 = plot(path(MersenneTwister(27), alpha_range[1]), c=:blue)
-p1 = plot!(path(MersenneTwister(27), alpha_range[2]), c=:red)
-p1 = plot!(path(MersenneTwister(27), alpha_range[3]), c=:green, title = "Same seed"; args...) 
+#Plot runs with same random numbers (common random numbers)\
+p1 = plot(path(Xoshiro(27), alpha_range[1]), c = :blue, label = "α=$(alpha_range[1])")
+p1 = plot!(path(Xoshiro(27), alpha_range[2]), c = :red, label = "α=$(alpha_range[2])")
+p1 = plot!(path(Xoshiro(27), alpha_range[3]), c = :green, label = "α=$(alpha_range[3])", title = "Same seed", legend = :topright; args...) 
 
 #Plot runs with different random numbers
-rng = MersenneTwister(27)
-p2 = plot(path(rng, alpha_range[1]), c=:blue)
-p2 = plot!(path(rng, alpha_range[2]), c=:red)
-p2 = plot!(path(rng, alpha_range[3]), c=:green, title = "Different seeds"; args...) 
+rng = Xoshiro(27)
+p2 = plot(path(rng, alpha_range[1]), c = :blue, label = "α=$(alpha_range[1])")
+p2 = plot!(path(rng, alpha_range[2]), c = :red, label = "α=$(alpha_range[2])")
+p2 = plot!(path(rng, alpha_range[3]), c = :green, label = "α=$(alpha_range[3])", title = "Different seeds", legend = :topright; args...) 
 
-plot(p1, p2, size=(800, 400), legend=:none, margin=5mm)
+plot(p1, p2, size=(800, 400), margin=5mm)
 ```
 
-As can be seen on the left, by keeping the same seed and varying $\alpha$ we see the effect on the task much better than by having each run have its own seed.
+As can be seen on the left, by keeping the same seed and varying $\alpha$ we see the effect on the walk much clearer than by having each run have its own seed.
 
 In general, common random numbers can be viewed as a form of a [variance reduction](https://en.wikipedia.org/wiki/Variance_reduction) technique in Monte Carlo.
 
 ## From Uniform(0,1) to a given distribution
 
-We now come to the question of how to generate random variables from a given distribution based on uniform(0,1) random variables. That is, say that all you have is the ability to do `rand()` function calls, each generating a uniform random `Float64` on in the set $[0,1]$. How can you use it for generating random quantities from other distributions?
+We now come to the question of how to generate random variables from a given distribution based on uniform(0,1) random variables. That is, say that all you have is the ability to do `rand()` function calls, each generating a uniform random `Float64` on in the set $[0,1)$. How can you use it for generating random quantities from other distributions?
 
-Sometimes it isn't difficult. For example:
+#### Basic distributions
+
+Sometimes it isn't difficult. For example, we could scale the variables to get a uniform distribution between `a` and `b`:
 
 ```julia
-#function to generate a Bernoulli(p) random variable
-rand_bit(p::Real = 0.5) = rand() ≤ p ? 1 : 0   #\le + [TAB]
-
-#function to generate a uniform(a,b) random variable
+# function to generate a uniform(a, b) random variable
 rand_uniform(a::Real, b::Real) = (b-a)*rand() + a;
 ```
+
+Another thing we can do is sample discrete distributions such as a Bernoulli distribution (e.g. a coin toss):
+
+```julia
+# function to generate a binomial random variable
+rand_bit(p::Real = 0.5) = rand() <= p ? 1 : 0
+```
+
+We can generalize this beyond a binary decision (e.g. a weighted dice roll). If we have `n` choices with probabilities `p[n] >= 0` where `sum(p) == 1`, we can construct the cumulative distrubtion function (CDF) using `cumsum`:
+
+```julia
+p = [0.1, 0.3, 0.2, 0.4]
+p_cdf = cumsum(p)
+```
+
+So we can draw from such a distribution like so:
+
+```julia
+function rand_from_cdf(cdf::Vector{Float64})
+    r = rand()
+    i = 1
+    while r > cdf[i]
+        i = i + 1
+    end
+    return i
+end
+
+histogram([rand_from_cdf(p_cdf) for _ in 1:10^6], bins=4, normed=true)
+```
+
+What the above is doing is effectively inverting the CDF. The CDF was a function from $\{1, 2, \ldots, n\}$ to $[0, 1]$ and the inverse of the CDF funciton is a mapping from $[0, 1]$ (the randomly generated number `r` above) to $\{1, 2, \ldots, n\}$ to $[0, 1]$. Knowing the CDF and its inverse is quite powerful, even for continuous distributions. We'll return to using it again below.
+
+#### Binomial distribution
 
 Sometimes you can use specialized methods for the distribution at hand. For example a Binomial$(n,p)$ random variables counts the number of successes in $n$ independent Bernoulli trials, each with success probability $p$.
 
@@ -196,7 +238,15 @@ Sometimes you can use specialized methods for the distribution at hand. For exam
 rand_binomial(n::Integer, p::Real = 0.5) = sum(rand_bit(p) for _ in 1:n)
 ```
 
-The Binomial$(n,p)$ distribution has mean $np$ and standard deviation $\sqrt{np(1-p)}$. So for example with $n=20$ and $p=0.3$ the mean should be $6$ and the standard deviation should be about $2.05$. Lets see:
+The Binomial$(n,p)$ distribution has mean $np$ and standard deviation $\sqrt{np(1-p)}$. So for example with $n=20$ and $p=0.3$:
+
+```julia
+n = 20
+p = 0.3
+(mean = n*p, std = sqrt(n*p*(1-p)))
+```
+
+Lets see what statistics we get from 1 million Monte Carlo samples:
 
 ```julia
 using Statistics
@@ -204,130 +254,169 @@ using Statistics
 n = 20
 p = 0.3
 data = [rand_binomial(n,p) for _ in 1:10^6]
-mean(data), std(data)
+(mean = mean(data), std = std(data))
 ```
 
-We could have also used the [Distributions.jl](https://github.com/JuliaStats/Distributions.jl) package:
+Another way of doing this is to sample the CDF of the binomial distribution above. We could have also used the [Distributions.jl](https://github.com/JuliaStats/Distributions.jl) package, which provides statistics and samplers for many common distributions:
 
 ```julia
 using Distributions
-dist = Binomial(n,p)
-data = rand(dist,10^6)
-mean(data), std(data)
+dist = Binomial(n, p)
+data = rand(dist, 10^6)
+(mean = mean(data), std = std(data))
 ```
 
 In fact, in with the `Distributions` package you can query the distribution object directly about things like the mean and standard deviation:
 
 ```julia
-mean(dist), std(dist)
+(mean = mean(dist), std = std(dist))
 ```
 
 The study of Monte Carlo methods includes a collection of algorithms for generating random variables from desired distributions. For example for the geometric distribution (describing the number of independent Bernoulli trials until success), and similarly for the negative binomial distribution (until $k$ successes), we can just write code based the Bernoulli coin flips (for example: [geometric.jl](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/3_chapter/geometric.jl) or [negativeBinomial.jl](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/3_chapter/negativeBinomial.jl)).
 
-In other cases, there are more "magical" algorithms for generating random variables from a given distribution, for example for example to create a standard normal (Gaussian) random variable you can use the [Box-Muller transform](https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform):
+#### Exponential distribution
+
+In other cases, there are seemingly "magical" algorithms for generating random variables from a given distribution. For example take the exponentail distribution $p(x) = \lambda \exp(-\lambda x)$ where $\lambda$ is called the rate parameter (and is the inverse of the "halflife").
+
+```julia
+x = 0:0.01:5
+plot(x, 0.5 .* exp.(-0.5 .* x); label = "λ = 0.5")
+plot!(x, 1.0 .* exp.(-1.0 .* x); label = "λ = 1.0")
+plot!(x, 1.5 .* exp.(-1.5 .* x); label = "λ = 1.5", xlabel = "x", ylabel = "PDF")
+```
+
+It turns out you can create a sample for this using this algorithm:
+
+```julia; eval = false
+randexp(λ) = -log(rand()) / λ
+```
+
+Note that Julia has a `randexp` function provided in the `Random` standard library. At first this algorithm might seem surprising, however it isn't too hard to derive. For starters, the scaling with $\lambda$ is relatively easy to understand - you can rescale `x` in one of the PDFs above to get any of the others.
+
+How then to explain the `log(rand())` part? In principle you can generate a scalar random variable from any given distribution using the **inverse probability transform**. The idea is that you generate a uniform$(0,1)$ random variable and apply the inverse of the CDF (cumulative distribution function) of your desired distribution to that uniform.
+
+A reminder: For a random variable $X$, the CDF $CDF(x)$ is the function $CDF(x) = {\mathbb P}(X \le x)$ which is the integral of the PDF:
+
+$$
+\int_{X \le x} p(X) \, dX
+$$
+
+It is a non-decreasing function in $x$ (because $p$ is never negative) with limits at $0$ for $x \to -\infty$ and $1$ for $x \to \infty$. This is enough to ensure that the inverse function $CDF^{-1}(p)$ exists. To remind you what an inverse function is, it is the function such that $CDF^{-1}\big(CDF(x)\big) = x$. 
+
+The idea of the inverse probability transform is then to apply the inverse CDF function onto a uniform random variable to get the desired distribution. So, let us look at the cumulative distribution of the exponential distribution:
+
+$$
+CDF(x) = 1 - \exp(\lambda x)
+$$
+
+```julia
+x = 0:0.01:3
+plot(x, 1.0 .- exp.(-0.5 .* x); label = "λ = 0.5")
+plot!(x, 1.0 .- exp.(-1.0 .* x); label = "λ = 1.0")
+plot!(x, 1.0 .- exp.(-1.5 .* x); label = "λ = 1.5", xlabel = "x", ylabel = "CDF")
+plot!(0:0.01:2, 0:0.01:2; linestyle = :dot, linecolor = :black, label = "")
+```
+
+We can invert the CDF function (i.e. mirror the above graphs across the diagonal $x = y$) via:
+
+$$
+CDF^{-1}(p) = \frac{-\ln(1 - p)}{\lambda}
+$$
+
+If we make the substitution $r = 1 - p$ and note that both $r$ and $p$ share the _same_ domain $[0, 1]$ we get the $-\ln(r) / \lambda$ that we see in `randexp` above. The algorithm will draw a cumulative probability from a _uniform_ distribution and use the inverse CDF to project to a value of $x$.
+
+#### Gaussian distribution
+
+To generate a standard normal (Gaussian) random variable you can use the [Box-Muller transform](https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform):
+
+```julia; eval = false
+randn() = sqrt(-2log(rand())) * cos(2π*rand())
+```
+
+(Note that Julia has an efficient version of this `randn` function provided in the `Random` module)
+
+This is another seemingly magical algorithm but it isn't too hard to understand. Like before we want to find the CDF of the distribution and invert it. The CDF is just the integral of the PDF. And if you cast your mind back to your calculus classes, the way to integrate a Gaussian is to transform it into the 2D integral of a 2D Gaussian and use polar coordinates:
+
+$$
+\left( \int_{-\infty}^{\infty} \exp(\frac{-x^2}{2}) \,dx \right)^2 = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \exp(\frac{-(x^2 + y^2)}{2}) \,dx \,dy = \int_{0}^{2\pi} \int_{0}^{\infty} r \exp(\frac{-r^2}{2}) \,dr \,d\theta = 2\pi \int_0^{\infty} \exp(-R) \,dR = 2\pi
+$$
+
+(where we do integration by substitution with $R = \frac{1}{2} r^2$, such that $dR = r \, dr$).
+
+We are going to use the same trick here — we can draw a value of $x$ from a Gaussian distribution and _another_ value of $y$ from a Gaussian distribution using polar coordinates. We are drawing $(x, y)$ from the 2D PDF below:
+
+```julia
+x = -3:0.025:3
+y = -3:0.025:3
+p = exp.(-0.5 .* (x.^2 .+ y'.^2)) ./ 2π
+contourf(x, y, p; xlabel = "x", ylabel = "y", aspect_ratio = :equal)
+```
+
+Rather than drawing a random $x$ and $y$ we will draw a random $r$ and $\theta$. Afterwards we can reproduce $x = r \cos \theta$ and $y = r \sin \theta$.
+
+Given the distribution has rotational symmetry we can draw $\theta$ from the uniform distribution $[0, 2\pi)$, so `x = r * cos(2π * rand())`.
+
+Now we just need to find a way to sample `r`. Rather than drawing $r$ from $r \exp(-r^2 / 2)$ we can draw `R` from $\exp(-R)$, using the exponential algorithm above `R = -log(rand())`. We can then reproduce `r = sqrt(2R)` which is `sqrt(-2*log(rand())`.
+
+Putting all of this together reproduces the algorithm above and we can faithfully sample the Gaussian distribution:
 
 ```julia
 using Random, Distributions, Plots
 Random.seed!(1)
 
-#This function creates a standard normal via the Box-Muller transform 
-Z() = sqrt(-2log(rand())) * cos(2π*rand())
+my_randn() = sqrt(-2log(rand())) * cos(2π*rand())
 
 x_grid = -4:0.01:4
 
-histogram([Z() for _ in 1:10^6], bins=50, normed=true, label="MC estimate")
-plot!(x_grid, pdf.(Normal(),x_grid), 
-	 c=:red, lw=4, label="PDF", 
-	 xlims=(-4,4), ylims=(0,0.5), xlabel="x", ylabel="f(x)")
+histogram([my_randn() for _ in 1:10^6], bins=50, normed=true, label="MC estimate")
+plot!(x_grid, pdf.(Normal(),x_grid),
+	 c = :red, lw = 4, label = "PDF",
+	 xlims = (-4,4), ylims = (0,0.5), xlabel = "x", ylabel = "f(x)")
 ```
 
-The general idea is to represent a pair of normal standard variables, $(X,Y)$ via polar coordinates, say $(R, \Theta)$. Then the angle $\Theta$ is naturally distributed uniformly on $[0,2\pi]$ and it can be shown that square of the radius follows an exponential distribution with a mean of $2$. Here is numerical demonstration of this latter fact:
+#### Rejection sampling
+
+There are many other methods for generating random variables, some of which general and some are specialized. An important general method that we don't discuss much here is [rejection sampling](https://en.wikipedia.org/wiki/Rejection_sampling). For example, to find a pair of random variables in a circle, one could simply throw away anything that falls outside a larger square and draw a new sample:
 
 ```julia
-#The radius squared taken from (X,Y), each standard normals.
-radius_squared = rand(Normal(),10^7) .^2 + rand(Normal(),10^7) .^2
-
-#Print the relative differences between the empirical quantile and an Exponential distribution with a mean of 2
-[(quantile(radius_squared, q) - quantile(Exponential(2), q))/quantile(Exponential(2), q)  for q in [0.1,0.25,0.5,0.75,0.9]] |> println
+x = [2*rand() - 1 for _ in 1:1000]
+y = [2*rand() - 1 for _ in 1:1000]
+c = [x[i]^2 + y[i]^2 <= 1 ? :blue : :red for i in 1:length(x)]
+scatter(x, y; c, xlabel = "x", ylabel = "y", label = "", aspect_ratio = :equal)
 ```
 
-Now converting back from polar coordinates $(R, \Theta)$ to $(X,Y)$ we have,
+So long as the rejection probability is not too large (very close to 1), this can be an efficient technique.
 
-$$
-X = R \cos(\Theta),
-$$
-
-and similarly can be done for $Y$. The question is then asked, how do we get an exponential random variable?
-
-In principle you can generate a scalar random variable from any given distribution using the **inverse probability transform**. The idea is that you generate a uniform$(0,1)$ random variable and apply the inverse of the CDF (cumulative distribution function) of your desired distribution to that uniform. 
-
-A reminder: For a random variable $X$, the CDF $F(x)$ is the function $F(x) = {\mathbb P}(X \le x)$. It is a non-decreasing function in $x$ with limits at $0$ and $1$ for $x \to -\infty$ and $x \to \infty$ respectively. 
-
-When $X$ is a continuous random variable on all of ${\mathbb R}$ (assume this first for simplicity), then the inverse function $F^{-1}(u)$ exists. It is the function such that $F^{-1}\big(F(x)\big) = x$. In fact, the `quantile()` function, overloaded via methods in the `Distributions` package implements exact this function:
-
-```julia
-@show quantile(Normal(),cdf(Normal(), 2.35)) #2.35 is some arbitrary point x
-@show cdf(Normal(),quantile(Normal(), 0.82)); #0.82 is some arbitrary point u
-```
-The idea of the inverse probability transform is then to apply the quantile (or inverse CDF) function onto a uniform random variable to get the desired distribution.
-
-To see why the method works, consider a uniform random variable $U$ and apply to it the inverse probability transform $F^{-1}(\cdot)$. In such a case, consider the CDF of $Y = F^{-1}(U)$ and see that it is $F(\cdot)$:
-
-$$
-F_Y(y) ={\mathbb P}\big(Y \le y \big) = {\mathbb P}\big(F^{-1}(U) \le y\big) = {\mathbb P} \big(U \le F(y) \big)  = F_U\big( F(y) \big) =  F(y).
-$$
-
-The third equality follows because $F(\cdot)$ is a monotonic function and can be applied to both sides of the inequality. The last step follows because the CDF of uniform $(0,1)$ random variable is the identity function on $(0,1)$, is $0$ for negative values, and is $1$ for values greater than $1$.
-
-Here is for example the inverse probability transform applied on the triangular distribution:
-
-```julia
-using Distributions, Plots
-
-triangDist = TriangularDist(0,2,1)
-xGrid = 0:0.1:2
-N = 10^6
-inverseSampledData = quantile.(triangDist,rand(N))
-
-histogram( inverseSampledData, bins=30, normed=true,
-	ylims=(0,1.1), label="Inverse transform data")
-plot!( xGrid, pdf.(triangDist,xGrid), c=:red, lw=4, 
-	xlabel="x", label="PDF", ylabel = "Density", legend=:topright)
-```
-
-Going back to the Box-Muller transform. It itself is not an inverse probability transform for standard normal random variables because computing quantiles of standard normals is not a simple task. However the generation of an exponential random variable with mean $2$ via, `-2log(rand())` is an inverse probability transform for exponentials. 
-
-Exercise: show that the quantile of a mean $2$ exponential distribution with density $\frac{1}{2} e^{-\frac{1}{2} x}$ on $x \ge 0$ is $-2 \log(1-u)$.  
-
-Now we also use the fact that `1-rand()` is distributed just like `rand()` and this explains `-2log(rand())` for generating mean $2$ exponentials and the Box-Muller transform.
-
-There are many other methods for generating random variables, some of which general and some are specialized. An important general method that we don't discuss here further is [rejection sampling](https://en.wikipedia.org/wiki/Rejection_sampling). 
+#### Poisson distribution
 
 To finish off this section (optional) here is a code to generate a Poisson random variable with (mean) parameter $\lambda$:
 
 ```julia
 using StatsBase, Distributions, Plots
 
-#A (not immediately) obvious method to generate Poisson random variables with mean lambda
-function prn(lambda)
-    k, p = 0, 1
-    while p > MathConstants.e^(-lambda)
-        k += 1
-        p *= rand()
+# A (not immediately) obvious method to generate Poisson random variables with mean λ
+function prn(λ)
+    k = 0
+    p = 1
+    while p > exp(-λ)
+        k = k + 1
+        p = p * rand()
     end
-    return k-1
+    return k - 1
 end
 
-xGrid, lambda, N = 0:16, 5.5, 10^6
+xGrid = 0:16
+λ = 5.5
+N = 1_000_000
 
-pDist = Poisson(lambda)
+pDist = Poisson(λ)
 bPmf = pdf.(pDist,xGrid)
-data = counts([prn(lambda) for _ in 1:N],xGrid)/N
+data = counts([prn(λ) for _ in 1:N], xGrid)/N
 
-plot( xGrid, data, 
+plot(xGrid, data, 
 	line=:stem, marker=:circle, 
 	c=:blue, ms=10, msw=0, lw=4, label="MC estimate")
-plot!( xGrid, bPmf, line=:stem, 
+plot!(xGrid, bPmf, line=:stem, 
 	marker=:xcross, c=:red, ms=6, msw=0, lw=2, label="PMF",
 	ylims=(0,0.2), xlabel="x", ylabel="Probability of x events")
 ```
@@ -351,7 +440,7 @@ using Distributions, Random, Plots
 Random.seed!(0)
 
 call_duration() = rand(Exponential(7.0))
-money_made(duration::Float64)::Float64 = duration ≤ 1.5 ? 0.0 : 2.5 * duration
+money_made(duration::Float64)::Float64 = duration <= 1.5 ? 0.0 : 2.5 * duration
 
 function simulate()
     current_worker_calls = [call_duration() for _ in 1:5] # initialize: all workers start a call at t=0
