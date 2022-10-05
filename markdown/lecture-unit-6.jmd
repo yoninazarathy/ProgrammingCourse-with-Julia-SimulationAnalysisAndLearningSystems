@@ -617,7 +617,7 @@ mm1k_estimate = queue_simulator(
     K
 )
 
-println("The load on the system: $(p)")
+println("The load on the system: $(ρ)")
 println("Queueing theory: $((mm1_theory, md1_theory, mm1k_theory))")
 println("Via simulation: $((mm1_estimate, md1_estimate, mm1k_estimate))")
 ```
