@@ -1,7 +1,7 @@
 # Project \#2 - Semester 2, 2022
 # Discrete Event Simulation (+ perspective seminar summary)
 
-(last edit: October 1, 2022)
+(last edit: October 5, 2022)
 
 **Here is an [explainer video for the project](https://www.youtube.com/watch?v=9vduCx93tuY)**.
 
@@ -113,6 +113,7 @@ Hence in summary, the parameters for a network are:
 * The dimension of the network (number of nodes): $L$.
 * The external arrival rates: $\alpha_1,\ldots,\alpha_L$, with $\alpha_i \ge 0$.
 * The service rates: $\mu_1,\ldots,\mu_L$, with $\mu_i > 0$.
+* The $L \times L$ routing matrix $P$.
 * The squared coefficient of variation of the service processes: $c_s > 0$.
 
 *Tip:* This bit of code with the `rate_scv_gamma()` function may help you see how to generate gamma distributed random variables with the desired rate and squared coefficient of variation.
@@ -276,7 +277,7 @@ max_scalings = round.(maximal_alpha_scaling.([scenario1, scenario2, scenario3, s
 println("The maximal scalings for scenarios 1 to 4 are: $max_scalings")
 
 """
-Use this function to adjust the network parameters to the desired ρ and c_s
+Use this function to adjust the network parameters to the desired ρ⋆ and c_s
 """
 function set_scenario(net::NetworkParameters, ρ::Float64, c_s::Float64 = 1.0)
     (ρ ≤ 0 || ρ ≥ 1) && error("ρ is out of range")  
@@ -300,7 +301,7 @@ adjusted_net = set_scenario(scenario4, 0.7, 2.4)
 @show ρ_star;
 ```
 
-Now assume $c_s = 1$ and create 4 plots for the four scenarios where you plot the **total steady state mean queue lengths** as a function of $\rho$. Simply use the fact that the theoretical steady state mean queue length for queue $i$ is $\rho_i/(1-\rho_i)$. This is a straight forward task that does not involve simulation, but rather only a deterministic computation.
+Now assume $c_s = 1$ and create 4 plots for the four scenarios where you plot the **total steady state mean queue lengths** as a function of $\rho^*$. Simply use the fact that the theoretical steady state mean queue length for queue $i$ is $\rho_i/(1-\rho_i)$. This is a straight forward task that does not involve simulation, but rather only a deterministic computation.
 
 ## Task 3: A Simulation Engine Based on Queue States (40pts)
 
