@@ -474,9 +474,9 @@ function simulate()
 end
 
 """
-This function is designed to stich_steps of a discrete event curve.
+This function is designed to stitch_steps of a discrete event curve.
 """
-function stich_steps(epochs, values)
+function stitch_steps(epochs, values)
     n = length(epochs)
     new_epochs  = [epochs[1]]
     new_values = [values[1]]
@@ -489,10 +489,10 @@ function stich_steps(epochs, values)
     return (new_epochs, new_values)
 end
 
-plot(stich_steps(simulate()...)..., label = false, 
+plot(stitch_steps(simulate()...)..., label = false, 
      xlabel = "Time", ylabel = "Revenue")
-plot!(stich_steps(simulate()...)..., label = false)
-plot!(stich_steps(simulate()...)..., label = false)
+plot!(stitch_steps(simulate()...)..., label = false)
+plot!(stitch_steps(simulate()...)..., label = false)
 ```
 
 As you can see, in a discrete event simulation, at each discrete time point $T_i$ the system state is modified due to an **event** that causes such a state change. 
@@ -798,7 +798,7 @@ end
 
 simulate(QueueState(0), TimedEvent(ArrivalEvent(),0.0), max_time = 100.0, callback = record_trajectory)
 
-plot(stich_steps(time_traj, queue_traj)... ,
+plot(stitch_steps(time_traj, queue_traj)... ,
              label = false, xlabel = "Time", ylabel = "Queue size (number in system)" )
 ```
 
