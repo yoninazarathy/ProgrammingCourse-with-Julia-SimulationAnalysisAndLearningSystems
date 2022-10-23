@@ -1,23 +1,43 @@
 # Unit 8: A Taste of Machine Learning
 
+Up to now most of the course dealt with writing explicit instructions for a computer to perform. For example, sorting using a very specified algorithm such as bubble sort or quicksort. Yet, in recent years more and more computer programming involves using "code" that has been automatically trained and not explicitly designed and coded. This is the domain of **machine learning**, **deep learning**, and in general **artificial intelligence**. 
+
+Machine learning is all about training mathematical models on a computer in order to classify data, predict outcomes, estimate relationships, summarize data, control complex processes, and more. Deep learning can be viewed as a form of machine learning based on **deep learning models**. We will mostly focus on general machine learning. At UQ, see the course [COMP4702](https://my.uq.edu.au/programs-courses/course.html?course_code=COMP4702) for a general introductory machine learning course. Further, [STAT3007](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007) is specialized deep learning course. There are multiple other courses that deal with theoretical aspects of machine learning such as [STAT3006](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006) and parts of [STAT4401](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT4401).
+
+Machine learning activities are often dichotomized into two broad categories, **supervised learning**, and **unsupervised learning**. With supervised learning, data is assumed to be available as $(x, y)$ pairs where each **feature vector** $x$ is labeled via $y$. In the case of unsupervised learning, one only observes data points $x$ and tries to find relationships between the various elements, variables, or coordinates of $x$.
+
+The following illustrations are taken from Chapter 2 of [The Mathematical Engineering of Deep
+Learning](https://deeplearningmath.org). They serve to illustrate how models, algorithms, and data can interact in the world of machine learning.
+
+This schematic illustrates **supervised learning**:
+
+![Supervised learning](../web_img/ML-supervised-cycle.png)
+
+This schematic illustrates **unsupervised learning** with **clustering** and **data reduction**:
+
+![Unsupervised learning](../web_img/ML-unsupervised-cycle.png)
+
 # ML Datasets
 
-There are some datasets used in machine learning learning, exploration, and (sometimes) practice that are very popular. This [YouTube video](https://www.youtube.com/watch?v=jrtxL5JHpTk) overviews a few such datasets. 
+There are some datasets used in machine learning learning, exploration, and (sometimes) practice that are very popular. 
 
-One of the most common datasets is the [MNIST Digits dataset](https://en.wikipedia.org/wiki/MNIST_database). It is composed of monochrome digits of $28 \times 28$ pixels and **labels** indicating each digit. There are $60,000$ digits that are called the **training set** and $10,000$ additional digits that are called the **test set**. In Julia you can access this dataset via the `MLDatasets.jl` package.
+One of the most common datasets is the [MNIST Digits dataset](https://en.wikipedia.org/wiki/MNIST_database). It is composed of monochrome digits of $28 \times 28$ pixels and **labels** indicating each digit. There are $60,000$ digits that are called the **training set** and $10,000$ additional digits that are called the **test set**. In Julia you can access this dataset via the [`MLDatasets.jl`](https://github.com/JuliaML/MLDatasets.jl) package.
 
+This is how we can load the training dataset. 
 
 ```julia
 using MLDatasets
 train_data = MLDatasets.MNIST.traindata(Float64)
 
-imgs = train_data[1]
-@show typeof(imgs)
-@show size(imgs)
+train_imgs = train_data[1]
+@show typeof(train_imgs)
+@show size(train_imgs)
 
-labels = train_data[2]
-@show typeof(labels);
+train_labels = train_data[2]
+@show typeof(train_labels);
 ```
+
+This is how we can load the testing dataset.
 
 ```julia
 test_data = MLDatasets.MNIST.testdata(Float64)
@@ -26,20 +46,24 @@ test_labels = test_data[2]
 @show size(test_imgs);
 ```
 
+Let's also keep variables for the total number of **samples**/**observations** in the training and testing dataset.
+
 ```julia
-n_train, n_test = length(labels), length(test_labels)
+n_train, n_test = length(train_labels), length(test_labels)
 ```
+
+We can plot a few example training images, just to get a feel for what they look like.
 
 ```julia
 using Plots, Measures, LaTeXStrings
-println("The first 12 digits: ", labels[1:12])
+println("The first 12 digits: ", train_labels[1:12])
 plot([heatmap(train_data[1][:,:,k]',
             yflip=true,legend=false,c=cgrad([:black, :white])) for k in 1:12]...)
 ```
-It is sometimes useful to "compact" each image into a vector. This then yields a matrix of $60,000 \times 784$ (each image has $784$ features since $784 = 28 \times 28$. We can plot that matrix as well.
+It is sometimes useful to "compactify" each image into a vector. This then yields a matrix of $60,000 \times 784$ (each image has $784$ features since $784 = 28 \times 28$. Just for the heck of it, we can plot that matrix as well.
 
 ```julia
-X = vcat([vec(imgs[:,:,k])' for k in 1:last(size(imgs))]...)
+X = vcat([vec(train_imgs[:,:,k])' for k in 1:n_train]...)
 @show size(X)
 heatmap(X, legend=false)
 ```
@@ -47,13 +71,13 @@ heatmap(X, legend=false)
 Although this looks a bit random, we can detect some trends in the pattern visually if we sort the labels first:
 
 ```julia
-X_sorted = vcat([vec(imgs[:,:,k])' for k in sortperm(labels)]...)
+X_sorted = vcat([vec(train_imgs[:,:,k])' for k in sortperm(train_labels)]...)
 heatmap(X_sorted, legend=false)
 ```
 
-The data is now sorted into vertical "bands" of the digits $0, 1, \dots, 9$. It is not inconceivable that a computer could be able to determine to which segment a given piece of input data belongs.
+The data is now sorted into vertical "bands" of the digits $0, 1, \dots, 9$. MNIST is a **balanced** dataset, meaning that each of the digits appears about the same number of times. It is not inconceivable that a computer could be able to determine to which segment a given piece of input data belongs.
 
-# Unsupervised learning
+# A taste of unsupervised learning
 
 In general, **unsupervised learning** is the process of learning attributes of the data based only on relationships between features (pixels in the the context of images) and not based on data labels $Y$. So in unsupervised learning we only have $X$.
 
@@ -68,8 +92,8 @@ args = (ms=0.8, msw=0, xlims=(-5,12.5), ylims=(-7.5,7.5),
             legend = :topright, xlabel="PC 1", ylabel="PC 2")
 
 function compareDigits(dA,dB)
-    xA = X[labels .== dA, :]'
-    xB = X[labels .== dB, :]'
+    xA = X[train_labels .== dA, :]'
+    xB = X[train_labels .== dB, :]'
     zA, zB = M'*xA, M'*xB
     
     scatter(zA[1,:], zA[2,:], c=:red, label="Digit $(dA)"; args...)
@@ -94,7 +118,7 @@ using Clustering, Random
 Random.seed!(0)
 clusterResult = kmeans(X',10)
 heatmap(hcat([reshape(clusterResult.centers[:,k],28,28)' for k in 1:10]...),
-    yflip=true,legend=false,aspectratio = 1,ticks=false,c=cgrad([:black, :white]))
+    yflip=true,legend=false,aspectratio = 1,ticks=false,c=cgrad([:black, :white]),ylim=(0,30))
 ```
 
 Some characters are identified as quite distinct from the others, while others (like 4, 7 and 9) appear to be blended together. There are a variety of more advanced unsupervised learning algorithms that we will not cover here.
@@ -105,44 +129,13 @@ A much more common form of machine learning is **supervised learning** where the
 
 In cases where the variable to be predicted, $Y$, is a continuos or numerical variable, the problem is typically called a **regression problem**. Otherwise, in cases where $Y$ comes from some finite set of label values the problem is called a **classification problem**. For example in the case of MNIST digits, it is a classification problem since we need to look at an image and determine the respective digit.
 
-## A taste of deep learning
-
-Before we deal with a few basic introductory methods, let us get a glimpse of methods that are near the current "state of the art". These are generally **deep learning** methods which are based on multi-layer (deep) neural networks. See for example the material in the course, [The Mathematical Engineering of Deep Learning](https://deeplearningmath.org/index.html) as well as linked material from there.
-
-To demonstrate we use the package `Metalhead.jl` which supplies "out of the box" deep learning models ready to use. The VGG deep convolutional neural network architecture is one classic model. 
-
-This code downloads the pre-trained VGG19 model which is about 0.5Gb (!!!) of data. It then prints the layers of this deep neural network.
-
-```julia
-using Metalhead
-
-#downloads about 0.5Gb of a pre-trained neural network from the web
-vgg = VGG19();
-vgg = VGG19();
-for (i,layer) in enumerate(vgg.layers)
-    println(i,":\t", layer)
-end
-```
-
-We don't cover the meaning of such a model in this course. See for example [this AMSI summer school course](https://deeplearningmath.org/) or the [UQ course on deep learning](https://www.nan-ye.com/teach/stat4402/). But we can use this pre-trained model.
-
-```julia
-#download an arbitrary image and try to classify it
-download("https://deeplearningmath.org/data/images/appleFruit.jpg","appleFruit.jpg");
-img = load("appleFruit.jpg")
-```
-
-```julia
-classify(vgg,img)
-```
-
-The image is actually not of "Granny Smith" apple, but rather a different type of apple. Still it is pretty close! VGG19 was trained on the famous [Image net database](https://www.image-net.org/).
+Today a very popular go-to tool for supervised learning is **deep learning**. Other methods include **tree based models**, which we study in the sequel. 
 
 ## The basics: linear models
 
-We don't have time in this course to get into the full details of deep learning. But we can start with a (degenerate) neural network - a linear model. 
+While not all forms of supervised learning are "deep learning", **linear models** are a special case of deep learning. We don't have time in this course to get into the full details of more advanced deep learning methods. But we can start with a (degenerate) neural network - a linear model. 
 
-With MNIST we can reach $86\%$ classification accuracy with a linear model. This is by no means the 99%+ accuracy that you can obtain with neural network models, but it is still an impressive measures for such a simple model. In discussing this we also explore basic aspects of classification problems.
+With MNIST we can reach $86\%$ classification accuracy with a linear model. This is by no means the 99%+ accuracy that you can obtain with more advanced neural network models, but it is still an impressive measure for such a simple model. In discussing this we also explore basic aspects of classification problems.
 
 Our data is comprised of images $x^{(1)},\ldots,x^{(n)}$ where we treat each image as $x^{(i)} \in {\mathbb R}^{784}$. There are then labels $y^{(1)},\ldots,y^{(n)}$ where $y^{(i)} \in \{0,1,2,\ldots,9\}$. For us $n=60,000$.
 
@@ -216,7 +209,7 @@ We can now find $\beta$ coefficients matching each digit. Interestingly we only 
 using Flux: onehotbatch
 
 tfPM(x) = x ? +1 : -1
-yDat(k) = tfPM.(onehotbatch(labels,0:9)'[:,k+1])
+yDat(k) = tfPM.(onehotbatch(train_labels,0:9)'[:,k+1])
 bets = [Adag*yDat(k) for k in 0:9]; #this is the trained model (a list of 10 beta coeff vectors)
 ```
 
@@ -245,7 +238,7 @@ Note that with unbalanced data, accuracy is a poor performance measure. However 
 
 The type of model training we used above relied on an explicit characterization of minimizers of the loss function: solutions of the normal equations. However in more general settings such as deep neural networks, or even in the linear setting with higher dimensions, explicit solution of the first order conditions for minimization (normal equations in the case of linear models) is not possible. For this we often use **iterative optimization** of which the most basic form is based on **first order methods** that move in the direction of local best descent.
 
-We already saw a simple example of **gradient descent** in Unit 3. This can work fine for small or moderate problems but in cases where there is huge data, multiple local minima, or other problems, one often uses **stochastic gradient descent**(SGD) or variants. As a simple illustration, the example below (approximately) optimizes a simple linear regression problem with SGD. Note that another very common which we don't show here is the use of **mini-batches**.
+We already saw a simple example of **gradient descent** in Unit 3. This can work fine for small or moderate problems but in cases where there is huge data, multiple local minima, or other problems, one often uses **stochastic gradient descent** (SGD) or variants. As a simple illustration, the example below (approximately) optimizes a simple linear regression problem with SGD. Note that another very common which we don't show here is the use of **mini-batches**.
 
 ```julia
 using Random, Distributions
@@ -282,6 +275,105 @@ p2 = scatter(xVals,yVals, c=:black, ms=1, label="Data points")
 
 plot(p1, p2, legend=:topleft, size=(800, 400), margin = 5mm)
 ```
+
+## Logistic and Softmax Regression
+
+While we won't focus on general deep learning networks, let us briefly see **logistic regression** and **logistic softmax regression**. These are used for binary and multi-class classification respectively and have a long tradition in statistical modeling. They are also some of the simplest non-degenerate neural networks that one can consider (see more info in [Chapter 3 of The Mathematical Engineering of Deep Learning](https://deeplearningmath.org).
+
+In a nutshell the logistic regression model is
+
+$$
+\hat{y}=\underbrace{\sigma_{\text{Sig}}\left(\overbrace{b+w^\top  x}^{z}\right)}_{a},
+$$
+
+where the Sigmoid function is
+
+$$
+\label{eqn:sigmoid-in-logistic}
+\sigma_{\text{Sig}}(u) =
+\frac{1 }{1 + e^{-u}}.
+$$
+
+The softmax (logistic) regression model is
+
+$$
+\hat{y}=\underbrace{S_{\text{softmax}} \big(\overbrace{b+W  x}^{z\in {\mathbb R}^K}\big)}_{a\in {\mathbb R}^K},
+$$
+
+where the softmax function is,
+
+$$
+S_{\text{softmax}}(z) = \frac{1}{\sum_{i=1}^{K} e^{z_i}} 
+\begin{bmatrix}
+e^{z_1} \\
+\vdots\\
+e^{z_{K}}\\
+\end{bmatrix}.
+$$
+
+The logistic regression model takes input vectors $x$ and returns probabilities (values in the range $(0,1)$). The softmax logistic regression model takes input vectors $x$ and returns probability vectors of length $K$ (probability distributions). The former can be used for **binary classification** and the latter for **multi-class classification** with $K$ classes (types to classify).
+
+Training these models can be done for (relatively) small $x$ via the Julia package [GLM.jl](https://github.com/JuliaStats/GLM.jl) (Generalized Linear Models). However more generally using a deep learning framework such as [Flux.jl](https://github.com/FluxML/Flux.jl) one can handle higher dimensions of $x$ as well.
+
+The typical loss function when training such models is called the **cross entropy** loss function. It measures the distance (although it isn't a proper distance metric) between two probability distributions. We skip the details.
+
+```julia
+using Flux, Statistics, Random, StatsBase, Plots
+using Flux: params, onehotbatch, crossentropy, update!
+Random.seed!(0)
+
+X_test = vcat([vec(test_imgs[:,:,k])' for k in 1:n_test]...)
+
+logistic_softmax_predict(img_vec, W, b) = softmax(W*img_vec .+ b)
+logistic_sofmax_classifier(img_vec, W, b) = argmax(logistic_softmax_predict(img_vec, W, b)) - 1
+
+
+function train_softmax_logistic(;mini_batch_size = 1000)
+    
+    #Initilize parameters
+    W = randn(10,28*28)
+    b = randn(10)
+
+    opt = ADAM(0.01)
+    loss(x, y) = crossentropy(logistic_softmax_predict(x, W, b), onehotbatch(y,0:9))
+
+    loss_value = 0.0
+    epoch_num = 0
+
+    #Training loop
+    while true
+        prev_loss_value = loss_value
+        
+        #Loop over mini-batches in epoch
+        start_time = time_ns()
+        for batch in Iterators.partition(1:n_train, mini_batch_size)
+            gs = gradient(()->loss(X'[:,batch], train_labels[batch]), params(W,b))
+            for p in (W,b)
+                update!(opt, p, gs[p])
+            end
+        end
+        end_time = time_ns()
+
+        #record/display progress
+        epoch_num += 1
+        loss_value = loss(X', train_labels)
+        println("Epoch = $epoch_num ($(round((end_time-start_time)/1e9,digits=2)) sec) Loss = $loss_value")
+        
+        if epoch_num == 1 || epoch_num % 5 == 0 
+            acc = mean([logistic_sofmax_classifier(X_test'[:,k], W, b) for k in 1:n_test] .== test_labels)
+            println("\tValidation accuracy: $acc") 
+            
+            #Stopping criteria
+            abs(prev_loss_value-loss_value) < 1e-3 && break
+        end
+    end
+    return W, b
+end
+
+# Train model parameters
+W, b = train_softmax_logistic();
+```
+
 
 ### Fitting, over-fitting, generalization, and model choice
 
@@ -348,14 +440,15 @@ In any case, our purpose fo the training/validation/cross-validation data is to 
 
 ### Tree-based models
 
-We now focus on tree-based models. [Decision trees](https://en.wikipedia.org/wiki/Decision_tree_learning) for machine learning have a long history a
-nd constitute a set of models that is still very much in use today. These models are enhanced with [Random forest](https://en.wikipedia.org/wiki/Random_forest) models which use a general machine learning technique [Ensemble Method](https://en.wikipedia.org/wiki/Ensemble_learning), or [bagging](https://en.wikipedia.org/wiki/Bootstrap_aggregating) also known as bootstrap aggregation.
+We now focus on tree-based models. [Decision trees](https://en.wikipedia.org/wiki/Decision_tree_learning) for machine learning have a long history and constitute a set of models that is still very much in use today. These models are enhanced with [Random forest](https://en.wikipedia.org/wiki/Random_forest) models which use a general machine learning technique [Ensemble Method](https://en.wikipedia.org/wiki/Ensemble_learning), or [bagging](https://en.wikipedia.org/wiki/Bootstrap_aggregating) also known as bootstrap aggregation.
 
 We first introduce and explore basics of decision trees both for regression and classification. We then see that on their own, decision trees are somewhat limited because they can easily over-fit. We then consider random forests which constitute a much more versatile algorithm.
 
+One of our main pedagogical reasons for focusing on tree-based models as example machine learning models in this course is simply because their programming requires using some recursive data-structures. This then provides some programming experience that is useful not just for machine learning, but also more generally. 
+
 #### Basic Decision trees
 
-To illustrate we'll first consider a classification problem with $d=2$ features and $k=3$. For simplicity we generate synthetic data via a mixture of bi-variate normals.
+To illustrate we'll first consider a classification problem with $d=2$ features and $k=3$ classes. For simplicity we generate synthetic data via a mixture of bi-variate normals.
 
 ```julia
 using Distributions, Random, LaTeXStrings, Plots
@@ -364,15 +457,14 @@ Random.seed!(1)
 d, k = 2, 3 #d features and k label types
 
 function make_data(class1 = 50, class2 = 30, class3 = 20)
-    return (
-        vcat(
-            rand(MvNormal([1,1],[3 0.7; 0.7 3]), class1)', 
-            rand(MvNormal([4,2],[2.5 -0.7; -0.7 2.5]), class2)', 
-            rand(MvNormal([2,4],[2 0.7; 0.7 2]), class3)'
-        ),
-            vcat(fill(1,class1), fill(2,class2), fill(3,class3)
-        )
-    )
+    return (#X
+            vcat(   rand(MvNormal([1,1],[3 0.7; 0.7 3]), class1)', 
+                    rand(MvNormal([4,2],[2.5 -0.7; -0.7 2.5]), class2)', 
+                    rand(MvNormal([2,4],[2 0.7; 0.7 2]), class3)')
+            ,
+            #y
+            vcat(fill(1,class1), fill(2,class2), fill(3,class3))
+            )
 end
 
 X, y = make_data()
@@ -383,7 +475,7 @@ xlim, ylim = (-3,8),(-3,8)
 #We'll plot points again below, so putting it in in a function
 function plot_points(plt_function, X, y)
     plt_function(X[:,1], X[:,2], c = label_colors, ms = 5,
-        group = y, xlabel = L"X_1", ylabel = L"X_2",
+        group = y, label=hcat(["class $k" for k in 1:3]...), xlabel = L"X_1", ylabel = L"X_2",
         xlim = xlim, ylim = ylim, legend = :topleft
     )
 end
@@ -401,9 +493,30 @@ mutable struct DecisionNode <: AbstractDecisionNode
     feature::Int
     cutoff::Float64
 
-    # Children - either another decision node
+    # Children - either another decision node or an value (label)
     lchild::Union{DecisionNode, Int64}
     rchild::Union{DecisionNode, Int64}
+end
+```
+
+A `show` function is useful to have.
+
+```julia
+function Base.show(io::IO, node::AbstractDecisionNode, this_prefix = "", subtree_prefix = "")
+    println(io, "$(this_prefix)─┬ feature[$(node.feature)] < $(node.cutoff)")
+
+    # print children
+    if node.lchild isa AbstractDecisionNode
+        show(io, node.lchild, "$(subtree_prefix) ├", "$(subtree_prefix) │")
+    else
+        println(io, "$(subtree_prefix) ├── $(node.lchild)")
+    end
+
+    if node.rchild isa AbstractDecisionNode
+        show(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
+    else
+        println(io, "$(subtree_prefix) └── $(node.rchild)")
+    end
 end
 ```
 
@@ -421,7 +534,7 @@ manual_tree = DecisionNode(
 Now prediction can be done by recursively running down the tree:
 
 ```julia
-predict(leaf::Int64, ::Vector{Float64}) = leaf
+# Prediction on a node uses the cutoff
 function predict(node::AbstractDecisionNode, features::Vector{Float64})
     if features[node.feature] <= node.cutoff
         return predict(node.lchild, features)
@@ -429,6 +542,9 @@ function predict(node::AbstractDecisionNode, features::Vector{Float64})
         return predict(node.rchild, features)
     end
 end;
+
+# This stops when the node lchild or rchild is a value (Int64) and then prediction
+predict(leaf::Int64, ::Vector{Float64}) = leaf;
 ```
 
 Here is our (simple) tree's prediction visually:
@@ -463,33 +579,12 @@ manual_tree.rchild = DecisionNode(
     3
 )
 
-plot_decision(manual_tree, X, y)
-```
-
-We can also print the tree (similar code appeared for heaps in the previous unit):
-
-```julia
-function Base.show(io::IO, node::AbstractDecisionNode, this_prefix = "", subtree_prefix = "")
-    println(io, "$(this_prefix)─┬ feature[$(node.feature)] < $(node.cutoff)")
-
-    # print children
-    if node.lchild isa AbstractDecisionNode
-        show(io, node.lchild, "$(subtree_prefix) ├", "$(subtree_prefix) │")
-    else
-        println(io, "$(subtree_prefix) ├── $(node.lchild)")
-    end
-
-    if node.rchild isa AbstractDecisionNode
-        show(io, node.rchild, "$(subtree_prefix) └", "$(subtree_prefix)  ")
-    else
-        println(io, "$(subtree_prefix) └── $(node.rchild)")
-    end
-end
-
 manual_tree
 ```
 
-With the above printout since decision rules are functions they don't "display nicely" but with a better implementation this can be overcome.
+```julia
+plot_decision(manual_tree, X, y)
+```
 
 Here is one more rule:
 
@@ -515,15 +610,17 @@ Still, before we deal with random forests that improve accuracy and allow to mit
 For this we'll use a slightly different struct for each node that doesn't only keep the decision rule, but also keeps the data available up to that node. We'll also keep the depth of the node in each node.
 
 ```julia
+#This is meant for leafs
 mutable struct DecisionWithData
     # The data available to the leaf
     X::Matrix{Float64}
     y::Vector{Int}
 
-    # Cutoff logic
+    # The current class of the leaf.
     value::Int64
 end
 
+#This is meant for nodes that are NOT leafs
 mutable struct DecisionNodeWithData <: AbstractDecisionNode
     # The data available to the node
     X::Matrix{Float64}
@@ -729,7 +826,7 @@ plot(2:150, [train_accuracy validation_accuracy],
 
 ### Trees for regression
 
-You can use decision trees for regression instead of classification. The key idea is to use a loss that quantifies the regression error at every split. Here typically we would need a stopping rule for how deep to go. More on this is in the practical.
+You can use decision trees for regression instead of classification. The key idea is to use a loss that quantifies the regression error at every split. Here typically we would need a stopping rule for how deep to go. 
 
 ### Dealing with categorical features
 
@@ -743,17 +840,6 @@ Now that we understood the basics of decision trees, lets use a package with mor
 Back to MNIST:
 
 ```julia
-using MLDatasets
-train_data = MLDatasets.MNIST.traindata(Float64)
-train_imgs = train_data[1]
-train_labels = train_data[2]
-
-test_data = MLDatasets.MNIST.testdata(Float64)
-test_imgs = test_data[1]
-test_labels = test_data[2];
-
-n_train, n_test = length(train_labels), length(test_labels)
-
 y_train = train_labels
 y_test = test_labels
 
@@ -762,7 +848,6 @@ X_test = vcat([vec(test_imgs[:,:,k])' for k in 1:n_test]...);
 
 size(X_train), size(X_test)
 ```
-
 Let's build a tree using the default API of `DecisionTree.jl`:
 
 ```julia
@@ -779,7 +864,7 @@ using DecisionTree, Statistics
 n_subfeatures=0; max_depth=-1; min_samples_leaf=1; min_samples_split=2
 min_purity_increase=0.0; pruning_purity = 1.0; seed=3
 
-tree_model    =   build_tree(y_train, X_train,
+tree_model    =   DecisionTree.build_tree(y_train, X_train,
                         n_subfeatures,
                         max_depth,
                         min_samples_leaf,
@@ -789,13 +874,13 @@ tree_model    =   build_tree(y_train, X_train,
 ```
 
 ```julia
-predicted_labels = apply_tree(tree_model, X_test)
+predicted_labels = DecisionTree.apply_tree(tree_model, X_test)
 accuracy = mean(predicted_labels .== y_test)
 println("\nPrediction accuracy (measured on test set of size $n_test): ",accuracy)
 ```
 ### Random forests
 
-The idea of the random forest algorithm is to build an ensemble of trees, not just one tree. It builds on a more general idea studied in machine learning theory called "bagging". (There is also an idea of "boosting" that we don't discuss here). The general idea of bagging is to create a model,
+The idea of the random forest algorithm is to build an ensemble of trees, not just one tree. It builds on a more general idea studied in machine learning theory called "bagging". (There is also an idea of "boosting" that we don't discuss here). The general idea of bagging is to create an [ensemble model](https://en.wikipedia.org/wiki/Ensemble_learning),
 
 $$
 \hat{f}(x) = \frac{1}{b} \sum_{i=1}^b \hat{f}_i(x),
@@ -896,4 +981,4 @@ function apply_forest(forest::Ensemble{S, T}, features::AbstractVector{S}) where
 end
 ```
 
-With this, we have touched only the tip of the iceberg in terms of machine learning models. However we hope it is clear that the software component of machine learning is a central one: executing machine learning effectively requires solid coding skills. Other aspects dealing with the mathematics of machine learning can be learned in STAT3006, STAT3007, and other UQ courses. Enjoy. 
+With this, we have touched only the tip of the iceberg in terms of machine learning models. However we hope it is clear that the software component of machine learning is a central one: executing machine learning effectively requires solid coding skills. Other aspects dealing with the mathematics of machine learning can be learned in STAT3006, STAT3007, and other UQ courses. Enjoy.
