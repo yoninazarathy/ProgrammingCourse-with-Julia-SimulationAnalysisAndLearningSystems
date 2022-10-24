@@ -2,7 +2,7 @@
 
 Up to now most of the course dealt with writing explicit instructions for a computer to perform. For example, sorting using a very specified algorithm such as bubble sort or quicksort. Yet, in recent years more and more computer programming involves using "code" that has been automatically trained and not explicitly designed and coded. This is the domain of **machine learning**, **deep learning**, and in general **artificial intelligence**. 
 
-Machine learning is all about training mathematical models on a computer in order to classify data, predict outcomes, estimate relationships, summarize data, control complex processes, and more. Deep learning can be viewed as a form of machine learning based on **deep learning models**. We will mostly focus on general machine learning. At UQ, see the course [COMP4702](https://my.uq.edu.au/programs-courses/course.html?course_code=COMP4702) for a general introductory machine learning course. Further, [STAT3007](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007) is specialized deep learning course. There are multiple other courses that deal with theoretical aspects of machine learning such as [STAT3006](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006) and parts of [STAT4401](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT4401).
+Machine learning is all about training mathematical models on a computer in order to classify data, predict outcomes, estimate relationships, summarize data, control complex processes, and more. Deep learning can be viewed as a form of machine learning based on **deep learning models**. We will mostly focus on general machine learning. At UQ, see the course [COMP4702](https://my.uq.edu.au/programs-courses/course.html?course_code=COMP4702) for a general introductory machine learning course. Further, [STAT3007](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007) is a specialized deep learning course. There are multiple other courses that deal with theoretical aspects of machine learning such as [STAT3006](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006) and parts of [STAT4401](https://my.uq.edu.au/programs-courses/course.html?course_code=STAT4401).
 
 Machine learning activities are often dichotomized into two broad categories, **supervised learning**, and **unsupervised learning**. With supervised learning, data is assumed to be available as $(x, y)$ pairs where each **feature vector** $x$ is labeled via $y$. In the case of unsupervised learning, one only observes data points $x$ and tries to find relationships between the various elements, variables, or coordinates of $x$.
 
@@ -19,7 +19,7 @@ This schematic illustrates **unsupervised learning** with **clustering** and **d
 
 # ML Datasets
 
-There are some datasets used in machine learning learning, exploration, and (sometimes) practice that are very popular. 
+There are some popular open datasets used in machine learning learning for exploration (study), and (sometimes) also used practice. In other cases researchers or companies have proprietary datasets. 
 
 One of the most common datasets is the [MNIST Digits dataset](https://en.wikipedia.org/wiki/MNIST_database). It is composed of monochrome digits of $28 \times 28$ pixels and **labels** indicating each digit. There are $60,000$ digits that are called the **training set** and $10,000$ additional digits that are called the **test set**. In Julia you can access this dataset via the [`MLDatasets.jl`](https://github.com/JuliaML/MLDatasets.jl) package.
 
@@ -278,7 +278,7 @@ plot(p1, p2, legend=:topleft, size=(800, 400), margin = 5mm)
 
 ## Logistic and Softmax Regression
 
-While we won't focus on general deep learning networks, let us briefly see **logistic regression** and **logistic softmax regression**. These are used for binary and multi-class classification respectively and have a long tradition in statistical modeling. They are also some of the simplest non-degenerate neural networks that one can consider (see more info in [Chapter 3 of The Mathematical Engineering of Deep Learning](https://deeplearningmath.org).
+While we won't focus on general deep learning networks, let us briefly see **logistic regression** and **logistic softmax regression**. These are used for binary and multi-class classification respectively and have a long tradition in statistical modeling. They are also some of the simplest non-degenerate neural networks that one can consider (see more info in [Chapter 3 of The Mathematical Engineering of Deep Learning](https://deeplearningmath.org)).
 
 In a nutshell the logistic regression model is
 
