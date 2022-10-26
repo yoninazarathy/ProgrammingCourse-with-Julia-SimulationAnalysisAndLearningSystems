@@ -1,11 +1,11 @@
 # Project \#3 - Semester 2, 2022
 # Analysis of Datasets and Basic ML Experiments
 
-(last edit: October 25, 2022)
+(last edit: October 26, 2022)
 
 **Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 16/11. Wednesday 7:30pm consultation hours will be held up until 16/11. These will be the only weekly consultation hours after week 13.
 
-**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. The remaining **90** points are for the project. The final 10 point task is more difficult. For that task you may choose to do **one of two options provided**.
+**Weights and marking criteria:** Total number of points: **120**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. The remaining **110** points are for the project. The final 14 point task is more difficult. For that task you may choose to do **one of two options provided**.
 
 **Submission format:** This project should be submitted via a GitHub Repo, a **single** PDF file, and a voice recording via Blackboard. The GitHub repo should have two Jupyter notebooks: 
 
@@ -68,7 +68,7 @@ Your GitHub repo should be formatted as exactly as follows:
 * In case you choose to create a movie for Task 3, do NOT upload the movie to GitHub. Instead, store it in some sharable place on the web and have a link to it from your notebook.
 * A `data` folder with the housing data and any other data needed.
 
-## Main project Task #1 - Housing Prices Data (40 points over 4 sub tasks)
+## Main project Task #1 - Housing Prices Data (48 points over 4 sub tasks)
 
 In this part of the project you deal with a [house prices dataset](https://www.kaggle.com/anthonypino/melbourne-housing-market) available from Kaggle. Your overarching purpose is to carry out basic exploratory analysis of this dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.
 
@@ -95,7 +95,7 @@ Create several plots over time that help visualize trends in the data. Specifica
 
 Review your results of Task 1.2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://statisticswithjulia.org/) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
 
-## Main project Task #2 - Basic ML on MNIST and FashionMNIST (40 points over 4 sub tasks)
+## Main project Task #2 - Basic ML on MNIST and FashionMNIST (48 points over 4 sub tasks)
 
 This is a more standard machine learning practice task focused on the [MNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.3/datasets/MNIST/) and [FashionMNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.1/datasets/FashionMNIST/) dataset. It deals with a subtle issue of using binary classifiers to create multi-class classifiers.  See the short "Multi-class Classification" subsection in Section 2.3 of [The Mathematical Engineering of Deep Learning](https://deeplearningmath.org). That section outlines the **one vs. all** (rest) strategy and the **one vs. one** strategy for using binary classifiers to create multi-class classifiers. Your purpose here is to create an empirical exploration of these strategies with basic ML models.
 
