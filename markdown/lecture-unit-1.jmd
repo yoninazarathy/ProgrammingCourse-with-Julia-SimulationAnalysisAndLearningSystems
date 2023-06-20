@@ -142,7 +142,7 @@ You are coming to this course after doing several mathematics and statistics cou
 * You know that you can make computers do the same action again and again, by wrapping code in loops, often using conditional statements (`if`) to decide how the program should continue.
 * You have even used and/or written a few functions (or routines) where you specify how some action should be done and describe that action in a function.
 * You certainly know how to use files, directories, and the internet. 
-* Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + several more math electives.
+* Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Multivariable Calculus + some modelling) + several more math electives.
 
 [![Women coding image](../web_img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
 
@@ -615,7 +615,7 @@ function fast_inv_sqrt(number::Float32)
     i = reinterpret(UInt32, number)
     #do WTF magic
     i = 0x5F3759Df - (i >> 1)
-    #reinterpet back into a float32
+    #reinterpret back into a float32
     y = reinterpret(Float32, i)
     #do an iteration of newtons method from a good first guess
     y = y * (Float32(1.5) - (x2 * y^2))
@@ -958,7 +958,7 @@ uppercase("ramzi")
 
 How would you do that?
 
-To close, here is an example adapted from the SWJ book. It takes the Shakespere corpus and counts frequencies of words.
+To close, here is an example adapted from the SWJ book. It takes the Shakespeare corpus and counts frequencies of words.
 
 ```julia
 using HTTP, JSON
