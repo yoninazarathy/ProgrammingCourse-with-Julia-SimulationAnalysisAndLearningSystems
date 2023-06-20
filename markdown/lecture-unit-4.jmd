@@ -79,7 +79,7 @@ end
 
 _Note: `for` and `while` loops always return `nothing`!_
 
-If you prefer, you can seperate multiple expressions in a code block with `;` instead of on seperate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
+If you prefer, you can seperate multiple expressions in a code block with `;` instead of on separate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
 
 ```julia
 x = (1; 2; 3)
@@ -694,7 +694,7 @@ This way even your code might error out, the file is _always_ closed in the `fin
 
 See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
 
-Julia actually has two seperate scopes — global or "toplevel" scope, and local scope.
+Julia actually has two separate scopes — global or "toplevel" scope, and local scope.
 
 Local scope is the simplest. Variables inside a function body take precedence (or "shadows") any variables of the same name outside the function body.
 
@@ -781,8 +781,8 @@ f()
 My advice:
 
  * use global variables as little as possible
- * use distinct names for variables as much as possilbe
- * the longer a varible hangs around, the longer and more discriptive it's name should be
+ * use distinct names for variables as much as possible
+ * the longer a variable hangs around, the longer and more descriptive its name should be
 
 Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap.
 
@@ -878,7 +878,7 @@ end
 
 The number of bits must be a multiple of `8` (i.e. whole bytes).
 
-By default, primitive types have no methods associated with them - you need to define low-level primitive actions for them (e.g. how to add integers). The one thing you can do is `reinterpret` one primtivie type as another with the same number of bits.
+By default, primitive types have no methods associated with them - you need to define low-level primitive actions for them (e.g. how to add integers). The one thing you can do is `reinterpret` one primitive type as another with the same number of bits.
 
 ```julia
 reinterpret(UInt64, 0.0)
@@ -1023,7 +1023,7 @@ In Julia, arbitrary bytes of data (like the contents of a file) is generally rep
 
 Strings represent text of arbitrary length.
 
-In Julia strings are immutable and assumed to be UTF-8 encoded (Windows, Java and JavaScript tend to use UTF-16 endoding). The compiler is allowed to make a few optimizations - e.g. for short strings, etc. You can mostly consider the backing bytes to be like an immutable `Vector{UInt8}`, which is how Julia strings are passed to functions from other programming languages like C.
+In Julia strings are immutable and assumed to be UTF-8 encoded (Windows, Java and JavaScript tend to use UTF-16 encoding). The compiler is allowed to make a few optimizations - e.g. for short strings, etc. You can mostly consider the backing bytes to be like an immutable `Vector{UInt8}`, which is how Julia strings are passed to functions from other programming languages like C.
 
 #### `Tuple`
 
@@ -1239,7 +1239,7 @@ end
 
 We've seen two types of abstract types — the `abstract type`s that make up the type tree, and the parameterized types (abstract `Complex` vs concrete `Complex{Float64}`).
 
-Julia has a third abstract type called `Union` which let's you reasona about a finite set of (abstract or concrete) types.
+Julia has a third abstract type called `Union` which let's you reason about a finite set of (abstract or concrete) types.
 
 ```julia
 42::Union{Int, Float64}
