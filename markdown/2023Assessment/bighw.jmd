@@ -1,20 +1,17 @@
 # BigHW - Semester 2, 2023.
-(last edit: July 11, 2023)
-
-# UNDER CONSTRUCTION
-
+(last edit: July 20, 2023)
 
 **Due:** End of day August 22, 2023. This assignment is in pairs.
 
-**Note:** 
+**Note:** Since this assignment is in **pairs** make sure to submit with the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three people in the team, require **explicit permission** from the course coordinator.
 
-Since this assignment is in **pairs** make sure to have the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three persons requires explicit permission from the course coordinator.
+The recommended way to work in **pairs** is to have a **lead** for each question and a **reviewer** for each **question**. The leader will be responsible that a solution is created and the reviewer will be consulted and provide feedback. In previous years students that were not exposed to all questions ended up doing more poorly in the course quiz in comparison to students that reviewed (or led) all questions. There is certainly no need to state who is the lead and who is the reviewer for the questions. Ultimately the pair is jointly responsible for the assignment submission. 
 
 **Submission format:**  The submission format is via a GitHub repository as described in Question 10. The submission should include the four submissions forms [I](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-I-Q1-Q4.ipynb), [II](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-II-Q5-Q9.ipynb), [III](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-III-Q10-Q12.ipynb), and [IV](https://github.com/yoninazarathy/ProgrammingCourse-with-Julia-SimulationAnalysisAndLearningSystems/blob/main/submission_forms_jupyter/Submission-Form-IV-Q13-Q17.ipynb). 
 
 The submission should also include an audio recording (30 sec minimum, 3 minutes maximum, 1 minute recommended). The voice recording should have voices of both (all) members of the group. The recording should verify that the work is your own. You can also state how you felt in the assignment. Say what was easy, what was hard, what you found useful, and what less.
 
-To submit, go to Blackboard and submit as instructed there by providing a link to the GitHub repo, naming the partners, and uploading the voice recording (do not upload the voice recording to GitHub - upload it to Blackboard).
+To submit, go to Blackboard and submit as instructed there by providing a link to the GitHub repo, naming the partners, and uploading the voice recording (do not upload the voice recording to GitHub - upload it to Blackboard). PDFs of the Jupyter notebooks and voice recordings are for Blackboard. Jupyter notebooks are for GitHub.
 
 **Marking Criteria:** 
 
@@ -22,7 +19,7 @@ To submit, go to Blackboard and submit as instructed there by providing a link t
 
 * There are 16 questions in total, with 6 points allocated for each question. Some questions are easier and some harder. Some require more work and some require less work.
 
-* There is an additional bonus question, question 17, dealing with Dr. Amy Chan's perspective seminar. It yields an additional 10 bonus points.
+* There is an additional bonus question, question 17, dealing with Dr. Megan Dawson's perspective seminar. It yields an additional 10 bonus points. 
 
 * As this is the first assignment, points will not be deducted for sloppy coding style. However, in future assignments clean and consistent coding style is required.
 
@@ -32,26 +29,22 @@ To submit, go to Blackboard and submit as instructed there by providing a link t
 
 
 ## Question 1: LaTeX, Jupyter, HTML, and Markdown
-```html
-<a id="q1">
-```
+
 This question deals with basic formatting tools.
 
-**1a**: Consider the following continued fraction formula for the golden ratio $\varphi$:
+**1a**: Consider the following recursive integration by parts formula for integer $n \ge 1$:
 
 $$
-\varphi=1+\frac{1}{1+\frac{1}{1+\ddots}}
+\int_0^\infty x^n  ~ e^{-x}  ~ dx 
+= 
+-\underbrace{x^{n} e^{-x}\Big|^\infty_0}_0   ~~+~~  n \int_0^\infty x^{n-1} ~ e^{-x}  dx.
 $$
 
-Use LaTeX to write a version of it with two additional nested levels. That is, replace the '$\ddots$' with two additional levels. 
+Use LaTeX to represent this formula for $n=2$ by repeating the integration by parts twice. 
 
-**1b**: Use Markdown to write an ordered list of your 5 favorite books. Add (Markdown) hyperlinks to each of the books.
+**1b**: Use Markdown to write an ordered list of 5 programming languages, where you mention for each language where it is used. For example Javascript is often used for front end web development (but not limited to that), etc.
 
 **1c**: Use HTML to embed an image with an hyperlink from the image. Use HTML to resize the image to a size you like. Make sure the aspect ratio is maintained.
-
-**1d**: Use HTML to create a table of your weekly class schedule. See for example this [reference](https://www.w3schools.com/html/html_tables.asp).
-
-
 
 ## Question 2: Warming up with quadratic equations 
 
@@ -157,7 +150,7 @@ test_real_roots_of_quadratic() ? println("Test passed") : println("Test failed")
 1. Work on understanding the expression `2000rand(3) .- 1000`. How would you change this expression if you wanted the coefficients to be in the range [-5,5]? Make that change and see if the test still passes. (yes/no).
 1. Instead of having the numbers `2000` and `1000` "hardcoded" in the function it is better practice to pass them as optional arguments, similarly to the arguments `num_tests` and `seed`. Do this by creating arguments `coeff_min` and `coeff_max` that are by default at `-1000` and `1000` respectively. This means that the values in the expression `2000rand(3) .- 1000` need to be represented in terms of these arguments. Do this.
 1. What happens in this test when there are no real roots? How many iterations does the for loop execute in this case? 
-1. In general a test passing is only a necessary condition for validity of a program rather than a sufficient condition. Can you suggest some sort of bug in the `real_roots_of_quadratic()` function that can exist which would slip through the test? Try this bug (modify `real_roots_of_quadratic()` and show that the test still passes.
+1. In general a test passing is only a necessary condition for validity of a program rather than a sufficient condition. Can you suggest some sort of bug in the `real_roots_of_quadratic()` function that can exist which would slip through the test? Try this bug (modify `real_roots_of_quadratic()` and show that the test still passes).
 1. A different way to test would be to use "random roots" instead of random coefficients. Such a test would first randomly decide if there are 0 real roots, 1 real root, or 2 real roots. It would then randomly draw the roots. It would then find the coefficients that match these roots. It would then test that `real_roots_of_quadratic()` has these roots. Try to implement such a test function. For the case of 0 (real roots) you may "hardcode" a few specific examples. Alternatively (optional) try to use the complex numbers. For example `rand()+rand()*im` is a complex number with random real and imaginary values, each in [0,1]
 
 **2d**: In general, we may have had a solver that finds the (potentially) complex roots of a quadratic. Since the coefficients, $a$, $b$, and $c$ are real, these are complex conjugates. So we want to use the quadratic formula directly (potentially taking square roots of negative numbers). 
@@ -201,68 +194,29 @@ roots_of_quadratic(1,2,3)
 
 The above implementation is fine, however it has code duplication for both cases of $\Delta \neq 0$. That is the case `Δ < 0` and the case `Δ > 0` can be merged. Modify the function so that it does not have an `elseif` statement. In fact, try to write the function without any `if` statement but rather only using the trinary operator `? :`. 
 
-## Question 3: The Collatz Conjecture
 
-The [Collatz conjecture](https://en.wikipedia.org/wiki/Collatz_conjecture) can be interpreted as a statement about the function `hail_stone_sequence()` below. It states that running the function on any integer input `x`, it will always terminate (ignoring machine overflow of integers).
+## Question 3: A little case of Faulhaber's formula
 
-```julia
-function hail_stone_sequence(x::Int, verbose::Bool = false)
-    while x != 1
-        x = ((x % 2 == 0) ? (x ÷ 2) : (3x + 1)) #\div + [TAB] for ÷ 
-        verbose && println("x = $x")
-    end
-    return nothing
-end
+[Faulhaber's formula](https://en.wikipedia.org/wiki/Faulhaber%27s_formula) presents an expression for 
 
-hail_stone_sequence(12,true)
-```
+$$
+\sum_{i=1}^n i^p,
+$$
+where $p$ is some non-negative integer. This problem deals with the case of $p=5$ and to solve this problem you don't need to investigate Faulhaber's formula.
 
-**3a**: 
+Say you believe that the expression resulting from the formula for $p=5$ is:
 
-1. The function uses `÷` (integer division). It also uses `%` (modulo). Experiment with these two operators and explain the expression `((x % 2 == 0) ? (x ÷ 2) : (3x + 1))`.
-2. Write the conjecture mathematically.
-3. Try to disprove the conjecture by running `hail_stone_sequence()` starting with the first $10^8$ integers (do this with `verbose = false`).
+$$
+\sum_{i=1}^{n} i^5 = \frac{1}{6} n^6 + \frac{1}{2} n^5 + \frac{5}{12} n^4 - \frac{5}{60} n^2,
+$$
 
-**3b**: Now we modify the function `hail_stone_sequence()` so that it returns the number of steps in the sequence until $1$ is reached. We call that function `hail_length()`. It receives an input argument `x` which is the initial value of the sequence and it returns the number of steps taken until reaching $1$ (or may get stuck if the conjecture is wrong).
+but just to be sure you want to write a program that checks this for $20$ random values (repetitions allowed) of $n$ in the range of $1,\ldots,10^3$. 
 
-We then also define the function `hail_max()` which finds the length of the maximal hailstone sequence (maximal number of steps until reaching 1), when starting in a range of values $1,2,\ldots,N$. We can then plot `hail_max()` as a function of `N` and it plots nicely on a logarithmic scale for the x-axis.
+**3a**: Write short program that performs this check by comparing the formula calculation and a calculation using a loop.
 
-```julia
-using Plots
-function hail_length(x::Int)
-    n = 0
-    while x != 1
-        x = ((x % 2 == 0) ? (x ÷ 2) : (3x + 1))
-        n += 1
-    end
-    return n
-end
+**3b**: Now try to use a variant of the program to do the check for $n=10^4$. Does it work? If not try to explain why?
 
-
-function hail_max(N)
-    max_n = -Inf
-    for x in 1:N
-        n = hail_length(x)
-        if n > max_n
-            max_n = n
-        end
-    end
-    return max_n
-end
-
-step_range = 1:10^4
-max_vals = [hail_max(N) for N in step_range]
-plot(step_range, max_vals, xaxis=:log, 
-    label=false, xlabel="Maximal initial value", ylabel="Maximal number of steps")
-```
-
-Are you able to replace `hail_max()` with a one line function? This function does not necessarily need to be efficient in terms of run time and or memory usage. Present your replacement function and show that you obtain the same plot.
-
-**3c**: Say we now wish to have a step range that reaches a maximal value of $10^7$. Modifying `10^4` to `10^7` would make that work but it would take an excessively long time to run. Why? 
-
-Improve the code above to produce a plot similar to the plot above, but up to an initial value of $10^7$.
-
-From an (mathematical) exploratory point view, observe your output plot and make any observations that pop out.
+**3c**: Now use Julia's `big()` function to do the calculation with `BigInt` types and use `//` to represent the fraction coefficients as rational types. Can you get an exact match now? 
 
 ## Question 4: Binary, Hex, and Decimal 
 
@@ -297,13 +251,16 @@ r_hex_strs = [random_hex_string() for _ in 1:10^3];
 
 **4c**: Now create your own functions (from first principles parsing strings) to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.
 
-# Questions 5--9 are submitted on Jupyter notebook II 
+## Question 5: Abundant numbers
 
-## Question 5: Perfect numbers
+An [abundant number](https://en.wikipedia.org/wiki/Abundant_number) is a positive integer for which the sum of its proper divisors (excluding the number itself) is greater than the number itself.
 
-A [perfect number](https://en.wikipedia.org/wiki/Perfect_number) is a positive integer that is equal to the sum of its positive divisors, excluding the number itself. For instance, 6 has divisors 1, 2 and 3 (excluding itself), and 1 + 2 + 3 = 6, so 6 is a perfect number.
+For example, consider the number 12. The proper divisors of 12 are 1, 2, 3, 4, and 6. The sum of these proper divisors is 1 + 2 + 3 + 4 + 6 = 16, which is greater than 12. Therefore, 12 is an abundant number.
 
-Write julia code that finds and prints all of the perfect numbers less than $10^6$.
+**5a**: Use the `divisors` functions from the `Primes.jl` package to write a program that prints all the abundant numbers that are less than or equal to $200$.
+
+**5b**: Now write a program that does the same thing without using the `divisors` function from `Primes.jl` (i.e. write your own divisors function or something similar).
+
 
 ## Question 6: Primes and Goldbach's conjecture
 
@@ -358,69 +315,31 @@ checks = check_Goldbach.(even_range)
 if 0 ∈ checks
     println("Found a counter example for Goldbach")
 end
+scatter(rand(10))
 scatter(even_range,checks,legend=false,xlabel="n",ylabel="Number of Goldbach pairs")
 ```
 
 Modify this code or create code of your own so that you can plot a figure similar to the above for the first $10^6$ Goldbach pairs. Do **not** use any in-built (or package) functions for prime numbers (e.g. [Primes.jl](https://github.com/JuliaMath/Primes.jl). In the figure, instead of plotting all the points associated with Goldbach pairs, only plot a random subset of the points so that the figure won't have more than about $20,000$ points. 
 
-## Question 7: Binary search
 
-The following code presents the functions `prepare_data()` and `prepare_sorted_data()` which create a list of indexes (in the range $1,\ldots,10^9$), and a list of license plates (a string with three numbers followed by three letters). The data also creates a special entry with index 1234567890 and license plate `000 ZZZ`.
+## Question 7: Searching on a monotonic discrete sequence
 
-```julia
-using Random
+Assume you have monotonic increasing sequences such those given by these Julia functions (assuming `n>=0`):
 
-random_license_plate() = String(rand('0':'9',3)) * " " * String(rand('A':'Z',3))
-
-function prepare_data(;N = 10^7)
-    Random.seed!(1)
-    indexes = rand(1:10^12, N)
-    plates = [random_license_plate() for _ in 1:N]
-
-    #One specific spot is set to a special value.
-    special_spot = Int(floor(0.9*N)) #Arbitrary index
-    indexes[special_spot], plates[special_spot] = 1234567890, "000 ZZZ"
-    
-    return indexes, plates
-end
-
-function prepare_sorted_data(;N = 10^7)
-    indexes, plates = prepare_data(N=N)  
-    perm = sortperm(indexes)
-    return indexes[perm], plates[perm]
-end
-
-indexes, plates = prepare_sorted_data(N=5) #as an example set N=5
-@show indexes
-@show plates;
+```
+fn1(n) = 1 - 1/√(20n)
+fn2(n) = 1 - exp(-(n-1)/50)
+fn3(n) = max(min(1, n/600 + 0.2),0)
+fn4(n) = 1/(1+exp(-(n - 100)/200))
 ```
 
-**7a**: Investigate the some of the features in this code including the one line function definition (`random_license_plate()`), the concatenation of strings via `*`, multiple uses of `rand()`, the use of a comprehension of the form `[  for _ in ]`, the return value of a function that is a tuple (seperated by a comma), and the in-built function `sortperm()`. For each of these language attributes present a little (short) example of how they work with a brief 1-3 line explanation.
+**7a**: Create a single informative scatter plot that presents all four of these functions with discrete values of `n` on the range `0:600`. Make sure that the plot is legible and the legend is clear. Adjust plotting parameters to make the plot as neat and suitable as you can.
 
-**7b**: Assume we now wish to use the indexes to find the license plate matching the index 1234567890. The following code does this when there are $10^7$ license plates. Note that there is a chance for having more than one such index, but it is small (what is it?). We also use the @btime macro to time how long it takes.
+**7b**: Create now a function called `find_n_basic` which takes as a first argument a function such as `fn1`, `fn2` etc... `f` (a pure mathematical function from the non-negative integers to the range $[0,1]$) and as a second argument a floating point number in the range `[0,1]`, call it `target`. Your function should then find the smallest `n` such that `f(n) >= target`. In your implementation do this by increasing `n` from `0`, until `f(n) >= target`. Test your `find_n` function on `fn1`, `fn2`, `fn3`, and `fn4` with various values of `target`. Show testing of this function for several random values of `target` (e.g. 5 values for each test function).
 
-```julia
-using BenchmarkTools
+**7c**: Your implementation of `find_n_basic` probably started with `n=0` and incremented `n` until `f(n) >= target`. Now go for a quicker implementation (call it `find_n_geometric`). Increment `n` from `0` to `1` and then by a multiple of `2` each time until exceeding (or equaling) target. Then decrease until finding the minimal `n`. Compare your answer here for the same 5 values that you tested in `7b` (for each of the test functions).
 
-function find_special_plate(indexes, plates; special_index = 1234567890)
-    for (i, index) in enumerate(indexes) 
-        if index == special_index 
-            return plates[i]
-        end
-    end 
-    throw(Error("Index not found"))
-end
-
-indexes, plates = prepare_sorted_data()
-
-@btime find_special_plate(indexes, plates)
-```
-
-Run this code. Then look a the GitHub repo and documentation of [BencmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl). How many commits has the package had? Find one of the issues in the repo, and copy it here. What is it about? Go to the documentation page of BenchmarkTools.jl (there is a link from the GitHub repo). Based on what you see in the documentation, briefly explain the difference between `@btime` and `@benchmark`? Then replace `@btime` with `@benchmark` and run again.
-
-**7c**: A generally better way to search for an index within a sorted list is via [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm). Implement a binary search procedure by replacing the algorithm in `find_special_plate()`. How much faster is it?
-
-**7d**: In general what is the time complexity for searching via binary search in a sorted array? Explain your answer.
+**7d**: Now have a third implementation which operates like `fine_n_geometric` yet after exceeding (or equaling the target), you cary out a binary search on the identified interval. So for example if for `n=32` you have that `f(n) < target` and further for `n=64` you have that `f(n) >= target`, then your new function (call it `find_n_fast`), will carry out a binary search between `n=32` and `n=64` to find `n`. Again compare your answer her for the same 5 values you tested above, for each of the test functions. 
 
 ## Question 8: Sorting
 
@@ -447,6 +366,13 @@ names = [   "Amy Chan",
             "Tom Cranitch",
             "Yoni Nazarathy",
             "Sam Hambleton",
+            "Isaac Beh", 
+            "Limao Chang", 
+            "Nazeef Hamid", 
+            "Cooper Janke", 
+            "Brandon Lowe", 
+            "Lief Lundmark",
+            "Megan Dawson",
             "Alistair Falconer",
             "Emma Comino",
             "Ivana Carrizo-Molina"]
@@ -466,7 +392,7 @@ array_table(sorted_names,"Sorted by last name")
 
 **8c**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of names above, using last name first.
 
-**8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner. Note that for `my_sort_bubble()` you can stop at at $10^4$ or $10^5$ becuase longer inputs will take too much time. However, try to use the large inputs for `my_sort_quick()` and the system's `sort()`.
+**8d**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner. Note that for `my_sort_bubble()` you can stop at at $10^4$ or $10^5$ because longer inputs will take too much time. However, try to use the large inputs for `my_sort_quick()` and the system's `sort()`.
 
 ## Question 9: Matrix Multiplication
 
@@ -538,21 +464,22 @@ So now rank one matrices may be added up.
 
 ## Question 10: Setting up your GitHub repo for hand-in.
 
-
 * Create your GitHub account if you don't have one.
-* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2022-BigHW`. So for example if your names are "Jeannette Young" and "Kidd Gee" the repo name should be `Jeannette-Young__Kidd-Gee-2504-2022-BigHW`.
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2023-BigHW`. So for example if your names are "Jacinda Ardern" and "Anthony Albanese" the repo name should be `Jacinda-Ardern__Anthony-Albanese-2504-2022-BigHW`.
 * Make sure the repo is **private**.
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the assignment, and must do this no later than the assignment due date.
 * Do **not** make any changes (commits) to the repo after the assignment due date. 
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
-* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+* If you haven't install git on mac or Linux, or use GitBash if you use Windows (both team mates should do this).
+* Setup authentication either via personal access token or via SSH (both team mates should do this).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff. However, if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
 
 Your GitHub repo should be formatted as exactly as follows:
 * Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
 * Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
 * Have a `.gitignore` file. 
 * Have a `notebooks` directory and in it have the 4 submission forms (notebooks) I--IV. 
-* Note: make sure that there aren't any files in your submission repo except for the submission forms I--IV. Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+* Note: make sure that there aren't any files in your submission repo except for the submission forms I--IV (.ipynb format). Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`. Voice recordings and PDF files are to be uploaded to blackboard, not GitHub.
 
 ## Question 11: A few unix commands
 
@@ -589,7 +516,6 @@ Your submission should be comprised of the text from the shell including the com
 **11n**: Delete all the files in the directory using a single command. Please be very careful when deleting files! 
 
 **11o**: Move back to `hw2_q1` and delete the directory `people`. Use either `rm` with a correct flag or `rmdir`.
-
 
 ## Question 12: HTTP, Files, JSON, and CSV
 
@@ -634,7 +560,7 @@ $$
 f'(x) \approx \frac{f(x+h/2) - f(x-h/2)}{h}.
 $$
 
-**13a**: Consider the functions, $f_1(x) = sin(x^2)$ at $x=1/2$, $f_2(x) = e^x$ at $x=1$, and $f_3(x) = atan(x)/(1+e^{-x^2})$ at $x=2$. Evaluate the performance of each of the schemes (forward and central) for each of these functions at the given points. In each case plot the error as a function of $h$, and find the optimal $h$. Display your results in a neat manner using one or two plots and a minimal summary.
+**13a**: Consider the functions, $f_1(x) = cos(x^2)$ at $x=1/2$, $f_2(x) = e^{x^2}$ at $x=1$, and $f_3(x) = atan(x)/(1+e^{-4x^2})$ at $x=2$. Evaluate the performance of each of the schemes (forward and central) for each of these functions at the given points. In each case plot the error as a function of $h$, and find the optimal $h$. Display your results in a neat manner using one or two plots and a minimal summary.
 
 **13b**: Consider now a vector valued function of the form, $f: {\mathbb R}^K \to {\mathbb R}^K$, defined as,
 
@@ -660,8 +586,6 @@ Assume you do not know the Jacobian expression and wish to compute it for a vect
 
 
 **13c**:  Consider now $z = [1^{1/3}, 2^{1/3}, \ldots, K^{1/3}]^\top$ for $K=10$, $K=20$, and $K=100$. Plot the error of the Jacobian for both the forward difference scheme and the central difference scheme where as error you consider the euclidean distance between the approximated Jacobian and the explicit Jacobian (the square root of the sum up the squares of the differences between entries of the numerical derivative and the explicit one). What is the optimal $h$ in each case?
-
-
 
 ## Question 14: Markov chains and `LinearAlgebra`
 
@@ -958,21 +882,20 @@ $$
 
 **16d**: The Julia package [DifferentialEquations.jl](https://github.com/SciML/DifferentialEquations.jl) has support for various state of the art techniques, including [symplectic integrators](https://diffeq.sciml.ai/stable/solvers/dynamical_solve/). Choose a state of the art standard ODE solver and a symplectic integrator and use it to find a solution for this ODE system. Compare results with your own implementation of leapfrog and comment on the results.
 
-## Question 17: Perspective seminar (Dr. Amy Chan).
+## Question 17: Perspective seminar (Dr. Megan Dawson).
 
 This question presents you with an additional 10 bonus points. 
 
-Write a 1-4 paragraph summary of Amy Chan's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Chan", or "Amy", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+Write a 1-4 paragraph summary of Megan's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Dawson", or "Megan" or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
 
 The writeup should address the following questions (in paragraph form):
 
-1. What was Amy’s career path, and her relationship with software, mathematics, and statistics?
+1. What was Mega's career path, and her relationship with engineering, software, mathematics, and statistics?
 
 1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
 
 1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
 
-1. Have you picked up any tips from Amy’s talk, which you can perhaps use in your career down the road?
+1. Have you picked up any tips from Megan's talk? Of these, which can perhaps be of use in your career down the road?
 
 1. Feel free to state anything else that you found interesting from the talk.
-
