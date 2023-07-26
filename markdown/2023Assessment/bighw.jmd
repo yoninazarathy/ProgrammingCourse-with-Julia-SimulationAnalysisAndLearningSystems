@@ -1,7 +1,9 @@
 # BigHW - Semester 2, 2023.
-(last edit: July 20, 2023)
+(last edit: July 24, 2023)
 
-**Due:** End of day August 22, 2023. This assignment is in pairs.
+**Due:** August 25, 2023, 16:00. This assignment is in pairs.
+
+Here is an **[explainer video](https://www.youtube.com/watch?v=-CDLxcuQg1w)** for this assignment.
 
 **Note:** Since this assignment is in **pairs** make sure to submit with the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three people in the team, require **explicit permission** from the course coordinator.
 
@@ -121,7 +123,7 @@ end
 
 1. Add two more examples of your own to the array (of arrays) `examples` and see how it works.
 2. The lines marked with `#***` could have been set in a function of their own and that function can be called (invoked) in place of those lines. Name that function `print_quadratic_roots()` and have it accept two arguments. The first argument is an array `coefficients` which is interpreted as the coefficients ($a$, $b$, and $c$). The second argument is the array `roots`. Define that function and run the code with your new function in place of the lines marked with `#***`. Since your new function does not have a return value you may write `return nothing` in the end.
-3. Finally beautify the output of your function such that when a coefficient is $+1$ or $-1$ it is not printed but rather only the sign is printed (if needed). For example the polynomial $+1x^2-1x+1$ is better printed as $-x^2-x+1$. In doing so, use the [ternary operator](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation) `? :`. In one way or another. This may have code with less lines (less explicit big `if` - `else` statements).
+3. Finally beautify the output of your function such that when a coefficient is $+1$ or $-1$ it is not printed but rather only the sign is printed (if needed). For example the polynomial $-1x^2-1x+1$ is better printed as $-x^2-x+1$. In doing so, use the [ternary operator](https://docs.julialang.org/en/v1/manual/control-flow/#man-conditional-evaluation) `? :`. In one way or another. This may have code with less lines (less explicit big `if` - `else` statements).
 
 **2c**: It is common and useful to create testing code that checks that operational code works. For the function `real_roots_of_quadratic()` we may create another function as follows:
 
@@ -472,7 +474,7 @@ So now rank one matrices may be added up.
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
 * If you haven't install git on mac or Linux, or use GitBash if you use Windows (both team mates should do this).
 * Setup authentication either via personal access token or via SSH (both team mates should do this).
-* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff. However, if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+* If for some reason you are not able or willing to use GitHub, an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff. However, if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
 
 Your GitHub repo should be formatted as exactly as follows:
 * Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
