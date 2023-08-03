@@ -194,7 +194,7 @@ end
 roots_of_quadratic(1,2,3)
 ```
 
-The above implementation is fine, however it has code duplication for both cases of $\Delta \neq 0$. That is the case `Δ < 0` and the case `Δ > 0` can be merged. Modify the function so that it does not have an `elseif` statement. In fact, try to write the function without any `if` statement but rather only using the trinary operator `? :`. 
+The above implementation is fine, however it has code duplication for both cases of $\Delta \neq 0$. That is the case `Δ < 0` and the case `Δ > 0` can be merged. Modify the function so that it does not have an `elseif` statement. In fact, try to write the function without any `if` statement but rather only using the ternary operator `? :`. 
 
 
 ## Question 3: A little case of Faulhaber's formula
@@ -341,7 +341,7 @@ fn4(n) = 1/(1+exp(-(n - 100)/200))
 
 **7c**: Your implementation of `find_n_basic` probably started with `n=0` and incremented `n` until `f(n) >= target`. Now go for a quicker implementation (call it `find_n_geometric`). Increment `n` from `0` to `1` and then by a multiple of `2` each time until exceeding (or equaling) target. Then decrease until finding the minimal `n`. Compare your answer here for the same 5 values that you tested in `7b` (for each of the test functions).
 
-**7d**: Now have a third implementation which operates like `fine_n_geometric` yet after exceeding (or equaling the target), you cary out a binary search on the identified interval. So for example if for `n=32` you have that `f(n) < target` and further for `n=64` you have that `f(n) >= target`, then your new function (call it `find_n_fast`), will carry out a binary search between `n=32` and `n=64` to find `n`. Again compare your answer her for the same 5 values you tested above, for each of the test functions. 
+**7d**: Now have a third implementation which operates like `fine_n_geometric` yet after exceeding (or equaling the target), you cary out a binary search on the identified interval. So for example if for `n=32` you have that `f(n) < target` and further for `n=64` you have that `f(n) >= target`, then your new function (call it `find_n_fast`), will carry out a binary search between `n=32` and `n=64` to find `n`. Again compare your answer here for the same 5 values you tested above, for each of the test functions. 
 
 ## Question 8: Sorting
 
@@ -467,7 +467,7 @@ So now rank one matrices may be added up.
 ## Question 10: Setting up your GitHub repo for hand-in.
 
 * Create your GitHub account if you don't have one.
-* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2023-BigHW`. So for example if your names are "Jacinda Ardern" and "Anthony Albanese" the repo name should be `Jacinda-Ardern__Anthony-Albanese-2504-2022-BigHW`.
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>2504-2023-BigHW`. So for example if your names are "Jacinda Ardern" and "Anthony Albanese" the repo name should be `Jacinda-Ardern__Anthony-Albanese-2504-2023-BigHW`.
 * Make sure the repo is **private**.
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the assignment, and must do this no later than the assignment due date.
 * Do **not** make any changes (commits) to the repo after the assignment due date. 
@@ -611,7 +611,7 @@ where ${\mathbf 1}\{\cdot\}$ is the indicator function equalling $1$ if the argu
 
 In this problem you will compute/estimate $\pi$ using methods 1-4 for a specific class of problems.
 
-The code below generates a very special class of Markov chains where there is an explicit expression for the stationary probability vector $\pi$. The function `structured_P` with input argument `L` creates and $L \times L$ matrix $P$ and the function `structured_π` creates an $L$-vector (column vector) $\pi$ matching this $P$:
+The code below generates a very special class of Markov chains where there is an explicit expression for the stationary probability vector $\pi$. The function `structured_P` with input argument `L` creates an $L \times L$ matrix $P$ and the function `structured_π` creates an $L$-vector (column vector) $\pi$ matching this $P$:
 
 ```julia
 using LinearAlgebra
@@ -892,7 +892,7 @@ Write a 1-4 paragraph summary of Megan's perspective seminar. The writeup should
 
 The writeup should address the following questions (in paragraph form):
 
-1. What was Mega's career path, and her relationship with engineering, software, mathematics, and statistics?
+1. What was Megan's career path, and her relationship with engineering, software, mathematics, and statistics?
 
 1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
 
