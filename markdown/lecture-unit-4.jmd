@@ -14,6 +14,257 @@ Julia is a high-performance language for solving large mathematical problems, an
 
 The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code. The notes below often refer to the Julia documentation.
 
+## Values and types
+
+One way Julia allows for easy and fast mathematical code is to emphasise _values_ (or _objects_), and transformations of values (via functions).
+
+A few ways that is apparent is:
+
+ 1. All valid Julia code is an _expression_ that evaluates to a value (no statements, no `void`).
+ 2. Every value has a specific (or "concrete") _type_ (like `String` or `Int64`).
+ 3. Functions are values, which can be stored in variables or passed to other functions.
+
+Many modern languages feature the above, but Julia takes it even further than that:
+
+ 4. Types are also values that can be passed around and manipulated.
+ 5. Julia code is a value (you can use and create macros, access generated native code, etc).
+
+With these last two, you can do some pretty powerful things with Julia. In fact, most of Julia is itself written in Julia. However, we won't focus on those here.
+
+### Why is it so?
+
+Remember, all this is designed to make it easy for mathematicians to write code that fast to run and easy to scale.
+
+In mathematics, we are interested in values or objects, as well as operations and transformations on such objects. Basing the language around values (objects), and allowing functions to behave like values (objects), makes our code resemble mathematics and have a similar interpretation. It does this without "getting in your way" or stopping you writing imperative code.
+
+The fact that values have _types_ is for two reasons:
+
+ 1. Types let us specify our data and define the _behavior_ of functions that operator on them.
+ 2. Types let the compiler know the _representation_ of the value in memory (e.g. how many bytes it is) so it can generate fast code.
+
+Types have two purposes: help _humans_ organise their data and define behaviour, and the help _the computer_ to execute the program quickly.
+
+### All valid code is an _expression_
+
+An expression is a piece of code that evaluates to a value. (Some languages, like Python or C, also have other pieces of syntax which are not expressions, typically known as "statements" - a statement tells to computer or compiler to "do something" but does not produce a value you can use).
+
+Here are some expressions in Julia:
+
+```julia
+1 + 1
+["a", "b", "c"]
+println(pi)
+```
+
+One nice aspects of expressions is you can copy them and paste them anywhere that expects an expression, and it is guaranteed to by syntactically valid. Each of these expressions evaluate to a value, which you can for example bind to a variable:
+
+```julia
+x = 1 + 1
+y = ["a", "b", "c"]
+z = println(pi)
+```
+
+### Every value has a concrete type
+
+The types of the first value is straightforward:
+
+```julia
+julia> typeof(1+1)
+Int64
+```
+
+This is just a 64-bit signed integer, which requires 64 bits (or 8 bytes) of memory to represent at runtime.
+
+The second is a 1D array, or vector:
+
+```
+julia> typeof(["a", "b", "c"])
+Vector{String} (alias for Array{String, 1})
+```
+
+Vectors can be arbitrarily long and use an unknown amount of memory at runtime. We'll talk about type parameters (the `{String}` part) and aliases in more detail later, but first let's look at the third:
+
+```julia
+julia> typeof(println(pi))
+π
+Nothing
+```
+
+The `println` function takes input and prints it to the console (followed by a new line). It doesn't really have any "value" to return. But I said earlier that all expressions in Julia return _some_ value. Julia has an value defined called `nothing` for this purpose, which is of type `Nothing`. There is nothing special about this type, except that it has no associated data (meaning it needs 0 bytes of data to represent at runtime).
+
+### What is a concrete type?
+
+A type can be thought of as a set of values.
+
+Every value is a concrete type, and Julia has just these concrete types:
+
+ 1. `primitive type`
+ 2. `struct` (and `mutable struct`)
+ 3. `Array{N, T}` (and `Vector{T}` / `Matrix{T}`)
+ 4. `String`
+
+### Primitive types
+
+Primitive types is where we begin describing data at the bits-and-bytes level. Here is the definition of `UInt8`:
+
+```julia
+primitive type UInt8
+    8
+end
+```
+
+There are 256 possible `UInt8` values: `0x00, 0x01, ..., 0xfe, 0xff`. You could say `UInt8` is a set with 256 elements.
+
+Here are the definitions of `Int64` and `Float64`:
+
+```julia
+primitive type Int64
+    64
+end
+
+primitive type Float64
+    64
+end
+```
+
+Each of these are sets containing `2^64` (about `10^18`) possible values. However, for every value in your program Julia keeps track of the type of the value, as well as the data. You can consider `Int64` and `Float64` to be _disjoint_ sets. The values `0` (an integer) and `0.0` (a float) are represented by exactly the same bits (all zero), yet they are not "the same":
+
+```julia
+julia> reinterpret(Float64, 0)
+0.0
+
+julia> reinterpret(Int64, 0.0)
+0
+
+julia> 0 === 0.0
+false
+```
+
+(Type tracking typically occurs at compile time, before the program runs, so Julia doesn't need to store extra data describing whether every value is an integer or a float or something else.)
+
+The advantage of distinct types is we can describe different behavour for these types. For example, there are seperate methods for addition representing the different ways the CPU handles integer and floating-point arithmetic, `+(x::Int64, y::Int64)` and `+(x::Float64, y::Float64)`.
+
+(Note that all primitive types are immutable values. You cannot "mutate" `0` to become `1` - you construct a new value instead.)
+
+### Structs
+
+Structs allow us to organise different pieces of data into a "structure". In general, structs represent composition of data: e.g. a complex number consists of a real component and an imaginary component:
+
+```julia
+struct Complex64
+    re::Float64
+    im::Float64
+end
+```
+
+The compiler knows that a `Complex64` needs 128 bits of data to represent - 64 bits each for `re` and `im`. This type is a distinct set with `2^128` possible values. 
+
+You can construct a struct with the "constructor" - where the type doubles as a kind of function that lets you specify the fields:
+
+```julia
+z = Complex64(1.0, 2.0)
+```
+
+You can get a field from the struct with the `.` operator, for example `z.re === 1.0` and `z.im === 2.0`.
+
+#### Empty structs
+
+A struct can have any number of fields, including zero:
+
+```julia
+struct Nothing
+end
+
+const nothing = Nothing()
+```
+
+This is exactly how `nothing` is defined in Julia! It takes zero bytes to represent nothing, and you could say `Nothing` is like a set containing `2^0 = 1` possible value - `nothing`.
+
+##### Mutable structs
+
+By default structs are immutable - once constructed you cannot edit the fields. It is possible to create structs that you can modify with the `mutable` keyword:
+
+```julia
+mutable struct MutableComplex64
+   re::Float64
+   im::Float64
+end
+
+z = MutableComplex64(1.0, 2.0)
+
+z.im = 0.0  # this would throw an error if z were immutable
+```
+
+#### Generic structs
+
+Finally, one more thing you can do is create _generic_ structs. In Julia the type for complex numbers is more like:
+
+```julia
+struct Complex{T}
+    re::T
+    im::T
+end
+```
+
+Given some type `T`, `Complex{T}` is a struct with fields `re` and `im` of type `T`. 
+
+This useful because now we don't need a seperate `struct` definition for complex numbers with `Float32` components, or `Int64` components, or whatever. Just one definition suffices for them all. This lets us write quite generic code that is oblivious to the exact type `T` but uses properties common to all complex numbers. For example, the absolute value squared can be written:
+
+```julia
+function abs2(z::Complex)
+    return z.re*z.re + z.im*z.im
+end
+```
+
+and this single definition is sufficient for all possible `T`.
+
+Note that the type `Complex` is an _abstract_ type (not a _concrete_ type). We'll talk more about abstract types and multiple dispatch later. For now, note that Julia lets you write both generic data types and generic functions.
+
+#### Type aliases
+
+Earlier we saw an example of a type "alias". You can create them like so:
+
+```julia
+const Complex64 = Complex{Float64}
+```
+
+Type aliases are useful to make your code shorter or more readable.
+
+#### Tuples
+
+Tuples in Julia are a kind of "lightweight" struct with no type or fieldnames that you need to define in advance. You construct tuples with brackets like `(1, 2, 3)`. Note the types don't have to be uniform, `t = (1, true, "abc")` is equally valid. You access the fields with the index, such as `t[3] === "abc"`.
+
+Note the syntax of tuples is much like the arguments to a function - `(x, y)` is a tuple and `f(x, y)` calls function `f` with inputs `(x, y)`. The correspondence is intentional.
+
+Julia also has "named" tuples, where you can name the fields, like `(a = 1, b = true, c = "abc")`. (These look a bit like keyword arguments to functions).
+
+### Arrays
+
+Structs are useful for collecting data, but only if you know how many elements you want at compile time.
+
+Arrays are dynamically-sized collections, that can contain zero-or-more elements. We use arrays a lot in Julia.
+
+Arrays in Julia are multi-dimensional and have the type `Array{T, N}`. Each array value knows the type of its contents `T` as well as how many dimensions `N` it has. However, since we don't know how many elements might be in an array, the computer needs to allocate memory to store the array at runtime.
+
+Arrays are mutable collections - elements can be edited, inserted or deleted.
+
+Remember that vectors and matrices are just aliases for 1D and 2D arrays.
+
+```julia
+const Vector{T} = Array{1, T}
+const Matrix{T} = Array{2, T}
+```
+
+### Strings
+
+Strings are built into the Julia language, for convenience. They are much like a `Vector{UInt8}` containing UTF-8 encoded string data, but are immutable.
+
+(In a future version of Julia with immutable arrays, `String` could theoretically become a "normal" Julia type, but for now this is a pragmatic tradeoff).
+
+### ...and, that's it!
+
+Julia provides other important types, like `Set`s and `Dict`s, but these are implemented in terms of the above.
+
 ## Syntax
 
 Before moving to types and dispatch, we'll cover some fundaments of Julia code syntax so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
@@ -28,10 +279,9 @@ An expression is a piece of code that, when evaluated, returns a value. For exam
 
 In Julia, _every_ piece of syntactically valid code is an expression — which means at run time it generates a value which you can assign to a variable. Even things like `if` statements!
 
-```julia
-x = 42
+```juliax = 42
 
-is_x_even = if x % 2 == 0
+This_x_even = if x % 2 == 0
    "$x is even"
 else
    "$x is odd"
