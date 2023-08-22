@@ -14,7 +14,7 @@ Julia is a high-performance language for solving large mathematical problems, an
 
 The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code. The notes below often refer to the Julia documentation.
 
-## Values and types
+## Values and their types
 
 One way Julia allows for easy and fast mathematical code is to emphasise _values_ (or _objects_), and transformations of values (via functions).
 
@@ -39,7 +39,7 @@ In mathematics, we are interested in values or objects, as well as operations an
 
 The fact that values have _types_ is for two reasons:
 
- 1. Types let us specify our data and define the _behavior_ of functions that operator on them.
+ 1. Types let us specify our data and define the _behavior_ of functions that operator on them (using multiple dispatch).
  2. Types let the compiler know the _representation_ of the value in memory (e.g. how many bytes it is) so it can generate fast code.
 
 Types have two purposes: help _humans_ organise their data and define behaviour, and the help _the computer_ to execute the program quickly.
@@ -69,8 +69,7 @@ z = println(pi)
 The types of the first value is straightforward:
 
 ```julia
-julia> typeof(1+1)
-Int64
+typeof(1+1)
 ```
 
 This is just a 64-bit signed integer, which requires 64 bits (or 8 bytes) of memory to represent at runtime.
@@ -78,16 +77,13 @@ This is just a 64-bit signed integer, which requires 64 bits (or 8 bytes) of mem
 The second is a 1D array, or vector:
 
 ```
-julia> typeof(["a", "b", "c"])
-Vector{String} (alias for Array{String, 1})
+typeof(["a", "b", "c"])
 ```
 
 Vectors can be arbitrarily long and use an unknown amount of memory at runtime. We'll talk about type parameters (the `{String}` part) and aliases in more detail later, but first let's look at the third:
 
 ```julia
-julia> typeof(println(pi))
-π
-Nothing
+typeof(println(pi))
 ```
 
 The `println` function takes input and prints it to the console (followed by a new line). It doesn't really have any "value" to return. But I said earlier that all expressions in Julia return _some_ value. Julia has an value defined called `nothing` for this purpose, which is of type `Nothing`. There is nothing special about this type, except that it has no associated data (meaning it needs 0 bytes of data to represent at runtime).
@@ -107,7 +103,7 @@ Every value is a concrete type, and Julia has just these concrete types:
 
 Primitive types is where we begin describing data at the bits-and-bytes level. Here is the definition of `UInt8`:
 
-```julia
+```julia; eval = false
 primitive type UInt8
     8
 end
@@ -117,7 +113,7 @@ There are 256 possible `UInt8` values: `0x00, 0x01, ..., 0xfe, 0xff`. You could 
 
 Here are the definitions of `Int64` and `Float64`:
 
-```julia
+```julia; eval = false
 primitive type Int64
     64
 end
@@ -130,14 +126,15 @@ end
 Each of these are sets containing `2^64` (about `10^18`) possible values. However, for every value in your program Julia keeps track of the type of the value, as well as the data. You can consider `Int64` and `Float64` to be _disjoint_ sets. The values `0` (an integer) and `0.0` (a float) are represented by exactly the same bits (all zero), yet they are not "the same":
 
 ```julia
-julia> reinterpret(Float64, 0)
-0.0
+reinterpret(Float64, 0)
+```
 
-julia> reinterpret(Int64, 0.0)
-0
+```julia
+reinterpret(Int64, 0.0)
+```
 
-julia> 0 === 0.0
-false
+```julia
+0 === 0.0
 ```
 
 (Type tracking typically occurs at compile time, before the program runs, so Julia doesn't need to store extra data describing whether every value is an integer or a float or something else.)
@@ -165,13 +162,25 @@ You can construct a struct with the "constructor" - where the type doubles as a 
 z = Complex64(1.0, 2.0)
 ```
 
-You can get a field from the struct with the `.` operator, for example `z.re === 1.0` and `z.im === 2.0`.
+```julia
+sizeof(z)
+```
+
+You can get a field from the struct with the `.` operator, for example 
+
+```julia
+z.re
+```
+
+```julia
+z.im
+```
 
 #### Empty structs
 
 A struct can have any number of fields, including zero:
 
-```julia
+```julia; eval = false
 struct Nothing
 end
 
@@ -184,7 +193,7 @@ This is exactly how `nothing` is defined in Julia! It takes zero bytes to repres
 
 By default structs are immutable - once constructed you cannot edit the fields. It is possible to create structs that you can modify with the `mutable` keyword:
 
-```julia
+```julia; eval = false
 mutable struct MutableComplex64
    re::Float64
    im::Float64
@@ -224,7 +233,7 @@ Note that the type `Complex` is an _abstract_ type (not a _concrete_ type). We'l
 
 Earlier we saw an example of a type "alias". You can create them like so:
 
-```julia
+```julia; eval = false
 const Complex64 = Complex{Float64}
 ```
 
@@ -244,13 +253,13 @@ Structs are useful for collecting data, but only if you know how many elements y
 
 Arrays are dynamically-sized collections, that can contain zero-or-more elements. We use arrays a lot in Julia.
 
-Arrays in Julia are multi-dimensional and have the type `Array{T, N}`. Each array value knows the type of its contents `T` as well as how many dimensions `N` it has. However, since we don't know how many elements might be in an array, the computer needs to allocate memory to store the array at runtime.
+Arrays in Julia are multi-dimensional and have the type `Array{T, N}`. Each array value knows the type of its contents `T` as well as how many dimensions `N` it has. However, since we don't know how many elements might be in an array, the computer needs to allocate memory to store the array at runtime. In terms of sets, arrays are a type contain an unbounded number of possible values.
 
 Arrays are mutable collections - elements can be edited, inserted or deleted.
 
 Remember that vectors and matrices are just aliases for 1D and 2D arrays.
 
-```julia
+```julia; eval = false
 const Vector{T} = Array{1, T}
 const Matrix{T} = Array{2, T}
 ```
@@ -259,29 +268,49 @@ const Matrix{T} = Array{2, T}
 
 Strings are built into the Julia language, for convenience. They are much like a `Vector{UInt8}` containing UTF-8 encoded string data, but are immutable.
 
-(In a future version of Julia with immutable arrays, `String` could theoretically become a "normal" Julia type, but for now this is a pragmatic tradeoff).
+(If a future version of Julia had immutable arrays, `String` could theoretically become a "normal" Julia type, but for now this is a pragmatic tradeoff).
 
 ### ...and, that's it!
 
-Julia provides other important types, like `Set`s and `Dict`s, but these are implemented in terms of the above.
+Julia provides other important types, like `Set`s and `Dict`s, but these are implemented in terms of the above. _Every_ value is one of:
 
-## Syntax
+ 1. A primitive type
+ 2. A struct (immutable, mutable, tuple or named tuple)
+ 3. An `Array`
+ 4. A `String`
 
-Before moving to types and dispatch, we'll cover some fundaments of Julia code syntax so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
+## Logic and syntax
 
-### Everything is an expression, and everything has a value
+Now that we've covered all the possible types of values in Julia, we'll take a look at how data is manipulated via logic and functions.
 
-An expression is a piece of code that, when evaluated, returns a value. For example:
+Eventually we'll come back to abstract types and multiple dispatch, but first we'll cover some fundaments of Julia code syntax and functions so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
+
+### Everything is an expression, everything has a value, and everything has a type
+
+We saw earlier that an expression is a piece of code that, when evaluated, produces a value. For example:
 
 ```julia
 1 + 1
 ```
 
+One thing you should understand about Julia is that it uses type inference to predict the output type of an expression. 
+
+```julia
+using InteractiveUtils
+
+@code_typed 1 + 1
+```
+
+The compiler essentially contains a "proof engine" that can formally prove constraints on the outputs of expressions. In this case it knows for sure that the output will be an `Int64`. Sometimes no proof can be found - in Julia this just makes the code slower, while in some other programming languages that could be a compilation error. This choice makes Julia feel more "dynamic" and makes prototype code easier to write.
+
+### `if`-`else`
+
 In Julia, _every_ piece of syntactically valid code is an expression — which means at run time it generates a value which you can assign to a variable. Even things like `if` statements!
 
-```juliax = 42
+```julia
+x = 42
 
-This_x_even = if x % 2 == 0
+is_x_even = if x % 2 == 0
    "$x is even"
 else
    "$x is odd"
@@ -327,7 +356,7 @@ function f(x)
 end
 ```
 
-_Note: `for` and `while` loops always return `nothing`!_
+_Note: `for` and `while` loops always produce `nothing`!_
 
 If you prefer, you can seperate multiple expressions in a code block with `;` instead of on seperate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
 
@@ -417,7 +446,9 @@ Each macro can be thought of as like user-defined syntax sugar. We can extend th
 
 ### An even better way to metaprogram
 
-Another form of metaprogramming in Julia is multiple dispatch. Multiple dispatch allows us to construct entire classes of programs that depend on the _types_ of values — and Julia will construct on-demand a particular program _specialized_ on the inputs you actually provide. Next we'll learn more about Julia functions, Julia types and how multiple dispatch works.
+Another form of metaprogramming in Julia is multiple dispatch. Multiple dispatch allows us to construct entire classes of programs that depend on the _types_ of values — and Julia will construct on-demand a particular program _specialized_ on the inputs you actually provide.
+
+Next we'll learn more about Julia functions and how multiple dispatch works. Afterwards we'll learn about abstract types and how to use this metaprogramming approach.
 
 ## Functions in Julia
 
@@ -456,6 +487,63 @@ end
 
 (Note: the `const` isn't essential — but it will let us attach other methods to `f3` or `f4` later)
 
+#### What type is a function?
+
+You can think of the above functions as being a lot like `nothing` (a struct with zero fields). Each function has a unique type:
+
+```julia
+typeof(f1)
+```
+
+```julia
+typeof(f2)
+```
+
+```julia
+typeof(f1) == typeof(f2)
+```
+
+And like `nothing`, there is no data associated with these:
+
+```julia
+sizeof(f1)
+```
+
+These types have only one possible value, which is why Julia describes them as "singleton types". Singleton types have a one-to-one correspondence between type and value.
+
+#### Function methods
+
+Note that in Julia you can attach _function methods_ to any type (primitive, struct, etc), not just those defined like above.
+
+```julia
+methods(f1)
+```
+
+```julia
+methods(nothing)
+```
+
+A "method" encodes the logic performed when the function executes. Types without methods are not callable. Types can have more than one method. We'll talk more about multiple methods when we discuss multiple dispatch.
+
+For now, just know you can attach methods to _any_ type with special syntax like this:
+
+```julia; eval = false
+(x::Bool)() = "this is $x"
+
+function (x::Bool)()
+    return "this is $x"
+end
+```
+
+For "singleton" types you can use the singleton value instead of the type, so these are equivalent:
+
+```julia; eval = false
+nothing() = "Nothing else matters"
+(::Nothing)() = "Nothing else matters"
+```
+
+If this seems a bit crazy or abstract - don't worry! Just remember that _anything_ can be made callable - functions are not special.
+
 ### Nested functions: "closures"
 
 In Julia you can define functions within functions.
@@ -477,6 +565,10 @@ Such functions are called "closures" because they "close over" (or "capture") th
 
 ```julia
 add_2.x
+```
+
+```julia
+sizeof(add_2)
 ```
 
 Note again it doesn't matter which form of function syntax we use. It's just different syntax for the same thing. We could have equally written:
@@ -609,7 +701,7 @@ add_all(1, 2, 3, 4, 5)
 function polynomialGenerator(a...)
     n = length(a) - 1
     poly = function(x)
-        return sum([a[i+1]*x^i for i in 0:n])
+        return sum(a[i+1] * x^i for i in 0:n)
     end
     return poly
 end
@@ -919,9 +1011,9 @@ end;
 One place closures, and `do` syntax in particular, gets used is when you want resources to be cleaned up automatically. Here's how one method of `open` is defined in Julia:
 
 ```julia; eval = false
-function open(f, x)
-    io = open(f)
-    try    
+function open(f, filename::String)
+    io = open(filename)
+    try
         f(io)
     finally
         close(io)
@@ -1037,275 +1129,6 @@ My advice:
 Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap.
 
 ## Types and the Type System
-
-See [types in the Julia docs](https://docs.julialang.org/en/v1/manual/types/).
-
-### Everything has a type
-
-```julia
-typeof(2.3)
-```
-
-```julia
-typeof(2.3f0)
-```
-
-```julia
-typeof(2)
-```
-
-```julia
-typeof(23 // 10)
-```
-
-```julia
-typeof(2 + 3im)
-```
-
-```julia
-typeof(2.0 + 3im)
-```
-
-```julia
-typeof("Hello!")
-```
-
-```julia
-typeof([1, 2, 3])
-```
-
-```julia
-typeof([1, 2, 3.0])
-```
-
-```julia
-typeof([1.0, 2, "three"])
-```
-
-```julia
-typeof((1.0, 2, "three"))
-```
-
-```julia
-typeof(1:3)
-```
-
-```julia
-typeof([1 2; 3 4])
-```
-
-```julia
-typeof(Float64)
-```
-
-```julia
-typeof(:Hello)
-```
-
-## Concrete Types
-
-Every value in Julia has what is called a "concrete" type. Julia also has "abstract" types (like `Any` and `Number`) that we'll discuss below. Only concrete types can have values - abstract types can have subtypes and *those* may be concrete.
-
-### Primitive types
-
-The most _basic_ type in Julia is the primitive type. You can create your own types with the `primitive type` keywords.
-
- Here's some definitions from `Base`:
-
-```julia; eval = false
-primitive type UInt8
-    8
-end
-
-primitive type Int32
-    32
-end
-
-primitive type Float64
-    64
-end
-```
-
-The number of bits must be a multiple of `8` (i.e. whole bytes).
-
-By default, primitive types have no methods associated with them - you need to define low-level primitive actions for them (e.g. how to add integers). The one thing you can do is `reinterpret` one primtivie type as another with the same number of bits.
-
-```julia
-reinterpret(UInt64, 0.0)
-```
-
-```julia
-reinterpret(UInt64, Float64(π))
-```
-
-Primitive types are treated by Julia as _immutable_ — once a value is created, it cannot be modified or "mutated". You don't modify an `Int64` in Julia when you increment it like `i += 1`, this is syntax sugar for `i = i + 1`, where `i + 1` returns a new `Int64` and the variable `i` is bound to a new value. 
-
-(As an optimization, compiled Julia code may actually modify some bit of RAM in-place, but this effect is not visible to the user in any way other than being fast.)
-
-### Structs and mutable structs
-
-Another concrete type in Julia is the `struct`. A simple example is a complex number with a real and complex part (as defined in `Base`):
-
-```julia; eval = false
-struct Complex{T <: Number} <: Number
-    re::T
-    im::T
-end
-```
-
-Here we see a few features of `struct`. A struct — or structure — contains structured data within, having fields with names and types. We again use the type assertion operator `::` to indicate the type, which could be a primitive type, a struct, or an abstract type like `Any` or `Number`. And the type can be _parameterized_ — in this case it has an associated type `T` which must be a subtype of `Number`. Finally, we can define that `Complex` is a subtype of `Number`. We'll talk more about subtypes later.
-
-Generally you _construct_ a struct value using a function call, like:
-
-```julia
-z = Complex{Int64}(2, 3)
-```
-
-Like primitive types, structs are by default immutable. You cannot modify an existing complex number — an operation like `z += 2im` returns a _new_ complex number via a constructor, e.g. `Complex{Int64}(2, 5)`. It is an error to do `z.im = 5`.
-
-If you wanted to, you could create your own _mutable_ struct using the `mutable struct` keywords:
-
-```julia
-mutable struct MutableComplex{T <: Number}
-    re::T
-    im::T
-end
-
-z = MutableComplex{Int64}(2, 3)
-z.im += 2
-z
-```
-
-Part of the reason the built-in `Complex` type is immutable is that means the compiler can produce faster code (as it can make more assumptions about the data in your program).
-
-Note that we haven't yet defined any functions that act on our new `MutableComplex` type. If we wanted it to print like the built-in `Complex` numbers (like `2 + 5im`), we'd need to define a method for `Base.show`.
-
-```julia
-function Base.show(io::IO, z::MutableComplex)
-    print(io, z.re)
-    print(io, " + ")
-    print(io, z.im)
-    print(io, "im")
-end
-
-MutableComplex{Int64}(2, 3)
-```
-
-If we wanted it to add, subtract, multiply or divide we'd need to define methods of `+`, `-`, `*` and `/`. For example:
-
-```julia
-function Base.:+(z1::MutableComplex, z2::MutableComplex)
-    return MutableComplex(z1.re + z2.re, z1.im + z2.im)
-end
-
-MutableComplex{Int64}(2, 3) + MutableComplex{Int64}(10, 6)
-```
-
-There are yet more functions to overload that would allow it to work well with other `Number` types (e.g. add a `MutableComplex{Float64}` and a real `Int64`). We could do that with brute force by defining methods for every possible combination — but we will see a better way when we study generic code and interfaces, later.
-
-### `DataType`
-
-Julia comes with a built-in struct called `DataType`. It has a pretty complex definition:
-
-```julia; eval = false
-mutable struct DataType <: Type
-    name::TypeName
-    super::Type
-    parameters::Tuple
-    names::Tuple
-    types::Tuple
-    ctor::Any
-    instance::Any
-    size::Int32
-    abstract::Bool
-    mutable::Bool
-    pointerfree::Bool
-end
-```
-
-It holds all sorts of details about concrete data types. Every concrete data type is a `DataType`:
-
-```julia
-@show typeof(Int64)
-@show typeof(Complex{Float64})
-@show typeof(Vector{String});
-```
-
-You can poke around in these structures to learn things:
-
-```julia
-@show Int64.size
-@show Complex{Float64}.size
-@show Complex{Float64}.name.names
-@show Complex{Float64}.types;
-```
-
-Given that `DataType` is just a mutable struct, it's type is also a `DataType`:
-
-```julia
-@show typeof(DataType)
-```
-
-It's circular, but logically consistent. Note that all Turing-complete systems have some kind of circular or higher-order logic like this at some point.
-
-### Built-in types
-
-There are a handful of special builtin types in Julia. Below are the _only_ concrete types which are not just regular `primitive type`s, `struct`s and `mutable struct`s.
-
-#### `Array`
-
-The (multidimensional) array is Julia's built-in type for storing data of arbitrary size. A primitive type or struct consists of a known set of bits, while an `Array` can be dynamically sized at run time.
-
-Arrays have two type parameters, `Array{T, N}`. Here `T` is the element type, and `N` is the dimensionality of the array.
-
-There are a couple type aliases defined:
-
-```julia; eval = false
-const Vector{T} = Array{T, 1}
-const Matrix{T} = Array{T, 2}
-```
-
-Note that `Vector`s are resizable after creation (`push!`, `pop!`, `empty!`, etc), but this isn't true for other dimensionalities.
-
-In Julia, arbitrary bytes of data (like the contents of a file) is generally represented by `Vector{UInt8}`.
-
-#### `String`
-
-Strings represent text of arbitrary length.
-
-In Julia strings are immutable and assumed to be UTF-8 encoded (Windows, Java and JavaScript tend to use UTF-16 endoding). The compiler is allowed to make a few optimizations - e.g. for short strings, etc. You can mostly consider the backing bytes to be like an immutable `Vector{UInt8}`, which is how Julia strings are passed to functions from other programming languages like C.
-
-#### `Tuple`
-
-A tuple is like an immutable struct where the field names are `1`, `2`, `3`, etc.
-
-```julia
-tuple = (42, 3.14, "abc")
-```
-
-Usually you use indexing syntax to get the elements:
-
-```julia
-tuple[3]
-```
-
-There is a special `Tuple` datatype with arbitrary number of type parameters (the only type that supports this).
-
-```julia
-typeof(tuple)
-```
-
-When you call a function in Julia, `f(42, 3.14, "abc")`, it is a bit like the function takes a single tuple as its input. If you want to return more than one thing from a function, it is common to return a tuple.
-
-Tuples have some special rules when it comes to _abstract_ types to help with multiple-dispatch, but that is a rather advanced topic. Despite that, every tuple value behaves just like plain old data.
-
-#### `NamedTuple`
-
-The `NamedTuple`, like `(a = 1, b = true, c = "abc")`, is a special built-in type. However, it behaves just like a regular struct with field names you can choose, and is immutable.
-
-```julia
-typeof((a = 1, b = true, c = "abc"))
-```
 
 ### More on mutation
 
