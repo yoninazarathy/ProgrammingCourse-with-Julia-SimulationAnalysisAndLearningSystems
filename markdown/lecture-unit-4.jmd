@@ -343,6 +343,8 @@ is_even(2)
 is_even(3)
 ```
 
+Sometimes it's a `Bool` and sometimes it's a `String`.
+
 ```julia
 @code_typed is_even(42)
 ```
@@ -373,7 +375,7 @@ Julia has operators for Boolean arithmetic, including `&` for _AND_ (logical con
 
 The operation `x & y` is equivalent to `&(x, y)` and will evaluate `x`, then evaluate `y` and then determine the result.
 
-The operation `x && y` is simular but it sometimes takes a shortcut. If `x` is false, it doesn't bother compute a value for `y`.
+The operation `x && y` is similar but it sometimes takes a shortcut. If `x` is false, it doesn't bother compute a value for `y` (as the answer is `false` no matter the value for `y`).
 
 This matters when `y` is particularly difficult/slow to calculate, or when it may be something you want to avoid doing when `x` is false.
 
@@ -783,6 +785,49 @@ Remember that `x` and `x::Any` are the same thing. The final method will accept 
 
 In a sense, the third method isn't _safe_ since someone could provide an input like `(1, 2, 3)` that can't be squared. What happens if someone provides a string? Is this expected? On the other hand, the third method provides maximum flexibility — someone can introduce a new type that works with `f` at any point in time, without having to edit the definition of `f` to make it work.
 
+### Dispatch
+
+"Dispatch" is the process of determing which method of a function is called.
+
+```julia
+example_f(x::Int) = "input is an integer"
+example_f(x::String) = "input is a string"
+
+@show example_f(1)
+@show example_f("abc")
+@show methods(example_f)
+```
+
+You can use it to tailor the logic of a function to its inputs. Try type `methods(+)` at the REPL!
+
+Argument types can be abstract types, like `Any` or `Union`.
+
+```julia
+example_f2(x::Int) = "input is an integer"
+example_f2(x::Any) = "input is not an integer"
+
+@show example_f2(1)
+@show example_f2("abc")
+@show methods(example_f2)
+```
+
+Note that `Int <: Any` and the two methods overlap somewhat. In this case Julia will pick the most "specific" method. In terms of "types as sets of values" it matches to the "smallest" set.
+
+The term "multiple dispatch" means that dispatch can depend on the types of multiple arguments:
+
+```julia
+example_f3(x::Int, y::Int) = "both input are integers"
+example_f3(x::String, y::Int) = "the inputs have different types"
+example_f3(x::Int, y::String) = "the inputs have different types"
+example_f3(x::String, y::String) = "both input are strings"
+
+@show example_f3(1, 2)
+@show example_f3(1, "abc")
+@show methods(example_f3)
+```
+
+Note: In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch can be a bit more flexible. 
+
 ### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
 
 Sometimes functions have a variable number of arguments — sometimes called "varargs" (or "variadic functions").
@@ -971,6 +1016,7 @@ while tmp !== nothing
     tmp = iterate(iterable, state)
 end
 ```
+
 In the above, `tmp` is either `nothing` or it's a tuple of length two — containing the next value and whatever metadata is needed to iterate to the next element.
 
 You can make any of your data types iterable in a `for` loop by implementing a method on the `iterate` function. We won't be doing this in this course, but it is an excellent example of an _interface_ in Julia. We'll talk more about interfaces later.
@@ -1199,39 +1245,48 @@ My advice:
 
 Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap.
 
-## Types and the Type System
+## More on mutation
 
-### More on mutation
-
-As we saw earlier, a type can be **mutable** or not (**immutable**). Variables/data of the immutable types are typically stored on the stack. Variables/data of mutable types are typically allocated and stored on the heap. 
+As we saw earlier, a type can be **mutable** or not (**immutable**). Values/objects of the immutable types are typically stored on the stack. Values/objects of mutable types are typically allocated and stored on the heap.
 
 ```julia
 @show ismutable(7)
 @show ismutable([7]);
 ```
 
-When you pass a mutable variable to a function, the function can change the data contained within. However, if you bind the input variable to a new value, this will only have an effect on the scope of variables _inside_ the function.
+When you pass a mutable object to a function, the function can change the data contained within.
 
 ```julia
-f(z::Int) = (z = 0)
-f(z::Array{Int}) = (z[1] = 0)
-
-x = 1
-@show typeof(x)
-@show isimmutable(x)
-println("Before call by value: ", x)
-f(x)
-println("After call by value: ", x, "\n")
+function mutating_function(z::Array{Int}) 
+    z[1] = 0
+end
 
 x = [1]
-@show typeof(x)
-@show isimmutable(x)
-println("Before call by reference: ", x)
-f(x)
-println("After call by reference: ", x)
+println("Before call: ", x)
+mutating_function(x)
+println("After call: ", x)
 ```
 
-The rule is that you can mutate the _inside_ of a mutable value (`Array` or `mutable struct`) and variables and/or data structures with references to that mutable value will be able to see the effect of the mutation.
+Programmers tend to need to keep track of which objects are being mutated and when. You'll see functions that mutate things often end in `!`, e.g. `push!`, `pop!`, `setindex!`, etc. This is just a convention – we could have called the above `mutating_function!`.
+
+For immutable values, there is no way to modify their contents. They are never modified by functions.
+
+#### Variable bindings
+
+Variable bindings are not modified inside functions.
+
+```julia
+function rebinding_function(z::Array{Int}) 
+    z = [0]
+end
+
+x = [1]
+println("Before call: ", x)
+mutating_function(x)
+println("After call: ", x)
+```
+
+So, the rule is that you can mutate the _inside_ of a mutable value (`Array` or `mutable struct`) and _other_ variables and/or data structures with references to that mutable value will be able to see the effect of the mutation.
 
 However variables are _always_ bound to _new_ values with `=` (e.g. `z = 0`) and the usual lexical scoping rules apply.
 
