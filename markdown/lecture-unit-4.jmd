@@ -869,48 +869,6 @@ The standard non-keyword arguments are called "positional" arguments since they 
 
 Note that when _calling_ a function you may either put a `;` or a `,` before the keyword arguments. In a function definition there's an ambiguity between optional arguments and keyword
 
-### [Do Block Syntax for Function Arguments](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments)
-
-As you know, you can pass functions as arguments and sometimes you can use an anonymous function for that. For example,
-
-```julia
-using Random
-
-Random.seed!(0)
-data = rand(-10_000:10_000, 100)
-filter(x -> (x % 10) == 0, data)
-```
-
-What if the anonymous function has more lines of code?
-
-```julia
-using Primes
-
-filter(function (x)
-    if x >= 0
-        return isprime(x)
-    else
-        return isprime(-x)
-    end
-end, data)
-```
-
-This is a little ugly — it can be hard to see where the function starts and ends, find the second argument, etc.
-
-In Julia there's a standard pattern that higher-order functions accept a function in their _first_ argument. There is a fancy bit of syntax sugar called `do` which lets you inject a function into the _first_ argument of a function call.
-
-This looks like:
-
-```julia
-filter(data) do (x)
-    if x >= 0
-        return isprime(x)
-    else
-        return isprime(-x)
-    end
-end
-```
-
 ### [Destructing](https://docs.julialang.org/en/v1/manual/functions/#Argument-destructuring)
 
 In Julia you can _destructure_ tuples (and other iterables) in the reverse way you _construct_ them:
@@ -1125,16 +1083,25 @@ function open(f, filename::String)
 end
 ```
 
-When you want to use this function it is common to use `do` syntax like so:
+You can call the `open` function with an anonymous function like so:
 
 ```julia; eval = false
-open(file) do (io)
+# Read the first 128 bytes from the file
+open(io -> read(io, 128), filename)
+```
+
+This way even when `read` might error out (e.g. too few bytes), the file is _always_ closed in the `finally` block above. Using this pattern avoids mistakes and resource leakage.
+
+When you want to use this pattern it is common to use `do` syntax like so:
+
+```julia; eval = false
+open(filename) do (io)
     # Read the first 128 bytes from the file
     return read(io, 128) # might throw an exception
 end
 ```
 
-This way even your code might error out, the file is _always_ closed in the `finally` block above. Using this pattern avoids mistakes and resource leakage.
+The `do` syntax is _yet another_ way of making a function. It creates a new function and injects it into the first argument.
 
 ### Variable scope
 
