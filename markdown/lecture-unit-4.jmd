@@ -325,11 +325,113 @@ is_x_even = x % 2 == 0 ? "$x is even" : "$x is odd"
 
 It's worth noting these are 100% identical. We say that `x ? y : z` is "syntax sugar" for the `if` statement — it's a sweetener to make the programmer's life easier, but not an entirely new feature since you can always achieve the same thing with more characters of code. Another piece of syntax sugar is that `x + y` has exactly the same meaning as `+(x, y)`.
 
+#### Our first abstract type
+
+What if the types of the `true` branch and the `false` branch of `if`-`else` don't match?
+
+```julia
+is_even(x) = x % 2 == 0 ? true : "false"
+```
+
+_Q: what is the output type of `is_even`?_
+
+```julia
+is_even(2)
+```
+
+```julia
+is_even(3)
+```
+
+```julia
+@code_typed is_even(42)
+```
+
+If `Bool` represents the set containing `true` and `false`, and `String` represents the set of all possible strings, then the type `Union{Bool, String}` represents the union of these two sets.
+
+`Union` is the first **abstract type** we'll cover, and is relatively straightforward. `Union` itself is not a concrete type; there are no values of type `Union`. It mostly exists in Julia to aid with type inference for cases like `if`-`else` above – to abstractly analyse the outputs and itermediate values of programs during compilation (where more precise inference leads to more efficient code generation). In cases like this Julia can keep track which of the two possibilities the data is in relatively efficiently (e.g. with a single byte for a tag).
+
+There are two more ways abstract types can show up Julia that we'll see later.
+
+#### Shortcutting logic
+
+Julia has operators for Boolean arithmetic, including `&` for _AND_ (logical conjunction) and `|` for _OR_ (logical disjunction).
+
+```julia
+@show false & false
+@show false & true
+@show true & false
+@show true & true
+```
+
+```julia
+@show false | false
+@show false | true
+@show true | false
+@show true | true
+```
+
+The operation `x & y` is equivalent to `&(x, y)` and will evaluate `x`, then evaluate `y` and then determine the result.
+
+The operation `x && y` is simular but it sometimes takes a shortcut. If `x` is false, it doesn't bother compute a value for `y`.
+
+This matters when `y` is particularly difficult/slow to calculate, or when it may be something you want to avoid doing when `x` is false.
+
+Note that `x && y` is 100% equivalent to:
+
+```julia; eval = false
+if x
+    y
+else
+    false
+end
+```
+
+Note that the type of `y` doesn't even need to be `Bool`, since it is never compared to anything. Sometimes people use this in a cute way:
+
+```julia; eval = false
+x < 0 && println("x is negative")
+```
+
+People tend to use that because it takes less space to write than:
+
+```julia; eval = false
+if x < 0
+    println("x is negative")
+end
+```
+
+Don't feel you need to use "cute" code like this, but if you see it somewhere I don't want you to feel confused.
+
+_Q: What does `(x < 0) & println("x is negative")` do?_
+
+There is an equivalent shortcut operator for `|`:
+
+```julia; eval = false
+x || y
+```
+
+which is equivalent to
+
+```julia; eval = false
+if x
+    true
+else
+    y
+end
+```
+
+One "cute" way to people use this is to perform assertions:
+
+```julia; eval = false
+x >= 0 || error("x is negative")
+```
+
 ### Blocks of code
 
 Above, we saw blocks of code containing values. They didn't really _do_ anything, like assign values to variables.
 
-The rule in Julia is that the last expression in a block of code is the value returned from that block of code. If for some reason you want to create a code block (sometimes useful) you can use `begin` like so:
+The rule in Julia is that the last expression in a block of code is the value returned from that block of code. If for some reason you want to _explicitly_ create a code block (sometimes useful) you can use `begin` like so:
 
 ```julia
 begin
@@ -342,7 +444,7 @@ end
 We see blocks of code everywhere in Julia — inside `if` and `else` statements, within `for` and `while` loops, within `function` bodies, etc. Blocks of code can be nested — we can have `if` statements inside `while` loops inside `function` bodies, and we tend to represent this visually with indentation:
 
 ```julia
-function f(x)
+function f()
     x = 0
     while x < 10
         if x % 2 == 0
@@ -354,6 +456,8 @@ function f(x)
     end
     return x
 end
+
+f()
 ```
 
 _Note: `for` and `while` loops always produce `nothing`!_
@@ -1206,9 +1310,11 @@ b[1][1] = 20
 @show a;
 ```
 
-## Abstract types
+## Abstract type tree
 
-Julia has a type hierarchy (a tree). At the top of the tree is the type `Any`. All types have a supertype (the supertype of `Any` is `Any`). Types that are not leaves of the tree have subtypes. Some types are **abstract** while others are **concrete**. One particularly distinctive feature of Julia's type system is that concrete types may not subtype each other: all concrete types are final and may only have abstract types as their supertypes.  
+We saw the `Union` abstract type earlier.
+
+Julia also has an abstract type hierarchy (a tree). At the top of the tree is the type `Any`, which encompasses every possible value in Julia. All types have a supertype (the supertype of `Any` is `Any`). Types that are not leaves of the tree have subtypes. Some types are **abstract** while others are **concrete**. One particularly distinctive feature of Julia's type system is that concrete types may not subtype each other: all concrete types are final and may only have abstract types as their supertypes.
 
 ```julia
 x = 2.3
@@ -1308,11 +1414,45 @@ primitive type Float64 <: AbstractFloat
 end
 ```
 
+### Parameterized / generic types
+
+We've actually now seen all three types of abstract types in Julia – the `abstract type`s that make up the type tree, the `Union` type, and the parameterized types (abstract `Complex` vs concrete `Complex{Float64}`).
+
+Actually `Complex` is a shorthand. It's full type is written like this:
+
+```julia; eval = false
+Complex{T} where T <: Real
+```
+
+This object is of type `UnionAll`:
+
+```julia
+typeof(Complex)
+```
+
+You can read this like "The abstract type which is the union of the concrete types `Complex{T}` for all possible `T <: Real`" – hence the shorthand `UnionAll`. Parameterised types can have bounds, like the components of complex numbers being real numbers.
+
+```julia
+@show Complex{Float64} <: Complex
+@show isconcretetype(Complex)
+@show isconcretetype(Complex)
+```
+
+Julia is pretty capable at figuring out the subtype (or subset) relationships:
+
+```julia
+(Complex{T} where T <: AbstractFloat) <: Complex
+```
+
+which follow from `AbstractFloat <: Real`.
+
+You've seen other `UnionAll` types like `Vector`, `Matrix`, `Set`, `Dict`, etc.
+
+Don't worry about this seeming complex – consider this background material!
+
 ### Union types
 
-We've seen two types of abstract types — the `abstract type`s that make up the type tree, and the parameterized types (abstract `Complex` vs concrete `Complex{Float64}`).
-
-Julia has a third abstract type called `Union` which let's you reasona about a finite set of (abstract or concrete) types.
+We saw earlier that Julia has a third abstract type called `Union` which let's you reason about a finite set of (abstract or concrete) types.
 
 ```julia
 42::Union{Int, Float64}
@@ -1331,6 +1471,8 @@ Julia has a third abstract type called `Union` which let's you reasona about a f
 As a special case `Union{T}` is just the same as `T`. We also have `Union{T, T} == T`, etc.
 
 The union of no types at all, `Union{}`, is a special builtin type which is the opposite of `Any`. No value can exist with type `Union{}`! Sometimes `Any` is called the "top" type and `Union{}` is called the "bottom" type. It's used internally by the compiler to rule out impossible situations, but it's not something for you to worry about.
+
+You've now seen _every possible concrete type_ and _every possible abstract type_ in all of Julia. Later when we study function methods, we'll be ready to cover multiple dispatch.
 
 ### Making types for your programs
 
