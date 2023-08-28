@@ -538,7 +538,7 @@ A "metaprogram" is a program that writes a program. Julia supports metaprogrammi
 
 ```julia
 x = 10
-@show x + 1
+@show x + 1;
 ```
 
 Effectively the macro takes the "expression" `x + 1`, prints the expression, prints equals, and prints the evaluated value. While Julia is busy replacing the builtin syntax sugar (like operators, `x + 1`) with more fundamental expressions (like function calls, `+(x, 1)`), it also "expands" the macro, resulting in code that is roughly:
@@ -795,7 +795,8 @@ example_f(x::String) = "input is a string"
 
 @show example_f(1)
 @show example_f("abc")
-@show methods(example_f)
+
+methods(example_f)
 ```
 
 You can use it to tailor the logic of a function to its inputs. Try type `methods(+)` at the REPL!
@@ -808,7 +809,8 @@ example_f2(x::Any) = "input is not an integer"
 
 @show example_f2(1)
 @show example_f2("abc")
-@show methods(example_f2)
+
+methods(example_f2)
 ```
 
 Note that `Int <: Any` and the two methods overlap somewhat. In this case Julia will pick the most "specific" method. In terms of "types as sets of values" it matches to the "smallest" set.
@@ -823,7 +825,8 @@ example_f3(x::String, y::String) = "both input are strings"
 
 @show example_f3(1, 2)
 @show example_f3(1, "abc")
-@show methods(example_f3)
+
+methods(example_f3)
 ```
 
 Note: In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch can be a bit more flexible. 
@@ -1048,7 +1051,7 @@ my_2_by_2_inv([ones(2) ones(2)])
 ```
 
 ```julia
-using LinearAlgebra
+using LinearAlgebra, Random
 
 Random.seed!(0)
 A = rand(2, 2)
@@ -1155,89 +1158,119 @@ See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manua
 
 Julia actually has two seperate scopes — global or "toplevel" scope, and local scope.
 
-Local scope is the simplest. Variables inside a function body take precedence (or "shadows") any variables of the same name outside the function body.
+Local scope is the simplest, and we'll look at that first. By default bindings inside a function body create _new_ variables that take precedence (or "shadows") any variables of the same name outside the function body.
 
 ```julia
 x = 0
 
 function f()
-    x = 1
+    x = 1 # create a new local variable
     return 2 * x
 end
 
 f()
 ```
 
-It gets a little more complicated when things are outside.
+You can use the `local` keyword to create new local bindings. The above is 100% equivalent to:
 
-```julia
-data = [1, 2, 3]
-s = 0
-β, γ = 2, 1
-
-for i in 1:length(data)
-    global s    #This usage of the `global` keyword is not needed in Jupyter
-                #But elsewhere without it:
-                #ERROR: LoadError: UndefVarError: s not defined
-    s += β*data[i]
-    data[i] *= -1 #Note that we didn't need 'global' for data
+```julia; eval = false
+function f()
+    local x = 1 # create a new local variable
+    return 2 * x
 end
-#print(i)       #Would cause ERROR: LoadError: UndefVarError: i not defined
-@show data
-@show s
-
-function sum_data(β)
-    s = 0           #try adding the prefix global
-    for i in 1:length(data)
-        s += β*(data[i] + γ)
-    end
-    return s
-end
-@show sum_data(β/2)
-@show s
 ```
 
-Julia uses Lexical scoping:
+If you want to modify the global variable, there is a `global` keyword for that:
 
 ```julia
-function my_function()
-    x = 10
-    function my_function_inside_a_function()
-        @show x
-    end
-    return my_function_inside_a_function
+x = 0
+
+function f()
+    global x = 1 # modify the global variable
+    return 2 * x
 end
 
-x = 20
-f_ret = my_function()
-f_ret();
+@show x
+@show f()
+@show x;
 ```
 
-The use of `outer`:
+Inside other code blocks such as `if`, `while` and `for`, the default is to overwrite existing local variables if they exist.
+
+_Q: What is the difference between these two functions?_
+
+```julia
+function f1()
+    x = 0
+    for i = 1:10
+        x = i
+    end
+    return x
+end
+
+function f2()
+    x = 0
+    for i = 1:10
+        local x = i
+    end
+    return x
+end
+```
+
+By default variables created _inside_ a loop no longer exist after the loop:
 
 ```julia
 function f()
-    i = 0
     for i = 1:3
-        # empty
+        x = i
     end
-    return i
+    return x
 end
 f()
 ```
+
+To fix that you can define that variable in advance using `local`:
 
 ```julia
 function f()
-    i = 0
-    for outer i = 1:3
-        # empty
+    local x
+    for i = 1:3
+        x = i
     end
-    return i
+    return x
 end
 f()
 ```
 
-My advice:
+Occasionally you might want to use the value of what is being iterated, where you can use `outer`:
+
+```julia
+function f()
+    x = 0
+    for outer x = 1:3
+        # empty
+    end
+    return x
+end
+f()
+```
+
+That can be useful in combination to `break`, where you can see where the loop terminated:
+
+```julia
+function f()
+    x = 0
+    for outer x = 1:3
+        if x > 1.5
+            break
+        end
+    end
+    return x
+end
+f()
+```
+
+Working with variables in different scopes can a little confusing and error prone. My advice:
 
  * use global variables as little as possible
  * use distinct names for variables as much as possilbe
@@ -1269,11 +1302,13 @@ println("After call: ", x)
 
 Programmers tend to need to keep track of which objects are being mutated and when. You'll see functions that mutate things often end in `!`, e.g. `push!`, `pop!`, `setindex!`, etc. This is just a convention – we could have called the above `mutating_function!`.
 
+Note that `collection[index]` is shorthand for `getindex(collection, index)` and `collection[index] = value` is shorthand for `setindex!(collection, index, value)`.
+
 For immutable values, there is no way to modify their contents. They are never modified by functions.
 
 #### Variable bindings
 
-Variable bindings are not modified inside functions.
+Variable bindings are not modified inside functions. The function below introduces a _new_ binding `z` every time the function is called, and `x` is unaffected.
 
 ```julia
 function rebinding_function(z::Array{Int}) 
@@ -1457,7 +1492,7 @@ You can read this like "The abstract type which is the union of the concrete typ
 ```julia
 @show Complex{Float64} <: Complex
 @show isconcretetype(Complex)
-@show isconcretetype(Complex)
+@show isconcretetype(Complex{Float64});
 ```
 
 Julia is pretty capable at figuring out the subtype (or subset) relationships:
@@ -1494,7 +1529,13 @@ As a special case `Union{T}` is just the same as `T`. We also have `Union{T, T} 
 
 The union of no types at all, `Union{}`, is a special builtin type which is the opposite of `Any`. No value can exist with type `Union{}`! Sometimes `Any` is called the "top" type and `Union{}` is called the "bottom" type. It's used internally by the compiler to rule out impossible situations, but it's not something for you to worry about.
 
-You've now seen _every possible concrete type_ and _every possible abstract type_ in all of Julia. Later when we study function methods, we'll be ready to cover multiple dispatch.
+You've now seen _every possible concrete type_ and _every possible abstract type_ in all of Julia. You've also looked a functions, methods and multiple dispatch.
+
+Don't worry if that was whirlwind. You don't need to memorise every detail that I've covered!
+
+Now we will practice using these tools to build larger programs, so you are ready for Projects 1, 2 and 3.
+
+## Crafting programs in Julia
 
 ### Making types for your programs
 
@@ -1519,12 +1560,12 @@ person = Person(1.79, 78.6, "Miriam") # A struct comes with a constructor functi
 
 @show person.height # The fields of a struct are accessed via "." - not to be confused with "." used for broadcasting.
 @show person.weight
-@show person.name
+@show person.name;
 ```
 
 ```julia
 @show ismutable(person)
-person.weight = 85.4 # gained some weight - but this will generate and error
+person.weight = 85.4 # gained some weight - but this will generate an error
 ```
 
 Here is a `mutable struct`
@@ -1719,9 +1760,9 @@ function my_f(x::Number)
     println("My number is $x")
 end
 
-my_f(2)
-my_f(2.5)
-my_f(2 // 3)
+@show my_f(2)
+@show my_f(2.5)
+@show my_f(2 // 3)
 
 println()
 @show methods(my_f);
@@ -1787,7 +1828,7 @@ println("We have a some score: $me. Pretty good!")
 Lets consider an example where we want to collect some quick running statistics from some data coming in. E.g.:
 
 ```julia
-using Random, Statistics
+using Statistics
 
 # A function that returns a data point - could be streamed from disk or the internet
 fetch_new_data() = 100*rand()
