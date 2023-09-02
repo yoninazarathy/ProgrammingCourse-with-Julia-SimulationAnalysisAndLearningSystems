@@ -88,7 +88,7 @@ Improve the "pretty printing" of the polynomials by incorporating the following 
 #### Enahnce your pretty printing with Unicode
 
 - Once your pretty printing works, enhance it with some Unicode characters. Specifically have the exponents appear as superscripts. For example `x^32` should appear as `x³²`. 
-- After you get Unicode to work, you do not need the previous printing format (i.e. no need for `x^32`
+- After you get Unicode to work, you do not need the previous printing format (i.e. no need for `x^32` and similar).
 
 #### A global option for `lowest_to_highest`
 
