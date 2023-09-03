@@ -3,6 +3,7 @@
 
 (last edit: September 2, 2023)
 
+Here is a an [outline video](https://www.youtube.com/watch?v=Iwecy19FY78) about the project.
 
 **Due:** End of Day, Friday, 22, September, 2023. Late submissions are not accepted.
 
@@ -47,7 +48,7 @@ Marking responses will be made by the teaching staff by annotating **selected pa
 ## Setting up your GitHub repo for hand-in (10pts):
 
 * Ideally use the same account you used for BigHW. 
-* Ideally we would like you to **fork** the GitHub repo [https://github.com/yoninazarathy/2504_2023_project1](https://github.com/yoninazarathy/2504_2023_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
+* Ideally we would like you to **fork** the GitHub repo [https://github.com/yoninazarathy/2504\_2023\_project1](https://github.com/yoninazarathy/2504_2023_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and you must do this no later than the project due date. You must verify that `uqMATH2504` is a collaborator on your project and let the course staff know if that is not the case. It is your duty to check that we accepted the invite (give us 2-5 working days to accept the invite).
 * Do **not** make any changes (commits) to the repo after the project due date. 
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc). Making intermediate commits is certainly recommended.
@@ -60,7 +61,7 @@ Your GitHub repo should be formatted like the original repo that you forked with
 
 ## Project tasks (80pts)
 
-Build your project on top of the [https://github.com/yoninazarathy/2504_2023_project1](https://github.com/yoninazarathy/2504_2023_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
+Build your project on top of the [https://github.com/yoninazarathy/2504\_2023\_project1](https://github.com/yoninazarathy/2504_2023_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
 
 Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialSparseBI` etc..). These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project. (There is NO need for you to use parameteric types - yet if you wish, go ahead and do that).
 
