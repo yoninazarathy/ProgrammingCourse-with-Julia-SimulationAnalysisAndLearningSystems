@@ -1537,293 +1537,512 @@ Now we will practice using these tools to build larger programs, so you are read
 
 ## Crafting programs in Julia
 
-### Making types for your programs
+### Making types for your programs - dimensions and units
 
 You can define your own types. Any "serious" programming task would almost always merit that you do that.
 
-#### Concrete `Person`
+#### Dimensions and units
 
-In object oriented languages (e.g. C++, Java, Python) types are typically called classes. A class (in such a language) will have both definitions of data and actions, typically called variables and methods respectively. An instance of a class would be called an object. 
+One thing types let you do is ensure you do things "safely" without making mistakes.
 
-Julia is not object oriented. It rather provides a different paradigm based on multiple-dispatch (which we describe below). Nevertheless, there are user defined types, called structs (structures). The name comes from C. 
+When solving physics problems its always useful to perform dimensional analysis to ensure your answer makes sense, and to make sure you are using a consistent set of units in your numeric computations.
 
-```julia
-struct Person # Notice the convention of using capital letters for the first letter of a struct
-    height::Float64
-    weight::Float64
-    name::String
-end
+ * **Dimensions** - length, time, mass, area (length squared), etc
+ * **Units** - metres, kilometers, centimeters, feet, inches, miles, etc
 
-person = Person(1.79, 78.6, "Miriam") # A struct comes with a constructor function
+#### Our first unit - `Metre`
 
-@show typeof(person)
+Julia lets us encode dimensions and units. There is a nice package called [Unitful.jl](https://painterqubits.github.io/Unitful.jl/stable/) that you can download and use. Lets see how a package like this works.
 
-@show person.height # The fields of a struct are accessed via "." - not to be confused with "." used for broadcasting.
-@show person.weight
-@show person.name;
-```
+We can start simple with a single type:
 
-```julia
-@show ismutable(person)
-person.weight = 85.4 # gained some weight - but this will generate an error
-```
-
-Here is a `mutable struct`
-
-```julia
-mutable struct MutablePerson
-    height::Float64
-    weight::Float64
-    name::String
-end
-
-person = MutablePerson(1.79, 78.6, "Miriam")
-person.weight = 85.4
-println(person)
-```
-
-**Note:** You typically cannot redefine a type during the same Julia session. One workaround for that is to use the [Revise.jl](https://github.com/timholy/Revise.jl) package. We won't use it just yet.
-
-```julia
-struct MyStruct
-    x::Int
-end
-
-struct MyStruct # Will generate an ERROR because redefining a struct
-    x::Int
-    y::Float64
+```julia; eval = false
+struct Metre{T <: Real}
+    value::T
 end
 ```
 
-#### Abstract `Animal`
+That's all very good, but we can't actually _do_ anything with it. When you introduce new data types you'll generally need some functions or methods to interact with the data. Lets define some basic algebra:
 
-We extends the above to a whole type hierarchy of different types of animals (including humans):
-
-```julia
-abstract type Animal end
-
-abstract type Mammal <: Animal end
-abstract type Reptile <: Animal end
-
-struct Human <: Mammal
-    height::Float64
-    weight::Float64
-    name::String
-end    
-
-struct Dog <: Mammal
-    height::Float64
-    weight::Float64
-end
-
-struct FlexDog{T <: Real} <: Mammal
-    height::T
-    weight::T
-end
-
-struct Crocodile <: Reptile
-    length::Float64
-    weight::Float64
-    type::Symbol # Expect to be :salt_water or :fresh_water
-end
-
-type_and_children(Animal)
+```julia; eval = false
+Base.:(+)(x::Metre, y::Metre) = Metre(x.value + y.value)
+Base.:(-)(x::Metre, y::Metre) = Metre(x.value - y.value)
+Base.:(-)(x::Metre) = Metre(-x.value)
+Base.:(*)(x::Metre, y::Real) = Metre(x.value * y)
+Base.:(*)(x::Real, y::Metre) = Metre(x * y.value)
+Base.:(/)(x::Metre, y::Metre) = x.value / y.value
+Base.:(/)(x::Metre, y::Real) = Metre(x.value / y)
 ```
 
-As stated above, the function that creates an instance of the type is called the **constructor**. Every concrete type comes with a default constructor.
+Here we have added new methods to existing functions (from `Base`). What we are doing here is opting-in to an existing interface. If it makes sense to use existing interfaces - do so! Later we'll create our own interace, but baby-steps first.
 
-```julia
-methods(Crocodile)
+(In an object-oriented language, you would probably add a class with some data and some function methods. It is very similar except for where the methods live!)
+
+We can make this a little "nicer" to use with one more definition.
+
+```julia; eval = false
+const m = Meter(1)
 ```
 
-```julia
-tick_tock = Crocodile(2.3, 204, :salt_water)
+This way we can write the code rather naturally:
+
+```julia; eval = false
+3.5m
 ```
 
-You can also create other constructor methods:
+(Remember that's just short for `3.5 * m`).
+
+We can also make it print something similar to the terminal:
+
+```julia; eval = false
+Base.show(io::IO, x::Metre) = print(io, x.value, "m")
+```
+
+##### How does this make things safe?
+
+If I try and do something invalid like `1 + 2m`, Julia will throw an error. This means algebra with incorrect dimensions will not compute in Julia. You'll get an error message and have the opportunity to fix your code.
+
+##### Isn't all of this slow?
+
+Surprisingly, in Julia this doesn't slow anything down. The `Metre{Float64}` object uses the same 64 bits to represent as a bare `Float64`. The compiler is smart enough to know it can use the same representation for either type interchangeably, and your program won't spend any effort "constructing structs" or "getting fields" at run time.
+
+#### Other length units
+
+How would you deal with other kinds of units of length?
+
+ * kilometres
+ * centimetres
+ * inches
+ * miles
+
+*Q: Does anyone have any other favourite unit of length?*
+
+As you can see, there might be a lot of different units of length. And units of time, units of mass, units of temperature, etc. And the variety grows further when you consider compound dimensions (like area, or velocity). And then we need to consider _binary_ operators like `+`, where the number of possible combinations is quadratic in the number of units being considered.
+
+How should we deal with all these combinations? How will the system know how to add centimeters and yards? What is `3yd + 68cm`?
+
+ 1. Write every single method by hand?
+ 2. Have a "blessed" unit (like SI units - kilograms, metres, seconds, Kelvin, etc)
+ 3. Have some set of clever rules (e.g. if both inputs are imperial, stay imperial)
+
+Option #1 is not practical. Here we are going to look at option #2. Julia actually uses option #3 for numeric conversion (what is `0x20 + 3.14`?), but we'll keep it a bit simpler.
+
+This is a good place to introduce some abstract types. Let's focus on just length units.
 
 ```julia
-function Crocodile(type::Symbol)
-    if type == :salt_water
-        return Crocodile(4.2, 410, :salt_water) # average male salt water croc
-    elseif type == :fresh_water
-        return Crocodile(2.3, 70, :fresh_water) # average male fresh water croc
+abstract type AbstractLength
+end;
+```
+
+This will be the "supertype" for our length types. (Remember "super" is latin for "above" – your supervisor is your overseer, etc).
+
+```julia
+struct Metre{T} <: AbstractLength
+    value::T
+end
+
+struct Kilometre{T} <: AbstractLength
+    value::T
+end
+
+struct Centimetre{T} <: AbstractLength
+    value::T
+end
+
+struct Inch{T} <: AbstractLength
+    value::T
+end
+
+struct Mile{T} <: AbstractLength
+    value::T
+end;
+```
+
+##### Conversion to and from metres
+
+For each of these, we might want a way to convert these to metres. We can use the `Metre` type, and attach methods to that. Such methods are known as "constructors".
+
+```julia
+Metre(x::Kilometre) = Metre(1000 * x.value)
+Metre(x::Centimetre) = Metre(0.01 * x.value)
+Metre(x::Inch) = Metre(0.0254 * x.value)
+Metre(x::Mile) = Metre(1760 * 3 * 12 * 0.0254 * x.value);
+```
+
+In the above, I know an inch is 2.54 centimetres, so I used that. I don't recall how many metres per mile, but I can look up how many yards per mile, and I recall there are 3 feet per yard and 12 inches per foot.
+
+There is one more we should add, just to make sure things are never ambiguous for Julia:
+
+```julia
+Metre(x::Metre) = x;
+```
+
+We'll also find it useful to go the other direction:
+
+```julia
+Kilometre(x::Metre) = Kilometre(0.001 * x.value)
+Centimetre(x::Metre) = Centimetre(100 * x.value)
+Inch(x::Metre) = Inch(x.value / 0.0254)
+Mile(x::Metre) = Mile(x.value / (1760 * 3 * 12 * 0.0254));
+```
+
+##### Conversion between any two types
+
+If we are converting between two length units neither of which is `Metre`, we might want to simply convert the input to metres first. Doing this we end up with:
+
+```julia
+Kilometre(x::AbstractLength) = Kilometre(Metre(x))
+Kilometre(x::Kilometre) = x
+
+Centimetre(x::AbstractLength) = Centimetre(Metre(x))
+Centimetre(x::Centimetre) = x
+
+Inch(x::AbstractLength) = Inch(Metre(x))
+Inch(x::Inch) = x
+
+Mile(x::AbstractLength) = Mile(Metre(x))
+Mile(x::Mile) = x;
+```
+
+Note that if we have `N` different length types, we'd only need to define `2N` different conversions (to and from metres) instead of `N^2` conversions (between every two possibilities). If `N` is large, this is hugely beneficial!
+
+Another fun fact is two differnt programmers can define different `AbstractLength` units without talking to each other. A third programmer can use the code from the first two, and those units will seemlessly work together with zero effort. This is great for sharing working in teams, between teams, or between entirely seperate organizations (e.g. open-source code).
+
+Note that in general, we can get Julia to automatically do this step for every `AbstractLength` type. The syntax for this one is a bit crazy:
+
+```julia; eval = false
+(::Type{T})(x::AbstractLength) where {T <: AbstractLength} = T(Metre(x));
+(::Type{T})(x::T) where {T <: AbstractLength} = x;
+```
+
+(Don't worry – we won't expect you to create something like that in this course!)
+
+##### Algebra with metres
+
+We have seen these already:
+
+```julia
+Base.:(+)(x::Metre, y::Metre) = Metre(x.value + y.value)
+Base.:(-)(x::Metre, y::Metre) = Metre(x.value - y.value)
+Base.:(-)(x::Metre) = Metre(-x.value)
+Base.:(*)(x::Metre, y::Real) = Metre(x.value * y)
+Base.:(*)(x::Real, y::Metre) = Metre(x * y.value)
+Base.:(/)(x::Metre, y::Metre) = x.value / y.value
+Base.:(/)(x::Metre, y::Real) = Metre(x.value / y)
+```
+
+##### Algebra with abstract types
+
+Now we have enough to perform algebra between all these types. Let's look at addition, subtraction and division:
+
+```julia
+Base.:(+)(x::AbstractLength, y::AbstractLength) = Metre(x) + Metre(y)
+Base.:(-)(x::AbstractLength, y::AbstractLength) = Metre(x) - Metre(y)
+Base.:(/)(x::AbstractLength, y::AbstractLength) = Metre(x) / Metre(y);
+```
+
+So to add, we just convert to metres first and then keep going.
+
+For the other operations we can "keep" the existing type, but we need to actually know the "unit" seperately to its type pararameter (e.g. `Centimetre` vs `Centimetre{Int64}` or `Centimetre{Float64}`). We define a brand-new function to describe this:
+
+```julia
+unit(::Metre) = Metre
+unit(::Kilometre) = Kilometre
+unit(::Centimetre) = Centimetre
+unit(::Inch) = Inch
+unit(::Mile) = Mile
+```
+
+Using this we can define "generic" methods for these functions:
+
+```julia
+Base.:(-)(x::AbstractLength) = unit(x)(-x.value)
+Base.:(*)(x::AbstractLength, y::Real) = unit(x)(x.value * y)
+Base.:(*)(x::Real, y::AbstractLength) = unit(y)(x * y.value)
+Base.:(/)(x::AbstractLength, y::Real) = unit(x)(x.value / y);
+```
+
+If we want to be a bit more fancy, we can get Julia to skip the conversion for addition, subtraction and division when it is unnecessary. There are different ways to do this like fancy dispatch rules, but you can just work with types directly _inside_ the functions:
+
+```julia
+function Base.:(+)(x::AbstractLength, y::AbstractLength)
+    if unit(x) == unit(y)
+        return unit(x)(x.value + y.value)
     else
-        error("Can't make crocodile of type $type")
+        return Metre(x) + Metre(y)
     end
 end
 
-methods(Crocodile)
-```
-
-```julia
-Crocodile(:salt_water) 
-```
-
-```julia
-Crocodile(:fresh_water) 
-```
-
-```julia
-Crocodile(:ice_water) # will generate an error
-```
-
-A bit more on [constructors](https://docs.julialang.org/en/v1/manual/constructors/) will come later.
-
-Notice we had the [parameteric type](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types) `FlexDog`:
-
-```julia
-dash_my_dog = FlexDog(2, 4)
-@show typeof(dash_my_dog)
-
-lassy_your_dog = FlexDog(2.3f0, 5.7f0)
-@show typeof(lassy_your_dog)
-
-my_dog_array = FlexDog{UInt16}[]
-```
-
-```julia
-my_dog_array = FlexDog{Complex}[] # Will not work because Complex is not a Real
-```
-
-With multiple dispatch we can get a form of polymorphism:
-
-```julia
-animal_noise(animal::Dog) = "woof"
-animal_noise(animal::Human) = "hello"
-animal_noise(animal::Crocodile) = "chchch"
-
-animals = [Crocodile(:fresh_water), Human(1.79, 78.6, "Miriam"), Crocodile(:salt_water), Dog(0.63, 12.5)]
-animal_noise.(animals)
-```
-
-```julia
-methods(animal_noise)
-```
-
-We can even handle the `FlexDog` and `Dog` together:
-
-```julia
-animal_noise(animal::Union{Dog, FlexDog}) = "woof"
-push!(animals, FlexDog{Int16}(2,4))
-animal_noise.(animals)
-```
-
-We can now say that `animal_noise` is a part of the `Animal` interface. Every `animal::Animal` will have an `animal_noise(animal)` which is returns a `String`. This is a guarantee people can use to build programs about `Animal`s.
-
-#### The `Animal` interface
-
-Most interestingly - at any point users could come along and define new types of `Animal`, and so long as the respect the interface the new types will function in pre-existing programs that did not anticipate them.
-
-```julia
-# sometime later...
-struct Cat <: Mammal
-    height::Float64
-    weight::Float64
+function Base.:(-)(x::AbstractLength, y::AbstractLength)
+    if unit(x) == unit(y)
+        return unit(x)(x.value - y.value)
+    else
+        return Metre(x) - Metre(y)
+    end
 end
 
-animal_noise(::Cat) = "meow"
+function Base.:(/)(x::AbstractLength, y::AbstractLength)
+    if unit(x) == unit(y)
+        return x.value / y.value
+    else
+        return Metre(x) / Metre(y)
+    end
+end;
 ```
 
-Using interfaces lets you build larger programs by assembling _generic_ logic with different data types like they were Lego bricks. Generic code can be reused - it doesn't need to be rewritten when a new type is added, or a when new field is added to a struct, or when a new interface is introduced.
+(Note that the `if` part will be dealt with at compile time.)
 
-Interfaces are flexible in two ways — you can add new types of `Animal` or of `AbstractArray`, or you think up new interfaces to `Animal` or add new interfaces to `AbstractArray` (e.g. `LinearAlgebra`).
-
-## Methods and Multiple Dispatch
-
-[See methods in Julia docs](https://docs.julialang.org/en/v1/manual/methods/).
-
-If there is one key attribute to Julia it is **multiple dispatch** as we have just seen above. 
+##### Niceties
 
 ```julia
-function my_f(x::Int)
-    println("My integer is $x")
+const m = Metre(1)
+const km = Kilometre(1)
+const cm = Centimetre(1)
+const inch = Inch(1)
+const mile = Mile(1);
+```
+
+```julia
+Base.show(io::IO, x::Metre) = print(io, x.value, "m")
+Base.show(io::IO, x::Kilometre) = print(io, x.value, "km")
+Base.show(io::IO, x::Centimetre) = print(io, x.value, "cm")
+Base.show(io::IO, x::Inch) = print(io, x.value, "inch")
+Base.show(io::IO, x::Mile) = print(io, x.value, "mile");
+```
+
+##### Some results
+
+*Q: How many kilometres in a mile?*
+
+```julia
+mile / km
+```
+
+*Q: Jenny is 5'9" (5 feet, 9 inches) tall, and has a ladder 210cm long. Can she reach a ceiling 4m high to change a light bulb?*
+
+```julia
+(5*12 + 9)inch + 210cm
+```
+
+*A: Her head won't quite hit the ceiling, but Jenny will be able to reach the light with her arms.*
+
+##### New interfaces
+
+So far we have mostly overloaded existing functions built into `Base` Julia. There is nothing stopping you defining your own functions – in fact you'll likely define more new functions that overload existing ones. Here we also added the `unit` function to help out.
+
+But how did we know to overload the `Base` functions? Well, these functions are _interfaces_ used throughout Julia. We can define new interfaces for our new _abstact_ types. (Typically, a function we write that accepts some concrete type is not a _generic interface_ – it is just a one-off function with a single mehtod).
+
+Now we have our `AbstractLength` interface, we can document how people _implement_ it so people could add new types, like `Nanometres` and `Yard`. To _implement the `AbstractLength` interface_ you'd need to implement:
+
+ * Conversion to and from `Metre`
+ * Define a method for `unit`
+ * Optionally, define a `const` unit value and overload `show`
+
+After this, everything will "just work"™. This is the power of interfaces!
+
+#### Other dimensions
+
+We could do the same for time, mass, temperature, etc. But then we need to deal with compound dimensions like area, velocity, energy, etc. Again, we need a clever interface to deal with all this complexity. This (and more) is implemented in the [Unitful.jl](https://painterqubits.github.io/Unitful.jl/stable/) package.
+
+### Making types and functions together – shapes
+
+This time we'll practice making new types together with functions.
+
+For this example we'll look at geometric shapes, starting with two-dimensional shapes.
+
+#### Abstract type and interface
+
+We can start with an abstract type for two-dimensional shapes.
+
+```julia
+abstract type Shape2D
+end;
+```
+
+Even _before_ we talk about what kinds of 2D shapes there are, we want to think about what you can _do_ with 2D shapes. For our purposes let's look at finding a couple of properties like perimeter and area.
+
+```julia
+"""
+    perimeter(shape::2DShape)
+
+Return the perimeter of `shape`.
+"""
+function perimeter
 end
 
-function my_f(x::Float64)
-    println("My floating point number is $x")
+"""
+    area(shape::2DShape)
+
+Return the area of `shape`.
+"""
+function area
+end;
+```
+
+Here we've defined two functions, each with zero methods but some documentation explaining their purpose (interfaces in Julia are informal, and are specified through documentation). You can find the documentation with `?area` at the REPL.
+
+#### Types of 2D shape
+
+There are various kinds of 2D shapes. Let's introduce a few here, and organize them by the number of sides. Here is some triangles:
+
+```julia
+abstract type Triangle <: Shape2D
 end
 
-@show my_f(2)
-@show my_f(2.5)
-@show methods(my_f);
-```
-
-It is worthwhile to watch this [video](https://www.youtube.com/watch?v=kc9HwsxE1OY) about the philosphy of multiple dispatch. Some of the content of the video may be a bit advanced, but perhaps towards the end of the course it would be worth listening to it again to see what makes sense and what not yet.
-
-### Specificity
-
-When a function has multiple methods on it, Julia will automatically use the most specific one:
-
-```julia
-function my_f(x::Number)
-    println("My number is $x")
+struct EquilateralTriangle{T} <: Triangle
+    side::T
 end
 
-@show my_f(2)
-@show my_f(2.5)
-@show my_f(2 // 3)
-
-println()
-@show methods(my_f);
+struct RightAngledTriangle{T} <: Triangle
+    height::T
+    width::T
+end;
 ```
 
-Dispatch always uses the _concrete types_ of the input values to find the correct method. This might mean it doesn't actually compile your code until the middle of program execution. (The Julia runtime includes the compiler itself).
-
-### Defining more methods for existing functions
-
-Almost any operation in julia is a function. For example,
+And here are some quadralaterals:
 
 ```julia
-using InteractiveUtils
-
-@which 2 + 3
-```
-
-There are many methods for `+`:
-
-```julia
-methods(+) |> length
-```
-
-So what if we had our own type and wanted to have `+` for it, and say an integer.
-
-```julia
-struct PlayerScore
-    player_name::String
-    score::Int
+abstract type Quadrilateral <: Shape2D
 end
 
-me = PlayerScore("Johnny", 22)
-```
-
-```julia
-me = me + 10 # will generate an error since `+` for me and an integer is not defined
-```
-
-So let's define it:
-
-```julia
-import Base: + # we do this to let Julia know we will add more methods to `+`
-
-function +(ps::PlayerScore, n::Int)::PlayerScore
-    return PlayerScore(ps.player_name, ps.score + n)
+struct Square{T} <: Quadrilateral
+    side::T
 end
 
-me = me + 10
+struct Rectangle{T} <: Quadrilateral
+    height::T
+    width::T
+end;
 ```
 
-You can do this for every operation and function you want (and makes sense).  What if we wanted "pretty printing"?
+And here is a circle, a direct subtype of `Shape2D`:
 
 ```julia
-import Base: show
-
-show(io::IO, ps::PlayerScore) = print(io, "Score for $(ps.player_name) = $(ps.score)")
-
-println("We have a some score: $me. Pretty good!")
+struct Circle{T} <: Shape2D
+    radius::T
+end;
 ```
 
-### Example: online statistics
+#### Implementing the `Shape2D` interface
+
+For each of these shapes we can deterime the perimeter:
+
+```julia
+function perimeter(shape::EquilateralTriangle)
+    return 3 * shape.side
+end
+
+function perimeter(shape::RightAngledTriangle)
+    angle = atan(shape.height / shape.width)
+    return shape.width + shape.height + cos(angle) * shape.height
+end
+
+function perimeter(shape::Square)
+    return 4 * shape.side
+end
+
+function perimeter(shape::Rectangle)
+    return 2 * shape.width + 2 * shape.width
+end
+
+function perimeter(shape::Circle)
+    return 2π * shape.radius
+end;
+```
+
+And the area:
+
+```julia
+function area(shape::EquilateralTriangle)
+    return 0.5 * sind(60) * shape.side * shape.side
+end
+
+function area(shape::RightAngledTriangle)
+    return 0.5 * shape.width + shape.height
+end
+
+function area(shape::Square)
+    return shape.side * shape.side
+end
+
+function area(shape::Rectangle)
+    return shape.width * shape.width
+end
+
+function area(shape::Circle)
+    return π * shape.radius * shape.radius
+end;
+```
+
+We can use these pretty straightforwardly.
+
+```julia
+@show perimeter(Rectangle(3.5, 2.0))
+@show area(RightAngledTriangle(10, 10));
+```
+
+At any point in time we can introduce new subtypes of `Shape2D`, `Triangle` or `Rectangle` so long as we define their perimeter and area. The person who wrote `Shape2d` does not even need to be aware.
+
+### Combining interfaces
+
+Today we have introduced two new abstract types with their own interfaces. One for units of length, and one for shapes.
+
+We have said Julia is good for quickly writing mathemetical code, and good for writing code that executes fast. Here we can see how Julia "scales" well when combining code together – everything will "just work".
+
+Take this:
+
+```julia
+perimeter(Square(4cm))
+```
+
+Here, the code that handles `perimeter` doesn't need to know anything about `AbstractLength`. The only thing it relies on is that the lengths in question work with `+`, `*`, `/`, etc.
+
+```julia
+perimeter(Circle(10.0cm))
+```
+
+However, in our units implementation we can't (yet) multiply lengths to get units of area (dimensions of length squared).
+
+```julia
+area(Circle(10.0cm))
+```
+
+If instead we used a more thorough implementation of units, like [Unitful.jl](https://painterqubits.github.io/Unitful.jl/stable/), this will work fine.
+
+```julia
+using Unitful
+
+area(Circle(10.0u"cm"))
+```
+
+## Going forward
+
+We are now done with the material for Unit 4. We have learned:
+
+ 1. What are the "concrete" types represents sets of values in Julia?
+    * `primitive type`
+    * `struct`, `Tuple`, `NamedTuple`
+    * `Array`, `String`
+ 2. What are the "abstract" types that represent sets of types in Julia?
+    * `abstract type`
+    * Generic type pararmeters, `UnionAll`
+    * `Union` of types
+ 3. How do functions work in Julia?
+    * functions and closures
+    * methods
+    * multiple dispatch
+ 4. How do we create types and interfaces in Julia?
+    * length units
+    * 2D shapes
+    * how interfaces compose naturally
+
+This will place you in good stead for Units 5-8, and in particular Projects 1-3 where you will need to craft non-trivail programs to create a solution.
+
+## Bonus material
+
+Consider the following material optional. Have a look through if you are curious, have extra time, or would like extra exposure and practice to defining types and interfaces.
+
+### Online statistics
 
 Lets consider an example where we want to collect some quick running statistics from some data coming in. E.g.:
 
