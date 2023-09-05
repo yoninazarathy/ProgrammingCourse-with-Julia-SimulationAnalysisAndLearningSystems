@@ -1934,7 +1934,7 @@ end
 
 function perimeter(shape::RightAngledTriangle)
     angle = atan(shape.height / shape.width)
-    return shape.width + shape.height + cos(angle) * shape.height
+    return shape.width + shape.height + shape.width / cos(angle)
 end
 
 function perimeter(shape::Square)
@@ -1942,7 +1942,7 @@ function perimeter(shape::Square)
 end
 
 function perimeter(shape::Rectangle)
-    return 2 * shape.width + 2 * shape.width
+    return 2 * shape.width + 2 * shape.height
 end
 
 function perimeter(shape::Circle)
@@ -1966,7 +1966,7 @@ function area(shape::Square)
 end
 
 function area(shape::Rectangle)
-    return shape.width * shape.width
+    return shape.width * shape.height
 end
 
 function area(shape::Circle)
