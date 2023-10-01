@@ -1,9 +1,9 @@
 # Project \#1 - Semester 2, 2023
 # Univariate Polynomials with Integer Coefficients
 
-(last edit: September 2, 2023)
+(last edit: September 7, 2023)
 
-Here is a an [outline video](https://www.youtube.com/watch?v=Iwecy19FY78) about the project.
+Here is a an [outline video](https://www.youtube.com/watch?v=Iwecy19FY78) about the project. Here is an [addtional video](https://www.youtube.com/watch?v=KA-NP9SD5fE) about linked lists and extra support.
 
 **Due:** End of Day, Friday, 22, September, 2023. Late submissions are not accepted.
 
@@ -97,6 +97,8 @@ Improve the "pretty printing" of the polynomials by incorporating the following 
 
 
 ### Task 2 (15pts) - Refactoring the data structure used
+
+Note: See this [addtional video](https://www.youtube.com/watch?v=KA-NP9SD5fE) about linked lists offering extra support. The code for it is [here](https://github.com/yoninazarathy/2504_2023_project1/blob/lists_and_dicts_support/src/sorted_linked_list.jl).
 
 The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is good for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.  Therefore,
 
