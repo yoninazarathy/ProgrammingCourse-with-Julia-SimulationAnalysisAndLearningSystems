@@ -19,10 +19,9 @@ The mathematics and modelling concepts that this unit covers are:
 In addition to the mathematical and modelling concepts that you'll pick up in this unit, you will also further your understanding of programming, data structures, and Julia. Specifically you will cover:
 
 * The heap data structure and its inner workings.
-* Parametric types in greater depth.
+* More practice with parametric types and designing types (`struct`s).
 * Working with Julia modules and structuring a larger program.
 * Further understanding how to benchmark and optimize code.
-* Gain further experience in designing types (`struct`s).
 
 In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic significance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
@@ -73,7 +72,7 @@ First lets not confuse the term "random" with "arbitrary" or "non-deterministic"
 ```julia
 a = Array{Int}(undef, 10^4)
 non_deterministic_number = sum(a)
-@show non_deterministic_number
+@show non_deterministic_number;
 ```
 
 This number is arbitrary but we have no guarantee that it comes from some distribution, or that if we create it twice then each instance is statistically independent of the other.
@@ -92,7 +91,9 @@ The integer parameters $a$, $c$ and $m$ are fixed and specify the details of the
 ```julia
 using Plots, LaTeXStrings, Measures
 
-(a, c, m) = (69069, 1, 2^32)
+a = 69069
+c = 1
+m = 2^32
 next(z) = (a*z + c) % m
 
 N = 1_000_000
@@ -125,7 +126,7 @@ rng = Xoshiro(27)
 @show rand(rng, Int)
 @show rand(rng, Complex{Float64})
 
-println("After creating an RNG with same seed:")
+println("\nAfter creating an RNG with same seed:")
 rng = Xoshiro(27)
 @show rand(rng, Int)
 @show rand(rng, Complex{Float64});
@@ -139,8 +140,11 @@ Here is an artificial example — consider a random walk (a.k.a. "drunken walk")
 using Plots, Random, Measures
 
 function path(rng::AbstractRNG, α::Real, n::Int=5000)
-    (x, y) = 0.0, 0.0
-    (xDat, yDat) = Float64[], Float64[]
+    x = 0.0
+    y = 0.0
+    xDat = Float64[]
+    yDat = Float64[]
+
     for _ in 1:n
         # random walk
         flip = rand(rng, 1:4)
@@ -158,7 +162,7 @@ function path(rng::AbstractRNG, α::Real, n::Int=5000)
         x += α
         y += α
 
-        # 
+        # add the result to the output
         push!(xDat, x)
         push!(yDat, y)
     end
@@ -276,7 +280,7 @@ The study of Monte Carlo methods includes a collection of algorithms for generat
 
 #### Exponential distribution
 
-In other cases, there are seemingly "magical" algorithms for generating random variables from a given distribution. For example take the exponential distribution $p(x) = \lambda \exp(-\lambda x)$ where $\lambda$ is called the rate parameter (and is the inverse of the "halflife").
+In other cases, there are seemingly "magical" algorithms for generating random variables from a given distribution. For example take the exponential distribution with PDF (probability density function) $p(x) = \lambda \exp(-\lambda x)$ where $\lambda$ is called the rate parameter (and is the inverse of the "halflife"). Here are some plots of PDFs for various $\lambda$:
 
 ```julia
 x = 0:0.01:5
@@ -291,14 +295,16 @@ It turns out you can create a sample for this using this algorithm:
 randexp(λ) = -log(rand()) / λ
 ```
 
-Note that Julia has a `randexp` function provided in the `Random` standard library. At first this algorithm might seem surprising, however it isn't too hard to derive. For starters, the scaling with $\lambda$ is relatively easy to understand - you can rescale `x` in one of the PDFs above to get any of the others.
+(Note that Julia has a `randexp` function provided in the `Random` standard library.)
+
+At first this algorithm might seem surprising, however it isn't too hard to derive. For starters, the scaling with $\lambda$ is relatively easy to understand - you can rescale `x` in one of the PDFs above to get any of the others.
 
 How then to explain the `log(rand())` part? In principle you can generate a scalar random variable from any given distribution using the **inverse probability transform**. The idea is that you generate a uniform$(0,1)$ random variable and apply the inverse of the CDF (cumulative distribution function) of your desired distribution to that uniform.
 
 A reminder: For a random variable $X$, the CDF $CDF(x)$ is the function $CDF(x) = {\mathbb P}(X \le x)$ which is the integral of the PDF:
 
 $$
-\int_{X \le x} p(X) \, dX
+CDF(x) = \int_{X \le x} p(X) \, dX
 $$
 
 It is a non-decreasing function in $x$ (because $p$ is never negative) with limits at $0$ for $x \to -\infty$ and $1$ for $x \to \infty$. This is enough to ensure that the inverse function $CDF^{-1}(p)$ exists. To remind you what an inverse function is, it is the function such that $CDF^{-1}\big(CDF(x)\big) = x$. 
@@ -333,7 +339,7 @@ To generate a standard normal (Gaussian) random variable you can use the [Box-Mu
 randn() = sqrt(-2log(rand())) * cos(2π*rand())
 ```
 
-(Note that Julia has an efficient version of this `randn` function provided in the `Random` module)
+(Note that Julia provides an efficient version of this `randn` function by default.)
 
 This is another seemingly magical algorithm but it isn't too hard to understand. Like before we want to find the CDF of the distribution and invert it. The CDF is just the integral of the PDF. And if you cast your mind back to your calculus classes, the way to integrate a Gaussian is to transform it into the 2D integral of a 2D Gaussian and use polar coordinates:
 
@@ -395,7 +401,7 @@ To finish off this section (optional) here is a code to generate a Poisson rando
 using StatsBase, Distributions, Plots
 
 # A (not immediately) obvious method to generate Poisson random variables with mean λ
-function prn(λ)
+function rand_poisson(λ)
     k = 0
     p = 1
     while p > exp(-λ)
@@ -411,7 +417,7 @@ N = 1_000_000
 
 pDist = Poisson(λ)
 bPmf = pdf.(pDist,xGrid)
-data = counts([prn(λ) for _ in 1:N], xGrid)/N
+data = counts([rand_poisson(λ) for _ in 1:N], xGrid)/N
 
 plot(xGrid, data, 
 	line=:stem, marker=:circle, 
