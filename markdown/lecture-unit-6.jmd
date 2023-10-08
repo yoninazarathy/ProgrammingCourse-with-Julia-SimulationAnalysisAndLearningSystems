@@ -385,8 +385,8 @@ plot!(x_grid, pdf.(Normal(),x_grid),
 There are many other methods for generating random variables, some of which general and some are specialized. An important general method that we don't discuss much here is [rejection sampling](https://en.wikipedia.org/wiki/Rejection_sampling). For example, to find a pair of random variables in a circle, one could simply throw away anything that falls outside a larger square and draw a new sample:
 
 ```julia
-x = [2*rand() - 1 for _ in 1:1000]
-y = [2*rand() - 1 for _ in 1:1000]
+x = [2*rand() - 1 for _ in 1:5000]
+y = [2*rand() - 1 for _ in 1:5000]
 c = [x[i]^2 + y[i]^2 <= 1 ? :blue : :red for i in 1:length(x)]
 scatter(x, y; c, xlabel = "x", ylabel = "y", label = "", aspect_ratio = :equal)
 ```
@@ -517,17 +517,17 @@ Assume that two doctors are operating in their own rooms and there is a secretar
 Some of the events that may take place in such a clinic may include: 
 
 * a new patient arrives to the clinic; 
-* a patient enters a doctors' room; 
-* a patient leaves the doctors' room and goes to speak with the secretary; 
+* a patient enters a doctor's room; 
+* a patient leaves the doctor's room and goes to speak with the secretary; 
 * the secretary answers a phone call; the secretary completes a phone call, etc. 
 
 The occurrence of each event causes a state change, and these events appear over discrete time points $T_1 < T_2 < T_3 < \ldots$. Hence to simulate such a health clinic, we advance simulation time, $t$, over discrete time points. 
 
 The question is then, at which time points do events occur? The answer depends on the simulation scenario since the time of future events depends on previous events that have occurred. 
 
-For example, consider the event ``a patient leaves the doctors' room and goes to speak with the secretary''. This type of event will occur after the patient entered the doctors' room, and is implemented by **scheduling the event** just as the patient entered the doctors' room. That is, in a discrete event simulation, there is typically an **event schedule** that keeps track of all future events. Then, the simulation algorithm advances time from $T_i$ to $T_{i+1}$, where $T_{i+1}$ is the time corresponding to the next event in the schedule. Hence a discrete event simulation maintains some data structure for the event schedule that is dynamically updated as simulation time progresses.
+For example, consider the event ``a patient leaves the doctor's room and goes to speak with the secretary''. This type of event will occur after the patient entered the doctor's room, and is implemented by **scheduling the event** just as the patient entered the doctor's room. That is, in a discrete event simulation, there is typically an **event schedule** (or event queue) that keeps track of all future events. Then, the simulation algorithm advances time from $T_i$ to $T_{i+1}$, where $T_{i+1}$ is the time corresponding to the next event in the schedule. Hence a discrete event simulation maintains some data structure for the event schedule that is dynamically updated as simulation time progresses.
 
-To handle arbitrary cases such as this doctor's office simulation, one may use general commercial simulation software such as [AnyLogic](https://www.anylogic.com/), [Arena](https://www.rockwellautomation.com/en-au/products/software/arena-simulation.html), [GoldSim](https://www.goldsim.com/) and others.  However one may also code discrete event simulations from scratch as we do here. 
+To handle arbitrary cases such as this doctors' office simulation, one may use general commercial simulation software such as [AnyLogic](https://www.anylogic.com/), [Arena](https://www.rockwellautomation.com/en-au/products/software/arena-simulation.html), [GoldSim](https://www.goldsim.com/) and others.  However one may also code discrete event simulations from scratch as we do here. 
 
 #### A simple queueing example
 
@@ -608,19 +608,19 @@ mm1k_theory = ρ/(1-ρ)*(1-(K+1)*ρ^K+K*ρ^(K+1))/(1-ρ^(K+1))
 
 mm1_estimate = queue_simulator(
     T,
-    () -> rand(Exponential(1/λ)),
-    () -> rand(Exponential(1/μ))
+    () -> rand(Exponential(1/λ)), # arrival_function
+    () -> rand(Exponential(1/μ))  # service_function
 )
 md1_estimate = queue_simulator(
     T,
-    () -> rand(Exponential(1/λ)),
-    () -> 1/μ
+    () -> rand(Exponential(1/λ)), # arrival_function
+    () -> 1/μ                     # service_function
 )
 mm1k_estimate = queue_simulator(
     T,
-    () -> rand(Exponential(1/λ)),
-    () -> rand(Exponential(1/μ)),
-    K
+    () -> rand(Exponential(1/λ)), # arrival_function
+    () -> rand(Exponential(1/μ)), # service_function
+    K                             # capacity
 )
 
 println("The load on the system: $(ρ)")
@@ -657,7 +657,8 @@ isless(te1::TimedEvent, te2::TimedEvent) = te1.time < te2.time
 """
     new_timed_events = process_event(time, state, event)
 
-Generate an array of 0 or more new `TimedEvent`s based on the current `event` and `state`.
+Process an `event` at a given `time`, which may read and write to the system `state`. An event
+may generate new events, returned as an array of 0 or more new `TimedEvent`s.
 """
 function process_event end # This defines a function with zero methods (to be added later)
 
@@ -683,7 +684,7 @@ Return an event that prints a log of the current simulation state.
 struct LogStateEvent <: Event end
 
 function process_event(time::Float64, state::State, ls_event::LogStateEvent)
-    println("Logging state at time $time.")
+    println("Logging state at time $time:")
     println(state)
     return []
 end
@@ -1178,11 +1179,12 @@ This is it. We have a basic heap and as you can argue, both the push and pop ope
 
 ```julia
 heap = MaxHeap()
+push!(heap, "Albanese, Anthony")
 push!(heap, "Morrison, Scott")
 push!(heap, "Turnbull, Malcolm")
 push!(heap, "Abbott, Tony")
-push!(heap, "Rudd, Kevin")
 push!(heap, "Gillard, Julia")
+push!(heap, "Rudd, Kevin")
 push!(heap, "Howard, John")
 push!(heap, "Keating, Paul")
 push!(heap, "Hawke, Bob")
@@ -1196,7 +1198,7 @@ push!(heap, "Holt, Harold")
 println("Tree of heap:")
 print(heap)
 
-println("Printing in reverse order: ")
+println("Printing in reverse alphabetical order: ")
 
 while heap.tree.num_nodes !=0 
     println(pop!(heap))
