@@ -105,7 +105,7 @@ Whenever you receive a dataset, it takes some time to understand its contents. T
 We were introduced to CSV files earlier in the course. Here's the first few lines of our file:
 
 ```julia
-open("../data/athlete_events.csv") do io
+open("data/athlete_events.csv") do io
     i = 0
     while i < 5
         println(readline(io))
@@ -120,7 +120,7 @@ We can use the _CSV.jl_ package to read the data and the _DataFrames.jl_ package
 
 ```julia
 using DataFrames, CSV
-csv_file = CSV.File("../data/athlete_events.csv"; missingstring = "NA")
+csv_file = CSV.File("data/athlete_events.csv"; missingstring = "NA")
 df = DataFrame(csv_file)
 println("Data size: ", size(df))
 println("Columns in the data: ", names(df))
