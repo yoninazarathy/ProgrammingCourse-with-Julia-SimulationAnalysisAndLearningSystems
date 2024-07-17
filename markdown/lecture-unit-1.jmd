@@ -1,7 +1,802 @@
 # Unit 1: Hello World Bootcamp
 
+In this unit we'll study the basic of a programming language, [Julia](https://julialang.org/) in our case. The unit ends with suggested class micro-projects and practice questions for the practice quiz that is at the end of the unit. The pace and nature of this unit is aimed at students with little or no programming experience. The units afterwards pick up the pace significantly.  
+
+## Super simple hello world
+
+Here is a Julia statement:
 
 ```julia
-println("THIS UNIT IS STILL UNDER CONSTRUCTION")
+println("Hello World!")
 ```
+We are calling (or invoking) the function `println` with the argument `"Hello World!"`. Round brackets after a name are the application of a function, kind of like in mathematics. But in Julia, round brackets also have other uses:
+
+For example, dealing with the order of precedence of computations:
+
+```julia
+1 + 1 * 3
+```
+
+```julia
+(1 + 1) * 3
+```
+
+And also creating tuples:
+
+```julia
+my_tuple = ("hello", 35, π, "world", '!')
+typeof(my_tuple)
+```
+
+This whole notebook is created using a package called [Weave.jl](https://github.com/JunoLab/Weave.jl). But try running these simple commands in:
+
+- REPL (by running Julia and using the REPL, line after line)
+- Jupyter (in a Jupyter notebook with Ctrl+Enter)
+- In a file using (by creating a file such as my_code.jl and running `julia my_code.jl`)
+- In VS-Code with the Julia plug-in
+
+## Getting to business - what to expect from this unit:
+
+* Variables
+* Types
+* Using in-built functions (e.g. `println`)
+* Using in-built macros (e.g. `@show`)
+* Logical statements (AND, OR, etc..)
+* Conditional statements (`if-elseif-else`)
+* For loops
+* While loops
+* Creating your own functions with (`function`)
+
+## Variables and types
+
+```julia
+x = 3
+```
+
+```julia
+x + 25
+```
+
+```julia
+typeof(x)
+```
+
+```julia
+sizeof(x)
+```
+
+```julia
+isbits(x)
+```
+
+```julia
+y = "cats"
+```
+
+```julia
+typeof(y)
+```
+
+```julia
+sizeof(y)
+```
+```julia
+isbits(y)
+```
+
+```julia
+y = "η" # \eta + [TAB]
+```
+
+```julia
+sizeof(y)
+```
+
+```julia
+y = "p"
+```
+
+```julia
+sizeof(y)
+```
+
+```julia
+y = 'p'
+```
+
+```julia
+typeof(y)
+```
+
+```julia
+isbits(y)
+```
+
+### Operations with Variables
+
+```julia
+x = "hello " #notice the extra space
+y = "world"
+x*y #In Python it would have been x+y for concatenation 
+```
+
+```julia
+x = 2
+y = 5
+x^y #In Python it would have x**y (raising to a power)
+```
+
+```julia
+x = "hello "
+y = 5
+x^y
+```
+
+```julia
+x[1:end-1]
+```
+
+```julia
+x^(y-1)*x[1:end-1]
+```
+
+There were invisible brackets around `x^(y-1)`:
+
+```julia
+(x^(y-1))*x[1:end-1]
+```
+
+What if we did the brackets the other way?
+```julia
+x^((y-1)*x[1:end-1])
+```
+
+What causes the error?
+
+```julia
+x = 2
+√x #\sqrt + [TAB]
+```
+
+```julia
+sqrt(x)
+```
+
+```julia
+round(√x, digits = 3) 
+```
+
+```julia
+y = -x
+```
+
+```julia
+sqrt(y)
+```
+
+```julia
+z = sqrt(y + 0im)
+```
+
+```julia
+x = 20
+y = 5 
+
+#swapping x and y:  attempt 1
+x = y
+y = x
+
+@show x #This is the @show macro
+@show y;
+```
+
+```julia
+x = 20
+y = 5 
+
+#swapping x and y:  attempt 2
+temp = x
+x = y
+y = temp
+
+@show x
+@show y;
+```
+
+In Julia we can do it without using the variable `temp`?
+
+```julia
+x = 20
+y = 5 
+
+x, y = y, x #Julia specific solution
+
+@show x
+@show y;
+```
+
+Trick Challenge: Can you do it without using the variable `temp`?
+
+```julia
+x = 20
+y = 5 
+
+y = x + y # (x, y) becomes (20, 25)
+x = y - x # (x, y) becomes (5, 25)
+y = y - x # (x, y) becomes (5, 20)
+
+@show x
+@show y;
+```
+
+
+## Using in-built functions (e.g. `println`)
+
+So we have seen in-built functions like `println` and `sqrt`, but surely there are many more?  
+
+```julia
+println("hello world")
+```
+
+The `println` function can also take several arguments.
+
+```julia
+println("hello", " ", "world")
+```
+
+Here is `print` without a new line.
+
+```julia
+print("hello")
+print(" ")
+print("world")
+```
+
+```julia
+println("hello\nworld") #notice the \n (newline)
+println("Here is the next line")
+```
+
+An equivalent use of `print`:
+
+```julia
+print("hello")
+print("\n")
+print("world")
+print("\n")
+println("Here is the next line")
+```
+
+Let's see some mathematical in-built functions:
+
+```julia
+exp(1)
+```
+
+```julia
+ℯ #\euler + [TAB]
+```
+
+
+```julia
+log(ℯ^2), log2(2^5), log10(10^3)
+```
+
+```julia
+abs(-3.5), abs(3.5), abs(3 + 4im)
+```
+
+But you can't do absolute value of a string:
+
+```julia
+abs("3.5")
+```
+
+```julia
+factorial(4)
+```
+
+## Logical statements (AND, OR, etc..)
+
+```julia
+true, false #In Python it is True and False (caps first letter)
+```
+
+```julia
+5 == 2 + 3 # check for equality
+```
+
+```julia
+5 != 2 + 3 # check for not being equal (!=)
+```
+
+```julia
+false && false, false && true, true && false, true && true #logical AND
+```
+
+```julia
+false || false, false || true, true || false, true || true #logical AND
+```
+
+```julia
+(2 != 3) || (2 == 3)
+```
+
+```julia
+!(2 == 3) # ! (not)
+```
+
+```julia
+using Random
+Random.seed!(7)
+
+x = rand(1:100) #random number within 1, 2, ..., 100
+y = rand(1:100) #random number within 1, 2, ..., 100
+
+@show x, y
+
+(x == y) || (x != y)
+```
+
+```julia
+x < y, x<=y, x ≤ y, x > y, x ≥ y # \le or \ge + [TAB]
+```
+
+
+```julia
+(x == y) && (x != y)
+```
+
+## Conditional statements (`if-elseif-else`)
+
+```julia
+if 2 < 3 && 2 > 3
+    println("The world has gone crazy")
+end
+```
+
+```julia
+if 2 < 3 || 2 > 3
+    println("The world makes sense")
+end
+```
+
+```julia
+x = 25.3
+if x < 30
+    println("It is less than 30")
+else
+    println("It is greater or equal to 30")
+end
+```
+
+```julia
+x = 25.3
+if x < 20
+    println("It is less than 20")
+elseif x < 30
+    println("It is less than 30 but not less than 20")
+else
+    println("It is greater or equal to 30")
+end
+```
+
+Let's use it to compute an absolute value.
+
+```julia
+x = -3 # some input
+if x < 0
+    println(-x)
+else
+    println(x)
+end
+```
+
+## For loops
+
+```julia
+for i in 1:5
+    println(i)
+end
+```
+
+```julia
+for i in 1:3
+    println(i)
+end
+```
+
+```julia
+for i ∈ 1:3 # \in + [TAB]
+    println(i)
+end
+```
+
+```julia
+for _ ∈ 1:3 # \in + [TAB]
+    println("hello")
+end
+```
+
+
+```julia
+total = 0
+max_val = 10
+for i ∈ 1:max_val 
+    global total # This line can be ignored by now
+    total = total + i
+end
+println("The total is: $total")
+println("And using a formula: ", max_val*(max_val+1)/2)
+```
+
+Notice the above `55` vs. `55.0`. This is because of division which converts an integer to a float.
+
+## While loops
+
+```julia
+i = 1
+while i ≤ 3
+    global i
+    println(i)
+    i = i + 1
+end
+```
+
+The hailstone sequence: If a number if even, half it, if it is odd, multiply by 3 and add 1. Stop when you reach 1.
+
+```julia
+n = 7
+while n != 1
+    global n
+    print(n, ", ")
+    if n % 2 == 0 # modulo
+        n = n ÷ 2 # \div + [TAB] Integer division
+    else
+        n = 3n + 1
+    end
+end
+println(n)
+```
+## Creating your own functions with (`function`)
+
+We already had logic for an absolute value function (of real values). Now let's make a function out of it:
+
+```julia
+function my_abs(x)
+    if x < 0
+        return -x
+    else
+        return x
+    end
+end
+```
+
+We can also implement this as,
+
+```julia
+function my_abs(x)
+    if x < 0
+        return -x
+    end
+    return x
+end
+```
+
+Or even,
+
+```julia
+function my_abs(x)
+    if x < 0
+        return -x
+    end
+    x
+end
+```
+
+```julia
+@show my_abs(-3.5)
+@show my_abs(2.3)
+@show my_abs(0);
+```
+
+Functions don't have to have an argument or a return value:
+
+```julia
+function print_my_details()
+    println("Name: Jacob")
+    println("Occupation: diesel mechanic")
+    return nothing
+end
+
+print_my_details()
+```
+
+Functions can be combined.
+
+```julia
+
+function times_2(x)
+    return 2x
+end
+
+times_2(times_2(times_2(10)))
+```
+
+When you can implement a function in one line, you can avoid using the `function` keyword.
+
+```julia
+times_2(x) = 2x #this defines the function 
+
+times_2(times_2(times_2(10))) #this uses the function.
+```
+
+In Python you use the `def` keyword to define (write) functions.
+
+Let's see the hailstone sequence for the first 10 integers:
+
+```julia
+#let's "wrap" the code we had before in a function
+function hailstone(n_start)
+    n = n_start
+    while n != 1
+        print(n, ", ")
+        if n % 2 == 0 
+            n = n ÷ 2 
+        else
+            n = 3n + 1
+        end
+    end
+    println(n)
+    return nothing
+end
+
+hailstone(7)
+```
+
+```julia
+println("Hailstone sequences: ")
+for n in 1:10
+    hailstone(n)
+end
+```
+
+## Arrays = Data
+
+So up to this point we have the basics of programming including variables, logical statements, conditional statements, loops, and functions. One other major component is **data**. For this let us consider arrays.
+
+```julia
+[2, 4, -3, 15] #this is an array
+```
+
+It is a "chunk of memory" (RAM).
+
+```julia
+a = [2, 4, -3, 15]
+b = a #This just makes b point to the same chunk of memory as a.
+@show pointer(a)
+@show pointer(b);
+```
+
+You can see that both a and b "point" to the same location in memory.
+
+We can get an element of an array by "indexing". In Julia (like MATLAB and R) indexing starts at 1. In languages like Python, Javascript, and C/C++, indexing starts at 0.
+
+```julia
+@show a[1]
+@show a[2]
+@show a[3]
+@show a[4];
+```
+
+You can also change the elements this way.
+
+```julia
+a[3] = -100.
+@show a;
+```
+
+```julia
+@show b;
+```
+
+Note that in Python the basic similar entity to an array is the "list". Also note that if you use [NumPy](https://numpy.org/) in Python, as is typically the case for numerical computation, then the basic entity is called an "array". In Python the length of a list is obtained via the `len` function. In Julia the length of an array is obtained using `length`.
+
+```julia
+length(a)
+```
+
+Note that strings are kind of like arrays.
+
+```julia
+my_string = "Hello"
+@show length(my_string)
+@show my_string[1]
+@show my_string[5];
+```
+
+But arrays are **mutable** (meaning you can change them) while strings are not (they are **immutable**).
+
+```julia
+my_string[5] = 'x'
+```
+
+The error above is how Julia tries to tell you that you can't change the string. 
+
+Arrays don't have to be arrays of just numbers, for example.
+
+```julia
+my_other_array = ["hello", 2, sqrt, 3.4, "bye", [1, 2, 3]]
+```
+
+Let's make a function that sums up entries of an array (assuming it is an array of numbers).
+
+```julia
+function my_sum(input_array)
+    total = 0
+    for i in 1:length(input_array)
+        total += input_array[i]
+    end
+    return total
+end
+
+a = [1, 10, 100, 1000]
+my_sum(a)
+```
+
+There is also an in-built function for this.
+
+```julia
+sum(a)
+```
+
+But you can do more things with the in-built sum. For example:
+
+```julia
+a = [-1,10,-100,1000]
+@show sum(a)
+@show sum(abs, a); #sum the absolute values
+```
+
+Arrays can be extended with the `push!` function. Note that the `!` is part of the function name and indicates to us that the function modifies the array.
+
+```julia
+my_array = Int[] #empty array of integers
+push!(my_array, -3)
+@show my_array
+push!(my_array, 10)
+@show my_array;
+```
+
+Let's modify our `hailstone` function to return an array with the sequence instead of printing the sequence. 
+
+```julia
+function hailstone(n_start)
+    sequence = Int[]
+    n = n_start
+    while n != 1
+        push!(sequence, n) # was before print(n, ", ")
+        if n % 2 == 0 
+            n = n ÷ 2 
+        else
+            n = 3n + 1
+        end
+    end
+    push!(sequence, n) # was before println(n)
+    return sequence # was before return nothing
+end
+
+hailstone(7)
+```
+
+The [Collatz Conjecture](https://en.wikipedia.org/wiki/Collatz_conjecture) says that for every starting value the sequence eventually hits 1. Let's try to disprove it by seeing if this program gets stuck.
+
+```julia
+for n in 1:10^3
+    hailstone(n)
+end
+```
+
+It didn't get stuck (try even changing `10^3` to `10^6`).
+
+Now let's see what was the longest sequence.
+
+```julia
+length_of_longest = 0
+n_of_longest = 1
+for n in 1:10^3
+    global length_of_longest, n_of_longest
+    seq_len = length(hailstone(n))
+    if seq_len > length_of_longest
+        length_of_longest = seq_len
+        n_of_longest = n
+    end
+end
+
+println("Longest sequence is of length $length_of_longest when you start at $n_of_longest.")
+```
+
+One very easy way to create an array is via an array comprehension. 
+
+```julia
+[i^2 for i in 1:10]
+```
+
+The `maximum` function finds the maximal value of an array. We can find the 179 value from above just like this.
+
+```julia
+maximum([length(hailstone(n)) for n in 1:10^3])
+```
+
+What if we wanted to also know which index attains this maximum? See the `findmax` function.
+
+```julia
+findmax([length(hailstone(n)) for n in 1:10^3])
+```
+
+## Classroom Micro-Projeccts 
+
+Here are several micro-projects aimed at providing practice using the concepts above. For each of them you may need a bit more functionallity and in-built functions that what we explored so far. You can get that from web-search, LLM-help, peer help, or staff help.
+
+**Micro-Project 1**: Write a little program in that gives a student a mathematics arithmetic quiz with the operations +, -, * and divide. It has input numbers in the range 1,200. Students get asked questions and need to respond with the correct answer. After 10 questions the students gets a summary of how many they got correct and what they got wrong. You may need to explore the `readline` and `parse` functions. 
+
+**Micro-Project 2**: Write a litte program that is a Tik-Tak-Toe game between two players. On each turn, the state of the board is re-printed. You can use 1,...,9 as input for the cells.
+
+**Micro-Project 3**: Write a program that works on some fixed long string (e.g. several paragraphs of text such as the text here describing the micro projects). The program should output the character count, the word count, and perhaps other statistics about the text.
+
+## Practice questions for the practice quiz
+
+1. Consider the Julia code:
+
+```
+a = ["$i" for i in 1:3]
+s = a[1]*a[2]*a[3]
+```
+
+What is the type and value of `s`?
+
+2. You want to write a function `my_minimum` that gets an array of numbers and returns the minimal value in the array. Do not use the `minimum` in-built function as part of your answer.
+
+```
+function my_minimum(a)
+
+    return minimal_value
+end
+```
+
+Fill in the code for the function.
+
+3. You want to write a Julia function `num_sub_str` which accepts a string `main_string` and a string `sub_string`, and returns a count of how many times `sub_string` is in `main_string`. 
+
+```
+function num_sub_str(main_string, sub_string)
+
+    return number_occurances
+end
+```
+
+Fill in the code for the function.
+
+4. Consider the Julia function, `tamid_nahon` which gets two boolean values as inputs, `a`, and `b`.
+
+```
+function tamid_nahon(a, b)
+    return !(a && b) == !a || !b
+end
+```
+
+For what combinations of `a` and `b` is the return value `true`? For what is it `false`?
+
+5. The Fibbonaci sequence is 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ... (every element is the sum of the previous two and the initilization is 0, 1). Write a Julia function that computes the first `n` terms of the Fibbonaci sequence, returning these terms in an array.
+
+```
+function fibbonaci(n)
+    arr = [0, 1]
+
+
+    return arr
+end
+```
+
+Fill in the code for the function.
 
