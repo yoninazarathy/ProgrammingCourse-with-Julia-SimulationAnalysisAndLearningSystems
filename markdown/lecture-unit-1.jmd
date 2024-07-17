@@ -734,13 +734,13 @@ What if we wanted to also know which index attains this maximum? See the `findma
 findmax([length(hailstone(n)) for n in 1:10^3])
 ```
 
-## Classroom Micro-Projeccts 
+## Classroom Micro-Projects 
 
-Here are several micro-projects aimed at providing practice using the concepts above. For each of them you may need a bit more functionallity and in-built functions that what we explored so far. You can get that from web-search, LLM-help, peer help, or staff help.
+Here are several micro-projects aimed at providing practice using the concepts above. For each of them you may need a bit more functionality and in-built functions that what we explored so far. You can get that from web-search, LLM-help, peer help, or staff help.
 
 **Micro-Project 1**: Write a little program in that gives a student a mathematics arithmetic quiz with the operations +, -, * and divide. It has input numbers in the range 1,200. Students get asked questions and need to respond with the correct answer. After 10 questions the students gets a summary of how many they got correct and what they got wrong. You may need to explore the `readline` and `parse` functions. 
 
-**Micro-Project 2**: Write a litte program that is a Tik-Tak-Toe game between two players. On each turn, the state of the board is re-printed. You can use 1,...,9 as input for the cells.
+**Micro-Project 2**: Write a little program that is a Tik-Tak-Toe game between two players. On each turn, the state of the board is re-printed. You can use 1,...,9 as input for the cells.
 
 **Micro-Project 3**: Write a program that works on some fixed long string (e.g. several paragraphs of text such as the text here describing the micro projects). The program should output the character count, the word count, and perhaps other statistics about the text.
 
@@ -771,7 +771,7 @@ Fill in the code for the function.
 ```
 function num_sub_str(main_string, sub_string)
 
-    return number_occurances
+    return number_occurrences
 end
 ```
 
@@ -787,10 +787,10 @@ end
 
 For what combinations of `a` and `b` is the return value `true`? For what is it `false`?
 
-5. The Fibbonaci sequence is 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ... (every element is the sum of the previous two and the initilization is 0, 1). Write a Julia function that computes the first `n` terms of the Fibbonaci sequence, returning these terms in an array.
+5. The Fibonacci sequence is 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ... (every element is the sum of the previous two and the initialization is 0, 1). Write a Julia function that computes the first `n` terms of the Fibonacci sequence, returning these terms in an array.
 
 ```
-function fibbonaci(n)
+function fibonacci(n)
     arr = [0, 1]
 
 
