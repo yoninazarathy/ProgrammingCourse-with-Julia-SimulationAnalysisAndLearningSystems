@@ -3,6 +3,9 @@ cd(@__DIR__)
 using Pkg; Pkg.activate("..")
 cd("..")
 
+# https://github.com/JunoLab/Weave.jl/issues/436#issuecomment-1600972329
+ENV["GKSwstype"]="nul"
+
 kwargs = (doctype = "md2html", out_path = "assessment_html", template = "math2504assessment.tpl")
 
 assesmentSubfolder = "2024Assessment"
@@ -29,3 +32,5 @@ open("assessment_html/bighw.html", "w") do f
         write(f, line)
     end
 end
+
+ENV["GKSwstype"]="gksqt"
