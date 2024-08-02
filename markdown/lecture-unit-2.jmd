@@ -460,6 +460,7 @@ sqrt(Complex(-1))
 In Julia a function (such as `sqrt` or its alias `√`) can have many methods:
 
 ```julia
+using InteractiveUtils
 @which sqrt(2)
 ```
 
