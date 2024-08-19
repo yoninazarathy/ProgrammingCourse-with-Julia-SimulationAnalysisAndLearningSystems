@@ -135,27 +135,22 @@ average_age = sum(df_no_names[:,2])/n  #Here we just access ages as the second c
 
 ### JSON Files
 
-JSON files are much more structured than CSV files and are used for a variety of settings. As a real world application consider the [Safe Blues](https://safeblues.org/) project where cellular phones transmit virtual safe virus-like tokens. In this case, the information about the types of viruses is stored on a server and presented to the phones. One way of sharing information easily with a server is just by exposing it on a web address. In this case consider this address: [https://api.safeblues.org/admin/list](https://api.safeblues.org/admin/list) which presents a JSON file with all kinds of information dealing the "virtual safe viruses".
+JSON files are much more structured than CSV files and are used for a variety of settings. As a real world application consider the [Github Public API](https://api.github.com/), this provides programmatic web access to github services so that source code and artefacts can be managed via software.
 
-We download the JSON file from the web and the use `JSON.parse` from the `JSON.jl` package to convert the JSON file into a hierarchical dictionary. 
+We download the JSON file from the web for the repos of a particular github user and the use `JSON.parse` from the `JSON.jl` package to convert the JSON file into a hierarchical dictionary. 
 
 ```julia
 using HTTP, JSON
-strand_web = HTTP.request("GET","https://api.safeblues.org/admin/list")
-strand_web_data = JSON.parse(String(strand_web.body))
+web_request = HTTP.request("GET","https://api.github.com/users/paulbellette/repos")
+web_data = JSON.parse(String(web_request.body))
 ```
 
 ```julia
-strand_web_data["latestAppVersion"]
+length(web_data)
 ```
 
 ```julia
-strands = strand_web_data["strands"]
-length(strands)
-```
-
-```julia
-strands[250]
+[(r["name"], r["language"]) for r in web_data]
 ```
 
 ### Basic scientific work environment
