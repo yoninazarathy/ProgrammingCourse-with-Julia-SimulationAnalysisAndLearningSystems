@@ -848,7 +848,7 @@ A very useful data structure for dealing with large matrices is a Sparse Matrix.
 Consider the following imaginary social network
 
 ```julia
-using SparseArrays, Random, Arpack, LinearAlgebra
+using SparseArrays, Random, Arpack, LinearAlgebra, InteractiveUtils
 
 n_people = 10000
 
