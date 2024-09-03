@@ -1,25 +1,25 @@
-# Project \#1 - Semester 2, 2023
-# Univariate Polynomials with Integer Coefficients
+# Project \#1 - Semester 2, 2024
+# Computer Algebra for Polynomials
 
-(last edit: September 7, 2023)
+(last edit: September 3, 2024)
 
-Here is a an [outline video](https://www.youtube.com/watch?v=Iwecy19FY78) about the project. Here is an [addtional video](https://www.youtube.com/watch?v=KA-NP9SD5fE) about linked lists and extra support.
 
-**Due:** End of Day, Friday, 22, September, 2023. Late submissions are not accepted.
+
+**Due:** Due: September 20, 2024, 16:00.
 
 **Individual work**: This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years (in case students made them public). Do not copy code from those repos directly - but rather use such code bases for help as needed.
 
-**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 20/9.
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 18/9.
 
-**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, and neat output. There are **10** additional points for setting up the GitHub repo properly. The remaining **80** points are for the project questions. There is a total of **15** bonus points to be obtained via bonus tasks.
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for setting up the GitHub repo properly and following instructions for hand-in (including voice recording). The remaining **90** points are for the project tasks. 
 
 **Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
 
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator before the due date. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2023-PROJECT1`. So for example if your name is "Volodymyr Zelenskyy", the repo name should be `Volodymyr-Zelenskyy-2504-2023-PROJECT1`.
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator before the due date. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2024-PROJECT1`. So for example if your name is "Anthony Albanese", the repo name should be `Anthony-Albanese-2504-2024-PROJECT1`.
 
 The PDF file should be a nice formatted file that has:
 
-* Your name, student number, and assignment title (Project 1 - 2023) on the top.
+* Your name, student number, and assignment title (Project 1 - 2024) on the top.
 * A (clickable) link to your GitHub repo.
 * An illustration of the code and output for `example_script.jl`: Show the lines of the script and display the corresponding output. 
 * An illustration of the output of `test/runtests.jl`. 
@@ -31,24 +31,18 @@ Marking responses will be made by the teaching staff by annotating **selected pa
 
 **Marking Criteria**: 
 
-* 10 points are allocated for following instructions. 
+* 10 points are allocated for setting up the GitHub hand-in according to the instructions and following all submission instructions.
 
-* 10 points are allocated for setting up the GitHub hand-in according to the instructions.
-
-* 80 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.
-
-* There is a 5 point bonus question.
-
-* There are also 10 bonus points for a summary of Maithili Mehta's perspective seminar.
+* 90 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task. The points allocated to Tasks 1 -- 7 are 15, 10, 15, 10, 15, 15 and 10 points respectivly. 
 
 * In general (unlike BigHW), points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
 
 ---
 
-## Setting up your GitHub repo for hand-in (10pts):
+## Setting up your GitHub repo for hand-in (10 pts):
 
 * Ideally use the same account you used for BigHW. 
-* Ideally we would like you to **fork** the GitHub repo [https://github.com/yoninazarathy/2504\_2023\_project1](https://github.com/yoninazarathy/2504_2023_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
+* Ideally we would like you to **fork** the GitHub repo [https://github.com/yoninazarathy/2504\_2024\_project1](https://github.com/yoninazarathy/2504_2024_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
 * Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and you must do this no later than the project due date. You must verify that `uqMATH2504` is a collaborator on your project and let the course staff know if that is not the case. It is your duty to check that we accepted the invite (give us 2-5 working days to accept the invite).
 * Do **not** make any changes (commits) to the repo after the project due date. 
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc). Making intermediate commits is certainly recommended.
@@ -59,13 +53,13 @@ Your GitHub repo should be formatted like the original repo that you forked with
 * Note: make sure that there aren't any excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use a `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
 
 
-## Project tasks (80pts)
+## Project tasks
 
-Build your project on top of the [https://github.com/yoninazarathy/2504\_2023\_project1](https://github.com/yoninazarathy/2504_2023_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
+Build your project on top of the [https://github.com/yoninazarathy/2504\_2024\_project1](https://github.com/yoninazarathy/2504_2024_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
 
-Please follow the suggested type names below (`PolynomialZeroPacked`, `PolynomialSparseBI` etc..). These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project. (There is NO need for you to use parameteric types - yet if you wish, go ahead and do that).
+Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which means that you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types - a concept which we do not use in this project. (There is NO need for you to use parameteric types - yet if you wish, go ahead and do that).
 
-### Task 1 (8 pts) - Getting it to run, improving pretty printing, and creating your own example script.
+### Task 1 (15 pts) - Getting it to run and creating your own example script
 
 #### Study the Repo
 Once you create your own repository make sure it works by running `test/runtests.jl` and `example_script.jl`. At this point simply study the functionality of the repository by looking at the function signatures (not implementations) to understand what the repo can do. 
@@ -77,14 +71,29 @@ Create your own example script called `example_script_2.jl` and include polynomi
 -  have example polynomials over residue classes (primes).
 Basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`.
 
-#### Pretty Printing
+In your scripts. Make sure you understand how ÷ and `gcd` work.
+
+### Task 2 (10 pts) - A small cleanup (removing `max_degree_allowed`)
+
+The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$. There is also a limit on the degree of the polynomial via a global variable `max_degree_allowed` (currently set at `400`). 
+
+- First change the value from `400` to `100` in the code base, restart Julia, and re-run the tests. Explain why the first failure occurs.
+
+- After changing back to `400`, run `cyclotonic_polynomial(401)` and see that this fails as well.
+
+Now it turns out that this limit is not needed. It was a "feature" that was added wrongfully to the code base. So remove `max_degree_allowed` and all code related to it. As you do so, run the tests again, and also try `cyclotonic_polynomial` with a very large power. Reason about your code change.
+
+Then make a commit of this change and in your answer point to the commit, the files changed, as the fact that you "did not seem to break anything" because the tests passed. 
+
+### Task 3 (15 pts) - Improving pretty printing
+
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
 -  Terms of zero degree (constants) should exclude `x^0`, e.g. `2` not `2x^0`.
 -  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
 -  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
 -  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
 -  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
--  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
+-  Make sure your code does not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
 
 #### Enahnce your pretty printing with Unicode
 
@@ -95,92 +104,57 @@ Improve the "pretty printing" of the polynomials by incorporating the following 
 
 - One more option you should add is reversing of the degree. For this have a global variable `lowest_to_highest` which if set to `true` implies that the order printed is from lowest to highest as opposed to the default (highest to lowest). Note that if `lowest_to_highest` is not set (does not exist as a global) then the program should still work and simply act as though `lowest_to_highest = false`. 
 
+### Task 4 (10 pts) - Refactoring the coefficient type from `Int` to `BigInt`
 
-### Task 2 (15pts) - Refactoring the data structure used
+Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`.
 
-Note: See this [addtional video](https://www.youtube.com/watch?v=KA-NP9SD5fE) about linked lists offering extra support. The code for it is [here](https://github.com/yoninazarathy/2504_2023_project1/blob/lists_and_dicts_support/src/sorted_linked_list.jl).
+-  Refactor `Polynomial` and `Term` to have `Big` coefficients instead of `Int`. Do this by introducing a new type `PolynomialBig` and `TermBig`. 
 
-The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is good for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.  Therefore,
+-  Duplicate the functionality (functions and methods).
 
--  Create a new type called `PolynomialSparse` that stores *only* nonzero terms using datastructures as described below.  `PolynomialSparse` should have identical functionality to `Polynomial` in terms of the functions and methods the later provides. That is, anything you can do with a `Polynomial` you should be able to do with `PolynomialSparse`. (Yet no need to be able to do operations that involve both types).
+-  Create tests for `PolynomialBig` and associated functions and ensure your implementation passes them.
 
--  Create tests for `PolynomialSparse` and associated functions and ensure your implementation passes them. 
+-  Find examples where `Polynomial` (the one with `Int` coefficients) overflows and yields the wrong result whereas your new `PolynomialBig` does not. The test code for `PolynomialBig` should have such cases. 
 
--  Rename the supplied `Polynomial` type to be called `PolynomialDense` and rename all the methods that use it. Make sure the original supplied tests and scripts work for the new renamed type `PolynomialDense`. 
+-  Empirically compare the run-time performance of polynomial multiplication for `Polynomial` and `PolynomialBig`. Do this for cases where `Polynomial` does not overflow (i.e. returns the correct result).  In general, your results should show that `Polynomial` is faster, yet may overflow.
 
--  Modify your solution to Task 1 so that `example_script.jl` is for `PolynomialDense` and `example_script_2.jl` is for `PolynomialSparse`.
+Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `Polynomial128`. You may (if you wish) use parametric types but it is not required.
 
--  Provide a short discussion contrasting the pros and cons of the dense and sparse representations.  In particular, determine which operations are efficient (both in terms of memory and time) with the original `PolynomialDense` type and what operations are efficient with your new `PolynomialSparse`.
+### Task 5 (15 pts) - Creating a polynomial mod p datatype and further refactoring
 
-Note: You may to create an abstract base type, say `Polynomial`, for `PolynomialSparse` and `PolynomialDense`. However, this is not required. 
+Notice the `Polynomial`, `PolynomialBig` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must do this reduction themselves, and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
 
-#### Datastructures for `PolynomialSparse`
-
-Your `PolynomialSparse` should have a non-trivial datastructure which involves both a dictionary and a linked list. The dictionary can be the in-built `Dict()` of Julia. The linked list can be via [DataStructures.jl](https://juliacollections.github.io/DataStructures.jl/latest/mutable_linked_list/).
-
-- Linked lists are like arrays, yet they allow us to have more efficient insertion and deletion of terms. Their drawback is that lookup is not O(1) like an array but rather requires traversing the list. 
-
-- To make the lookup quicker, a dictionary where the keys are exponents will point at the entries of the linked list. The idea here is that every term of the polynomial will be represented both in the linked list and the dictionary. Searching for example for a term of power 32 would imply looking to see if it has a key in the dictionary. Then using the dictionary value to find it in the linked list. Similarly, running over all terms will imply iterating the linked list. Etc...
-
-- With every operation a `PolynomialSparse` object needs to remain consitent in that each term of the polynomial is represented both in the linked list and in the dictionary. Further, there are no excessive terms in the linked list or the dictionary.
-
-- Note that as you develop this task you may do it in two phases. First implement the linked list - do all the tests and see everything works. Then add the dictionary and again see everything works. 
-
-### Task 3 (7pts) - Refactoring the coefficient type from `Int` to `Int128`
-
-From now on we focus on the sparse representation.
-
-Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`. Nevertheless in this project we'll simply replace `Int` by `Int128`.
-
--  Refactor `PolynomialSparse` to have `Int128` coefficients instead of `Int`. Do this by introducing a new type `PolynomialSparse128` which is short hand for "Polynomial Sparse 128 bit Integer". 
-
--  Duplicate the functionality (functions and methods) of `PolynomialSparse` for `PolynomialSparse128`. Note that `PolynomialSparse128` should have a sparse implementation just like `PolynomialSparse`. 
-
--  Create tests for `PolynomialSparse128` and associated functions and ensure your implementation passes them.
-
--  Find examples where `PolynomialSparse` (the one with `Int` coefficients) overflows and yields the wrong result whereas your new `PolynomialSparse128` does not. The test code for `PolynomialSparse128` should have such cases. 
-
--  Empirically compare the run-time performance of polynomial multiplication for `PolynomialSparse` and `PolynomialSparse128`.  Do this for cases where `PolynomialSparse` does not overflow (i.e. returns the correct result).  In general, your results should show that `PolynomialSparse` is faster, yet may overflow.
-
-Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialSparse128`. You may (if you wish) use parametric types for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparse128` but it is not required.
-
-### Task 4 (15pts) - Creating a polynomial mod p datatype and further refactoring
-
-Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparse128` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must do this reduction themselves, and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
-
--  Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations.  
+-  Create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `Polynomial` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations.  
 
 - Create tests for `PolynomialModP` and associated functions and ensure your implementation passes them.
 
-Your new datatype should rely on the existing functionality of `PolynomialSparse` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
+Your new datatype should rely on the existing functionality of `Polynomial` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
 
-Once you complete this task, certain operations of `PolynomialSparse128` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `f1 ÷ f2` for `f1` and `f2` of types `PolynomialSparse128`, it is better to only `÷` when `f1` and `f2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
+Once you complete this task, certain operations of `Polynomial` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `f1 ÷ f2` for `f1` and `f2` of types `Polynomial`, it is better to only `÷` when `f1` and `f2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
 
 -  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
 
--  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
+-  Update the `show` method for `PolynomialModP` to include an indication it is "mod p" in the output.
 
-### Task 5 (20pts) - Improving multiplication using the Chinese Remainder Theorem
+### Task 6 (15 pts) - Improving multiplication using the Chinese Remainder Theorem
 
-The current multiplication implementation is not efficient for `PolynomialSparse128` because biger integer arithmetic may be expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparse128` via cheaper products of `PolynomialModP`.
+The current multiplication implementation is not efficient for `PolynomialBig` because biger integer arithmetic may be expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialBig` via cheaper products of `PolynomialModP`.
 
 - Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
 
-- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparse128` as presented in the lecture. Here the product of two `PolynomialSparse128`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
+- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialBig` as presented in the lecture. Here the product of two `PolynomialBig`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
 
-- Create tests for `PolynomialSparse128` CRT multiplication and ensure your implementation passes them.
+- Create tests for `PolynomialBig` CRT multiplication and ensure your implementation passes them.
 
-- Benchmark `PolynomialSparse128` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
+### Task 7 (10pts) - Factorization mod p and improving power
 
-### Task 6 (15pts) - Factorization mod p and improving power
-
-At this point you should have efficient multiplication and power for `PolynomialSparse128` as well as  `PolynomialModP` and its associated functions and methods.
+At this point you should have efficient multiplication and power for `PolynomialBig` as well as  `PolynomialModP` and its associated functions and methods.
 
 #### Power
 
 As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using repeated squaring.
 
--  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialSparse128` and `PolynomialModP`.
+-  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialBig` and `PolynomialModP`.
 
 -  Create tests for `pow_mod` and `^` for both implementations and ensure your implementation passes them.
 
@@ -193,26 +167,3 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 -  Benchmark your factorization algorithm by factoring a database of problems (e.g. generated by you via `rand`).  Do not use more than 120 seconds of local compute time.
 
 -  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
-
-### Bonus Task (5 bonus points)
-
-Use factorization of `PolynomialModP` and CRT to write a factorization algorithm for `PolynomialSparse128`.
-
-## Bonus Task (10 bonus points): Perspective seminar (Dr. Maithili Mehta).
-
-This question presents you with an additional 10 bonus points based on Dr. Mehta's talk. 
-
-Write a 1-2 paragraph summary of Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Mehta", or "Maithili", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
-
-The writeup should address some of the following (in paragraph form):
-
-1. What was Maithili's career path, and her relationship with software and mathematics?
-
-1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
-
-1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
-
-1. Have you picked up any tips from Maithili's talk, which you can perhaps use in your career down the road?
-
-1. Feel free to state anything else that you found interesting from the talk.
-
