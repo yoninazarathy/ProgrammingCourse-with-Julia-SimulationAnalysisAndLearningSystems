@@ -5,7 +5,7 @@ In the previous three units we explored basics of programming and computation (U
 Programming languages, including Julia, are designed mostly with these aims in mind:
 
  1. **Execution speed** — programs should run fast enough to solve the problem at hand. 
- 2. **Coding speed** — writing programs to solve problems should be quick & easy for the coder.
+ 2. **Coding speed** — writing programs to solve problems should be quick, easy and enjoyable for the coder.
  3. **Scalable engineering** — creating and maintaining large programs with many contributors should be no harder than writing small programs yourself.
 
 Different programming languages have different goals and target audiences, and make different trade-offs and affordances for the above. The trickiest one to get right is the third one — as codebases grow it is _typical_ to get stuck in a tarpit of complexity, where it gets harder and harder to change and improve the code, and progress grinds to a halt. A corollary of that is that code in large pieces of software is _read_ far more often than it is _written_, so it becomes crucial to make code that is written easy to understand.
@@ -36,6 +36,8 @@ With these last two, you can do some pretty powerful things with Julia. In fact,
 Remember, all this is designed to make it easy for mathematicians to write code that fast to run and easy to scale.
 
 In mathematics, we are interested in values or objects, as well as operations and transformations on such objects. Basing the language around values (objects), and allowing functions to behave like values (objects), makes our code resemble mathematics and have a similar interpretation. It does this without "getting in your way" or stopping you writing imperative code.
+
+From a historical perspective, Julia is strongly influenced by lisp (scheme) which is a functional language where everything is an expression.
 
 The fact that values have _types_ is for two reasons:
 
@@ -95,9 +97,10 @@ A type can be thought of as a set of values.
 Every value is a concrete type, and Julia has just these concrete types:
 
  1. `primitive type`
- 2. `struct` (and `mutable struct`)
- 3. `Array{N, T}` (and `Vector{T}` / `Matrix{T}`)
+ 2. `struct` and `mutable struct`
+ 3. `Array{N, T}` with aliases `Vector{T}` / `Matrix{T}`. (Note in Julia-1.11 just `Memory{T}`!)
  4. `String`
+ 5. `Tuple`
 
 ### Primitive types
 
@@ -241,7 +244,7 @@ Type aliases are useful to make your code shorter or more readable.
 
 #### Tuples
 
-Tuples in Julia are a kind of "lightweight" struct with no type or fieldnames that you need to define in advance. You construct tuples with brackets like `(1, 2, 3)`. Note the types don't have to be uniform, `t = (1, true, "abc")` is equally valid. You access the fields with the index, such as `t[3] === "abc"`.
+Tuples in Julia are a kind of "lightweight" struct with no type or field names that you need to define in advance. You construct tuples with brackets like `(1, 2, 3)`. Note the types don't have to be uniform, `t = (1, true, "abc")` is equally valid. You access the fields with the index, such as `t[3] === "abc"`.
 
 Note the syntax of tuples is much like the arguments to a function - `(x, y)` is a tuple and `f(x, y)` calls function `f` with inputs `(x, y)`. The correspondence is intentional.
 
@@ -270,7 +273,7 @@ Strings are built into the Julia language, for convenience. They are much like a
 
 (If a future version of Julia had immutable arrays, `String` could theoretically become a "normal" Julia type, but for now this is a pragmatic tradeoff).
 
-### ...and, that's it!
+**...and, that's it!**
 
 Julia provides other important types, like `Set`s and `Dict`s, but these are implemented in terms of the above. _Every_ value is one of:
 
@@ -677,6 +680,12 @@ add_2.x
 sizeof(add_2)
 ```
 
+We can see the full internal structure using the `dump()` function:
+
+```julia
+dump(add_2)
+```
+
 Note again it doesn't matter which form of function syntax we use. It's just different syntax for the same thing. We could have equally written:
 
 ```julia
@@ -723,7 +732,7 @@ Note that _every_ function in Julia has its own type — e.g. `sin` and `cos` ha
 
 ### [Type assertions](https://docs.julialang.org/en/v1/manual/types/#Type-Declarations)
 
-The `::` operator has two closely-related meanings.
+The `::` operator has three closely-related meanings.
 
 First is type assertion. In programming an "assertion" is something the programmer asserts to be true, which either the compiler or runtime will check.
 
@@ -759,9 +768,29 @@ The type `Any` is the supertype of every type.
 
 This type assertion always checks out, and doesn't really have any affect on your program. Therefore `x` and `x::Any` are the same thing. Such code is said to be a "no-op" because it corresponds to "no operation".
 
+Why use type assertions? Normally you don't need them, but the can occasionally
+be useful for performance when type inference is having trouble.
+
+### Variable declarations
+
+When used on the left-hand side of an assignment - or as part of a `local`,
+`global` or `const` declaration - the `::` operator means this variable always
+have the specified type, a bit like type declarations in a statically-typed
+language such as C:
+
+```julia
+begin
+    local x::Int
+    x = 0xff
+    @info "First" x
+    x = 10.0
+    @info "Second" x
+end
+```
+
 ### [Argument types](https://docs.julialang.org/en/v1/manual/functions/#Argument-type-declarations)
 
-The second meaning of `::` is in function / method signatures, which constrains the types of arguments the method will accept.
+The third meaning of `::` is in function / method signatures, which constrains the types of arguments the method will accept.
 
 We have seen Julia methods from the start, e.g.
 
@@ -823,13 +852,13 @@ example_f3(x::String, y::Int) = "the inputs have different types"
 example_f3(x::Int, y::String) = "the inputs have different types"
 example_f3(x::String, y::String) = "both input are strings"
 
-@show example_f3(1, 2)
-@show example_f3(1, "abc")
+@show example_f3(1, 2);
+@show example_f3(1, "abc");
 
 methods(example_f3)
 ```
 
-Note: In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch can be a bit more flexible. 
+In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch is a lot more flexible and changes the way we design software. 
 
 ### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
 
@@ -886,8 +915,8 @@ function my_density(x::Float64, μ::Float64 = 0.0, σ::Float64 = 1.0)
 end
 
 x = 1.5
-@show pdf(Normal(), x), my_density(x)
-@show pdf(Normal(0.5), x), my_density(x, 0.5);
+@show pdf(Normal(), x) my_density(x)
+@show pdf(Normal(0.5), x) my_density(x, 0.5);
 ```
 
 ### [Keyword arguments](https://docs.julialang.org/en/v1/manual/functions/#Keyword-Arguments)
@@ -899,15 +928,14 @@ function my_density(x::Float64; μ::Float64 = 0.0, σ::Float64 = 1.0)
     return exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
 end
 
-@show pdf(Normal(0.0,2.5),x), my_density(x, σ=2.5);
+@show pdf(Normal(0.0,2.5),x) my_density(x, σ=2.5);
 ```
 
 We can even make a function that takes arbitrary numbers of positional and keyword arguments:
 
 ```julia
 function very_flexible_function(args...; kwargs...)
-    @show args
-    @show kwargs
+    @info "All the args" args kwargs
 end
 
 very_flexible_function(2.5, false, a=1, b="two", c=:three)
@@ -950,6 +978,9 @@ end
 
 f(10 + 42im)
 ```
+
+(But note that the `x.re` and `x.im` fields are internal - you should use the
+`real()` and `imag()` functions to work with `Complex` values!)
 
 One thing you can do is destructure arguments to functions as they come in. For example:
 
@@ -1040,14 +1071,14 @@ function my_2_by_2_inv(A::Matrix{Float64})
         throw(ArgumentError("matrix is singular or near singular")) #\approx + [TAB]
     end
 
-    return [A[2,2] -A[1,2]; -A[2,1] A[1,1]]/d
+    return [A[2,2] -A[1,2]; -A[2,1] A[1,1]] ./ d
 end
 
 my_2_by_2_inv(rand(3,3))
 ```
 
 ```julia
-my_2_by_2_inv([ones(2) ones(2)])
+my_2_by_2_inv(ones(2,2))
 ```
 
 ```julia
@@ -1074,11 +1105,11 @@ end
 An exception may be caught way down the call stack:
 
 ```julia
-A = ones(2,2)
-f(mat) = 10*my_2_by_2_inv(A)
+f(mat) = 10*my_2_by_2_inv(mat)
 g(mat) = f(mat .+ 3)
 h(mat) = 2g(mat)
-h(A)
+A = ones(2,2)
+h()
 ```
 ```
 ERROR: ArgumentError: matrix is singular or near singular
@@ -1095,17 +1126,17 @@ Stacktrace:
    @ REPL[36]:1
 ```
 
+#### Try, catch and finally
+
+It's possible to "catch" and handle errors that happened using `try`, `catch` and `finally`.
+
 ```julia
 try 
     h(A)
 catch e
-    println(e)
+    @info "Handling exception" println(e)
 end
 ```
-
-#### Try, catch and finally
-
-It's possible to catch and handle errors that happened using `try`, `catch` and `finally`.
 
 ```julia
 try
@@ -1272,11 +1303,11 @@ f()
 
 Working with variables in different scopes can a little confusing and error prone. My advice:
 
- * use global variables as little as possible
- * use distinct names for variables as much as possilbe
- * the longer a varible hangs around, the longer and more discriptive it's name should be
+* Don't use non-const global variables unless there is no alternative. Prefer passing variables to functions, including using closures to capture state (see also ScopedValue in Julia 1.11).
+* Use distinct names for variables as much as possible
+* The larger the scope of a variable, the longer and more discriptive its name should be
 
-Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap.
+Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap (though naming things well is hard!)
 
 ## More on mutation
 
@@ -1581,7 +1612,7 @@ Here we have added new methods to existing functions (from `Base`). What we are 
 We can make this a little "nicer" to use with one more definition.
 
 ```julia; eval = false
-const m = Meter(1)
+const m = Metre(1)
 ```
 
 This way we can write the code rather naturally:
@@ -1795,7 +1826,7 @@ end;
 ##### Niceties
 
 ```julia
-const m = Metre(1)
+const m = Metre(1) # done above
 const km = Kilometre(1)
 const cm = Centimetre(1)
 const inch = Inch(1)
@@ -2017,7 +2048,7 @@ area(Circle(10.0u"cm"))
 
 ## Going forward
 
-We are now done with the material for Unit 4. We have learned:
+We are now done with the material for Unit 5. We have learned:
 
  1. What are the "concrete" types represents sets of values in Julia?
     * `primitive type`
@@ -2036,7 +2067,7 @@ We are now done with the material for Unit 4. We have learned:
     * 2D shapes
     * how interfaces compose naturally
 
-This will place you in good stead for Units 5-8, and in particular Projects 1-3 where you will need to craft non-trivail programs to create a solution.
+This will place you in good stead for Units 6-8, and in particular Projects 1-3 where you will need to craft non-trivail programs to create a solution.
 
 ## Bonus material
 
