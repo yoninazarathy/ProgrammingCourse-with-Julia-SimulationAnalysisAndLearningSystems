@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2024
 # Computer Algebra for Polynomials
 
-(last edit: September 3, 2024)
+(last edit: September 18, 2024)
 
 Here is an [explainer video](https://youtu.be/y44psett_Ec)
 
@@ -118,7 +118,7 @@ Exact computation requires polynomials with (truly) integer coefficients and the
 
 -  Empirically compare the run-time performance of polynomial multiplication for `Polynomial` and `PolynomialBig`. Do this for cases where `Polynomial` does not overflow (i.e. returns the correct result).  In general, your results should show that `Polynomial` is faster, yet may overflow.
 
-Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `Polynomial128`. You may (if you wish) use parametric types but it is not required.
+Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialBig`. You may (if you wish) use parametric types but it is not required.
 
 ### Task 5 (15 pts) - Creating a polynomial mod p datatype and further refactoring
 
