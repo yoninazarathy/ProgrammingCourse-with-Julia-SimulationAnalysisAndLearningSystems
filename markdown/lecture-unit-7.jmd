@@ -132,7 +132,7 @@ rng = Xoshiro(27)
 @show rand(rng, Complex{Float64});
 ```
 
-There are several reasons for using multiple random number generators, but before these are understood it is good to understand the concept of **common random numbers**. The general idea is that you want to do some task, or compute some function which depends both on a random sequence and some parameter, say $\alpha$. Sometimes you would want to vary $\alpha$ a bit and see the effect on the task and the function. If you keep the same random numbers (the same seed) then the effect will often be more apparat.
+There are several reasons for using multiple random number generators, but before these are understood it is good to understand the concept of **common random numbers**. The general idea is that you want to do some task, or compute some function which depends both on a random sequence and some parameter, say $\alpha$. Sometimes you would want to vary $\alpha$ a bit and see the effect on the task and the function. If you keep the same random numbers (the same seed) then the effect will often be more apparent.
 
 Here is an artificial example — consider a random walk (a.k.a. "drunken walk") with a bias toward the upper-left given by `α`:
 
@@ -391,7 +391,7 @@ c = [x[i]^2 + y[i]^2 <= 1 ? :blue : :red for i in 1:length(x)]
 scatter(x, y; c, xlabel = "x", ylabel = "y", label = "", aspect_ratio = :equal)
 ```
 
-So long as the rejection probability is not too large (very close to 1), this can be an efficient technique.
+So long as the rejection probability is not too large (very close to 1), this can be an efficient technique.  In fact, many of Julia's fast random number generators, including `randn()` use a clever variant of this technique called the Ziggurat algorithm.
 
 #### Poisson distribution
 
@@ -878,7 +878,7 @@ mutable struct Node
 end
 ```
 
-Since in this course we didn't get a chance to see such dangled implementations elsewhere, and since they are ubiquitous with classical and useful dat structures such as general balanced trees, linked lists, graphs, and more, we now present an implementation of such a complete binary tree using the `Node` struct above. We then use it for a heap, which we describe below. 
+Since in this course we didn't get a chance to see such dangled implementations elsewhere, and since they are ubiquitous with classical and useful data structures such as general balanced trees, linked lists, graphs, and more, we now present an implementation of such a complete binary tree using the `Node` struct above. We then use it for a heap, which we describe below. 
 
 This specific case stores `value` elements of type `String`. However this can be generalized to store any types of values.
 
@@ -1252,7 +1252,7 @@ MyModule.hi()
 
 By default, the module will be `using Base` (this can be removed by using `baremodule` instead - you only need this for writing the compiler, etc). Modules can be nested inside of each other, as a form of hierachical code organization.
 
-Modules have a set of `export`s. While some code is intended to be "internal" to the module, the export statement signals which types, functions and variables are intended for users of the module, and things marked with `export` are automatically imported with the `using` statement.
+Modules have a set of `export`s. While some code is intended to be "internal" to the module, the export statement signals which types, functions and variables are intended for users of the module, and things marked with `export` are automatically imported with the `using` statement. Sometimes you want to parts of the package as public without exporting them into the user's namespace - for this you can use the `public` keyword (new in Julia 1.11).
 
 By default, `using` and `import` will consult the package manager to look up the name (we will discuss this later). To avoid this and use a locally defined module in the current scope prefix with a single `.`, such as `using .MyModule`. Since modules have a `parentmodule()`, you can navigate to any other module in the hierarchy by adding more `.`s, such as `using ..MyModule`.
 
@@ -1534,30 +1534,70 @@ There are a number of optional things that a package might contain, which the pa
 
  * A `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
  * A git repository (tracked by the package registry).
- * A unit test suite (Julia and github can help you automate testing).
+ * A test suite (Julia and github can help you automate testing).
 
 When you use a `Manifest.toml` you are "locking" your code to use certain versions of packages. Otherwise when you install packages you will get the latest version compatible version of Julia and other dependencies. While using the latest version of code is generally good, occassiionally packages introduce bugs or change the API in a breaking way, and for complex, production-grade code it is necessary to have a high degree of stability to ensure your code continues to function and doesn't break unexpectedly. (This issue becomes more important the larger the codebase and number of dependencies).
 
 ## Creating packages - demonstration
 
-Let's construct a package live in VS Code and the REPL!
+Let's construct a package live and edit its code! We'll use PkgTemplates.jl and Revise.jl along with the REPL for a smooth package development experience.
+
+## Package Tests
+
+Formal package tests live in the file `test/runtests.jl` - this file is run as a "script" by `Pkg.test()` and the `] test Foo` command in the julia REPL. You can design your tests any way you want, but I suggest using a testing framework like the `Test` standard library. Generally `runtests.jl` will contain "unit tests" - small, fairly fast tests for localized pieces of functionality within the code. It can also contain end-to-end tests and integration tests.
+
+Why do we need formal testing? There are both technical and social/human factors.
+
+On the technical side, each change to the code has a chance of breaking some functionality, somewhere. If you make many changes the probability of untested code or systems becoming broken over time approaches 1 ("bitrot"). This can include changes in the environment in which the code runs - eg, other systems communicating with your code - in which case you need "integration tests".
+
+On the human side, it's ideal to know about any broken code right away before you forget about the details of the changes you were making. It's far easier, faster, cheaper and *just more fun* to get the code correct at the time rather than having to hunt down a problem later.
+
+If you have a multi-person project, tests give the project scalability: new contributors can add code to the project without breaking things, and the burden on the maintainers to check that new code is much less because the tests are a proof that things still work after some new change. And remember: in three years time it's likely you'll have forgotten all the details of your project - *you* become the new contributor but your past-self isn't around anymore to review your new code! Even for single person projects the tests keep you honest and hold your hand as you get back into changing your old code and remembering how it works.
+
+### When to write tests, how many tests, what flavour of tests?
+
+When do you write tests? My rule of thumb is "As soon as the project gets too large to fit all the code in your head at once." In practice, this probably means a few hundred lines of code or less.
+
+How many tests and what should they be like? This depends on the purpose and lifecycle of your project.
+
+Early in a software project's life there's completely new code being written and everything is changing all over the place. Having a high volume of tests can slow the project in this creative phase, but you certainly want some tests: you want a small number of end-to-end tests which check that the core functionality is working; tests which are easy to change as the code itself changes. These are sometimes called "smoke tests" - they check whether anything critical is on fire before more detailed testing is done. For small pieces of one-off scientific work, some carefully verified end-to-end tests may be sufficient.
+
+As the code in a project matures, you may end up with thousands of lines of code and many contributors. Now you want high coverage "unit tests" - these test small parts of functionality in as much isolation as practical and attempt to cover every line of code with a test. There are tools to check test coverage and make sure it's maintained over time.
+
+### Making testing fun
+
+Ideally testing should be as fun as interactively playing with your code in the REPL. Some things which make testing more fun:
+* Make sure that individual test cases are easy to read and write. For example using a good test library such as the `Test` standard library, you can use `@test sin(pi/4) ≈ sqrt(2)/2`.
+* Make the reporting of successful and failed tests obvious. (Use the `Test` standard library!)
+* Making running your tests (or a subset of your tests) as fast as possible. For example, splitting them into multiple files within the `test` directory, or using one of the successors to the `Test` stdlib.
+* Writing utility code (eg, within `test/utils.jl`) to make your testing easier. As an example we might have a look at the "IR" (Intermediate Representation) tests in JuliaLowering.jl.
 
 ## Package development lifecycle
 
-Now lets discuss the packag development process in general.
+Now lets discuss the package development process in general.
 
-Here are a few packages developed by myself (Andy Ferris). We shall discuss their philosophy and the work that goes into such package development and maintenance:
+Here's a grab bag of packages developed by me (Claire Foster) and collaborators. I've chosen these because they cover a fairly broad set of areas including libraries for supporting mathematical work, file formats, software engineering, network/server/web programming and "data science" data workflows.
 
-* [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
-* [TypedTables.jl](https://github.com/JuliaData/TypedTables.jl) - we may use this package in the next unit
-* [SplitApplyCombine.jl](https://github.com/JuliaData/SplitApplyCombine.jl) - we may use this package in the next unit
-* [Dictionaries.jl](https://github.com/andyferris/Dictionaries.jl)
+* A simple geometry file IO package - [PlyIO.jl](https://github.com/JuliaGeometry/PlyIO.jl)
+* Julia's efficient short-array implementation - [StaticArrays.jl](https://github.com/JuliaArrays/StaticArrays.jl)
+* The Julia compiler parser - [JuliaSyntax.jl](https://github.com/JuliaLang/JuliaSyntax.jl)
+* The Julia compiler's symbolic analysis pass - [JuliaLowering.jl](https://github.com/c42f/JuliaLowering.jl)
+* A "devops" style package for a REPL experience on a remote server [RemoteREPL.jl](https://github.com/JuliaWeb/RemoteREPL.jl)
+* A package for underscore placeholder syntax [Underscores.jl](https://github.com/c42f/Underscores.jl) (you may find this useful in the next unit)
+
+We'll talk about the open source maintainence workflow with reference to a relatively old package `PlyIO` (started in Julia version 0.5 - before Project.toml existed!), including:
+* Issues / bug reports (as a simple example, https://github.com/JuliaGeometry/PlyIO.jl/issues/21)
+* Pull Requests (https://github.com/JuliaGeometry/PlyIO.jl/pull/22)
+* Testing for Continuous Integration (https://github.com/JuliaGeometry/PlyIO.jl/actions/runs/11320934127/job/31479240290?pr=22)
+* Releasing new versions in the General registry (https://github.com/JuliaGeometry/PlyIO.jl/commit/a19d73080cbac01a2d4ef91ce042f39e4cbf2045)
+
+Time permitting, we may also discuss the work that goes into developing such packages and some history and design philosopy.
 
 # More on Julia and programming - demonstration
 
-* A few bits about Meta-programming and further understanding of the compilation process. 
-* More on type inference and performance implications. `@code_warntype`
-* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl)
+* A few bits about Meta-programming and further understanding of the compilation process.
+* More on type inference and performance implications. `@code_warntype`, `@code_llvm`, `@code_native`.
+* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl); `@btime` and `@benchmark`.
 
 # Basic Monte Carlo based statistical analysis
 
