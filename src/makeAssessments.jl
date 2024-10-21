@@ -12,8 +12,8 @@ assesmentSubfolder = "2024Assessment"
 
 # weave("markdown/$(assesmentSubfolder)/bighw.jmd"; kwargs...)
 # weave("markdown/$(assesmentSubfolder)/project1.jmd"; kwargs...)
-weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
-# weave("markdown/$(assesmentSubfolder)/project3.jmd"; kwargs...)#
+# weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
+weave("markdown/$(assesmentSubfolder)/project3.jmd"; kwargs...)#
 
 
 ### This is a temporary hack to add links to question numbers (it assumes questions are heading 2's)
