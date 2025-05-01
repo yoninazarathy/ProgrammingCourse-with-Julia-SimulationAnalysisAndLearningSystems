@@ -34,7 +34,7 @@
           {{#:date}}<h5>{{{:date}}}</h5>{{/:date}}
         </div>
 
-          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2024)</h1>
+          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2025)</h1>
           <br>
           <center>
               <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
