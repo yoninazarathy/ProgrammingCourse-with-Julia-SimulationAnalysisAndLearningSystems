@@ -351,7 +351,7 @@ df[isodd.(df.a), :]
 So first we find:
 
 ```julia
-iseven.(df.a)
+isodd.(df.a)
 ```
 
 And afterwards we take a subset of the rows.
@@ -520,7 +520,7 @@ We could analyse this data another hundred ways. Some questions that come to min
 
  * How does team success relate to socioeconomic indicators of their home country, such as GDP per capita? Do richer countries do comparatively better than poorer countries? To do this, we would need to _join_ the data with country data.
  * Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia received a lot of medals during the Sydney 2000 Olympics.
- * Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning, which will cover next.
+ * Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning.
 
 # Memory management
 
