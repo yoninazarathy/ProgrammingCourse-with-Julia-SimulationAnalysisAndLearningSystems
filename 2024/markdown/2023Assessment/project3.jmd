@@ -1,0 +1,151 @@
+# Project \#3 - Semester 2, 2023
+# Analysis of Datasets and Basic ML
+
+(last edit: October 22, 2023)
+
+See [explainer video](https://www.youtube.com/watch?v=fLKoRxqzY7Q).
+
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 15/11. The 7:30pm Wednesday zoom consultation hours will be held up until 15/11. These will be the only weekly contact hours after week 13.
+
+**Weights and marking criteria:** Total number of points: **110**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. The remaining **100** points are for the project with **50** points for each of the two parts. For each part you may choose **one of two options provided** (do not hand in or do both options - do only one option per part - your choice).
+
+**Submission format:** This project should be submitted via a GitHub Repo, a **single** PDF file, and a voice recording via Blackboard. The GitHub repo should have two Jupyter notebooks: 
+
+* For part 1 if you do **option a**, then `part1a.ipynb` should have all the code and output for the tasks of the part. Alternatively, if you choose **option b**, then the file should be called `part1b.ipynb`.
+
+* Similarly for part 2 if you do **option a** call the submission file `part2a.ipynb` and if you do **option b** then call it `part2b.ipynb`. 
+
+You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required.
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
+
+The PDF file should be a nice formatted file that has:
+
+* Your name, student number, and assignment title (Project 3 - 2023) on the top.
+* A (clickable) link to your GitHub repo.
+* A PDF printout of your `part1a.ipynb` **or** `part1b.ipynb` file (first).
+* A PDF printout of your `part2a.ipynb` **or** `part2b.ipynb` file (second).
+
+Use a PDF merging utility to create the PDF file. Do not worry about extra white space occurring due to Jupyter notebook PDF printouts.
+
+As with previous assignments you can comment on questions in this PDF (e.g. when asked to answer things not via code). The Jupyter notebooks in the GitHub should be "runnable". That is, course staff should be able to download them from your repo and run them after activating the environment in the working directory based on your `Project.toml` file which specifies the dependencies used. 
+
+Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. 
+
+**Individual work**: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available. An exception is the random forest part/option (2b). For that question you may use code from the lecture, but not anything else (and do not use  `DecisionTree.jl`).
+
+**Marking Criteria**: 
+
+There are 110 points total, yet the grade recorded in blackboard will be between 0 and 100. That is, anyone who gets more than 100 points will receive a grade of 100.
+
+* 10 points are allocated for following instructions and the GitHub repo.
+
+* 50 points are for Part 1, doing **either** part 1a or part 1b (choose one of the two options).
+
+* 50 points are for Part 2 doing **either** part 1a or part 1b (choose one of the two options).
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. Nevertheless, **in this project you are mostly creating scripting code for data analysis and ML experimentation** so it can be looser in nature. That is, in contrast to previous projects, the code may be less generic. Nevertheless, define functions as needed to avoid duplication (copy pasting) of code where possible.
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts):
+
+* Ideally use the same account you used for PROJECT1. 
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2023-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2023-PROJECT3`.
+* Make sure the repo is **private**.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted exactly as follows:
+* Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `.gitignore` file. 
+* Have basic running instructions on how to run the code. 
+* Have the two main Jupyter notebooks as instructed above. In each notebook have `using Pkg` and `Pkg.activate(".")` commands at the top so that you work in an environment of your current directory. 
+* Add dependencies to this environment and this will create a `Project.toml` file which should also be part of your repo.
+* In case you choose to create a movie for Task 3, do NOT upload the movie to GitHub. Instead, store it in some sharable place on the web and have a link to it from your notebook.
+* A `data` folder with the housing data and any other data needed.
+
+## Part #1 - Data Analysis (choose 1a or 1b)
+
+For this part choose one of two options (option **a** or option **b**). Don't do both options only one of them.
+
+In this part of the project you deal with a [house prices dataset](https://www.kaggle.com/anthonypino/melbourne-housing-market) available from Kaggle.
+
+### Option 1a: Housing Prices Data (50 points over 4 sub tasks)
+
+ Your overarching purpose is to carry out basic exploratory analysis of this dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.
+
+There are 4 separate tasks below. All tasks use the `Melbourne_housing_FULL.csv` file. You can download the file from Kaggle and place it in a `data` folder in your repo. Your scripts should access this file.
+
+Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc. 
+
+As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to (don't drop all rows for all tasks). In certain cases, if you see a sensible way to impute (replace/make-up data), feel free to do so and explain your imputation strategy. 
+
+**Task 1.1a Exploratory data of single variables (15 pts)**
+
+Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Keep in mind that different type of data requires different plots.
+
+**Task 1.2a Exploratory data analysis comparing variables (10 pts)**
+
+Create several plots that present the house price as a function of distance to the city, house size (e.g. land size, rooms, car ports, etc...), and some combination of these variables. In presenting these plots, visually search for relationships between variables.
+
+**Task 1.3a Exploratory data analysis over time (10 pts)**
+
+Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold (`Type = "h"`) over time. 
+
+**Task 1.4a Linear Regression Models (15 pts)**
+
+Review your results of Task 1.2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://statisticswithjulia.org/) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
+
+### Option 1b: Location data over time movie on map (50 points)
+
+Your goal here is to create a quality animation (movie) presenting location data over time of the Melbourne Housing Data. The movie should use a background metropolitan Map and present some animation over a timeline of the trends of houses being sold in the Melbourne area. For examples circles with sizes of the deals can pop-up and disappear. Other features are possible also. Presenting additional animated or summarized statistics alongside the movie is also possible and encouraged.  
+
+It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
+
+Do **NOT** upload the created movie to GitHub - only update the code. Host the movie in another publicly reachable location (YouTube etc.) and share a link to the movie. 
+
+You may add a soundtrack, e.g. music,  (no need to do this programmatically). Also specify if you are happy for the link of your movie to be shared on the course website for future use, or not.  
+
+40 out of the 50 points of the task are guaranteed if you manage to create the movie, relating the coordinates of the sold properties to the map and having a minimal basic visual representation. The additional 10 points are given for extra neat visual effects and creativity. 
+
+Please keep the movie shorter than 2 minutes. 
+
+## Part #2 - Machine Learning (choose 2a or 2b)
+
+This part deals with both the [MNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.3/datasets/MNIST/) and [FashionMNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.1/datasets/FashionMNIST/) datasets. Since the datasets are generally interchangeable, you should execute your code both for MNIST and FashionMNIST and report the results for both datasets. Create one model for MNIST and another one for FashionMNIST. Training for each model is to be on the training data (60,000 images in either MNIST or FashionMNIST) and performance testing is to be on the 10,000 test images of that dataset. 
+
+## Option 2a: Basic ML on MNIST and FashionMNIST (50 points)
+
+This is a more standard machine learning practice task focused on the  dataset. Your goal is to create classifiers that determine if an MNIST or FashionMNIST image is: rotated by 90 degrees, 180 degrees, 270 degrees, or 0 degrees (not rotated).
+
+**Task 2.1a Creating the datasets (10pts)**
+
+Use some fixed seed to create a dataset where you rotate images uniformly randomly. That is each image (MNIST or FashionMNIST) should be rotated by 90, 180, 270, or 0 degrees and the associated label (e.g. "0", "90", "180", or "270") is to be stored as well. Do this both for the test and train datasets. Save the files in CSV format or in a different manner. Illustrated graphically that your rotations work on a few example images. 
+
+**Task 2.2a Using a linear classifier (15pts)**
+
+Now train (using pseudo-inverse is fine if you can) a linear classifier (least squares) with the one-vs-rest approach to determine if the rotation label (one of four options) of the images. You'll need to do this once for MNIST and once for FashionMNIST.
+
+Evaluate the performance (accuracy) of your classifier on the training sets.
+
+**Task 2.3a Using a linear classifier (15pts)**
+
+Now repeat with a multi-class classifier (softmax regression or "logistic regression"). Is the performance better than the linear classifier? 
+
+**Task 2.4a Incorporation of PCA (10pts)**
+
+Now merge both MNIST and FashionMNIST so that you have 120,000 training images. Carry out PCA on these images down to a dimension of $p \in \{2,5,10,20,50\}$. In each case, train a softmax regression classifier to determine the orientation of the image (90, 180, 270, or 0). 
+
+Your classifier should work by first reducing dimension to $p$ and then classify from the low dimension $p$ to one of the four options. So for each possible $p$ train a different classifier.
+
+Now test performance on the 20,000 training images and tabulate the accuracy results. How does it compare to 2.3a? (It isn't guaranteed to be better).  
+
+### Option 2b - Your own Random Forest Implementation (MNIST and FashionMNIST)
+
+Implement your own Random Forest (based on decision trees). You can use code supplied in the lecture, but you should also adapt it for your own needs. Then use your algorithm to train models on MNIST and FashionMNIST and in each case present the test accuracy. Here you are predicting the labels 0,...,9 (or similar for FashionMNIST). 
+
+Try to tweak parameters as to achieve an accuracy of no less than 92% on MNIST.

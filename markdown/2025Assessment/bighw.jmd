@@ -200,7 +200,12 @@ The above implementation is fine, however it has code duplication for both cases
 
 ## Question 3: An 1855 research paper is still of interest
 
-Return to the continued fraction from Question 1, again using $a_0 =0, a_1 = 1, a_2 = 2, a_3 = 3, \ldots$. This continued fraction is mentioned [here](https://oeis.org/A052119) and was investigated in this [1855 Amoretti paper](http://www.numdam.org/item/NAM_1855_1_14__40_1.pdf). The approximate value of $x$ is $0.697774657964008$. The following code computes this:
+<!--Return to the continued fraction from Question 1, again using $a_0 =0, a_1 = 1, a_2 = 2, a_3 = 3, \ldots$. This continued fraction is mentioned [here](https://oeis.org/A052119) and was investigated in this [1855 Amoretti paper](http://www.numdam.org/item/NAM_1855_1_14__40_1.pdf). The approximate value of $x$ is $0.697774657964008$. -->
+The following code computes the approximate value of the continued fraction 
+$$
+x = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \cfrac{1}{a_3 + \cfrac{1}{a_4 + \cfrac{1}{\ddots}}}}}
+$$
+for $a_0 =0, a_1 = 1, a_2 = 2, a_3 = 3, \ldots$. It is mentioned [here](https://oeis.org/A052119) and investigated in [1855 Amoretti paper](http://www.numdam.org/item/NAM_1855_1_14__40_1.pdf):
 
 ```julia
 amoretti(i=0; cut_off = 20) = i > cut_off ? 0 : i + 1 / amoretti(i+1; cut_off = cut_off)
