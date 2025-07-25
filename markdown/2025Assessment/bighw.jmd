@@ -1,9 +1,9 @@
 # BigHW - Semester 2, 2025.
-(last edit: July 10, 2025)
+(last edit: July 25, 2025)
 
 **Due:** September 5, 2025, 16:00. This assignment is in pairs.
 
-See also the [explainer video](https://www.youtube.com/watch?v=0lQQsa9cr-E) for this assignment.
+<!-- See also the [explainer video](https://www.youtube.com/watch?v=0lQQsa9cr-E) for this assignment.-->
 
 **Note:** Since this assignment is in **pairs** make sure to submit with the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three people in the team, require **explicit permission** from the course coordinator.
 
@@ -21,7 +21,7 @@ To submit, go to Blackboard and submit as instructed there by providing a link t
 
 * There are 16 questions in total, with 6 points allocated for each question. Some questions are easier and some harder. Some require more work and some require less work.
 
-* There is an additional bonus question, question 17, dealing with Dr. Megan Dawson's perspective seminar. It yields an additional 10 bonus points. 
+* There is an additional bonus question, question 17, dealing with Dr. Anna Foeglein's perspective seminar. It yields an additional 10 bonus points. 
 
 * As this is the first assignment, points will not be deducted for sloppy coding style. However, in future assignments clean and consistent coding style is required.
 
@@ -843,7 +843,7 @@ plot_solution(t,u,title = "Euler's method", label="h=$h")
 Note: Your solution to this question does not need to deal with binary data or use serialization as we have. Here it is simply a mechanism for obtaining data for our example plot (which you can reproduce).
 
 
-## Question 16: Planetary Motion - Part 2
+## Question 16 (only for MATH7504): Planetary Motion - Part 2
 
 The equations of motion described above for a planetary system have the special property of being a [Hamiltonian System](https://en.wikipedia.org/wiki/Hamiltonian_system). Hamiltonian Systems are of great interest to physicists and mathematicians due to their significance in physical modelling and their special properties. A (time invariant) Hamiltonian System is one where the dynamics of the system are completely determined by a smooth scalar function $H(q,p)$, for $q$ and $p \in {\mathbb R}^{\tilde{d}}$, where the dynamics are described by the system of first order differential equations for $i=1,\ldots,{\tilde d}$:
 
