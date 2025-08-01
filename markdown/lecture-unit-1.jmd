@@ -28,19 +28,26 @@ my_tuple = ("hello", 35, π, "world", '!')
 typeof(my_tuple)
 ```
 
-This whole notebook is created using a package called [Weave.jl](https://github.com/JunoLab/Weave.jl). But try running these simple commands in:
+## Input a variable through user interaction
+
+Store the following 3 lines into the file 'test.jl' and run it either through by runing the command 'julia test.jl' from the terminal or through include("test.jl") from the REPL.
+
+`println("What is your name: ")`   \
+`name=readline()`   \
+`println("Hi $name, how are you?")`
+
+This whole notebook is created using a package called [Weave.jl](https://github.com/JunoLab/Weave.jl). But try running these simple commands in:, 
 
 - REPL (by running Julia and using the REPL, line after line)
-- Jupyter (in a Jupyter notebook with Ctrl+Enter)
-- In a file using (by creating a file such as my_code.jl and running `julia my_code.jl`)
-- In VS-Code with the Julia plug-in
+- Jupyter (in a Jupyter notebook with Ctrl+Enter),
+- In a file (by creating a file such as my_code.jl and either running `julia my_code.jl` from the terminal or include("my_code.jl") within the REPL)
+- In VS-Code with the Julia extension.
 
 ## Getting to business - what to expect from this unit:
 
 * Variables
 * Types
-* Using in-built functions (e.g. `println`)
-* Using in-built macros (e.g. `@show`)
+* Using in-built functions (e.g. `println`) and macros (e.g. `@show`)
 * Logical statements (AND, OR, etc..)
 * Conditional statements (`if-elseif-else`)
 * For loops
@@ -48,41 +55,65 @@ This whole notebook is created using a package called [Weave.jl](https://github.
 * Creating your own functions with (`function`)
 
 ## Variables and types
+Think of variables as a **storage box**, with a name (tag) on it. The computer's memory is the **storage facility** in which you can store all your boxes. 
+
+![Variables are boxes in a storage facility (memory)](../img/boxes2.png)
+
 
 ```julia
 x = 3
 ```
+stores the value 3 in the box tagged x.
 
 ```julia
 x + 25
 ```
+retrieves the value stored in x and adds 25 to it.
+
+Variables have a type - think of it as the size and shape of the box. 
 
 ```julia
 typeof(x)
 ```
-
+gives the type of the variable x (an Integer value of size 64 bits= 8 bytes).
 ```julia
 sizeof(x)
 ```
+```julia
+y=34.23
+typeof(y)
+```
+gives the type of the variable y (a Floating point number of size 64 bits= 8 bytes).
 
 ```julia
 isbits(x)
 ```
+x is a **primitive type**, i.e. x **directly** refers to the value of the variable.
+![Number types in Julia](../img/type_hierarchy.png)
+
+Use 
+```julia
+@show typemin(Int16) typemax(Int16);
+```
+to find the minimal and maximal values that can be represented by integer types.
+
+## Variables of type String (i.e. text) and Char(acter)
 
 ```julia
-y = "cats"
+str = "Hello"
 ```
 
 ```julia
-typeof(y)
+typeof(str)
 ```
 
 ```julia
-sizeof(y)
+sizeof(str)
 ```
 ```julia
-isbits(y)
+isbits(str)
 ```
+String is the standard data type for text. It is a **composite type**. Therefore the variable 'str' does not refer to the text "Hello" itself, but to the address (**reference**, pointer) in memory where the content is stored. Think of the reference as the shelf number in the storage facility (memory).
 
 ```julia
 y = "η" # \eta + [TAB]
@@ -112,46 +143,54 @@ typeof(y)
 isbits(y)
 ```
 
+
 ### Operations with Variables
 
 ```julia
-x = "hello " #notice the extra space
-y = "world"
-x*y #In Python it would have been x+y for concatenation 
+x = 3.0
+y = 4.2
+x*y, x+y, x-y, x/y, x^y #In Python it would have x**y (raising to a power)
 ```
+And for non-numerical types such as Strings:
 
 ```julia
-x = 2
-y = 5
-x^y #In Python it would have x**y (raising to a power)
+s1 = "hello " #notice the extra space
+s2 = "world"
+@show typeof(s1);
+s1*s2 #In Python it would have been x+y for concatenation 
 ```
 
+
 ```julia
-x = "hello "
+s = "hello "
 y = 5
 x^y
 ```
+These are examples of **operator (method) overloading** in Julia: For different data types, different versions of a function/method/operator can be defined. 
+
+#### Indexing into strings using [...] 
 
 ```julia
-x[1:end-1]
+s[1:end-1]
 ```
 
 ```julia
-x^(y-1)*x[1:end-1]
+s^(y-1)*s[1:end-1]
 ```
 
-There were invisible brackets around `x^(y-1)`:
+Since the operator `'` has precedence of `*`, this is the same as 
 
 ```julia
-(x^(y-1))*x[1:end-1]
+(s^(y-1))*s[1:end-1]
 ```
 
+#### Common errors: type mismatch
 What if we did the brackets the other way?
 ```julia
-x^((y-1)*x[1:end-1])
+s^((y-1)*s[1:end-1])
 ```
-
-What causes the error?
+Here, Julia tries to identify an instance of the method "+(.,.)" which takes an Integer and a String as arguments (this is Julia's **"multiple dispatch"** paradigm), but doesn't succeed.
+The closest candidates are listed in the error message, but none of them fits (e.g.any argument of type Int64 can be converted into types Real, Number, Any, etc).
 
 ```julia
 x = 2
@@ -177,6 +216,19 @@ sqrt(y)
 ```julia
 z = sqrt(y + 0im)
 ```
+#### Be careful about side effects when manipulating composite types
+For primitive types we have
+```julia
+a1=1; a2=a1; a1=99;
+println("After changing the value of a1, the value of a2 is: ", a2)
+```
+but for a composite type such as Vector{Float64}
+```julia
+v1=[1,2,3]; v2=v1; v1[1]=99;
+println("After changing the value of v1, the value of v2 is: $v2")
+```
+
+#### Syntactic sugar for swapping values
 
 ```julia
 x = 20
@@ -186,7 +238,7 @@ y = 5
 x = y
 y = x
 
-@show x #This is the @show macro
+@show x; #This is the @show macro
 @show y;
 ```
 
@@ -199,11 +251,11 @@ temp = x
 x = y
 y = temp
 
-@show x
+@show x;
 @show y;
 ```
 
-In Julia we can do it without using the variable `temp`?
+In Julia we can do it without using the variable `temp`!
 
 ```julia
 x = 20
@@ -211,26 +263,37 @@ y = 5
 
 x, y = y, x #Julia specific solution
 
-@show x
+@show x;
 @show y;
 ```
 
-Trick Challenge: Can you do it without using the variable `temp`?
+Now, with composite types:
 
 ```julia
-x = 20
-y = 5 
+m1 = rand(1000, 1000)  #generates of 1000x1000 matrix with random entries
+m2 = rand(1000, 1000)
 
-y = x + y # (x, y) becomes (20, 25)
-x = y - x # (x, y) becomes (5, 25)
-y = y - x # (x, y) becomes (5, 20)
+@time m2, m1 = m1, m2;
+```
+takes about as much time as
 
-@show x
-@show y;
+```julia
+m1 = rand(10000, 10000)
+m2 = rand(10000, 10000)
+
+@time m2, m1 = m1, m2;
+```
+because for composite types **only the references** are swapped! Compare this to the time required for re-assigning those variables after copying their entire content:
+
+```julia
+m1 = rand(1000, 1000)
+m2 = rand(1000, 1000)
+
+@time m2, m1 = copy(m1), copy(m2);
 ```
 
 
-## Using in-built functions (e.g. `println`)
+## Using built-in functions and macros
 
 So we have seen in-built functions like `println` and `sqrt`, but surely there are many more?  
 
@@ -293,7 +356,44 @@ abs("3.5")
 ```
 
 ```julia
+length("3.5")
+```
+
+```julia
 factorial(4)
+```
+
+Note that '@show' does something very similar. It is a **macro (all macros have @ in their names)**.
+```julia
+s="3.5";
+@show s;
+println(s)
+```
+**Macros are evaluated at compile time** (when translating the Julia code into machine code) and therefore have access to more information, e.g. the variable name of their argument. For that reason @show can also output the variable name 's' which is convenient for debugging, whereas prinln only has access to the content '3.5' of its argument.
+## Type conversions
+
+```julia
+a=4;
+x=Float64(a); 
+@show typeof(a) a;
+@show typeof(x) x;
+```
+```julia
+y=sqrt(5);
+b=round(y);
+@show typeof(y) y;
+@show typeof(b) b;
+```
+
+```julia
+Int('a'), Int('b'), Int('A'), Int('B'), Int('α'), Int('∀') #type \alpha and \forall
+```
+gives the ascii/unicode for these letters/symbols.
+
+Often those conversions are made implicitly (**"multiple dispatch"**), e.g.
+```julia
+z=a+x
+@show typeof(z);
 ```
 
 ## Logical statements (AND, OR, etc..)
@@ -302,6 +402,16 @@ factorial(4)
 true, false #In Python it is True and False (caps first letter)
 ```
 
+
+```julia
+typeof(true)
+```
+```julia
+@show Int(true);
+@show Int(false);
+```
+
+#### Logical operators
 ```julia
 5 == 2 + 3 # check for equality
 ```
@@ -315,7 +425,7 @@ false && false, false && true, true && false, true && true #logical AND
 ```
 
 ```julia
-false || false, false || true, true || false, true || true #logical AND
+false || false, false || true, true || false, true || true #logical OR
 ```
 
 ```julia
@@ -326,17 +436,28 @@ false || false, false || true, true || false, true || true #logical AND
 !(2 == 3) # ! (not)
 ```
 
+For the next block, you need to have the package `Random` installed: To install it, change to package mode using `]`, and use `add Random`. 
+
+The REPL modes are
+*  `;` to access the shell/terminal temporarily , 
+* `?` for help mode
+*  `]` for package mode
+* Ctrl-C or Backspace brings you back to the standard "Julian" prompt.
+
 ```julia
-using Random
-Random.seed!(7)
+using Random 
+
+Random.seed!(7)  #The exclamation mark denotes functions which change the environment (side-effects).
 
 x = rand(1:100) #random number within 1, 2, ..., 100
 y = rand(1:100) #random number within 1, 2, ..., 100
 
-@show x, y
+@show x, y;
 
 (x == y) || (x != y)
 ```
+
+The command `Random.seed!` sets the seed value for the random number generator. Without it, an almost random seed value is generated and random numbers will differ every time you evaluate the following 'rand' commands. If you set the seed value, then random numbers will always be the same - every time you run the script (which can be useful for debugging, or comparison).
 
 ```julia
 x < y, x<=y, x ≤ y, x > y, x ≥ y # \le or \ge + [TAB]
@@ -347,7 +468,27 @@ x < y, x<=y, x ≤ y, x > y, x ≥ y # \le or \ge + [TAB]
 (x == y) && (x != y)
 ```
 
-## Conditional statements (`if-elseif-else`)
+## Logical operators for composite types
+
+
+```julia
+x=[1,2,3]
+y=[1,2,3]
+x==y
+```
+compares the content of x to the content of y. To check whether x and y are physically identical (same reference) use
+
+```julia
+@show x===y;
+z=y
+@show z===y;
+```
+
+![composite types](../img/sketch1.png)
+
+# Control structures 
+
+### Conditional statements (`if-elseif-else`)
 
 ```julia
 if 2 < 3 && 2 > 3
@@ -392,7 +533,22 @@ else
 end
 ```
 
-## For loops
+#### Compact ways of formulating if clauses
+Use either the **ternary operator** `condition ? resultiftrue : resultiffalse`
+```julia
+x = -3 # some input
+absx = x < 0 ? -x : x   
+```
+
+or using logical AND (`&&`), making use of Julia's **lazy evalution of logical operators**, 
+```julia
+x = -3 # some input
+x < 0 && println("This is a negative number!")   
+```
+Here, the second condition for the AND clause `&&` is only evaluated if the first condition evaluates to true. Effectively this
+behaves like a single-line if statement.
+
+### For loops
 
 ```julia
 for i in 1:5
@@ -432,7 +588,7 @@ println("And using a formula: ", max_val*(max_val+1)/2)
 
 Notice the above `55` vs. `55.0`. This is because of division which converts an integer to a float.
 
-## While loops
+### While loops
 
 ```julia
 i = 1
@@ -495,8 +651,8 @@ end
 ```
 
 ```julia
-@show my_abs(-3.5)
-@show my_abs(2.3)
+@show my_abs(-3.5);
+@show my_abs(2.3);
 @show my_abs(0);
 ```
 
@@ -523,15 +679,6 @@ end
 times_2(times_2(times_2(10)))
 ```
 
-When you can implement a function in one line, you can avoid using the `function` keyword.
-
-```julia
-times_2(x) = 2x #this defines the function 
-
-times_2(times_2(times_2(10))) #this uses the function.
-```
-
-In Python you use the `def` keyword to define (write) functions.
 
 Let's see the hailstone sequence for the first 10 integers:
 
@@ -561,6 +708,26 @@ for n in 1:10
 end
 ```
 
+#### Alternative, more compact ways, of defining functions
+
+When you can implement a function in one line, you can avoid using the `function` keyword and instead use **mathematical notation for defining functions**
+
+```julia
+times_2(x) = 2x 
+
+@show times_2(times_2(10)) #this uses the function twice.
+@show (times_2 ∘ times_2)(10) # alternative way of writing function composition
+@show [1,2,3] |> times_2; # or, using piping operator |>
+```
+
+One can even define **anonymous function** without function names
+```julia
+[1,2,3] |> (x->2x) 
+```
+
+Note: in Python you use the `def` keyword to define (write) functions.
+
+
 ## Arrays = Data
 
 So up to this point we have the basics of programming including variables, logical statements, conditional statements, loops, and functions. One other major component is **data**. For this let us consider arrays.
@@ -574,18 +741,20 @@ It is a "chunk of memory" (RAM).
 ```julia
 a = [2, 4, -3, 15]
 b = a #This just makes b point to the same chunk of memory as a.
-@show pointer(a)
+@show pointer(a);
 @show pointer(b);
 ```
 
-You can see that both a and b "point" to the same location in memory.
+You can see that both a and b "point" to the same location in memory (a reference, or pointer).
+
+### Indexing
 
 We can get an element of an array by "indexing". In Julia (like MATLAB and R) indexing starts at 1. In languages like Python, Javascript, and C/C++, indexing starts at 0.
 
 ```julia
-@show a[1]
-@show a[2]
-@show a[3]
+@show a[1];
+@show a[2];
+@show a[3];
 @show a[4];
 ```
 
