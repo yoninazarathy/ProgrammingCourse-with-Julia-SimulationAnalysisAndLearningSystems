@@ -534,7 +534,7 @@ end
 ```
 
 #### Compact ways of formulating if clauses
-Use either the **ternary operator** `condition ? resultiftrue : resultiffalse`
+Use either the **ternary operator** `condition ? dothisiftrue : dothisiffalse`
 ```julia
 x = -3 # some input
 absx = x < 0 ? -x : x   
@@ -588,18 +588,42 @@ println("And using a formula: ", max_val*(max_val+1)/2)
 
 Notice the above `55` vs. `55.0`. This is because of division which converts an integer to a float.
 
+Using the command `break`, loops can be left at any time.
+```julia
+for i ∈ 1:13 # \in + [TAB]
+    if i<5
+        println("hello $i")
+    else
+        break
+    end
+end
+```
+
+Using the command `continue`, code executation continues at the start of the loop
+```julia
+for i ∈ 1:13 # \in + [TAB]
+    if i<10
+      continue
+    else
+        println("hello $i")
+    end
+end
+```
+
 ### While loops
+
+While loops give you more control over the loop.
 
 ```julia
 i = 1
-while i ≤ 3
+while i ≤ 3   # do the following as long as i is smaller or equal than 3
     global i
     println(i)
     i = i + 1
 end
 ```
 
-The hailstone sequence: If a number if even, half it, if it is odd, multiply by 3 and add 1. Stop when you reach 1.
+The hailstone sequence: If a number is even, half it, if it is odd, multiply by 3 and add 1. Stop when you reach 1.
 
 ```julia
 n = 7
@@ -649,6 +673,7 @@ function my_abs(x)
     x
 end
 ```
+which uses that functions by default return the output of the last command.
 
 ```julia
 @show my_abs(-3.5);
@@ -667,18 +692,6 @@ end
 
 print_my_details()
 ```
-
-Functions can be combined.
-
-```julia
-
-function times_2(x)
-    return 2x
-end
-
-times_2(times_2(times_2(10)))
-```
-
 
 Let's see the hailstone sequence for the first 10 integers:
 
@@ -725,8 +738,6 @@ One can even define **anonymous function** without function names
 [1,2,3] |> (x->2x) 
 ```
 
-Note: in Python you use the `def` keyword to define (write) functions.
-
 
 ## Arrays = Data
 
@@ -735,8 +746,8 @@ So up to this point we have the basics of programming including variables, logic
 ```julia
 [2, 4, -3, 15] #this is an array
 ```
-
-It is a "chunk of memory" (RAM).
+Note that in Julia 1-dimensional arrays are also called Vector.
+Arrays represent a "block of memory" (RAM). Its address in RAM (random access memory) can be retrieved as follows:
 
 ```julia
 a = [2, 4, -3, 15]
@@ -768,9 +779,9 @@ a[3] = -100.
 ```julia
 @show b;
 ```
-
+<!--
 Note that in Python the basic similar entity to an array is the "list". Also note that if you use [NumPy](https://numpy.org/) in Python, as is typically the case for numerical computation, then the basic entity is called an "array". In Python the length of a list is obtained via the `len` function. In Julia the length of an array is obtained using `length`.
-
+-->
 ```julia
 length(a)
 ```
@@ -797,6 +808,14 @@ Arrays don't have to be arrays of just numbers, for example.
 ```julia
 my_other_array = ["hello", 2, sqrt, 3.4, "bye", [1, 2, 3]]
 ```
+is an array of components of type `Any` (the most general type Julia provides).
+
+Compare this to the definition of a tuple
+```julia
+my_other_array = ("hello", 2, sqrt, 3.4, "bye", [1, 2, 3]);
+typeof(my_other_array)
+```
+
 
 Let's make a function that sums up entries of an array (assuming it is an array of numbers).
 
@@ -907,13 +926,13 @@ findmax([length(hailstone(n)) for n in 1:10^3])
 
 Here are several micro-projects aimed at providing practice using the concepts above. For each of them you may need a bit more functionality and in-built functions that what we explored so far. You can get that from web-search, LLM-help, peer help, or staff help.
 
-**Micro-Project 1**: Write a little program in that gives a student a mathematics arithmetic quiz with the operations +, -, * and divide. It has input numbers in the range 1,200. Students get asked questions and need to respond with the correct answer. After 10 questions the students gets a summary of how many they got correct and what they got wrong. You may need to explore the `readline` and `parse` functions. 
+**Micro-Project 1**: Write a little program in that gives a student a mathematics arithmetic quiz with the operations +, - and *. It has input numbers in the range from 1 to 200. Students get asked questions and need to respond with the correct answer. After 10 questions the students gets a summary of how many they got correct and what they got wrong. You may need to explore the `readline` and `parse` functions. 
 
 **Micro-Project 2**: Write a little program that is a Tik-Tak-Toe game between two players. On each turn, the state of the board is re-printed. You can use 1,...,9 as input for the cells.
 
 **Micro-Project 3**: Write a program that works on some fixed long string (e.g. several paragraphs of text such as the text here describing the micro projects). The program should output the character count, the word count, and perhaps other statistics about the text.
 
-## Practice questions for the practice quiz
+## Practice questions
 
 1. Consider the Julia code:
 
@@ -968,4 +987,3 @@ end
 ```
 
 Fill in the code for the function.
-
