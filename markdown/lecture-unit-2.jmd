@@ -8,6 +8,9 @@ Before anything - a 10-20 minute demo.... e.g. expected number of findings of mi
 ```julia
 using Random
 
+# Make the program generate the same data every time it runs
+Random.seed!(42)
+
 function find_max(data)
     max_value = -Inf
     for x in data
@@ -40,12 +43,12 @@ function find_max(data)
             max_value = x
         end
     end
-    return max_value, n
+    return (max_value, n)
 end
 
 Random.seed!(0)
 data = rand(100)
-max_value, n = find_max(data)
+(max_value, n) = find_max(data)
 println("Found maximal value: $(max_value)")
 println("There were $n records along the way.")
 ```
@@ -98,18 +101,18 @@ Let's see it...
 ```julia
 using Plots
 
-println("γ = ",Float64(MathConstants.γ))  #\gamma + [TAB]
+println("γ = $(Float64(MathConstants.γ))")  #\gamma + [TAB]
 
 h(n) = sum(1/i for i in 1:n)
 approx_h(n) = log(n) + MathConstants.γ
 
 for n in 1:10
-    println(n, "\t", h(n), "\t", approx_h(n) )
+    println("$(n)\t$(h(n))\t$(approx_h(n))")
 end
 
 err = [h(n) - approx_h(n) for n in 1:20]
 
-scatter(1:20,err,xticks=1:20,xlabel="n",ylabel = "Error",ylim = (0,0.5), legend=false)
+scatter(1:20, err, xticks=1:20, xlabel="n", ylabel = "Error", ylim = (0, 0.5), legend=false)
 ```
 
 Here is a Monte Carlo estimate and a histogram of the distribution:
@@ -121,12 +124,12 @@ records = []
 for s in 1:10^5
     Random.seed!(s)
     data = rand(100)
-    _, n = find_max(data)
-    push!(records,n)
+    (_, n) = find_max(data)
+    push!(records, n)
 end
-println("log(100) + γ =  $(approx_h(100)), Monte Carlo Estimate: $(mean(records))")
+println("log(100) + γ = $(approx_h(100)), Monte Carlo Estimate: $(mean(records))")
 
-histogram(records,ticks = 1:maximum(records),normed=true,xlabel="n",ylabel="probability",legend=false)
+histogram(records, ticks = 1:maximum(records), normed=true, xlabel="n", ylabel="probability", legend=false)
 ```
 
 ## Preamble (before really getting into code)
@@ -144,15 +147,25 @@ You are coming to this course after doing several mathematics and statistics cou
 * You certainly know how to use files, directories, and the internet. 
 * Finally, you are also somewhat of a mathematician. You have done courses such as STAT1301 (first year stats), MATH1071 (Analysis + Linear Algebra) + MATH1072 (Mutivariable Calculus + some modelling) + several more math electives.
 
+#### Early computation
+
+* [Ready reckoner](https://en.wikipedia.org/wiki/Ready_reckoner)
+* [Computer (original meaning)](https://en.wikipedia.org/wiki/Computer_(occupation))
+
 [![Women coding image](../web_img/women_coders.jpg)](https://cacm.acm.org/news/234820-the-secret-history-of-women-in-coding/fulltext)
+
+* [Ancient analogue computer](https://en.wikipedia.org/wiki/Antikythera_mechanism)
+* [Babbage's Difference Engine](https://en.wikipedia.org/wiki/Difference_engine)
+* [Karakuri](https://en.wikipedia.org/wiki/Karakuri_puppet) and [Automata](https://en.wikipedia.org/wiki/Automaton)
+* [Curta (mechanical calculator)](https://en.wikipedia.org/wiki/Curta)
+* [Norden bombsight](https://en.wikipedia.org/wiki/Norden_bombsight)
 
 #### What is a computer?
 
 Wikipedia says this about a [computer](https://en.wikipedia.org/wiki/Computer):
 > A computer is a machine that can be programmed to carry out sequences of arithmetic or logical operations automatically. 
 
-[![Ada](../web_img/ada.jpg)](https://en.wikipedia.org/wiki/Ada_Lovelace)
-
+[![Ada](../web_img/ada.jpg)](https://en.wikipedia.org/wiki/Ada_Lovelace "Ada Lovelace")
 
 We can live with this definition. Here are some notes and bits.
 
@@ -191,24 +204,24 @@ Another option is the range $-127,\ldots,128$ (still $256$ possibilities) and th
 
 ```julia
 println("Unsigned 8 bit integers\n")
-println("Number \t Binary \tHex")
+println("Number \tBinary  \tHexadecimal\tJulia representation")
 for n in 0:255
     if n ≤ 18 || n ≥ 250 #\le + [TAB],  \ge + [TAB]
-        println(n, ":\t", bitstring(UInt8(n)), "\t", string(n, base = 16))
+        println("$(lpad(string(n), 3)):\t$(bitstring(UInt8(n)))\t$(lpad(string(n, base = 16), 2))\t\t$(repr(UInt8(n)))")
     elseif n ∈ 19:21 #in(n,19:21)  \in + [TAB]
-        println("\t   .")
+        println("\t   ⋮")
     end
 end
 ```
 
 ```julia
 println("Signed 8 bit integers (observe the sign bit)\n")
-println("Number \t Binary")
+println("Number \tBinary")
 for n in -128:127
     if n ∈ -128:-120 || n ∈ -5:5 || n ∈ 125:127
-        println(n, ":\t", bitstring(Int8(n)))
-    elseif n ∈ union(-119:-117,6:8)
-        println("\t   .")
+        println("$(lpad(n, 4)):\t$(bitstring(Int8(n)))")
+    elseif n ∈ -119:-117 || n ∈ 6:8
+        println("\t   ⋮")
     end
 end
 ```
@@ -223,7 +236,7 @@ print("Hex:\t")
 [print(string(n, base = 16), n<10 ? " " : "  ") for n in 0:15];
 println()
 print("Decimal:")
-data = [0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF]
+data = [0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf]
 [print(n, " ") for n in data];
 
 println("\n\nSome random values:")
@@ -239,7 +252,7 @@ You can also use the prefix notation `0b` to denote binary
 ```julia
 x = 11
 @show (x == 0b1011) 
-@show (x == 0xB);
+@show (x == 0xb);
 ```
 
 You can do arithmetic on any base. Specifically for hex and binary.
@@ -262,8 +275,8 @@ x = Int8(127)
 @show x
 println("Adding 1: ", x + Int8(1), "\n" )
 
-println("A \"Normal\" integer")
-x = UInt(0xFFFFFFFFFFFFFFFF) #Note that UInt = UInt64 on 64 bit computers 
+println("A \"Normal\" integer") 
+x = UInt(0xffffffffffffffff) #Note that UInt = UInt64 on 64 bit computers 
 @show x
 println("Adding 1: ", x + 1, "\n")
 ```
@@ -271,16 +284,15 @@ println("Adding 1: ", x + 1, "\n")
 Why does this occur? A useful exercise is to examine how addition can be implemented purely using logical operations (as occurs in hardware). Consider the following code
 
 ```julia
+half_adder(a::Bool, b::Bool) = (xor(a,b), a & b)
 
-half_adder(a::T, b::T) where {T <: Bool} = (xor(a,b), a & b)
- 
-function full_adder(a::T, b::T, carry::T) where {T<:Bool}
-    (s, carry_a) = half_adder(carry, a)
-    (s, carry_b) = half_adder(s, b)
-    return (s, carry_a | carry_b)
+function full_adder(a::Bool, b::Bool, carry::Bool)
+    (s1, carry_a) = half_adder(a, b)
+    (s2, carry_b) = half_adder(s1, carry)
+    return (s2, carry_a | carry_b)
 end
 
-function add_n_digits(a::T, b::T, n) where {T <: Int}
+function add_n_digits(a::Int, b::Int, n)
     #calculate y = a + b using array indexing and logic operations
     #convert to a vector of booleans
     a_bool = digits(Bool, a, base = 2, pad = n)
@@ -323,7 +335,7 @@ It is a useful exercise to consider how an equivalent logic based approach might
 Binary data considered as a string can often appear as hex. 
 
 ```julia
-data_as_string = "AB0352500FCC" #48 bits
+data_as_string = "ab0352500fcc" #48 bits
 data_as_binary = hex2bytes(data_as_string)
 @show data_as_binary;
 ```
@@ -344,7 +356,7 @@ x = 2^4
 @show x << 1
 @show x/2
 @show x//2
-@show x >> 1
+@show x >> 1;
 ```
 
 The `sizeof()` a variable.
@@ -385,14 +397,16 @@ We start by discussing Julia and a simple "Hello World" example and then continu
 2. Factorials (second story).
 3. String manipulation (third story).
 
-#### Hello World Julia
+#### Introduction
 
-* "Hello World" [Taken from SWJ book](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/1_chapter/helloWorld.jl)
 * Julia as a language (community, history, and motivation...)
-* Running from a file from the command line. (Demonstration).
 * The Read Evaluate Print Loop REPL. (Demonstration).
+* Running from a file from the command line. (Demonstration).
 * Jupyter (Demonstration).
 
+#### Hello World Julia
+
+"Hello World" [Taken from SWJ book](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/1_chapter/helloWorld.jl)
 
 ```julia
 # Hello World!
@@ -422,9 +436,6 @@ sqrt.(squares)
 ```
 
 #### Square root (the 1'st story)
-
-
-
 
 * Basics
 * Variables (also complex types)
@@ -486,7 +497,7 @@ x = 36
 @show x^0.5
 ```
 
-But how is such an algorithm implemented? In Julia's source code, in [`math.jl`](https://github.com/JuliaLang/julia/blob/master/base/math.jl) you'll find the following in lines 566-569:
+But how is such an algorithm implemented? In Julia's source code, in [`math.jl`](https://github.com/JuliaLang/julia/blob/master/base/math.jl#L647-L650) you'll find the following in lines 647-650:
 
 ```
 @inline function sqrt(x::Union{Float32,Float64})
@@ -615,7 +626,7 @@ function fast_inv_sqrt(number::Float32)
     #reinterpret the float32 number to a 32 bit unsigned integer
     i = reinterpret(UInt32, number)
     #do WTF magic
-    i = 0x5F3759Df - (i >> 1)
+    i = 0x5f3759df - (i >> 1)
     #reinterpet back into a float32
     y = reinterpret(Float32, i)
     #do an iteration of newtons method from a good first guess
@@ -649,7 +660,7 @@ f_a = factorial(10)
 f_b = *(1:10...)
 @show f_b
 
-f_c = last(accumulate(*,1:10))
+f_c = last(accumulate(*, 1:10))
 @show f_c
 
 f_d = 1
@@ -676,7 +687,7 @@ function my_factorial(n)
     if n == 0
         return 1
     else
-        return n * my_factorial(n-1)
+        return n * my_factorial(n - 1)
     end
 end
 
@@ -691,7 +702,7 @@ function my_factorial(n)
     if n == 0
         ret_val = 1
     else
-        ret_val = n * my_factorial(n-1)
+        ret_val = n * my_factorial(n - 1)
     end
     println("Returning from the call of my_factorial($n)")
     ret_val
@@ -705,7 +716,7 @@ You can also use the [`stracktrace()`](https://docs.julialang.org/en/v1/manual/s
 Here is the `my_factorial()` function (written compactly).
 
 ```julia
-my_factorial(n) = n == 0 ? 1 : n*my_factorial(n-1)
+my_factorial(n) = n == 0 ? 1 : n * my_factorial(n-1)
 
 my_factorial(10)
 ```
@@ -713,13 +724,13 @@ my_factorial(10)
 Such compact writing does not change what actually happens under the hood. To see this consider both forms:
 
 ```julia
-my_factorial1(n) = n == 0 ? 1 : n*my_factorial1(n-1)
+my_factorial1(n) = n == 0 ? 1 : n * my_factorial1(n - 1)
 
 function my_factorial2(n)
     if n == 0
         return 1
     else
-        return n * my_factorial2(n-1)
+        return n * my_factorial2(n - 1)
     end
 end
 ```
@@ -745,7 +756,7 @@ $$
 To see the approximation isn't unreasonable, observe that $n! \le n^n$ (why?) but isn't so far either. 
 ```julia
 #An array of named tuples (note that "n!" is just a name)
-[(n! = factorial(n), n2n = n^n, ratio = factorial(n)/(n^n)) for n in 1:10]
+[(n_fact = factorial(n), n_pow_n = n^n, ratio = factorial(n) / (n^n)) for n in 1:10]
 ```
 
 The other $\sqrt{n} e^{-n}$ factor of $n$ in Stirling, corrects for this and $\sqrt{2 \pi}$ is a constant.
@@ -754,10 +765,11 @@ The other $\sqrt{n} e^{-n}$ factor of $n$ in Stirling, corrects for this and $\s
 ```julia
 stirling(n) = (√(2π*n))*(n/MathConstants.e)^n      
 
-[(  n! = factorial(n), 
-    stirling = stirling(n), 
-    ratio = round(factorial(n)/stirling(n),digits = 5)) 
-    for n in 1:10]
+[(
+    n! = factorial(n),
+    stirling = stirling(n),
+    ratio = round(factorial(n) / stirling(n), digits = 5),
+) for n in 1:10]
 ```
 
 So let's use Stirling to see how big $n$ can be to fit in `UInt64`. That is solve 
@@ -873,7 +885,7 @@ $$
 \end{aligned}
 $$
 
-That is, the recursive relationship $\Gamma(z+1) = z\Gamma(z)$ holds similarly to $n! = n \cdot n!$. Further 
+That is, the recursive relationship $\Gamma(z+1) = z\Gamma(z)$ holds similarly to $n! = n \cdot (n-1)!$. Further 
 $$
 \Gamma(1) = \int_0^\infty e^{-x} \, dx = 1.
 $$
@@ -897,7 +909,7 @@ Here is a plot where we exclude certain points where it isn't defined
 using Plots, SpecialFunctions
 
 z = setdiff(-3:0.001:4, -3:0) #setdifference to remove points where gamma() returns a NaN   
-plot(z,gamma.(z), ylim=(-7,7),legend=false,xlabel="z",ylabel = "Γ(z)")
+plot(z, gamma.(z), ylim=(-7,7), legend=false, xlabel="z", ylabel="Γ(z)")
 ```
 
 #### Text, natural language, and strings (the 3'rd story)
@@ -921,8 +933,8 @@ The basic form of representing characters is via the [ASCII code](https://en.wik
 ```julia
 println("A rough ASCII table")
 println("Decimal\tHex\tCharacter")
-for c in 0x20:0x7E
-    println(c,"\t","0x" * string(c,base=16),"\t",Char(c))
+for c in 0x20:0x7e
+    println(c, "\t", "0x" * string(c, base=16),"\t",Char(c))
 end
 ```
 
