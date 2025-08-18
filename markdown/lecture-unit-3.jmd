@@ -1,10 +1,163 @@
-# Unit 3: On Algorithms and more
+# Unit 3: On Tools and Algorithms
 
 In the previous unit we got straight into general programming basics as well as specifics with Julia. We now know basic syntax, variables, conditional statements, loops, functions, and more. We spoke about bits, bytes, and representation of integers on a computer. In terms of tools we used Jupyter and the REPL.
 
 In this unit we'll get a taste for basic mathematical analysis of algorithms and quantification of behavior and performance. We'll also deal with more extensive tools including Git and GitHub, Visual Studio Code (IDE), and basic Unix command line.
 
-We'll start with basic demonstrations of the fact that the performance of algorithms can be analyzed mathematically.
+We'll start with tooling and then move onto a basic demonstrations of the fact that the performance of algorithms can be analyzed mathematically.
+
+## More tools
+
+We now spend more time on "tools", namely,
+
+* Unix command line
+* Git and GitHub 
+* The Visual Studio Code IDE
+
+### Unix command line
+
+An [operating system](https://en.wikipedia.org/wiki/Operating_system) is software that manages the other software and hardware of the computer. It manages:
+
+* Files
+* Computer memory (RAM)
+* Running programs, processes (tasks), and sometimes threads within a task
+* Input/Output
+* Networking
+* More ...
+
+This includes low level interfaces between the running programs and hardware, as well as its own "programs" for interfacing and managing the system (e.g. graphical user interface for files, and importantly for us the **shell**).
+
+[Unix](https://en.wikipedia.org/wiki/Unix) is a classic operating system still very much in use today. Mac's operating system [macOS](https://en.wikipedia.org/wiki/MacOS) is based on Unix. Similarly, [Linux](https://en.wikipedia.org/wiki/Linux) is a Unix based system. The most popular desktop family of operating systems, [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) is not Unix based.
+
+Our focus is on the **shell**, or **command line interface** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knowledge as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
+
+Note that when you run a Julia REPL, hitting `;` puts you in "shell mode" where the system's default shell is present. 
+
+We won't become shell experts but only learn to carry out a few basic tasks. Our main use case will be using Git source control software (see more below). For this, we'll also learn about basic file manipulation commands and a few more tid bits will appear as needed. We assume you are familiar with the fact your system has files, and folders (directories). Here are more things to be aware of:
+
+* `~` stands for the folder of your user.
+* `/` stands for the root directory.
+* `.` stands for the current directory (there is always the notion of the current directory for our process/program).
+* `..` stands for the parent directory.
+
+Key file navigation commands are:
+
+* `ls` show files.
+* `cd` change current directory.
+* `pwd` print working directory.
+
+Key file manipulation commands are (be careful!):
+
+* `rm` remove.
+* `rmdir` remove (empty directory).
+* `cp` copy.
+* `mv` move (also rename).
+
+A few more useful commands (apps):
+* `echo` print to screen (can be used as part of a shell script).
+* `cat` print a text file.
+* `head` print with first 10 lines of a text file
+* `tail` print with last 10 lines of a text file
+* `diff` compare two files line by line
+* `grep` search within a file.
+* `vim` and `emacs` text editors
+
+Commands work well with wildcards/regular expressions. A very common one is `*`.  
+
+Output of commands can be **piped** into other commands using `|`, similarly it can be redirected into file with `>` or `>>` for appending.
+
+There are some commands dealing with users and permissions (we won't cover unless needed):
+
+* `chmod` change permissions of a file.
+* `whoami` who you are just in case you aren't sure.
+* `sudo` super user do. 
+
+There are some commands dealing with processes:
+
+* `top` a task manager, shows running processes with cpu and memory utilization
+* `kill` a process.
+* `ps` see running processes.
+
+Here are some tools for dealing with useful networking tasks:
+
+* `curl` transfer data from a network with a variety of protocols supported
+* `wget` transfer data from a network (recursive downloads supported)
+* `ssh` cryptographic network protocol. Allows remote access to other machines.
+
+Finally some useful development tools:
+
+* `gcc` GNU compiler collection
+* `make` useful tool for building applications
+* `gdb` debugging tools 
+
+### A Note on the Unix Philosophy
+
+It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarized by Doug McIlroy (the inventor of Unix pipes) as:
+
+* Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new features.
+* Expect the output of every program to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
+* Design and build software, even operating systems, to be tried early, ideally within weeks. Don't hesitate to throw away the clumsy parts and rebuild them.
+* Use tools in preference to unskilled help to lighten a programming task, even if you have to detour to build the tools and expect to throw some of them out after you've finished using them.
+
+### Git and GitHub
+
+Working with software requires keeping track of versions and modifications. For this there is a set of best working practices that often depend on the task at hand. 
+
+The basic functionality of a version control system are:
+
+* Keeping track of software history over time
+* Being able to revert changes to a previous point in time (in case you break something important) 
+* Being able to make, track and merge experimental functionality, while keeping a "good" version unpolluted 
+* Keeping a remote backup of the source code in case of a disaster
+* Allow teams of people to work in this way on a codebase without treading on each others toes (too much) 
+
+One very useful tool is [Git](https://en.wikipedia.org/wiki/Git). We will be using Git both via command line and via Visual Studio Code. Git interfaces with online platforms such as [GitHub](https://en.wikipedia.org/wiki/GitHub) and [GitLab](https://en.wikipedia.org/wiki/GitLab). You may use GUI based applications for GitHub, such as [GitHub Desktop](https://desktop.github.com/).
+
+For a review of commands see this [cheat sheet](https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet) 
+
+### VS Code IDE
+
+An IDE is an acronym for an "Integrated Development Environment". The most basic development environment is simply a text file editor (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
+
+Features of an IDE that will make your life easier:
+
+* Text Editor
+* Source Code Navigation
+* Syntax Highlighting
+* Debugger
+* Code Completion
+* Version Control Integration
+* Search Tools
+* Language Support
+* Code Linting
+
+In this course we recommend using [VSCode](https://code.visualstudio.com/), an open source code editing tool made by Microsoft.
+
+### A Rough Field Guide to Software Licencing
+
+There are a vast number of licencing arrangements for dealing with the use of software and the availability of source code for the software. Two broad classes to be aware of:
+
+* Proprietary Software
+* Free and Open Source Software
+
+The source code for Proprietary Software is typically a closely guarded secret and unauthorised use can have severe legal consequences.
+
+Free and Open source does not mean that source code can always be used in whatever fashion is desired. Many different philosophies around why a particular developer or organisation wishes to distribute source code need to be respected.
+
+Open source code falls into three broad classes:
+
+* Permissive Licence (e.g. BSD, MIT, Apache)
+* Copyleft (e.g. GPL)
+* Public Domain (e.g. CC0)
+
+A rough summary is that Permissive Licences tend to be favorable for commercial use of derived software, Copyleft makes derived works free to redistribute, but they must also be Copyleft works, and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
+
+Examples of Software released under different licences:
+
+* Proprietary - Microsoft Windows, MacOS, MATLAB
+* Permissive - Julia (MIT), Python (PSFL), Android (Apache 2.0 for userspace, GPLv2 for kernel)
+* Copyleft - Linux (GPLv2), R (GPLv2)
+* Public Domain - BLAS, SQLite
 
 ## Mathematical analysis of algorithms
 
@@ -859,158 +1012,3 @@ There are many resources on the web dealing with quicksort. Here is one very nic
 We note that quick-sort's worst case complexity is actually $O(n^2)$ however on average it is $O(n \log n)$. Still, even though it doesn't have guaranteed performance like merge sort or heap sort, it is a very fast algorithm and generally beats merge sort and heap sort in terms of the constants. It is also by default "in place", just like it's slow cousin, bubble sort.
 
 Quicksort recently celebrated 60 years. Here is an useful [article](https://plus.maths.org/content/happy-birthday-quicksort) about it and here is the [follow-up](https://plus.maths.org/content/happy-birthday-quicksort-0) about it.
-
----
-
-# More tools
-
-We now spend more time on "tools", namely,
-
-* Unix command line
-* Git and GitHub 
-* The Visual Studio Code IDE
-
-### Unix command line
-
-An [operating system](https://en.wikipedia.org/wiki/Operating_system) is software that manages the other software and hardware of the computer. It manages:
-
-* Files
-* Computer memory (RAM)
-* Running programs, processes (tasks), and sometimes threads within a task
-* Input/Output
-* Networking
-* More ...
-
-This includes low level interfaces between the running programs and hardware, as well as its own "programs" for interfacing and managing the system (e.g. graphical user interface for files, and importantly for us the **shell**).
-
-[Unix](https://en.wikipedia.org/wiki/Unix) is a classic operating system still very much in use today. Mac's operating system [macOS](https://en.wikipedia.org/wiki/MacOS) is based on Unix. Similarly, [Linux](https://en.wikipedia.org/wiki/Linux) is a Unix based system. The most popular desktop family of operating systems, [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) is not Unix based.
-
-Our focus is on the **shell**, or **command line interface** which allows to execute simple and complicated tasks via command line. In Windows this is called the "command line". You can watch this (one of many) [video tutorial series](https://www.youtube.com/watch?v=MBBWVgE0ewk&list=PL6gx4Cwl9DGDV6SnbINlVUd0o2xT4JbMu) about the windows command line. However, you are not required to build up "command line" knowledge as part of this course. Instead if you are a Windows user, we recommended you use [GitBash](https://gitforwindows.org/) which gives you "Unix command line emulation". If you are a Mac user, you will simply run "Terminal", and on Linux you will run "Shell".
-
-Note that when you run a Julia REPL, hitting `;` puts you in "shell mode" where the system's default shell is present. 
-
-We won't become shell experts but only learn to carry out a few basic tasks. Our main use case will be using Git source control software (see more below). For this, we'll also learn about basic file manipulation commands and a few more tid bits will appear as needed. We assume you are familiar with the fact your system has files, and folders (directories). Here are more things to be aware of:
-
-* `~` stands for the folder of your user.
-* `/` stands for the root directory.
-* `.` stands for the current directory (there is always the notion of the current directory for our process/program).
-* `..` stands for the parent directory.
-
-Key file navigation commands are:
-
-* `ls` show files.
-* `cd` change current directory.
-* `pwd` print working directory.
-
-Key file manipulation commands are (be careful!):
-
-* `rm` remove.
-* `rmdir` remove (empty directory).
-* `cp` copy.
-* `mv` move (also rename).
-
-A few more useful commands (apps):
-* `echo` print to screen (can be used as part of a shell script).
-* `cat` print a text file.
-* `head` print with first 10 lines of a text file
-* `tail` print with last 10 lines of a text file
-* `diff` compare two files line by line
-* `grep` search within a file.
-* `vim` and `emacs` text editors
-
-Commands work well with wildcards/regular expressions. A very common one is `*`.  
-
-Output of commands can be **piped** into other commands using `|`, similarly it can be redirected into file with `>` or `>>` for appending.
-
-There are some commands dealing with users and permissions (we won't cover unless needed):
-
-* `chmod` change permissions of a file.
-* `whoami` who you are just in case you aren't sure.
-* `sudo` super user do. 
-
-There are some commands dealing with processes:
-
-* `top` a task manager, shows running processes with cpu and memory utilization
-* `kill` a process.
-* `ps` see running processes.
-
-Here are some tools for dealing with useful networking tasks:
-
-* `curl` transfer data from a network with a variety of protocols supported
-* `wget` transfer data from a network (recursive downloads supported)
-* `ssh` cryptographic network protocol. Allows remote access to other machines.
-
-Finally some useful development tools:
-
-* `gcc` GNU compiler collection
-* `make` useful tool for building applications
-* `gdb` debugging tools 
-
-### A Note on the Unix Philosophy
-
-It can be hard to quantify good software design. An informative approach is the "Unix Philosophy". This is summarized by Doug McIlroy (the inventor of Unix pipes) as:
-
-* Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new features.
-* Expect the output of every program to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
-* Design and build software, even operating systems, to be tried early, ideally within weeks. Don't hesitate to throw away the clumsy parts and rebuild them.
-* Use tools in preference to unskilled help to lighten a programming task, even if you have to detour to build the tools and expect to throw some of them out after you've finished using them.
-
-### Git and GitHub
-
-Working with software requires keeping track of versions and modifications. For this there is a set of best working practices that often depend on the task at hand. 
-
-The basic functionality of a version control system are:
-
-* Keeping track of software history over time
-* Being able to revert changes to a previous point in time (in case you break something important) 
-* Being able to make, track and merge experimental functionality, while keeping a "good" version unpolluted 
-* Keeping a remote backup of the source code in case of a disaster
-* Allow teams of people to work in this way on a codebase without treading on each others toes (too much) 
-
-One very useful tool is [Git](https://en.wikipedia.org/wiki/Git). We will be using Git both via command line and via Visual Studio Code. Git interfaces with online platforms such as [GitHub](https://en.wikipedia.org/wiki/GitHub) and [GitLab](https://en.wikipedia.org/wiki/GitLab). You may use GUI based applications for GitHub, such as [GitHub Desktop](https://desktop.github.com/).
-
-For a review of commands see this [cheat sheet](https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet) 
-
-### VS Code IDE
-
-An IDE is an acronym for an "Integrated Development Environment". The most basic development environment is simply a text file editor (such as vim) and somewhere to run the code (such as a Julia REPL). Software developers work with wide variety of such tools (with extensions to make coding a simpler task).
-
-Features of an IDE that will make your life easier:
-
-* Text Editor
-* Source Code Navigation
-* Syntax Highlighting
-* Debugger
-* Code Completion
-* Version Control Integration
-* Search Tools
-* Language Support
-* Code Linting
-
-In this course we recommend using [VSCode](https://code.visualstudio.com/), an open source code editing tool made by Microsoft.
-
-### A Rough Field Guide to Software Licencing
-
-There are a vast number of licencing arrangements for dealing with the use of software and the availability of source code for the software. Two broad classes to be aware of:
-
-* Proprietary Software
-* Free and Open Source Software
-
-The source code for Proprietary Software is typically a closely guarded secret and unauthorised use can have severe legal consequences.
-
-Free and Open source does not mean that source code can always be used in whatever fashion is desired. Many different philosophies around why a particular developer or organisation wishes to distribute source code need to be respected.
-
-Open source code falls into three broad classes:
-
-* Permissive Licence (e.g. BSD, MIT, Apache)
-* Copyleft (e.g. GPL)
-* Public Domain (e.g. CC0)
-
-A rough summary is that Permissive Licences tend to be favorable for commercial use of derived software, Copyleft makes derived works free to redistribute, but they must also be Copyleft works, and Public Domain are the most free and can be used as desired. Again there can be severe legal consequences for misuse of derived works.
-
-Examples of Software released under different licences:
-
-* Proprietary - Microsoft Windows, MacOS, MATLAB
-* Permissive - Julia (MIT), Python (PSFL), Android (Apache 2.0 for userspace, GPLv2 for kernel)
-* Copyleft - Linux (GPLv2), R (GPLv2)
-* Public Domain - BLAS, SQLite
