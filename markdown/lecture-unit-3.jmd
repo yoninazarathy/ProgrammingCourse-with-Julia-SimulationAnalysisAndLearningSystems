@@ -177,7 +177,7 @@ function bubble_sort!(a)
     for i in 1:n-1
         for j in 1:n-i
             if a[j] > a[j+1]
-                a[j], a[j+1] = a[j+1], a[j]
+                (a[j], a[j+1]) = (a[j+1], a[j])
             end
         end
     end
@@ -232,7 +232,7 @@ function slightly_faster_bubble_sort!(a::Vector{Int})::Vector{Int}
         for j in 1:n-i
             @inbounds begin
                 if a[j] > a[j+1]
-                    a[j], a[j+1] = a[j+1], a[j]
+                    (a[j], a[j+1]) = (a[j+1], a[j])
                 end
             end
         end
@@ -264,14 +264,14 @@ using Random, Plots
 Random.seed!(0)
 
 function do_timing()
-    times = Vector{Float64}(undef,0)
-    n_range = 500 : 500 : 10^4 
+    times = Vector{Float64}(undef, 0)
+    n_range = 500 : 500 : 10^4
     for n in n_range
         data = rand(Int64, n)
         start_time = time_ns()
-        bubble_sort!(data[1:n])
+        bubble_sort!(data)
         end_time = time_ns()
-        push!(times, Int(end_time - start_time)/10^6) #time in milliseconds
+        push!(times, Int(end_time - start_time) / 10^6) # time in milliseconds
     end
     return times, n_range
 end
