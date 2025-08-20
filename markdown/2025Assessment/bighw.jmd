@@ -526,7 +526,7 @@ Your submission should be comprised of the text from the shell including the com
 
 **11h**: Move `my_name2.txt` into `people`, where the file name will be `<<YOUR-NAME>>.txt` with `<<YOUR-NAME>>` being your first and last name without white space using `_`. For this use the `mv` command.
 
-**11i**: Using the same thing you did in **1c**, create three additional files of peoples names in the folder `people`.
+**11i**: Using the same thing you did in **11c**, create three additional files of peoples names in the folder `people`.
 
 **11j**: Change directory into `people`. Now Use `mv` to move one of the people files back into `hw_q11`. Use `..` (double dot).
 
