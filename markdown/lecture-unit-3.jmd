@@ -866,7 +866,7 @@ data = rand(Int64,10^6)
 @time sort!(data);
 ```
 
-We still see that the in-built sort is about twice as fast and does not allocate memory. In contrast the heap sort algorithm used memory. Comparing the two together we see they appear to (empirically) be of similar order, but the constant of heap-sort is about twice as much as the in-built sort.
+We still see that the in-built sort is about four times as fast and does not allocate memory. In contrast the heap sort algorithm used memory. Comparing the two together we see they appear to (empirically) be of similar order, but with the in-built sort about 3-4 times faster.
 
 ```julia
 using Random, Plots
@@ -987,7 +987,7 @@ The Master theorem allows to formalize this taking into considerations all possi
 
 ### A quick glimpse at quick-sort
 
-We now explore [quicksort](https://en.wikipedia.org/wiki/Quicksort). Like merge sort it is a divide and conquer algorithm. Implementing it is part of HW1, so we won't provide an implementation. However here is pseudocode adapted from Wikipedia broken up into two functions `quicksort` which operates on an array `A` indexed by `lo` and `hi` (in an initial call you would use `lo = 1` and `hi = length(A)`:
+We now explore [quicksort](https://en.wikipedia.org/wiki/Quicksort). Like merge sort it is a divide and conquer algorithm. Implementing it is part of BigHW, so we won't provide an implementation. However here is pseudocode adapted from Wikipedia broken up into two functions `quicksort` which operates on an array `A` indexed by `lo` and `hi` (in an initial call you would use `lo = 1` and `hi = length(A)`:
 
 ```
 algorithm quicksort(A, lo, hi):
