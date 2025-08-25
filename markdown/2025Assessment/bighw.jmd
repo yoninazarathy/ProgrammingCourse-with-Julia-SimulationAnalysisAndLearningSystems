@@ -413,7 +413,7 @@ array_table(sorted_names,"Sorted by last name")
 
 **8c**: Now investigate the [quick sort algorithm](https://en.wikipedia.org/wiki/Quicksort). As you can see the Wikipedia entry has pseudo-code for the algorithm. Use the help of an LLM (e.g. ChatGPT or Anthropic's Claude) to convert that pseudo-code to Julia code. Then use that code in your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of names above, using last name first (it should also support `by=`). Note that the LLM help that you get may not be perfect, so you may need to make adjustments to make it work. 
 
-**8d**: Now generate lists of a million integers via `data = rand(Int,10^4)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers and compare `my_quick_sort()` and the in-built `sort()`. Report your results in an organized manner. 
+**8d**: Now generate lists of ten thousand integers via `data = rand(Int,10^4)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@btime` macro. Then repeat for $10^7$ and $10^8$ integers and compare `my_quick_sort()` and the in-built `sort()`. Report your results in an organized manner. 
 
 
 ## Question 9: Matrix Multiplication
