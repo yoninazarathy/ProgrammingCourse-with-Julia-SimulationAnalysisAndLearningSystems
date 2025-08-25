@@ -728,7 +728,7 @@ person_B = (priority = 12.6, name = "Lenna")#if there wasn't "priority =" and "n
 @show person_B.priority;
 ```
 
-So the type of this objects is `NamedTuple{(:priority, :name), Tuple{Float64, String}}` and they are just convient to work with.
+So the type of these objects is `NamedTuple{(:priority, :name), Tuple{Float64, String}}` and they are just convient to work with.
 
 Now back to our naive priority queue. We will just keep an array of the named tuples (the naiveness is not because of the named tuples but because of the fact we are using an array). 
 
@@ -737,7 +737,7 @@ Now back to our naive priority queue. We will just keep an array of the named tu
 naive_priority_queue = NamedTuple{(:priority, :name), Tuple{Float64, String}}[];
 ```
 
-Now in the most naive implemintation, every time we add an individual we'll just `push!` their named tuple to the array. For example,
+Now in the most naive implementation, every time we add an individual we'll just `push!` their named tuple to the array. For example,
 
 ```julia
 new_person = (priority = 123.2, name = "Yarden")
