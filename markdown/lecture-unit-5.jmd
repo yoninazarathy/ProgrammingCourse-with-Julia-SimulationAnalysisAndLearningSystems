@@ -1,6 +1,6 @@
 # Unit 5: More language features for software architecture
 
-In the previous three units we explored basics of programming and computation (Unit 1), algorithms and data structures (Unit 2), and data files and numerics (Unit 3). In this unit we take a deeper and more thorough approach at basic Julia language features. 
+In the previous three units we explored basics of programming and computation (Unit 2), algorithms and data structures (Unit 3), and data files and numerics (Unit 4). In this unit we take a deeper and more thorough approach at basic Julia language features. 
 
 Programming languages, including Julia, are designed mostly with these aims in mind:
 
