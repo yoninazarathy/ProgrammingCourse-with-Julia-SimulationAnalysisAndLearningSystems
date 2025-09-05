@@ -16,13 +16,14 @@
 
 Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT1`. So for example if your name is "Pierre-Simon Laplace", the repo name should be `Pierre-Simon-Laplace-2504-2025-PROJECT1`.
 
-The PDF file should be a nice formatted file that has:
+The PDF must have the following compents.
 
-* Your name, student number, and assignment title (Project 1 - 2025) on the top.
-* A (clickable) link to your GitHub repo.
-* An illustration of the code and output for `example_script.jl`: Show the lines of the script and display the corresponding output. 
-* An illustration of the output of `test/runtests.jl`. 
-* The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
+1.  Your name, student number, and assignment title (Project 1 - 2025) on the top.
+2.  A (clickable) link to your GitHub repo.
+3.  A screenshot or copy/paste of output for `example_script.jl`.
+4.  A screenshot or copy/paste the output of `test/runtests.jl`. 
+
+The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
 
 The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
 
@@ -57,7 +58,7 @@ Build your project on top of the [https://github.com/dietmaroelz/2504\_2025\_pro
 
 Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.
 
-### Task 1 (5 pts) - Getting it to run, improving pretty printing, and creating your own example script.
+### Task 1 (? pts) - Getting it to run, improving pretty printing, and creating your own example script.
 
 
 #### Study the Repo
@@ -65,57 +66,70 @@ Once you create your own repository make sure it works by running `test/runtests
 
 
 #### Create Example Scripts
-Create your own example script called `example_script_2.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Namely, your script should 
--  run and demonstrate how the code in the repository works, 
--  contain some intermediate output (e.g. using `println()`) that describes what is going on, and in particular
--  have example polynomials over residue classes (primes).
+Create your own example script called `example_script_2.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Namely, your script should run and demonstrate (using `println` or `@show`) how the code in the repository works by 
+1.  constructing *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
+1.  compute `f + g`, `f * h`, `g * h`, and `gcd(f*h, g*h)`,
+1.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
+1.  compute `(f * h) \div h` modulo 3, 7 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
+  
 Basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`.
 
 #### Pretty Printing
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
--  Terms of zero degree (constants) should exclude `x^0`, e.g. `2` not `2x^0`.
--  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
--  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
--  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
--  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
--  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
+1.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
+2.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
+3.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
+4.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
+5.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
+6.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
 
-### Task 2 (16pts) - Refactoring the data structure used
+### Task 2 (?pts) - Refactoring the data structure used
 
 The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.
 
-- Create an abstract base type, `Polynomial` and refactor (ie, modify) `PolynomialDense` to  inherit from `Polynomial`. Refactor the existing codebase to accept `Polynomial` for all of the functions and methods that currently accept `PolynomialDense`.
+1.  Navigate to the folder `src/basic_polynomial_operations` and duplicate the folder `dense` as the folder `sparse`.
 
--  Create a new type called `PolynomialSparse` that inherits from `Polynomial` that stores *only* nonzero terms in a [max heap](TODO) ordered by term degree.  `PolynomialSparse` will have identical functionality to `Polynomial` in terms of the functions and methods the latter provides.
+1.  Navigate to the folder `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
 
--  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse` and associated functions are working. 
+1.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are exluded from storage.  Utlize a [max heap](https://juliacollections.github.io/DataStructures.jl/latest/heaps/) ordered by term degree to accomplish this.
 
--  Replicate Task 1 so that `example_script_2.jl` is for `PolynomialSparse`.
+1.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing. 
 
--  Describe three pros and/or cons between the dense and sparse representations.
+1.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `add` can no longer be done with simple vector addition.
 
--  [TODO: Verifying this is solveable] Find one example where `PolynomialSparse` overflows and yields the wrong result.
+1.  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse` and associated functions are working. 
 
--  Compare the run-time performance of polynomial multiplication between `PolynomialSparse` and `PolynomialDense`.  Do this only for cases where `PolynomialSparse` and `PolynomialDense` does not overflow.  In general, your results should show that `PolynomialSparse` is faster, yet may overflow.
+1.  Replicate Task 1 so that `example_script_2.jl` is for `PolynomialSparse`.
 
+1.  Describe three pros and/or cons between the dense and sparse representations.
 
-### Task 3 (12pts) - Refactoring the coefficient type from `Int` to `BigInt`
+1.  Find one example where `PolynomialSparse` overflows and yields the wrong result.
 
-From now on we focus on the sparse representation.
+1.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) `PolynomialSparse` out-performs `PolynomialDense` when operating on sparse polynomials.  *Do this only for cases where `PolynomialSparse` and `PolynomialDense` does not overflow.*
+
+### Task 3 (? pts) - Parameterize the coefficient type to utilize `BigInt`
+
+From now on we focus on the *sparse* representation.
 
 Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`.
 
-- [TODO: Do this with generics] Refactor `PolynomialSparse` to have `BigInt` coefficients instead of `Int`. Do this by introducing a new type `PolynomialSparseBI` which is short hand for "Polynomial Sparse Big Integer". 
+-  Refactor `Term` to accept a type parameter called `T` and let the coefficients and degree be of that type.  (`T` should be a subtype of `Number`).  
 
--  [TODO: Do this generics] Duplicate the functionality (functions and methods) of `PolynomialSparse` for `PolynomialSparseBI`. Note that `PolynomialSparseBI` should have a sparse implementation just like `PolynomialSparse`. 
+-  Refactor all functions in `term.jl` to account for this new paramter.  Note: you may create a number of type `T` by writing, for example, `T(1)`.
 
--  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparseBI` and associated functions.
+-  Modifying the existing code to utilize `Term{Int64}` for `PolynomialDense` and associated operations and functions and verify your modification's integrity by re-running your example script.
 
--  Ensure your impelentation for `PolynomialSparseBI` passes your tests.
+-  Refactor the constructor, functions, and associated operations of `PolynomialSparse` to accept the parameter type `T<:Number` and verify your modification's integrity by updating and re-running your example script for `PolynomialSparse{Int64}`.
 
-- [TODO GENERICS] Show your new `PolynomialSparseBI` does not overlow on the example you found in Task 2.
+[TODO]  Tell the students to version their example scripts (by appending V1 and so on) for each time we have asked them to rerun stuff.  So example,
 
-[TODO MOVE AND MAKE instructions] Note: Ideally we would use parametric types in Julia but for simplicity we simply introduce the new type `PolynomialSparseBI`. You may (if you wish) use parametric types for `PolynomialSparse`, `PolynomialDense`, and `PolynomialSparseBI` but it is not required.
+-  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse{BigInt}` and associated functions and put this in a file called `example_script_?.jl`.
+
+-  Ensure your impelentation for `PolynomialSparse{BigInt}` passes your tests.
+
+- Show your new `PolynomialSparse{BigInt}` does not overlow on the example you found in Task 2.
+
+[TODO]  Continue from here.
 
 ### Task 4 (17pts) - Creating a polynomial mod p datatype and further refactoring
 
@@ -133,19 +147,7 @@ Once you complete this task, certain operations of `PolynomialSparseBI` like `p1
 
 -  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
 
-### Task 5 (22pts) - Improving multiplication using the Chinese Remainder Theorem
-
-The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
-
-- Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
-
-- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
-
-- Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
-
-- Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
-
-### Task 6 (17pts) - Factorization mod p and improving power
+### Task 5 (?pts) - Improving Factorization mod p by optimising `PowMod`
 
 At this point you should have efficient multiplication and power for `PolynomialSparseBI` as well as  `PolynomialModP` and its associated functions and methods.
 
@@ -156,6 +158,19 @@ As discussed in class, if you have a polynomial `f` and raise it to the power `2
 -  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialSparseBI` and `PolynomialModP`.
 
 -  Create tests for `pow_mod` and `^` for both implementations and ensure your implementation passes them.
+
+
+### Task 6 (22pts) - Improving multiplication using the Chinese Remainder Theorem
+
+The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
+
+- Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
+
+- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
+
+- Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
+
+- Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
 
 #### Factoring
 
