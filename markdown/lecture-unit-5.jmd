@@ -12,7 +12,7 @@ Different programming languages have different goals and target audiences, and m
 
 Julia is a high-performance language for solving large mathematical problems, and compiled code needs to run "close to the metal". It makes many affordances to solve mathematical problems quickly and efficiently. But most crucially, it tries to solve these in such a way that is "scalable" — where generic code can be reused and repurposed, and pieces of a program can be connected together elegantly like lego bricks.
 
-The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code. The notes below often refer to the Julia documentation.
+The goal of this unit is to show you the most important language features of Julia and how to use them to best effect. The most important language features that we explore are the syntax, type system, user-defined types, and multiple-dispatch. At the end we'll consider how to use these to construct your code with an emphasis on types and functions (data and transformations / nouns and verbs). Choosing good *nouns* and *verbs* for your problem domain is the core of good program design. The notes below often refer to the Julia documentation.
 
 ## Values and their types
 
@@ -41,7 +41,7 @@ From a historical perspective, Julia is strongly influenced by lisp (scheme) whi
 
 The fact that values have _types_ is for two reasons:
 
- 1. Types let us specify our data and define the _behavior_ of functions that operator on them (using multiple dispatch).
+ 1. Types let us specify our data and define the _behaviour_ of functions that operator on them (using multiple dispatch).
  2. Types let the compiler know the _representation_ of the value in memory (e.g. how many bytes it is) so it can generate fast code.
 
 Types have two purposes: help _humans_ organise their data and define behaviour, and the help _the computer_ to execute the program quickly.
@@ -98,7 +98,7 @@ Every value is a concrete type, and Julia has just these concrete types:
 
  1. `primitive type`
  2. `struct` and `mutable struct`
- 3. `Array{N, T}` with aliases `Vector{T}` / `Matrix{T}`. (Note in Julia-1.11 just `Memory{T}`!)
+ 3. `Memory{T}` (a 1D non-resizable container of `T`, used to store the elements of `Array{N, T}`)
  4. `String`
  5. `Tuple`
 
@@ -142,7 +142,7 @@ reinterpret(Int64, 0.0)
 
 (Type tracking typically occurs at compile time, before the program runs, so Julia doesn't need to store extra data describing whether every value is an integer or a float or something else.)
 
-The advantage of distinct types is we can describe different behavour for these types. For example, there are seperate methods for addition representing the different ways the CPU handles integer and floating-point arithmetic, `+(x::Int64, y::Int64)` and `+(x::Float64, y::Float64)`.
+The advantage of distinct types is we can describe different behaviour for these types. For example, there are separate methods for addition representing the different ways the CPU handles integer and floating-point arithmetic, `+(x::Int64, y::Int64)` and `+(x::Float64, y::Float64)`.
 
 (Note that all primitive types are immutable values. You cannot "mutate" `0` to become `1` - you construct a new value instead.)
 
@@ -220,7 +220,7 @@ end
 
 Given some type `T`, `Complex{T}` is a struct with fields `re` and `im` of type `T`. 
 
-This useful because now we don't need a seperate `struct` definition for complex numbers with `Float32` components, or `Int64` components, or whatever. Just one definition suffices for them all. This lets us write quite generic code that is oblivious to the exact type `T` but uses properties common to all complex numbers. For example, the absolute value squared can be written:
+This useful because now we don't need a separate `struct` definition for complex numbers with `Float32` components, or `Int64` components, or whatever. Just one definition suffices for them all. This lets us write quite generic code that is oblivious to the exact type `T` but uses properties common to all complex numbers. For example, the absolute value squared can be written:
 
 ```julia
 function abs2(z::Complex)
@@ -267,6 +267,8 @@ const Vector{T} = Array{1, T}
 const Matrix{T} = Array{2, T}
 ```
 
+Underneath, `Array{N,T}` is now (as of Julia 1.11) implemented in terms of the low level `Memory{T}` - a one dimensional array of elements of type `T` with a length which is fixed at the time of construction. However, `Vector{T}` is more convenient to work with and you'll generally see that used in most Julia code.
+
 ### Strings
 
 Strings are built into the Julia language, for convenience. They are much like a `Vector{UInt8}` containing UTF-8 encoded string data, but are immutable.
@@ -279,14 +281,14 @@ Julia provides other important types, like `Set`s and `Dict`s, but these are imp
 
  1. A primitive type
  2. A struct (immutable, mutable, tuple or named tuple)
- 3. An `Array`
+ 3. A `Memory`
  4. A `String`
 
 ## Logic and syntax
 
 Now that we've covered all the possible types of values in Julia, we'll take a look at how data is manipulated via logic and functions.
 
-Eventually we'll come back to abstract types and multiple dispatch, but first we'll cover some fundaments of Julia code syntax and functions so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
+Eventually we'll come back to abstract types and multiple dispatch, but first we'll cover some fundamentals of Julia code syntax and functions so we understand _what_ we are looking at later. A lot of this might be intuitive to some of you, but since we are mathematicians, we'd like to spell it out more formally :)
 
 ### Everything is an expression, everything has a value, and everything has a type
 
@@ -354,11 +356,11 @@ Sometimes it's a `Bool` and sometimes it's a `String`.
 
 If `Bool` represents the set containing `true` and `false`, and `String` represents the set of all possible strings, then the type `Union{Bool, String}` represents the union of these two sets.
 
-`Union` is the first **abstract type** we'll cover, and is relatively straightforward. `Union` itself is not a concrete type; there are no values of type `Union`. It mostly exists in Julia to aid with type inference for cases like `if`-`else` above – to abstractly analyse the outputs and itermediate values of programs during compilation (where more precise inference leads to more efficient code generation). In cases like this Julia can keep track which of the two possibilities the data is in relatively efficiently (e.g. with a single byte for a tag).
+`Union` is the first **abstract type** we'll cover, and is relatively straightforward. `Union` itself is not a concrete type; there are no values of type `Union`. It mostly exists in Julia to aid with type inference for cases like `if`-`else` above – to abstractly analyse the outputs and intermediate values of programs during compilation (where more precise inference leads to more efficient code generation). In cases like this Julia can keep track which of the two possibilities the data is in relatively efficiently (e.g. with a single byte for a tag).
 
 There are two more ways abstract types can show up Julia that we'll see later.
 
-#### Shortcutting logic
+#### Short cutting logic
 
 Julia has operators for Boolean arithmetic, including `&` for _AND_ (logical conjunction) and `|` for _OR_ (logical disjunction).
 
@@ -467,7 +469,7 @@ f()
 
 _Note: `for` and `while` loops always produce `nothing`!_
 
-If you prefer, you can seperate multiple expressions in a code block with `;` instead of on seperate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
+If you prefer, you can separate multiple expressions in a code block with `;` instead of on separate lines. Sometimes you'd even use parentheses to clarify where the code block begins and ends.
 
 ```julia
 x = (1; 2; 3)
@@ -529,7 +531,7 @@ x = hello()
 @show x;
 ```
 
-Q: Does anyone know what the equivalent thing in _C_ is?
+_Q: Does anyone know what the equivalent thing in `C` is?_
 
 ### Why expressions? Metaprogramming!
 
@@ -586,19 +588,15 @@ And there are "anonymous functions" (or "arrow functions"):
 const f3 = x -> x^2
 ```
 
-In this form `x -> x^2` is an expression that constructs a function which is "anonymous" — it has no name. We have bound it to the variable `f3` so we can use it later. You can even do this in "long form"!
+In this form `x -> x^2` is an expression that constructs a function which is "anonymous" — it has no name. In this case we have bound it to the name `f3` so it can be referred to later, but anonymous functions are most useful to write simple functions inline within some other code. For example to pass to `map`:
 
 ```julia
-const f4 = function (x)
-    return x^2
-end
+map(x -> x^2, [1,2,4])
 ```
-
-(Note: the `const` isn't essential — but it will let us attach other methods to `f3` or `f4` later)
 
 #### What type is a function?
 
-You can think of the above functions as being a lot like `nothing` (a struct with zero fields). Each function has a unique type:
+You can think of the above functions as being a struct with zero fields. Each function has a unique type:
 
 ```julia
 typeof(f1)
@@ -730,67 +728,11 @@ add_2(3)
 
 Note that _every_ function in Julia has its own type — e.g. `sin` and `cos` have different types. We'll come back to types and methods later.
 
-### [Type assertions](https://docs.julialang.org/en/v1/manual/types/#Type-Declarations)
-
-The `::` operator has three closely-related meanings.
-
-First is type assertion. In programming an "assertion" is something the programmer asserts to be true, which either the compiler or runtime will check.
-
-```julia
-42::Int
-```
-
-You could read the above as "`42` must be an `Int`". The result is just the value — `::` doesn't normally do _anything_, unless the assertion is false
-
-```julia
-42::String
-```
-
-Julia has an "abstract" `Number` type.
-
-```julia
-42::Number
-```
-
-This is fine since `Int` is a subtype of `Number`, which itself could be written:
-
-```julia
-Int <: Number
-```
-
-(Note that this one returns `true` or `false`.)
-
-The type `Any` is the supertype of every type.
-
-```julia
-42::Any  # always correct!
-```
-
-This type assertion always checks out, and doesn't really have any affect on your program. Therefore `x` and `x::Any` are the same thing. Such code is said to be a "no-op" because it corresponds to "no operation".
-
-Why use type assertions? Normally you don't need them, but the can occasionally
-be useful for performance when type inference is having trouble.
-
-### Variable declarations
-
-When used on the left-hand side of an assignment - or as part of a `local`,
-`global` or `const` declaration - the `::` operator means this variable always
-have the specified type, a bit like type declarations in a statically-typed
-language such as C:
-
-```julia
-begin
-    local x::Int
-    x = 0xff
-    @info "First" x
-    x = 10.0
-    @info "Second" x
-end
-```
-
 ### [Argument types](https://docs.julialang.org/en/v1/manual/functions/#Argument-type-declarations)
 
-The third meaning of `::` is in function / method signatures, which constrains the types of arguments the method will accept.
+To constrain the type of a function argument we use the `::` operator: When
+written in the argument list, `x::T` means the argument named `x` must be of
+type `T` for this method to match.
 
 We have seen Julia methods from the start, e.g.
 
@@ -814,9 +756,13 @@ Remember that `x` and `x::Any` are the same thing. The final method will accept 
 
 In a sense, the third method isn't _safe_ since someone could provide an input like `(1, 2, 3)` that can't be squared. What happens if someone provides a string? Is this expected? On the other hand, the third method provides maximum flexibility — someone can introduce a new type that works with `f` at any point in time, without having to edit the definition of `f` to make it work.
 
+Note that there are two other uses of the `::` operator outside of function
+arguments - type assertion and typed variable declarations - but these aren't
+used as commonly and we won't cover them here.
+
 ### Dispatch
 
-"Dispatch" is the process of determing which method of a function is called.
+"Dispatch" is the process of determining which method of a function is called.
 
 ```julia
 example_f(x::Int) = "input is an integer"
@@ -858,7 +804,7 @@ example_f3(x::String, y::String) = "both input are strings"
 methods(example_f3)
 ```
 
-In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch is a lot more flexible and changes the way we design software. 
+In object-oriented languages (like Python, Javascript, C#, Java or C++) dynamic dispatch occurs only on the type of first object (the class method being called). Multiple dispatch is a lot more flexible and changes the way we design software.
 
 ### [Varargs functions](https://docs.julialang.org/en/v1/manual/functions/#Varargs-Functions)
 
@@ -982,15 +928,6 @@ f(10 + 42im)
 (But note that the `x.re` and `x.im` fields are internal - you should use the
 `real()` and `imag()` functions to work with `Complex` values!)
 
-One thing you can do is destructure arguments to functions as they come in. For example:
-
-```julia
-f((x,y)) = x + y
-my_pair = (4, 5)
-f(my_pair)
-```
-
-
 ### [Function composition and piping](https://docs.julialang.org/en/v1/manual/functions/#Function-composition-and-piping)
 
 Just a little bit of syntax sugar for "piping" values into function calls:
@@ -1109,7 +1046,7 @@ f(mat) = 10*my_2_by_2_inv(mat)
 g(mat) = f(mat .+ 3)
 h(mat) = 2g(mat)
 A = ones(2,2)
-h()
+h(A)
 ```
 ```
 ERROR: ArgumentError: matrix is singular or near singular
@@ -1187,7 +1124,7 @@ The `do` syntax is _yet another_ way of making a function. It creates a new func
 
 See [variables and scoping in Julia docs](https://docs.julialang.org/en/v1/manual/variables-and-scoping/).
 
-Julia actually has two seperate scopes — global or "toplevel" scope, and local scope.
+Julia actually has two separate scopes — global or "toplevel" scope, and local scope.
 
 Local scope is the simplest, and we'll look at that first. By default bindings inside a function body create _new_ variables that take precedence (or "shadows") any variables of the same name outside the function body.
 
@@ -1305,7 +1242,7 @@ Working with variables in different scopes can a little confusing and error pron
 
 * Don't use non-const global variables unless there is no alternative. Prefer passing variables to functions, including using closures to capture state (see also ScopedValue in Julia 1.11).
 * Use distinct names for variables as much as possible
-* The larger the scope of a variable, the longer and more discriptive its name should be
+* The larger the scope of a variable, the longer and more descriptive its name should be
 
 Remember you want your programs to be _simple_ and _easy to read_. Variable names are cheap (though naming things well is hard!)
 
@@ -1446,7 +1383,7 @@ We can ask whether a given type is abstract or concrete.
 @show isconcretetype(Real);
 ```
 
-Structs with undefined type paremeters are not concrete:
+Structs with undefined type parameters are not concrete:
 
 ```julia
 @show isconcretetype(Complex);
@@ -1469,7 +1406,7 @@ function type_and_children(type, prefix = "", child_prefix = "")
 
         println(prefix, type, ": concrete")
     else
-        println(prefix, type, isabstracttype(type) ? ": abstract" : ": parameterized")
+        println(prefix, type, isabstracttype(type) ? ": abstract" : ": parameterised")
 
         children = subtypes(type)
         for (i, c) in enumerate(children)
@@ -1579,7 +1516,7 @@ One thing types let you do is ensure you do things "safely" without making mista
 When solving physics problems its always useful to perform dimensional analysis to ensure your answer makes sense, and to make sure you are using a consistent set of units in your numeric computations.
 
  * **Dimensions** - length, time, mass, area (length squared), etc
- * **Units** - metres, kilometers, centimeters, feet, inches, miles, etc
+ * **Units** - metres, kilometres, centimetres, feet, inches, miles, etc
 
 #### Our first unit - `Metre`
 
@@ -1605,7 +1542,7 @@ Base.:(/)(x::Metre, y::Metre) = x.value / y.value
 Base.:(/)(x::Metre, y::Real) = Metre(x.value / y)
 ```
 
-Here we have added new methods to existing functions (from `Base`). What we are doing here is opting-in to an existing interface. If it makes sense to use existing interfaces - do so! Later we'll create our own interace, but baby-steps first.
+Here we have added new methods to existing functions (from `Base`). What we are doing here is opting-in to an existing interface. If it makes sense to use existing interfaces - do so! Later we'll create our own interface, but baby-steps first.
 
 (In an object-oriented language, you would probably add a class with some data and some function methods. It is very similar except for where the methods live!)
 
@@ -1650,7 +1587,7 @@ How would you deal with other kinds of units of length?
 
 As you can see, there might be a lot of different units of length. And units of time, units of mass, units of temperature, etc. And the variety grows further when you consider compound dimensions (like area, or velocity). And then we need to consider _binary_ operators like `+`, where the number of possible combinations is quadratic in the number of units being considered.
 
-How should we deal with all these combinations? How will the system know how to add centimeters and yards? What is `3yd + 68cm`?
+How should we deal with all these combinations? How will the system know how to add centimetres and yards? What is `3yd + 68cm`?
 
  1. Write every single method by hand?
  2. Have a "blessed" unit (like SI units - kilograms, metres, seconds, Kelvin, etc)
@@ -1665,7 +1602,7 @@ abstract type AbstractLength
 end;
 ```
 
-This will be the "supertype" for our length types. (Remember "super" is latin for "above" – your supervisor is your overseer, etc).
+This will be the "supertype" for our length types. (Remember "super" is Latin for "above" – your supervisor is your overseer, etc).
 
 ```julia
 struct Metre{T} <: AbstractLength
@@ -1737,7 +1674,7 @@ Mile(x::Mile) = x;
 
 Note that if we have `N` different length types, we'd only need to define `2N` different conversions (to and from metres) instead of `N^2` conversions (between every two possibilities). If `N` is large, this is hugely beneficial!
 
-Another fun fact is two differnt programmers can define different `AbstractLength` units without talking to each other. A third programmer can use the code from the first two, and those units will seemlessly work together with zero effort. This is great for sharing working in teams, between teams, or between entirely seperate organizations (e.g. open-source code).
+Another fun fact is two different programmers can define different `AbstractLength` units without talking to each other. A third programmer can use the code from the first two, and those units will seamlessly work together with zero effort. This is great for sharing working in teams, between teams, or between entirely separate organizations (e.g. open-source code).
 
 Note that in general, we can get Julia to automatically do this step for every `AbstractLength` type. The syntax for this one is a bit crazy:
 
@@ -1774,7 +1711,7 @@ Base.:(/)(x::AbstractLength, y::AbstractLength) = Metre(x) / Metre(y);
 
 So to add, we just convert to metres first and then keep going.
 
-For the other operations we can "keep" the existing type, but we need to actually know the "unit" seperately to its type pararameter (e.g. `Centimetre` vs `Centimetre{Int64}` or `Centimetre{Float64}`). We define a brand-new function to describe this:
+For the other operations we can "keep" the existing type, but we need to actually know the "unit" separately to its type parameter (e.g. `Centimetre` vs `Centimetre{Int64}` or `Centimetre{Float64}`). We define a brand-new function to describe this:
 
 ```julia
 unit(::Metre) = Metre
@@ -1861,7 +1798,7 @@ mile / km
 
 So far we have mostly overloaded existing functions built into `Base` Julia. There is nothing stopping you defining your own functions – in fact you'll likely define more new functions that overload existing ones. Here we also added the `unit` function to help out.
 
-But how did we know to overload the `Base` functions? Well, these functions are _interfaces_ used throughout Julia. We can define new interfaces for our new _abstact_ types. (Typically, a function we write that accepts some concrete type is not a _generic interface_ – it is just a one-off function with a single mehtod).
+But how did we know to overload the `Base` functions? Well, these functions are _interfaces_ used throughout Julia. We can define new interfaces for our new _abstract_ types. (Typically, a function we write that accepts some concrete type is not a _generic interface_ – it is just a one-off function with a single method).
 
 Now we have our `AbstractLength` interface, we can document how people _implement_ it so people could add new types, like `Nanometres` and `Yard`. To _implement the `AbstractLength` interface_ you'd need to implement:
 
@@ -1930,7 +1867,7 @@ struct RightAngledTriangle{T} <: Triangle
 end;
 ```
 
-And here are some quadralaterals:
+And here are some quadrilaterals:
 
 ```julia
 abstract type Quadrilateral <: Shape2D
@@ -1954,9 +1891,38 @@ struct Circle{T} <: Shape2D
 end;
 ```
 
+Sometimes it's useful to use values which aren't types as type parameters. One
+standard example is the `N` in `Array{T,N}` which is just an integer signifying
+the dimension of the array. Doing this helps the compiler know some parts of
+the "problem size" at compile time based on the type and can lead to much more
+efficient code or data storage. It can also let us cover several different
+sub-cases with one type definition. In our `Shape2D` example we can use it to
+define a regular polygon with `N` sides as follows:
+
+```julia
+struct RegularPolygon{N, T} <: Shape2D
+    side_length::T
+end 
+
+# and a constructor for convenience
+function RegularPolygon{N}(side) where N
+    RegularPolygon{N,typeof(side)}(side)
+end
+
+# const Square = RegularPolygon{4}  # We already defined squares above
+const Pentagon = RegularPolygon{5}
+const Hexagon = RegularPolygon{6}
+```
+
+(One limitation of this is that we we can't have
+`RegularPolgyon{4} <: Quadrilateral` in this generic definition so if
+`Quadrilateral` was important to our design we may have some thinking to do
+here.)
+
+
 #### Implementing the `Shape2D` interface
 
-For each of these shapes we can deterime the perimeter:
+For each of these shapes we can determine the perimeter:
 
 ```julia
 function perimeter(shape::EquilateralTriangle)
@@ -1978,6 +1944,10 @@ end
 
 function perimeter(shape::Circle)
     return 2π * shape.radius
+end
+
+function perimeter(shape::RegularPolygon{N, T}) where {N, T}
+    return N * shape.side_length
 end;
 ```
 
@@ -2002,6 +1972,10 @@ end
 
 function area(shape::Circle)
     return π * shape.radius * shape.radius
+end
+
+function area(shape::RegularPolygon{N, T}) where {N, T}
+    return  (N * shape.side_length^2) / (4 * tand(180/N))
 end;
 ```
 
@@ -2009,6 +1983,7 @@ We can use these pretty straightforwardly.
 
 ```julia
 @show perimeter(Rectangle(3.5, 2.0))
+@show perimeter(Hexagon(1.5))
 @show area(RightAngledTriangle(10, 10));
 ```
 
@@ -2018,7 +1993,7 @@ At any point in time we can introduce new subtypes of `Shape2D`, `Triangle` or `
 
 Today we have introduced two new abstract types with their own interfaces. One for units of length, and one for shapes.
 
-We have said Julia is good for quickly writing mathemetical code, and good for writing code that executes fast. Here we can see how Julia "scales" well when combining code together – everything will "just work".
+We have said Julia is good for quickly writing mathematical code, and good for writing code that executes fast. Here we can see how Julia "scales" well when combining code together – everything will "just work".
 
 Take this:
 
@@ -2056,7 +2031,7 @@ We are now done with the material for Unit 5. We have learned:
     * `Array`, `String`
  2. What are the "abstract" types that represent sets of types in Julia?
     * `abstract type`
-    * Generic type pararmeters, `UnionAll`
+    * Generic type parameters, `UnionAll`
     * `Union` of types
  3. How do functions work in Julia?
     * functions and closures
@@ -2067,7 +2042,7 @@ We are now done with the material for Unit 5. We have learned:
     * 2D shapes
     * how interfaces compose naturally
 
-This will place you in good stead for Units 6-8, and in particular Projects 1-3 where you will need to craft non-trivail programs to create a solution.
+This will place you in good stead for Units 6-8, and in particular Projects 1-3 where you will need to craft non-trivial programs to create a solution.
 
 ## Bonus material
 
@@ -2091,7 +2066,7 @@ function print_running_stats(n::Integer, running_stats_storage)
         # Collect data for statistics
         push!(running_stats_storage, data_point)
 
-        # Peridoically we look at summary statistics
+        # Periodically we look at summary statistics
         if i % 20 == 0
             println("-------")
             println("Count: ", length(running_stats_storage))
@@ -2199,7 +2174,7 @@ print_running_stats(100, running_stats_storage)
 
 But there is a problem with the above. What if `T` was `Complex`? Should we have done `<: Number` or `<: Real`?
 
-In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the peices of your program together into a coherent whole. 
+In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the pieces of your program together into a coherent whole. 
 
 ### Interfaces
 
