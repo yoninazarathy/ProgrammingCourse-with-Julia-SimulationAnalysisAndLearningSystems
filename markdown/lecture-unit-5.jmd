@@ -1463,6 +1463,13 @@ You can read this like "The abstract type which is the union of the concrete typ
 @show isconcretetype(Complex{Float64});
 ```
 
+Sometimes it's useful to **use values which aren't types as type parameters ("Value types")**. One
+standard example is the **`N` in `Array{T,N}`** which is just an integer signifying
+the dimension of the array. Doing this helps the compiler know some parts of
+the "problem size" at compile time based on the type and can lead to much more
+efficient code or data storage (see example ```RegularPolygon``` below).
+
+
 Julia is pretty capable at figuring out the subtype (or subset) relationships:
 
 ```julia
@@ -1891,7 +1898,7 @@ struct Circle{T} <: Shape2D
 end;
 ```
 
-Sometimes it's useful to use values which aren't types as type parameters. One
+Sometimes it's useful to **use values which aren't types as type parameters ("Value types")**. One
 standard example is the `N` in `Array{T,N}` which is just an integer signifying
 the dimension of the array. Doing this helps the compiler know some parts of
 the "problem size" at compile time based on the type and can lead to much more
