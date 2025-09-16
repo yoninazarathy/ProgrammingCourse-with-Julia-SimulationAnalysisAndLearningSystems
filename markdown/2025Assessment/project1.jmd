@@ -1,190 +1,420 @@
 # Project \#1 - Semester 2, 2025
 # Univariate Polynomials with Integer Coefficients
-
-(last edit: September 4, 2025)
- 
-
-**Due:** Friday, 26, September, 2025 at 4pm. Late submissions are not accepted.
-
-**Individual work:** This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years (in case students made them public). Do not copy code from those repos directly - but rather use such code bases for help as needed.
-
-**Note:** The teaching staff will only answer questions (via ED, consultation hour, or practicals) regarding this assignment up to the evening of Thursday 25/9.
-
-**Weights and marking criteria:** Total number of points: **100**. There are 10 points for setting up the GitHub repo properly and following instructions for hand-in (including voice recording). The remaining **90** points are for the project tasks. 
-
-**Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
-
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT1`. So for example if your name is "Pierre-Simon Laplace", the repo name should be `Pierre-Simon-Laplace-2504-2025-PROJECT1`.
-
-The PDF must have the following compents.
-
-1.  Your name, student number, and assignment title (Project 1 - 2025) on the top.
-2.  A (clickable) link to your GitHub repo.
-3.  A screenshot or copy/paste of output for `example_script.jl`.
-4.  A screenshot or copy/paste the output of `test/runtests.jl`. 
-
-The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
-
-The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
-
-Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
-
-**Marking Criteria**: 
-
-* 10 points are allocated for setting up the GitHub hand-in according to the instructions and following the submission instructions.
-
-* 90 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task.
-
-* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
-
----
-
-## Setting up your GitHub repo for hand-in (10pts):
-
-* Ideally use the same account you used for BigHW. 
-* Ideally we would like you to **fork** the GitHub repo [https://github.com/dietmaroelz/2504\_2025\_project1](https://github.com/dietmaroelz/2504_2025_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
-* Invite the course GitHub user, `MATH2504-staff-2025` as a collaborator. You may do so early on while working on the project, and you must do this no later than the project due date. You must verify that `MATH2504-staff-2025` is a collaborator on your project and let the course staff know if that is not the case. . It is your duty to check that we accepted the invite (give us 2-5 working days to accept the invite).
-* Do **not** make any changes (commits) to the repo after the project due date. 
-* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc). Making intermediate commits is certainly recommended.
-
-Your GitHub repo should be formatted like the original repo that you forked with additional files and modifications based on the tasks below.
-
-* Note: make sure that there aren't any excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use a `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
-
-
-## Project tasks (90pts)
-
-Build your project on top of the [https://github.com/dietmaroelz/2504\_2025\_project1](https://github.com/dietmaroelz/2504_2025_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that, you will make improvements, additions, and cleanups.
-
-Please follow the suggested type names below. These are suggested so that tasks have backwards compatibility which mean you do not throw away old code, but rather add modifications. Note that in an actual project, you would sometimes replace older types with newer ones, and/or use parametric types.
-
-### Task 1 (? pts) - Getting it to run, improving pretty printing, and creating your own example script.
-
-
-#### Study the Repo
-Once you create your own repository make sure it works by running `test/runtests.jl` and `example_script.jl`. At this point simply study the functionality of the repository by looking at the function signatures (not implementations) to understand what the repo can do. 
-
-
-#### Create Example Scripts
-Create your own example script called `example_script_2.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Namely, your script should run and demonstrate (using `println` or `@show`) how the code in the repository works by 
-1.  constructing *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
-1.  compute `f + g`, `f * h`, `g * h`, and `gcd(f*h, g*h)`,
-1.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
-1.  compute `(f * h) \div h` modulo 3, 7 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
   
-Basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`.
-
-#### Pretty Printing
+(last edit: September 11, 2025)
+   
+**Due Date & Late Submission Policy:** See [ECP](https://course-profiles.uq.edu.au/course-profiles/MATH2504-62116-7560#assessment)
+  
+**Individual work:** This is an individual work assignment. Plagiarism will *not* be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Note that similar and not identical projects were issued in previous editions of the course. If you wish, you may look at GitHub repos of such projects from previous years (in case students made them public). Do not copy code from those repos directly - but rather use such code bases for help as needed.
+  
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up 24 hours before the due date.
+  
+**Weights and marking criteria:** Total number of points: *100*.  
+There are *10* points for setting up the GitHub repo properly and following instructions for hand-in (including voice recording). The remaining *90* points are for the project tasks.
+  
+**Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard.
+  
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT1`. So for example if your name is "Pierre-Simon Laplace", the repo name should be `Pierre-Simon-Laplace-2504-2025-PROJECT1`.
+  
+The PDF must have the following components in this order:
+  
+1.  Your name, student number, and assignment title (Project 1 - MATH2504 - 2025) on the top.
+2.  A (clickable) link to your GitHub repo.
+3.  A screenshot or copy/paste of output for each `example_script_task_i.jl`.
+4.  A screenshot or copy/paste the output of `test/runtests.jl` for the relevant tasks.
+  
+**Note:** *organize your submission into clearly marked sections. Use headings in the format `Task i` or `Task i.j` for each part of the assignment.*
+  
+Present the new snippets of code that you created and indicate what they do via brief descriptions. It is also a place to answer any questions that require output, or description.
+  
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. Also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it is not required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code ([this page](https://carbon.now.sh) may be useful), so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable.
+  
+Feedback will be given by the teaching staff by annotating **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
+  
+**Note:** *as you may have experienced in BigHW, long lines of code in Jupyter notebooks may be truncated by the width of the page when converted to a PDF. Please be aware of this and format your notebook (i.e., split code over multiple lines if needed) as appropriate.*
+  
+**Marking Criteria**:
+ 
+* *10 points* are allocated for setting up GitHub according to the instructions and following the submission instructions.
+ 
+* *90 points* are allocated for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code.
+ 
+* *12 points* are allocated for the *bonus tasks*. No support will be given on Ed for these tasks and tutors will prioritise questions other than those related to the bonus tasks. Bonus marks will be applied on top of your mark for the remainder of the assignment, and your overall mark is capped at 100.
+ 
+* In general, points **will be** deducted for sloppy coding style. Make sure your code is properly indented, uses sensible and consistent variable names and write code that is in general clean and consistent.
+ 
+---
+ 
+## Setting up your GitHub repo for hand-in (10pts):
+ 
+* Ideally use the same account you used for BigHW.
+* **Duplicate** the repository [https://github.com/dietmaroelz/2504\_2025\_project1](https://github.com/dietmaroelz/2504_2025_project1) as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository". *Ideally, you would fork the repository, but GitHub does not allow forked repositories to be made private. Do **not** attempt to fork the repository.*
+* Invite the course GitHub user, `MATH2504-staff-2025` as a collaborator and verify this is done (*failure to do so may result in a grade of 0*). You must do this no later than the project due date. It is your duty to check that we accepted the invite (give us 2-5 working days to accept the invite).
+* Do **not** make any changes (i.e., commits) to the repo after the project due date.
+* Create a local clone of the repo. It is *recommended* that you use the `git` command line to make changes/additions to the assignment and submission. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc). You should make intermediate commits to demonstrate your development process.
+ 
+Your GitHub repo must be formatted like the original repo.
+ 
+* Ensure that there aren't excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+ 
+ 
+## Project tasks (90pts)
+ 
+Build your project on top of the [repo](https://github.com/dietmaroelz/2504_2025_project1) by making modifications, additions, and improvements. Your first goal is to understand the base repository. After that, you will make improvements, additions, and cleanups.
+ 
+Follow the supplied type names below. These are given so that tasks have backwards compatibility. Note that in an actual project, you would sometimes replace older types with newer ones.
+  
+Read all the tasks before starting - only some tasks are dependent on previous ones so they do *not* necessarily have to be done in order.
+  
+### **Task 1 (15pts) - Working in an existing codebase**
+This task is for getting the repo to run, improving pretty printing, and creating your own example script.
+ 
+#### Study the Repo
+Once you create your own repository, first read the file `README.md`. Then make sure the repository works by running `test/runtests.jl` and `example_script.jl`. At this point simply study the functionality of the repository by looking at the function signatures (not implementations) to understand what the repo can do.
+  
+#### Create Example Scripts (*7 points*)
+Create your own example script called `example_script_task_1.jl` and include polynomials for illustrating the key functionality of the operations available via the software. Your script should run and demonstrate (using `println` or `@show`) how (*not why*) the code in the repository works. Namely:
+  
+1.  construct (at least) *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
+2.  compute `f + g`, `f * h`, `g * h`,
+3.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
+4.  compute `(f * h) ÷ h` modulo 5, 17 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
+5.  compute `gcd_mod_p(f*h, g*h, p)` for `p` equal to 5, 11 and 13. 
+    
+Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`.
+  
+#### Pretty Printing (*8 points*)
 Improve the "pretty printing" of the polynomials by incorporating the following rules:
-1.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
-2.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
-3.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
-4.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
-5.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
-6.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
+  
+5.  Terms of zero degree (i.e., constants) should exclude `x^0`, e.g. `2` not `2x^0`.
+6.  Terms with unit degree should exclude the degree, e.g. `3x` not `3x^1`.
+7.  Excluding the constant term `1`, terms with unit coefficient should exclude the coefficient, e.g. `3x^2 + x` not `3x^2 + 1x`.
+8.  Use subtraction instead of adding negative terms, e.g. `3x^2 - 2x` not `3x^2 + -2x`.
+9.  Display the terms in *descending* degree order. $a_n \cdot x^n + a_n \cdot x^{n-1} + \cdots + a_1 x + a_0$.
+10.  Do not print terms with zero coefficients, e.g. `x^2 + 1` not `x^2 + 0 x^1 + 1`.
 
-### Task 2 (?pts) - Refactoring the data structure used
+Note: feel free to use [Unicode](https://en.wikipedia.org/wiki/Unicode) characters (but this is not necessary).
+  
+11. *Include the output of `example_script_task_1.jl` in your PDF submission via screenshot (or copy/paste).*
 
-The current implementation for polynomials is a vector where the term of degree $k$ is stored at position $k+1$.  This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n -1$.
+  
+### **Task 2 (20pts) - Utilising Julia's type system**
+ In this task we parameterise the coefficient type to utilize `BigInt`
+   
+#### Showing overflow for `PolynomialDense` (*2 points*)
+Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`. 
+  
+1. Create a new script called `example_script_task_2.jl`. Demonstrate using five hard-coded examples (i.e, explicitly write out the polynomials and do not use `rand` to generate them) of `PolynomialDense` addition that will overflow by making the coefficients (*not the degree*) excessively large.
+  
+#### Parameterising `Polynomial` (*10 points*)
+Notice the struct `Term` is already parameterised and can accept coefficients and degrees that are `BigInt`s. However, the `Polynomial` and `PolynomialDense` types default to using `Int` for both. Your task is to refactor (i.e., modify) these types to be parametric as follows:
+  
+2.  Refactor `Polynomial` to accept two type parameters called `C` and `D` respectively (named so for coefficient and degree). I.e., we should have 
+```
+abstract type Polynomial{C, D} end
+```
 
-1.  Navigate to the folder `src/basic_polynomial_operations` and duplicate the folder `dense` as the folder `sparse`.
+3. Refactor all functions in the file `src/polynomial_definitions/polynomial.jl` to account for these new parameters.  *Note: you may create a number (or any other concrete type) of type `T` by writing, for example, `T(5)`. The methods `zero(T)` and `one(T)` can create 0 and 1 of type `T`.*
 
-1.  Navigate to the folder `src/polynomial_definitions` and duplicate the file `polynomial_dense.jl` as the file `polynomial_sparse.jl`.
+4. Refactor all functions in the directory (a.k.a. folder) `src/abstract` to account for these new parameters.
+  
+#### Parameterising `PolynomialDense` (*5 points*)
+5. At this stage the `PolynomialDense` implementation will no longer work. Refactor the type `PolynomialDense` to accept two type parameters `{C, D}` such that the struct definition starts with 
+```
+struct PolynomialDense{C, D} <: Polynomial{C, D}
+    terms::Vector{Term{C, D}}
+``` 
 
-1.  Inside `polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and refactor (ie. modify) the inner constructor of `PolynomialSparse` so that non-zero terms are exluded from storage.  Utlize a [max heap](https://juliacollections.github.io/DataStructures.jl/latest/heaps/) ordered by term degree to accomplish this.
+6. Refactor all methods in `src/polynomial_definitions/polynomial_dense.jl` to account for these new parameters. (*Hint: you should use the functions `zero(::Type), one(::Type)` to create 0 and 1*). 
 
-1.  Refactor the *constructors* and *functions* in `polynomial_sparse.jl` to account for the new underlying representation.  For example, `mod` can no longer utilise array indexing. 
+7. Refactor all functions in the directory `src/dense` to account for these new parameters.
+  
+At this stage we should be able to instantiate a polynomial of type `PolynomialDense{BigInt, Int}`. We need to verify it works correctly. *Note: do not try and instantiate a polynomial of type `PolynomialDense{BigInt, BigInt}` or `PolynomialDense{Int, BigInt}`. These may create absurdly large arrays.*
+  
+#### Checking it works (*3 points*)
+8.  Modify your script `example_script_task_2.jl` to demonstrate that your five original hard-coded examples fail (i.e., produce obviously incorrect output) for `PolynomialDense{Int, Int}` but are correct when using `PolynomialDense{BigInt, Int}` (ie, do not overflow). *Include the output of `example_script_task_2.jl` in your PDF submission.*
 
-1.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `add` can no longer be done with simple vector addition.
+9.  Refactor the test scripts in the directory `test` to accept your newly parameterised polynomials. Ensure your implementation for `PolynomialDense{Int, Int}` and `PolynomialDense{BigInt, Int}` passes your tests (you should refactor the `test/runtest.jl` file to allow different concrete polynomial types to be tested). *Include the output of the tests in your PDF submission.*
+  
+### **Task 3 (15pts) - Refactoring the data structure used**
+#### Sparse Polynomials 
+  
+The current implementation for `PolynomialDense` uses a `Vector` to store the term of degree $k$ at position $k+1$. This is optimal for dense polynomials (those with mostly *nonzero* coefficients) but our factoring algorithms rely heavily on manipulating *sparse polynomials* like $x^n - 1$. In this task we address this deficiency:
+  
+#### Constructors (*2 points*)
+1.  Navigate to the directory `src/polynomial_definitions` and duplicate `polynomial_dense.jl` as `polynomial_sparse.jl`.
 
-1.  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse` and associated functions are working. 
+2.  Inside `src/polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and modify the inner constructor of `PolynomialSparse` so that *non-zero terms* are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
 
-1.  Replicate Task 1 so that `example_script_2.jl` is for `PolynomialSparse`.
+3.  Rewrite the *constructors* in `src/polynomial_sparse.jl` to account for the new underlying representation.  
+  
+#### Operations (*9 points*)
 
-1.  Describe three pros and/or cons between the dense and sparse representations.
+4.  Rewrite the *functions* in `src/polynomial_sparse.jl` to account for the new underlying representation. For example, `mod` can no longer utilise array indexing.
 
-1.  Find one example where `PolynomialSparse` overflows and yields the wrong result.
+5.  Navigate to the directory `src/basic_polynomial_operations` and duplicate the directory `dense` as the directory `sparse`.
 
-1.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) `PolynomialSparse` out-performs `PolynomialDense` when operating on sparse polynomials.  *Do this only for cases where `PolynomialSparse` and `PolynomialDense` does not overflow.*
+6.  Refactor the *operations* in `src/basic_polynomial_operations/sparse` to account for the new underlying representation.  For example, `+` can no longer be done with simple vector addition. To optimise these you may also need to refactor functions in `src/polynomial_sparse.jl`.
+  
+*Note: sparse term multiplication and addition can be optimised significantly compared to the abstract implementations. You should override both these functions for your `PolynomialSparse` implementation. You cannot achieve full marks in this section without optimisation to **both** addition and term multiplication. You may need to optimise other helper functions in order to achieve this.*
+ 
+#### Checking it works (*4 points*)
+7.  Replicate the `example_script_task_2.jl` for `PolynomialSparse` in a file called `example_script_task_3.jl`.
 
-### Task 3 (? pts) - Parameterize the coefficient type to utilize `BigInt`
+8.  Show (using [`BenchmarkTools`](https://juliaci.github.io/BenchmarkTools.jl/stable/)) that there are examples where `PolynomialSparse` outperforms `PolynomialDense` for both time and memory usage. *Do this only for cases where `PolynomialSparse` and `PolynomialDense` do not overflow.*
 
-From now on we focus on the *sparse* representation.
+9. Append your code for task 3.8 to `example_script_task_3.jl` and *include the output of the script in your PDF submission.*
 
-Exact computation requires polynomials with (truly) integer coefficients and thereby we must use `BigInt` rather than (the finitely many integers comprising) `Int`.
+10.  Describe (at least) three pros and/or cons (*in a table within your PDF*) between the dense and sparse representations.
+    
+### **Task 4 (7pts) - Optimising an algorithm**
+#### Fixing power (*7 points*)
 
--  Refactor `Term` to accept a type parameter called `T` and let the coefficients and degree be of that type.  (`T` should be a subtype of `Number`).  
+As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using **repeated squaring**.
+  
+1. Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should be implemented at the abstract level (i.e.,`Polynomial{C, D}`) and should therefore  work for both `PolynomialDense` and `PolynomialSparse`.
 
--  Refactor all functions in `term.jl` to account for this new paramter.  Note: you may create a number of type `T` by writing, for example, `T(1)`.
+2. Refactor your algorithms for `pow_mod` and `^` such that `0^n`, `1^n` and `x^n` are constructed without multiplications (i.e., run in O(1)).
 
--  Modifying the existing code to utilize `Term{Int64}` for `PolynomialDense` and associated operations and functions and verify your modification's integrity by re-running your example script.
+3. Create `tests/power_test.jl` containing tests for `pow_mod` and `^` which run on at least $10^2$ randomly generated polynomials (*make sure this can be run on your computer in less than 30s*). Ensure your implementations pass these tests.
 
--  Refactor the constructor, functions, and associated operations of `PolynomialSparse` to accept the parameter type `T<:Number` and verify your modification's integrity by updating and re-running your example script for `PolynomialSparse{Int64}`.
+4. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your `pow_mod` and `^` functions. *Screenshot (or copy/paste) the output and add it to your PDF submission`*
+  
+### **Task 5 (8pts) - Implementing $\mathbb{Z}_p$**
 
-[TODO]  Tell the students to version their example scripts (by appending V1 and so on) for each time we have asked them to rerun stuff.  So example,
+Notice your polynomial implementation has assumed integer coefficients and (fatally) $\mathbb{Z}[x]$ is *not* a [euclidean domain](https://en.wikipedia.org/wiki/Euclidean_domain). This means we do not yet have access to `gcd` on polynomials which is a critical component of the factoring algorithm. If we take our coefficients from a *[field](https://en.wikipedia.org/wiki/Field_(mathematics))* like $\mathbb{Z}_p$, for $p$ a prime, then the resulting $\mathbb{Z}_p[x]$ *is* a Euclidean domain. We therefore need to implement some way to work with $\mathbb{Z}_p[x]$.
 
--  Create 5 hard coded tests and 10 random tests for verifying `PolynomialSparse{BigInt}` and associated functions and put this in a file called `example_script_?.jl`.
+We have implemented the field-variants of `div`, `gcd`, and `factor` (and so on) as `div_mod_p`, `gcd_mod_p`, `factor_mod_p` (and so on).  These new functions *require* an additional input (a prime) and this interface is cumbersome and bad because we do not want to be threading a prime $p$ through all our calculations like this:
+```
+# Example usage
+x = x_poly(PolynomialSparse{Int, Int})
+f = (x + 5)^3 * x^2 * (x + 1)^2
+g = (x - 1) * (x + 5) * (x + 1)^4
+@show gcd_mod_p(f, g, 7) 
+# output: 5⋅x^0 + 4⋅x^1 + 1⋅x^3 = (x + 5) * (x + 1)^2
+```
+ 
+It is much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated, eliminating the need to thread $p$ like this:
+```
+# Example usage
+x = x_poly(PolynomialSparse{ZModP{Int, 7}, Int})
+f = (x + 5)^3 * x^2 * (x + 1)^2
+g = (x - 1) * (x + 5) * (x + 1)^4
+@show gcd(f, g) 
+# output: 5⋅x^0 + 4⋅x^1 + 1⋅x^3 = (x + 5) * (x + 1)^2
+```
 
--  Ensure your impelentation for `PolynomialSparse{BigInt}` passes your tests.
+In this task we implement this improvement. *Note: you should aim to implement all functions in this section as efficiently as you can.*
+ 
+##### Constructors (*2 points*)
 
-- Show your new `PolynomialSparse{BigInt}` does not overlow on the example you found in Task 2.
+1. Create `src/z_mod_p.jl` and inside of this file create a `struct` with the following type signature:
+```
+struct ZModP{T <: Integer, N} <: Integer
+    val::T
 
-[TODO]  Continue from here.
+    # val ∈ [0,...,N - 1]
+    # T is the type of val, N is the prime p in Zp
+end
+```
 
-### Task 4 (17pts) - Creating a polynomial mod p datatype and further refactoring
+*Note: that `N` is a [value type](https://docs.julialang.org/en/v1/manual/types/#%22Value-types%22) and thus it must be specified as a constant, it cannot be generated (e.g. via rand) at runtime. A collection of primes has been provided to you in `src/utils/sample_primes.jl`. Use subset of these to work with constants which are primes.*
 
-Notice the `PolynomialDense`, `PolynomialSparse`, and `PolynomialSparseBI` data-types have integer coefficients whereas operations such as `divide`, `gcd`, and `factor` require the coefficient arithmetic to be done modulo $p$.  Consequently, the aforementioned functions must be performed in $\mathbb{Z}_p[x]$ and not in $\mathbb{Q}[x]$ and worse yet can only do so once a prime $p$ is provided.  It is for this reason that `divide`, `gcd`, and `factor` return a function that returns a polynomial only once a $p$ is provided.  It would be much cleaner to have a polynomial datatype where the "mod p" behavior is "baked in" and automated.
+2. Create inner and outer constructors for this struct. You must be able to construct an object of type `ZModP{T, N}` where `T` is either `Int` or `BigInt` and `N` is some prime. You must you write functions satisfying *all* of the following type signatures:
 
--  [WITH ABSTRACTION] Create a type `PolynomialModP` which has a polynomial (of type `PolynomialSparse`) and a prime number (`Int`) as field names.  `PolynomialModP` should support the same arithmetic operations as `PolynomialSparse` but with coefficient arithmetic over $\mathbb{Z}_p$ rather than `Int`. `PolynomialModP` should be easier to work with when carrying out division, gcd, and factorization. So for example `f1 ÷ f2` where `f1` and `f2` are of type `PolynomialModP`, would directly yield a new `PolynomialModP` which is the result mod $p$. Similarly for the other operations.  
+```
+    function ZModP{T, N}(a::T) where {T <: Integer, N}
+    function ZModP(a::T, Val{N})::ZMod where {T <: Integer, N}
+    function zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    function one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
+    function zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    function one(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+```
 
-- Create tests for `PolynomialModP` and associated functions and ensure your implementation passes them.
+3. Ensure the constructors in Task 5.2 (above) fail when attempting to create an object of type `ZModP{T, N}` when `N` is *not* a prime. *Use the Primes.jl package that is included in the repository.*
 
-Your new datatype should rely on the existing functionality of `PolynomialSparse` but restrict the coefficients to $0$, $1$, \ldots, $p-1$.
+##### Field operations and miscellaneous functions (*4 points*)
 
-Once you complete this task, certain operations of `PolynomialSparseBI` like `p1 ÷ p2`, are now better done via `PolynomialModP`. That is, while you may use `f1 ÷ f2` for `f1` and `f2` of types `PolynomialSparseBI`, it is better to only `÷` when `f1` and `f2` are of type `PolynomialModP` because you get back an instance of `PolynomialModP` rather than a function.
+4. Implement the following convenience and query operations:
 
--  Implement `^` for `PolynomialModP` and update the `pow_mod` function to use it.
+```
+    function show(io::IO, a::ZModP{T, N}) where {T <: Integer, N}
+    function ==(a::ZModP{T, N}, b::ZModP{T, N})::Bool where {T <: Integer, N}
+    function ==(a::ZModP{T, N}, b::S)::Bool where {T <: Integer, S <: Integer, N}
+    function ==(a::S, b::ZModP{T, N})::Bool where {T <: Integer, S <: Integer, N}
+```
 
--  Update the `show` method for `PolynomialModP` to include an indication it is "mod p".
+5. Implement the following basic arithmetic (field) operations:
 
-### Task 5 (?pts) - Improving Factorization mod p by optimising `PowMod`
+```
+    function +(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function +(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function +(a::Int, b::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function -(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function -(a::S, b::ZModP{T, N}) where {T <: Integer, S <: Integer, N}
+    function *(a::ZModP{T, N}, b::ZModP{T, N}) where {T <: Integer, N}
+    function *(a::ZModP{T, N}, b::S) where {T <: Integer, S <: Integer, N}
+    function *(a::S, b::ZModP{T, N}) where {T <: Integer, S <: Integer, N}
+    function inv(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    function ÷(a::ZModP{T, N}, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
+    function ÷(a::ZModP{T, N}, b::S)::ZModP{T, N} where {T <: Integer, S <: Integer, N}
+    function ÷(a::S, b::ZModP{T, N})::ZModP{T, N} where {T <: Integer, S <: Integer, N}
+```
 
-At this point you should have efficient multiplication and power for `PolynomialSparseBI` as well as  `PolynomialModP` and its associated functions and methods.
+*Hint: Recall division in a field is simply multiplication by the inverse. See `int_inverse_mod` in `src/utils/general_alg.jl`.*
 
-#### Power
+*Note: All the above operations should act as they do in $\mathbb{Z}_p$. E.g., $3 \cdot 2 = 6 \equiv 1\, (\text{mod}\, 5)$ should correspond to the code:*
+```
+    a = ZModP(3, 5)
+    @show a * 2 # should print 1
+```
 
-As discussed in class, if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n` using repeated squaring.
+6. Implement the additional arithmetic operations
 
--  Re-factor `pow_mod` and `^` into something more efficient by using repeated squaring.  Your implementation should work for both `PolynomialSparseBI` and `PolynomialModP`.
+```
+    function ^(a::ZModP{T, N}, n::S) where {T <: Integer, S <: Integer, N}
+    function abs(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N} 
+```
 
--  Create tests for `pow_mod` and `^` for both implementations and ensure your implementation passes them.
+7. Implement the following function to convert elements of `ZModP{T, N}` to `Int` or `BigInt`:
 
+```
+    function lift(a::ZModP{T, N})::S where {T <: Integer, N, S <: Integer}
+```
 
-### Task 6 (22pts) - Improving multiplication using the Chinese Remainder Theorem
+8. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
 
-The current multiplication implementation is not efficient for `PolynomialSparseBI` because big integer arithmetic is expensive.  In this task we reconcile this problem by using CRT to compute products of `PolynomialSparseBI` via cheaper products of `PolynomialSparse`.
+9. Utilising your constructors for `ZModP` and `lift` function, refactor the function `div_mod_p` for `Term` (i.e., in `src/term.jl`) to simply convert from the input type `Term{C, D}` to `Term{ZModP{C, N}, D}`, then call `div` and finally convert the result back to `Term{C, D}`.
 
-- Implement multiplication for `PolynomialModP` (if you haven't done so yet in Task 4).
+**Note:** you may make as many additional convenience/helper functions as you wish.
 
-- Implement multiplication using the **Chinese Remainder Theorem** (CRT) for `PolynomialSparseBI` as presented in the lecture. Here the product of two `PolynomialSparseBI`s will be computed by doing sufficiently many multiplications of their `PolynomialModP` counterparts.
+#### Checking that it works (*2 points*)
+10.  Create `example_script_task_5.jl` and in this file, demonstrate *all* basic modular arithmetic operations working correctly (each at least once).
 
-- Create tests for `PolynomialSparseBI` CRT multiplication and ensure your implementation passes them.
+11.  Create `tests/z_mod_p.jl` containing tests which run *all* operations on `ZModP`.  Your tests must run on at least $10^3$ randomly generated integers in the range $[-10^4, 10^4]$ inclusive and using at least 10 different primes. Utilise the in-built `mod` function on integers to verify correctness of your operations. Ensure your implementations pass these tests.
 
-- Benchmark `PolynomialSparseBI` CRT multiplication and contrast your results against the old multiplication (it is recommended to keep the old form of multiplication in another function or method).  Find examples that demonstrate the CRT based approach is faster.
+12. Add this test file to the `test/runtests.jl` file and have your tests print some output demonstrating the correctness of your operations on `ZModP`. *Screenshot (or copy/paste) the output of this and your `example_script_task_5.jl` and add it to your PDF submission.*
 
-#### Factoring
+### **Task 6 (7pts) - Implementing $\mathbb{Z}_p[x]$**
+#### Constructing $\mathbb{Z}_p[x]$ (*5 points*)
 
-- Adapt the supplied polynomial factorization code to incorporate the new methods and types you have built up to this point. The current supplied code works for limited cases but may get stuck on certain examples. 
+Now that we have `ZModP` as a subtype of `Integer`, we can use this as the coefficient type of our polynomials. E.g., `PolynomialSparse{ZModP{Int, 5}, Int}`. *Try experimenting in the REPL with this before attempting the rest of this section.*
+ 
+Additionally, since we have a baked-in version of $\mathbb{Z}_p$, it is better to re-implement all our functions that were previously named with the suffix `_mod_p` to use this new type.
+  
+We also have several functions that are not yet implemented at the abstract level. These are stored in the file `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl`. Your next task is to implement these:
 
--  Create tests for factorization and ensure your implementation passes them.  It is a good idea to pass your factorization algorithm a product of polynomials so your factorization is predictable.  Note that your factorization algorithm may fail on small primes due to bad luck. It is therefore best to choose large primes.
+1. Create a folder `src/basic_polynomial_operations/mod_p` and duplicate `src/basic_polynomial_operations/abstract/polynomial_field_ops.jl` as `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl`.
 
--  Benchmark your factorization algorithm by factoring a database of problems (e.g. generated by you via `rand`).  Do not use more than 120 seconds of local compute time.
+2. Each function in `src/basic_polynomial_operations/mod_p/polynomial_field_ops.jl` takes `::Type{C}` as its first argument. Modify the type signature such that `C` is of type `ZModP{T, N}` (i.e., so we can override it specifically for polynomials over $\mathbb{Z}_p$).
 
--  Using a compute budget of approximately 120 seconds "stress test" your factorization implementation by factoring something substantial.
+3. Reimplement each function in `polynomial_field_ops.jl` by refactoring the corresponding `_mod_p` version to use your new (better) $\mathbb{Z}_p[x]$ polynomials. *Note: these functions no longer require a prime to be given as input as this is now baked into the type.*
+```
+    function div_rem(::Type{C}, num::P, den::P)::Tuple{P, P} where {P <: Polynomial}
+    function factor(::Type{C}, f::P)::Vector{Tuple{P,Int}} where {P <: Polynomial}
+    function dd_factor(::Type{C}, f::P)::Array{P} where {P <: Polynomial}
+    function dd_split(::Type{C}, f::P, d::Int)::Vector{P} where {P <: Polynomial}
+```
 
-### Bonus Task (6 bonus points)
+*Note: it is recommended you refactor functions one at a time and test before moving on to the next one.*
 
-Use factorization of `PolynomialModP` and CRT to write a factorization algorithm for `PolynomialSparseBI`.
+4. Write a function for converting between polynomials with terms of type `Term{C, D}` (where `C` is `Int` or `BigInt`) and polynomials with terms of type `Term{ZModP{C, N}, D}` for some given prime `N`.
 
+5. Refactor the functions with suffix `_mod_p` to first convert to a polynomial over $\mathbb{Z}_p[x]$, then call the corresponding `ZModP` function (i.e., the function without suffix `_mod_p`) and then convert back to the initial polynomial type. The functions are as follows:
 
+```
+    function div_rem_mod_p(num::P, den::P, prime::Int)::Tuple{P, P} where {P <: Polynomial}
+    function extended_euclid_alg_mod_p(a::P, b::P, prime::Int) where {P <: Polynomial}
+    function square_free_mod_p(f::P, prime::Int) where {P <: Polynomial}
+    function factor_mod_p(f::P, prime::Int)::Vector{Tuple{P,Int}} where {P <: Polynomial}
+    function multiplicity_mod_p(f::P, g::P, prime::Int)::Int where {P <: Polynomial}
+    function dd_factor_mod_p(f::P, prime::Int)::Array{P} where {P <: Polynomial}
+    function dd_split_mod_p(f::P, d::Int, prime::Int)::Vector{P} where {P <: Polynomial}
+```
 
+*Note: Any other functions with suffix `_mod_p` do not need to be refactored as they depend on the functions in Task 6.5.*
+ 
+#### Checking that it works (*2 points*)
+
+6. Verify the correctness of your implementations to the rest of Task 6 by using `tests/runtests.jl` on polynomials with coefficients of type `ZModP{T, N}` for `T` *both* `Int` and `BigInt` and at least 3 primes (and at least 1 prime must be larger than 1000). *Include the output of the tests in your PDF submission.*
+ 
+### **Task 7 (18pts) - Factoring with Chinese Remainder Theorem**
+*Note:* This is a mastery level task that need only be attempted by those students targeting a seven. It will require extra independent reading of material not covered in class. Sufficient marks have been allocated by this point to earn a (high) six.
+ 
+1. Create `example_script_task_7.jl`. All *examples* you provide in the remainder of Task 7 must be included in this script, and the output of the script at the end of Task 7 (or however much you are able to accomplish) should be *included in your PDF submission*.
+
+2. Create `src/crt.jl`. All functions you implement in Task 7 should be written in this file unless explicitly stated otherwise.
+ 
+#### Integer CRT (*4 points*)
+
+2. Implement a function with the following type signature which applies the **Chinese Remainder Theorem** (CRT) over a list of remainders $r1,\ldots,rk$ and (coprime) moduli $m1,\ldots,mk$:
+```
+function int_crt(rems::Vector{T}, moduli::Vector{T})::S where {T <: Union{Int, BigInt}, S <: Union{Int, BigInt}}
+# The output has a different type as you may wish to output a `BigInt` even if `Int`'s are inputted to avoid overflow.
+```
+
+4.  Demonstrate the correctness of your algorithm with at least 3 examples with 5 or more remainders/moduli.
+
+#### Factorisation with CRT (*14 points*)
+
+5. You have been given factorisation over $\mathbb{Z}_p[x]$. Implement the generalised factoring algorithm over $\mathbb{Z}[x]$ as discussed in Unit 6. 
+
+6. Create benchmarks and tests for your implementation. Isolate any bottlenecks and recommend corrections/improvements to address them. Document the technical details of your development process *in your PDF submission*.
+
+*Note: there are nuances in the factoring algorithm we have not covered in class. Due to this you may encounter bugs that you cannot account for. It is fine if your software is **mostly** working but strive to be as correct as possible.*
+
+7. Research Hensel lifting and explain the differences (*in your PDF submission*) between factoring with CRT as discussed in class and factoring utilising Hensel's lemma.
+ 
+### **Bonus Tasks (12 points)** 
+**Note:** *no help will be given via the Ed discussion board or otherwise for bonus tasks.* Bonus tasks may not increase your final mark beyond 100%. E.g., if you get 94/100 for normal tasks and 7/10 for bonus tasks you will get 100/100 (*not 101/100*).
+  
+Each bonus task can be completed independent of the others, the order presented here is arbitrary.
+ 
+#### 1. CRT Multiplication (*4 **bonus** points*)
+The current multiplication implementation is not efficient for any concrete subtype of `Polynomial{BigInt, Int}` or `Polynomial{BigInt, BigInt}` because big integer arithmetic is expensive. In this task we reconcile this problem by using CRT to compute products of `Polynomial{BigInt, T}` via cheaper products of `Polynomial{Int, Int}`. *Note: `BigInt` arithmetic is highly optimised in Julia (built on [GMP](https://gmplib.org)). It is unlikely you will be able to show CRT is faster, but strive to find examples where it is.*
+  
+1. Create `example_script_bonus_task_1.jl`. All test cases and benchmarking in the remainder of this section must be included in this script. *Include the output of this script in your PDF submission.*
+ 
+2. Implement a function to multiply two polynomials using CRT (*you should reuse parts of your code from Task 7*). The product of 2 polynomials must be computed by doing sufficiently many multiplications of each polynomial reduced to $\mathbb{Z}_p[x]$. *Note: you can reuse the primes as global constants from `src/utils/sample_primes.jl`.* 
+```
+function crt_multiplication(f::P, g::P) where {C, D, P <: Polynomial{C, D}}
+```
+  
+*Note: before creating non-trivial tests in the next section, you should test your implementation on trivial examples to verify it is not obviously incorrect.*
+
+3. Write at least 10 hardcoded tests demonstrating the correctness of your implementation on non-trivial multiplications (i.e., with `BigInt` coefficients and degree greater than 100) from bonus Task 1.1. *Hint: use polynomials where you know what the coefficients should be after multiplying, e.g., using binomial theorem.*
+
+4. Benchmark (using `BenchmarkTools`) the speed of your CRT multiplication for the examples in bonus Task 1.2 against multiplying the `BigInt`'s directly. Try using both `PolynomialSparse` and `PolynomialDense`.
+ 
+#### 2. FFT/DFT Multiplication (*4 **bonus** points*)
+The naive multiplication algorithm that we have provided (and likely any optimised version you have written) is $O(n^2)$. Modern computer algebra systems use the [Fast Fourier Transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform) (FFT) to compute the [Discrete Fourier Transform](https://en.wikipedia.org/wiki/Discrete_Fourier_transform). This is utilised to multiply both polynomials and (large) integers in $O(n \log n)$. This is one of the [*most important algorithms ever developed*](https://en.wikipedia.org/wiki/Fast_Fourier_transform).
+ 
+1. Refactor the existing multiplication of polynomials to use the FFT. In particular, ensure your multiplication uses two different implementations of the FFT to avoid the bit reversal permutation entirely.
+
+2. *In your PDF submission* include an annotated copy of your code, and a description of the technical details of your implementation.
+
+3. Create `example_script_bonus_task_2.jl`. Benchmark using `BenchmarkTools` the speed of your FFT polynomial multiplication algorithm against the naive ones provided.
+  
+*Note: no marks are awarded for bonus Task 2.2/2.3 if your implementation does not work correctly.*
+
+*Note: you do not need to learn/implement the truncated FFT (TFFT). The FFT over $2^n$ terms is sufficient. For those curious, see [Paul's](https://arxiv.org/abs/1602.04562) [paper](https://arxiv.org/pdf/1602.04562) for an explanation of (TFFT).*
+
+#### 3. Pseudo-Division in Rings that are *NOT* Euclidean Domains (*4 **bonus** points*)
+As you may have discovered, implementing division over $Z[x]$ is not possible. In particular, we cannot determine a quotient and remainder as $Z[x]$ is not a Euclidean domain. Instead, we have the notion of *pseudo-division*. *Write all examples for this task in a script called `example_script_bonus_task_3.jl` and include the output in your PDF submission.*
+
+1. Write a function `pseudo_div_rem` which returns the *pseudo-quotient* and *pseudo-remainder* of `f` pseudo-divided by `g`. The type signature of the function should be: 
+```
+pseudo_div_rem(f::P, g::P)::Tuple{P, P} where {C, D, P <: Polynomial{C, D}} 
+```
+
+2. Use the provided `pseudo_gcd` and `square_free` functions (that are currently commented out) in `src/basic_polynomial_operations/polynomial_pseudo_operations.jl` to test that your implementations work. 
+
+3. Show that the pseudo-div-rem property (this is similar to the definition of integer division) holds as well as the pseudo-gcd property. 
+
+4. Using at least 3 different primes show that the function `square_free` for at least 5 hard-coded examples returns a square free version of your original polynomial (*hint - create polynomials by taking products of irreducibles*) and show that the function `square_free_mod_p(f, prime)` returns the same as `mod(square_free(f), prime)`. *Ensure your script takes no longer than **5 minutes** to run.*
+
+5. *In your PDF submission* provide a full explanation of the technical details of your pseudo-division algorithm, including why and how it works. Explain the notion of coefficient swell and why your algorithm is slow. Answer whether this issue can be avoided (and why) if we computed this over $\mathbb{Q}[x]$ rather than $\mathbb{Z}[x]$ using exact division over $\mathbb{Q}$.
+ 
+###### *If you have reached this point and are still not satisfied, reach out to Dr. Vrbik for supervision opportunities!*
