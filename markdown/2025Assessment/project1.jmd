@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2025
 # Univariate Polynomials with Integer Coefficients
   
-(last edit: September 17, 2025)
+(last edit: September 11, 2025)
    
 **Due Date & Late Submission Policy:** See [ECP](https://course-profiles.uq.edu.au/course-profiles/MATH2504-62116-7560#assessment)
   
@@ -144,7 +144,7 @@ The current implementation for `PolynomialDense` uses a `Vector` to store the te
 #### Constructors (*2 points*)
 1.  Navigate to the directory `src/polynomial_definitions` and duplicate `polynomial_dense.jl` as `polynomial_sparse.jl`.
 
-2.  Inside `src/polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and modify the inner constructor of `PolynomialSparse` so that *non-zero terms* are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
+2.  Inside `src/polynomial_sparse.jl` rename all instances of `PolynomialDense` to `PolynomialSparse` and modify the inner constructor of `PolynomialSparse` so that *zero terms* are excluded from storage.  Utilize the [max heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) (which you can find in `src/utils/heap.jl`) ordered by term degree to accomplish this.
 
 3.  Rewrite the *constructors* in `src/polynomial_sparse.jl` to account for the new underlying representation.  
   
@@ -281,7 +281,7 @@ end
 7. Implement the following function to convert elements of `ZModP{T, N}` to `Int` or `BigInt`:
 
 ```
-    function lift(a::ZModP{T, N})::S where {T <: Integer, N, S <: Integer}
+    function (::Type{S})(a::ZModP)::S where {S <: Union{Int, BigInt}} 
 ```
 
 8. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
