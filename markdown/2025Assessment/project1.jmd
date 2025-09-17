@@ -1,7 +1,7 @@
 # Project \#1 - Semester 2, 2025
 # Univariate Polynomials with Integer Coefficients
   
-(last edit: September 11, 2025)
+(last edit: September 17, 2025)
    
 **Due Date & Late Submission Policy:** See [ECP](https://course-profiles.uq.edu.au/course-profiles/MATH2504-62116-7560#assessment)
   
@@ -78,7 +78,7 @@ Create your own example script called `example_script_task_1.jl` and include pol
 1.  construct (at least) *three* polynomials (say `f`, `g`, and `h`) using the given constructors for `PolynomialDense`,
 2.  compute `f + g`, `f * h`, `g * h`,
 3.  compute `derivative(f * g)` and show it is equal to what is expected when utilizing product rule,
-4.  compute `(f * h) ÷ h` modulo 5, 17 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 3, 7, and 101 is returned.
+4.  compute `(f * h) ÷ h` modulo 5, 17 and 101, and confirm using `mod` (in `polynomial_dense.jl`) that `f` modulo 5, 17, and 101 is returned.
 5.  compute `gcd_mod_p(f*h, g*h, p)` for `p` equal to 5, 11 and 13. 
     
 Basically, `example_script_task_1.jl` is an improvement over the minimally supplied `example_script.jl`.
@@ -116,7 +116,7 @@ abstract type Polynomial{C, D} end
 
 3. Refactor all functions in the file `src/polynomial_definitions/polynomial.jl` to account for these new parameters.  *Note: you may create a number (or any other concrete type) of type `T` by writing, for example, `T(5)`. The methods `zero(T)` and `one(T)` can create 0 and 1 of type `T`.*
 
-4. Refactor all functions in the directory (a.k.a. folder) `src/abstract` to account for these new parameters.
+4. Refactor all functions in the directory (a.k.a. folder) `src/basic_polynomial_operations/abstract` to account for these new parameters.
   
 #### Parameterising `PolynomialDense` (*5 points*)
 5. At this stage the `PolynomialDense` implementation will no longer work. Refactor the type `PolynomialDense` to accept two type parameters `{C, D}` such that the struct definition starts with 
@@ -224,7 +224,7 @@ end
 
 ```
     function ZModP{T, N}(a::T) where {T <: Integer, N}
-    function ZModP(a::T, Val{N})::ZMod where {T <: Integer, N}
+    function ZModP(a::T, ::Val{N})::ZModP{T, N} where {T <: Integer, N}
     function zero(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
     function one(::Type{ZModP{T, N}})::ZModP{T, N} where {T <: Integer, N}
     function zero(a::ZModP{T, N})::ZModP{T, N} where {T <: Integer, N}
@@ -267,7 +267,7 @@ end
 
 *Note: All the above operations should act as they do in $\mathbb{Z}_p$. E.g., $3 \cdot 2 = 6 \equiv 1\, (\text{mod}\, 5)$ should correspond to the code:*
 ```
-    a = ZModP(3, 5)
+    a = ZModP(3, Val(5))
     @show a * 2 # should print 1
 ```
 
