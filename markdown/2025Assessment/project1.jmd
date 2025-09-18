@@ -286,7 +286,7 @@ end
 
 8. Override the function `div` for `Term` (i.e., in `src/term.jl`) to implement it for terms with coefficient type `ZModP`.
 
-9. Utilising your constructors for `ZModP` and `lift` function, refactor the function `div_mod_p` for `Term` (i.e., in `src/term.jl`) to simply convert from the input type `Term{C, D}` to `Term{ZModP{C, N}, D}`, then call `div` and finally convert the result back to `Term{C, D}`.
+9. Utilising your constructors for `ZModP` and the function you created in 7., refactor the function `div_mod_p` for `Term` (i.e., in `src/term.jl`) to simply convert from the input type `Term{C, D}` to `Term{ZModP{C, N}, D}`, then call `div` and finally convert the result back to `Term{C, D}`.
 
 **Note:** you may make as many additional convenience/helper functions as you wish.
 
