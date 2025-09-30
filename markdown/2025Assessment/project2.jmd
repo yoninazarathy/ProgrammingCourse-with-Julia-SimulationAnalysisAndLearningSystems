@@ -1,34 +1,37 @@
-# Project \#2 - Semester 2, 2024
+# Project \#2 - Semester 2, 2025
 # Discrete Event Simulation of a Modulated Queueing Network (+ perspective seminar summary)
 
-(last edit: Sep 25, 2024)
+(last edit: Sep 30, 2025)
 
-See [Explainer video](https://www.youtube.com/watch?v=VI2usNCmVmg).
+**Due:** Friday, 24 October, 2025, 16:00. Late submissions are not accepted. **Work in pairs** - you must have a single partner for submission. Any deviation from this requires special permission from the course coordinator.
 
-**Due:** Friday, 18, October, 2024, 16:00. Late submissions are not accepted. **Work in pairs** - you must have a single partner for submission. Any deviation from this requires special permission from the course coordinator.
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday October 22.
 
-**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday October 16.
-
-**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are **10** points for the summary of Dr. Maithili Mehta's perspective seminar (this is not a bonus as in BigHW). The remaining **80** points are for the project itself.
+**Weights and marking criteria:** Total number of points: **100**. 
+* There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and most importantly the GitHub repo. 
+* The remaining **90** points are for the project itself. 
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
 
 **Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
 
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>-2504-2024-PROJECT2`. So for example if your names are "Little Pug" and "Big Hound" the repo name should be `Little-Pug__Big-Hound-2504-2024-PROJECT2`. Please invite `uqMATH2504` as a collaborator as early as possible.
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo *exactly* as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>-2504-2025-PROJECT2`. So for example if your names are "Little Pug" and "Big Hound" the repo name should be `Little-Pug__Big-Hound-2504-2025-PROJECT2`. Please invite `uqMATH2504-staff-2025` as a collaborator as early as possible.
 
-The PDF file should be a nice formatted file that has:
+The PDF file should be a nicely formatted file that includes:
 
-* Your names, student numbers, and assignment title (Project 2 - 2024) on the top.
+* Your names, student numbers, and assignment title (Project 2 - 2025) on the top.
 * A (clickable) link to your GitHub repo.
 * Instructions on how to run the main simulation code in the repo via an easy to use `simulation_script.jl` file.
 * All of the project code formatted in an organized manner.
 * Output and answers to specific questions formatted in an organized manner.
 * Plots and graphs should have clean organized labels, legends, etc.
 
-The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixelated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is cleanly formatted, and readable ([this page](https://carbon.now.sh) may be useful). 
 
 Marking responses will be made by the teaching staff by annotating (or leaving textual comments) regarding **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo and potentially run `simulation_script.jl`. A very readable and clean PDF file is important. In printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
 
 **Work in pairs but discuss with others**: This is work in pairs. Plagiarism between groups will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Answering Ed questions of others is recommended.
+
+<!-- 
 
 **Marking Criteria**: 
 
@@ -36,20 +39,19 @@ Marking responses will be made by the teaching staff by annotating (or leaving t
 
 * 10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness (the writeup should answer all questions posed). 2 points of originality and style.
 
-* 80 points are for the simulation project itself.
+* 90 points are for the simulation project itself.
 
 * In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
-
+-->
 ---
 
 ## Setting up your GitHub repo for hand-in (10pts)
 
 * Ideally use the same accounts you used for PROJECT1 and BigHW. Choose one of the team members to "own" the repo and the other(s) will be invited as collaborators.  
 * Make sure the repo is **private**.
-* Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date. You must make sure that `uqMATH2504` accepted the invitation, and follow up otherwise.
+* Invite the course GitHub user, `uqMATH2504-staff-2025` as a collaborator and follow up, in case the invitation is not accepted. You may do so early on while working on the project, and must do this no later than the project due date. 
 * Do **not** make any changes (commits) to the repo after the project due date. 
-* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
-* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+* Create a local clone of the repo. It is recommended to use the `git` command via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
 
 Your GitHub repo should be formatted exactly as follows:
 * Have a `README.md` file which states your names, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
@@ -57,13 +59,14 @@ Your GitHub repo should be formatted exactly as follows:
 * Have a `.gitignore` file.
 * Have basic running instructions on how to run the code. This can be similar to what was provided for Project 1 (polynomials). 
 * Have `src` and `test` folders similarly to Project 1.
-* Note: make sure that there aren't any files in your submission repo except for those mentioned above (with the exception of perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF). Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+* Note: make sure that your submission repo contains only those files mentioned above (with the exception of perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF). You may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
 * All code (except for scripting) is to be part of a Julia module (with the [module statement](https://docs.julialang.org/en/v1/manual/modules/)). Call the module `ModulatedJacksonSim`. (To avoid confusion, be aware that "modulated" for the network has nothing to do with "module" as in the module statement).
 * Make sure the project has a `Manifest.toml` and a `Project.toml` file that specify all the dependencies exactly. Do not have extra dependencies that are not used.
 * Have a `simulation_script.jl` file which runs all of the code needed for the tasks. As this script runs, make sure it prints some light intermediate output (e.g. progress), especially for simulations that take significant time to run.
 
 Since this project involves work in pairs, it is recommended that you try to use GitHub effectively. You may work on parallel branches with frequent merges (but this is not required), or work on the same branch via peer programming. The way you develop is not being assessed, still it is recommended you make good use of GitHub.
 
+<!--
 ## Perspective seminar question (10pts)
 
 Write a 1-4 paragraph summary of Dr. Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person, or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
@@ -77,18 +80,21 @@ The writeup should address the following questions:
 1. Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous talk.
 
 Note: Since the submission is in pairs you should only submit a single writeup for the pair/group.
+-->
 
 ## Overview of the model
 
-Your key task is to create a discrete event simulation engine for stochastic models that are called "Modulated Open Jackson Networks". [Jackson networks](https://en.wikipedia.org/wiki/Jackson_network) are well studied in classical "applied probability" and "stochastic modelling". The phrase "modulated" means that the parameters of the network vary over time. "Modulated" networks are less amenable to closed form mathematical results (explicit formulas) - and this is why we will use discrete event simulation to analyze them. The "Open" phrase implies that customers may enter and leave these networks (in contrast with "closed" networks that have a finite number of customers). Note: you do not need to dive deeply into the Wikipedia entries or other literature. All the information you need about the model is supplied in this project description.
+You may want to listen to last year's [Explainer video](https://www.youtube.com/watch?v=VI2usNCmVmg) by Yoni Nazarathy.
 
-A Jackson network (or "open Jackson network") is a network of queues (also known as "nodes" or "stations") where customers (also known as "jobs") arrive from the outside world, are served at the queues in a "first come first served manner" and then move to other nodes or leave. As a very rough motivational example consider an amusement park (e.g. [Dream World](https://www.dreamworld.com.au/)). There are multiple rides, and individuals move throughout the park and queue up for rides. At any point (after finishing a ride) an individual may go home, or alternatively they may go to the next ride, and so-fourth. However, this is just a rough motivation and there are several significant differences between the (modulated) Jackson network models you will simulate and what may constitute something like an amusement park. You are asked to discuss these differences in Task 1. Below is a detailed mathematical description of the model.
+Your key task is to create a discrete event simulation engine for stochastic models that are called "Modulated Open Jackson Networks". [Jackson networks](https://en.wikipedia.org/wiki/Jackson_network) are well studied in classical "applied probability" and "stochastic modelling". The phrase "modulated" means that the parameters of the network vary over time. <!--"Modulated" networks are less amenable to closed form mathematical results (explicit formulas) - and this is why we will use discrete event simulation to analyze them.--> The "Open" phrase implies that customers may enter and leave these networks (in contrast with "closed" networks that have a finite number of customers). <!--Note: you do not need to dive deeply into the Wikipedia entries or other literature. All the information you need about the model is supplied in this project description.-->
 
-There are $L$ stations (e.g. $L=5$ or $L=100$) and each station has a  **server** and a **waiting buffer** (or queue). There are jobs traversing through the network and the stations. If needed, jobs can be uniquely identified (numbered) via $\ell=1,2,3,\ldots$ and it is expected that the simulation processes thousands, or millions of job, so that if you track individual jobs then $\ell$ is an increasing counter of the jobs.
+A Jackson network (or "open Jackson network") is a network of queues (also known as "nodes" or "stations") where customers (also known as "jobs") arrive from the outside world, are served at the queues in a "first-come first-served manner" and then move to other nodes or leave. As a very rough motivational example consider an amusement park. There are multiple rides, and individuals move throughout the park and queue up for rides. At any point (after finishing a ride) an individual may go home, or, alternatively, go to the next ride, and so forth. <!--However, this is just a rough motivation and there are several significant differences between the (modulated) Jackson network models you will simulate and what may constitute something like an amusement park. You are asked to discuss these differences in Task 1.--> Below is a detailed mathematical description of the model.
+
+There are $L$ stations (e.g. $L=5$ or $L=100$) and each station has a  **server** and a **waiting buffer** (or queue). There are jobs traversing through the network and the stations. If needed, jobs can be uniquely identified (numbered) via $\ell=1,2,3,\ldots$ and it is expected that the simulation processes thousands, or millions of jobs, so that if you track individual jobs then $\ell$ is an increasing counter of the jobs.
 
 A job's location can be one of:
 
-* Out the system prior to arrival (the job still doesn't exist).
+* Out of the system prior to arrival (the job still doesn't exist).
 * In the system in a buffer of one of the stations (queueing - i.e. waiting for its turn to enter service).
 * In the system at one of the stations being served by the server at that station. This means it is "at the head" of the queue (and being served).
 * Out of the system after leaving.
@@ -105,11 +111,11 @@ The rate of arrivals of jobs to nodes from the outside world is $\alpha_i \ge 0$
 
 As for the durations of service times we will set them also as exponentially distributed. This assumption of Poisson arrival processes and exponentially distributed service time is what makes the network an "Open Jackson network". Mathematically it means the network can be described by a "continuous time Markov chain" (you do not need to know these details for this project). In such a case, some explicit results exist and you could use these to test some parts (this is in Task 2 and Task 3). However, the **modulation** component of the model, described below, implies that generally, the model is more complicated than an Open Jackson Network. In this case, explicit results are much more scarce and hence the simulation model may yield information that is not available otherwise.
 
-When a job completes service it either leaves the system immediately, or immediately moves to another buffer. The choice of its destination is based on the routing matrix $P$. Here $P_{i,j}$ is probability of going to station j after completing service in station $i$.  It is assumed that $P$ has non-negative entries and has a spectral radius less than $1$. Mathematically this means that the maximal absolute value of eigenvalues of $P$ is less than unity. It also means that jobs may always eventually leave the system and that at least some rows of the matrix $P$ sum up to less than $1$. The probability of a job leaving the system (immediately) after service at station $i$ is $1 - \sum_{j=1}^L P_{i,j}$.
+When a job completes service it either leaves the system immediately, or immediately moves to another buffer. The choice of its destination is based on the routing matrix $P$. Here $P_{i,j}$ is probability of going to station j after completing service in station $i$.  It is assumed that $P$ has non-negative entries and has a spectral radius less than $1$. Mathematically this means that the maximal absolute value of eigenvalues of $P$ is less than 1. It also means that jobs may always eventually leave the system and that at least some rows of the matrix $P$ sum up to less than $1$. The probability of a job leaving the system (immediately) after service at station $i$ is $1 - \sum_{j=1}^L P_{i,j}$.
 
 *Tip:* Recall (4) from Question 14 of BigHW. The `sample()` function from `StatsBase.jl` may help generate the location (node) of the next job when carrying out the simulation. Yet keep in mind that "outside of the system" is also a possible location.
 
-Now let us now describe how **modulation** takes place. With this model feature, the service rates of nodes are not fixed at $\mu_1,\ldots,\mu_L$ but rather alternate between the rates $\mu_1^{(1)},\ldots,\mu_L^{(1)}$ and the rates $\mu_1^{(2)},\ldots,\mu_L^{(2)}$. Let us also assume that $\mu_i^{(1)} < \mu_i^{(2)}$ for all $i$. I.e the second set of rates is "faster" than the first set of rates. Hence the system is either in "slow mode" (rates with superscript (1)), or is "fast mode" (rates with superscript (2)). At any given time, the mode of the system is either `slow` or `fast` and when this change happens, all rates instantly change. Very loosely, in the amusement park setting you can think of `slow` as a situation where rides only work with some employees and equipment while `fast` is a situation where rides work with more employees and equipment and operate faster. Modulation is then the process of changing between `slow` and `fast` back and fourth. 
+Now let us now describe how **modulation** takes place. With this model feature, the service rates of nodes are not fixed at $\mu_1,\ldots,\mu_L$ but rather alternate between the rates $\mu_1,\ldots,\mu_L$ and the rates $\kappa\mu_1,\ldots,\kappa\mu_L$, with $\kappa>1$. I.e the second set of rates is "faster" than the first set of rates. Hence the system is either in "slow mode" (rates denoted $\mu_i$), or is "fast mode" (rates denoted $\kappa\mu_i$). At any given time, the mode of the system is either `slow` or `fast` and when this change happens, all rates instantly change. Very loosely, in the amusement park setting you can think of `slow` as a situation where rides only work with some employees and equipment while `fast` is a situation where rides work with more employees and equipment and operate faster. Modulation is then the process of changing between `slow` and `fast` back and forth. 
 
 The process of changing (modulating) between "slow mode" (`slow`) and "fast mode" (`fast`) occurs independently of the jobs in the system, and for all servers together. Specifically the system changes between `slow` and `fast` and back as follows: `slow` durations are exponentially distributed with mean $\gamma_1^{-1}$ where $\gamma_1 > 0$. `fast` durations are exponentially distributed with mean $\gamma_2^{-1}$ where $\gamma_2 > 0$. The system alternates between `slow` and `fast` and back based on such independent random variables. The system starts in `slow`, then changes to `fast`, then back to `slow`, and so fourth. We denote the long term proportion of time that the system is `slow` via $R^{(1)}$. This quantity is,
 
@@ -117,7 +123,7 @@ $$
 R^{(1)} = \frac{\gamma_2}{\gamma_1 + \gamma_2} = \frac{\gamma_1^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
 $$
 
-Similarly the long term proportion of time that the system is in `fast`, $R^{(2)}$ is just $1-R^{(1)}$ or,
+Similarly the long term proportion of time that the system is in `fast`, $R^{(2)}$ is just $1-R^{(2)}$ or,
 
 $$
 R^{(2)} = \frac{\gamma_1}{\gamma_1 + \gamma_2} = \frac{\gamma_2^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
@@ -125,14 +131,14 @@ $$
 
 Note that if $R^{(1)} = 1$ or $R^{(2)} = 1$ it means that the system is either always `slow` or respectively always `fast`. This can be approximated for "always `slow`" by sending $\gamma_1 \to 0$ (infinitely small "changing to fast" rate). Similarly $\gamma_2 \to 0$ will achieve "always `fast`". We call these **test cases** the **always slow** and **always fast** test cases. They are important because in this case the network is essentially just an Open Jackson Network (not modulated).
 
-When the system changes mode (`slow` to `fast` or the other way), any service time of a job currently in service is purged and the service restarts for that job at a new service duration according to the new mode. So for example assume that server number 7 has a job that entered service at time `9.9` when the system was `slow`. This means that at time `9.9` the service duration was drawn with rate $\mu_7^{(1)}$. Say that this duration is `3.3`. Hence the job is due to leave service at time `13.2`. Now assume that at time `11.4` the system changes duration to mode `fast`. Then at that point the job in service for server 7 needs to forget that it is due to leave at time `13.2` and instead a new service duration is drawn. That duration is exponentially distributed with rate $\mu_7^{(2)}$.
+When the system changes mode (`slow` to `fast` or the other way), any service time of a job currently in service is purged and the service restarts for that job at a new service duration according to the new mode. So for example assume that server number 7 has a job that entered service at time `9.9` when the system was `slow`. This means that at time `9.9` the service duration was drawn with rate $\mu_7$. Say that this duration is `3.3`. Hence the job is due to leave service at time `13.2`. Now assume that at time `11.4` the system switches to `fast` mode. Then at that point the job in service for server 7 needs to forget that it is due to leave at time `13.2` and instead a new service duration is drawn. That duration is exponentially distributed with rate $\kappa\mu_7$. Say the new service duration is `2.3`, the job is now due to finish service at `11.4+2.3=13.7`.
 
-In a modelling setting we may expect to have the modulation occur at a rate much slower than the arrival and service rates. I.e. the rates $\alpha_i$, $\mu_i^{(1)}$, and $\mu_i^{(2)}$ should generally be much larger than the rates of modulation, $\gamma_1$ and $\gamma_2$. For example in the amusement park example we can believe that staffing levels change in the order of hours while arrivals and ride durations are in the orders of seconds and minutes. 
+In a modelling setting we may expect to have the modulation occur at a rate much slower than the arrival and service rates. I.e. the rates $\alpha_i$, $\mu_i$, and $\kappa\mu_i$ should generally be much larger than the rates of modulation, $\gamma_1$ and $\gamma_2$. For example in the amusement park example we can believe that staffing levels change in the order of hours while arrivals and ride durations are in the orders of seconds and minutes. 
 
 While this may not be useful for modelling real scenarios, if we take $\gamma_1 \to \infty$ and $\gamma_2 \to \infty$ (very quick modulation), and under the exponential random variable assumptions, it will mean that the system acts like a non-modulated network (just an Open Jackson Network) with service rates,
 
 $$
-\tilde{\mu}_i =  R^{(1)} \mu_i^{(1)} + R^{(2)} \mu_i^{(2)}.
+\tilde{\mu}_i =  R^{(1)} \mu_i + R^{(2)} \kappa\mu_i.
 $$
 
 We call this $\gamma_1 \to \infty$ and $\gamma_2 \to \infty$ case the **super fast modulation** case. It is an important test case because like the **always slow** and **always fast** test cases, it should also yield results as an Open Jackson Network (non modulated) with service rates $\tilde{\mu}$. 
@@ -140,16 +146,7 @@ We call this $\gamma_1 \to \infty$ and $\gamma_2 \to \infty$ case the **super fa
 These averaged service rates, $\tilde{\mu}_i$, are also important in the stability condition we describe below. Note also below, that when we consider notation like $\mu$, or $\tilde{\mu}$, or $\alpha$, we refer to the $L$ dimensional vector of the individual entries.
 
 ## Overview of model parameters
-
-As an intermediate summary, the parameters for a network are:
-* The dimension of the network (number of nodes): $L$.
-* The external arrival rates: $\alpha_1,\ldots,\alpha_L$, with $\alpha_i \ge 0$ for all $i$, and $\alpha_i > 0$ for at least one $i$. (Vector $\alpha$).
-* The slow service rates: $\mu_1^{(1)},\ldots,\mu_L^{(1)}$, with $\mu_i^{(1)} > 0$ for all $i$. (Vector $\mu^{(1)}$).
-* The fast service rates: $\mu_1^{(2)},\ldots,\mu_L^{(2)}$, with $\mu_i^{(2)} > 0$ for all $i$.  (Vector $\mu^{(2)}$).
-* The modulation rates. Slow to fast: $\gamma_1$. Fast to slow: $\gamma_2$.
-* The $L \times L$ routing matrix $P$.
-
-However, as a slight simplification, we will set $\mu_i^{(2)} = \kappa \mu_i^{(1)}$ for all $i$ with $\kappa > 1$. Hence $\kappa$ is the speedup parameter (with same "speedup" applied to all servers). For this we just denote $\mu_i^{(1)}$ as $\mu_i$. Hence $\mu_i^{(2)} = \kappa \mu_i$. This way, **the parameters of the network that we shall use are:**
+**The parameters of the network that we shall use are:**
 
 * The dimension of the network (number of nodes): $L$.
 * The external arrival rates: $\alpha_1,\ldots,\alpha_L$, with $\alpha_i \ge 0$ for all $i$, and $\alpha_i > 0$ for at least one $i$. (Vector $\alpha$).
@@ -170,7 +167,7 @@ $$
 \gamma_2 = \gamma_1 \frac{R^{(1)}}{1-R^{(1)}}.
 $$
 
-*Tip:* You'll be generating a-lot of exponentially distributed random variables. For example this is a distribution with $\mu = 2.5$ or a mean of $0.4$.
+*Tip:* You'll be generating a lot of exponentially distributed random variables. For example this is a distribution with $\mu = 2.5$ or a mean of $0.4$.
 
 ```julia
 using Distributions, Statistics
@@ -189,7 +186,7 @@ data = [rand(dist) for _ in 1:10^6]
 
 ## Arrival rates to nodes and traffic equations
 
-Jobs arrive to nodes either from outside our internally after being routed to a node. Combining both of these arrivals, a basic quantity one can measure is the rate of arrivals to a given node $i$. That is,
+Jobs arrive to nodes either from outside or internally after being routed to a node. Combining both of these arrivals, a basic quantity one can measure is the rate of arrivals to a given node $i$. That is,
 
 $$
 \lambda_i = \lim_{t \to \infty} \frac{A_i(t)}{t},
@@ -204,10 +201,10 @@ $$
 \text{(Traffic equations)}
 $$
 
-where $\lambda$ is a (column) vector of $\lambda_i$ values, and $\alpha$ and $\mu$ are also column vectors of the respective quantities. These "Traffic equations" hold as long as the solution to the equation $\lambda = (I-P^\top)^{-1} \alpha$ satisfies, $\lambda < \tilde{\mu}$. Here the inequality between vectors requires element wise inequality on all elements. To understand the traffic equations further, look at them for each $i$:
+where $\lambda$ is a (column) vector of $\lambda_i$ values, and $\alpha$ and $\mu$ are also column vectors of the respective quantities. These "Traffic equations" hold as long as the solution to the equation $\lambda = (I-P^\top)^{-1} \alpha$ satisfies, $\lambda < \tilde{\mu}$. Here the inequality between vectors requires element-wise inequality on all elements. To understand the traffic equations further, look at them for each $i$:
 
 $$
-\lambda_i = \alpha_i + \sum_{j=1}^L P_{j,i} \lambda_j.
+\lambda_i = \underbrace{\alpha_i}_{\rm external} + \underbrace{\sum_{j=1}^L P_{j,i} \lambda_j}_{\rm internal}.
 $$
 
 *Intuition:* Observe that $\lambda_i$ is equated to the sum of external arrivals and all internal arrivals from other nodes $j$ routed with proportions $P_{j,i}$. This holds as long as the input rates to all nodes $j$ are less than the averaged (for modulation) service rate.
@@ -220,7 +217,7 @@ We will denote the **load for node $i$** via $\rho_i = \lambda_i/\tilde{\mu}_i$ 
 
 In general, it is known that as each $\rho_i$ grows, the congestion in the individual queue at node $i$ increases in the sense that "on average", there are larger steady state queues and longer wait times. Further, as $\rho^*$ grows, the general congestion in the network grows. Since we consider $\rho^* < 1$, we only focus on networks that are stable, yet if $\rho^* \approx 1$, e.g. $=0.95$, they are highly congested. 
 
-For a (non-modulated) Open Jackson Network, one can prove that the steady state queue length of each individual queue $i$ has a "geometric distribution" on $0, 1, 2,\ldots$ with a mean of $\rho_i/(1-\rho_i)$. Many more such theoretical results exists, yet we skip the details. This relationship appears as follows: 
+For a (non-modulated) Open Jackson Network, one can prove that the steady state queue length of each individual queue $i$ has a "geometric distribution" on $0, 1, 2,\ldots$ with a mean of $\rho_i/(1-\rho_i)$. Many more such theoretical results exist, yet we skip the details. This relationship appears as follows: 
 
 ```julia
 using Plots
@@ -228,12 +225,12 @@ using Plots
 mean_steady_state_queue_size(ρ) = ρ/(1-ρ) #Theoretical steady state mean queue length (also of M/M/1 queue).
 plot(ρ_grid, mean_steady_state_queue_size.(ρ_grid), 
         xlabel = "ρ", ylabel = "Mean steady state queue length\nfor an individual node",
-        label = false, lw = 2, c = :black, xlim = (0,1),ylim=(0,20))
+        label = false, lw = 2, c = :black, xlim = (0,1),  ylim=(0,20))
 ```   
 
 However with modulation, there is not an explicit simple relationship. One of the main goals of the project is to quantify the effect of modulation.
 
-*Tip:* In the tasks below you are not expected to look at a node per-se but rather at the whole network. You would thus create a superposition of graphs as above, where you sum up all of the queues in the network. When considering the whole network, your x-axis would not be an individual $\rho_i$ but rather $\rho^*$.
+*Tip:* In the tasks below you are not expected to look at a node per se but rather at the whole network. You would thus create a superposition of graphs as above, where you sum up all of the queues in the network. When considering the whole network, your x-axis would not be an individual $\rho_i$ but rather $\rho^*$.
 
 ## Example scenarios (networks)
 
@@ -272,7 +269,7 @@ scenario1 = NetworkParameters(  L=3,
 ############################
 # Three queues in tandem with option to return back to first queue
 scenario2 = @set scenario1.P  = [0 1.0 0; #The @set macro is from Accessors.jl and allows to easily make a 
-                                 0 0 1.0; # modified copied of an (immutable) struct
+                                 0 0 1.0; # modified copy of an (immutable) struct
                                  0.3 0 0] 
 
 ############################
@@ -289,7 +286,7 @@ scenario3 = NetworkParameters(  L=5,
 ############################
 # A large arbitrary network
 
-#Generate some random(arbitrary) matrix P
+#Generate some random (arbitrary) matrix P
 Random.seed!(0)
 L = 100
 P = rand(L,L)
@@ -308,7 +305,8 @@ For each of these scenarios you can modify certain parameters. Importantly, the 
 
 This task does not involve any coding or computation. Your answer can be in paragraph form or bullet point form. Consider the Modulated Jackson Network model and the application of a "Dream World" amusement park. As mentioned above, the model can be used to model customer congestion in the amusement park. However, like any model it is at best a rough approximation of reality. Describe some features that exist in the amusement park setting that are **not** captured by the model. Similarly, describe model assumptions that may be **unrealistic** for the application of the amusement park.
 
-Also answer the following: If you were actually using this model to assess congestion at the park, would it be useful or not? What would you use such a model for in the context of the park? What operational answers can you get with the aid of such simulations? To get insight for answering this question, you may (but are not required to) watch a perspective seminar lecture by Dr. Anna Foeglein (previous years). In that lecture Anna describes her work as a simulation professional. [Anna's talk on YouTube](https://www.youtube.com/watch?v=tM87YGLmBgA).
+Also answer the following: If you were actually using this model to assess congestion at the park, would it be useful or not? What would you use such a model for in the context of the park? What operational answers can you get with the aid of such simulations? To get insight for answering this question, you may (but are not required to) reference the perspective seminar lecture by Dr. Anna Foeglein. In that lecture Anna describes her work as a simulation professional.
+
 
 # Task 2: Computation for Jackson Networks (10pts)
 
@@ -330,12 +328,12 @@ println("The maximal scalings for scenarios 1 to 4 are: $max_scalings")
 """
 Use this function to adjust the network parameters to the desired ρ⋆, and other parameters
 """
-function set_scenario(net::NetworkParameters, ρstar::Float64; κ::Float64 = 2.0, γ₁::Float64 = 10^-8, R::Float64 = 1-10^-8)
+function set_scenario(net::NetworkParameters, ρstar::Float64; κ::Float64 = 2.0, γ₁::Float64 = 10^-8, R1::Float64 = 1-10^-8)
     κ ≤ 1 && error("κ is out of range")  
     (ρstar ≤ 0 || ρstar ≥ 1) && error("ρ⋆ is out of range")  
-    (R ≤ 0 || R > 1) && error("R is out of range")  
+    (R1 ≤ 0 || R1 > 1) && error("R¹ is out of range")  
     net = @set net.γ₁ = γ₁
-    net = @set net.γ₂ = net.γ₁ * R/(1-R) #set γ₂ based on given γ₁ and R
+    net = @set net.γ₂ = net.γ₁ * R1/(1-R1) #set γ₂ based on given γ₁ and R1
     net = @set net.κ = κ
     max_scaling = maximal_alpha_scaling(net)
     net = @set net.α_vector = net.α_vector*max_scaling*ρstar #max_scaling*ρstar is the scaling factor applied to the original alpha
@@ -348,7 +346,7 @@ end;
 For example set the parameters of scenario 2 to have $\rho^* = 0.7$, a default $\kappa$, a value of $\gamma_1 =  0.1$, and a value of $R^{(1)} = 0.7$ we do:
 
 ```julia
-adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R = 0.7)
+adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R1 = 0.7)
 @show adjusted_net.α_vector
 @show adjusted_net.γ₁, adjusted_net.γ₂
 
@@ -363,10 +361,10 @@ R1,R2=adjusted_net.γ₂/(adjusted_net.γ₁+adjusted_net.γ₂),adjusted_net.γ
 @show ρ_star;
 ```
 
-Where as if we repeat with $\kappa = 3$ you can see that now $\alpha_1$ is increased because now in `fast` mode the system is faster. So to accommodate for the same target $\rho^*$ we can have a faster arrival rate.
+Whereas if we repeat with $\kappa = 3$ you can see that now $\alpha_1$ is increased because now in `fast` mode the system is faster. So to accommodate for the same target $\rho^*$ we can have a faster arrival rate.
 
 ```julia
-adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R = 0.7, κ = 3.0)
+adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R1 = 0.7, κ = 3.0)
 @show adjusted_net.α_vector
 
 λ = (I - adjusted_net.P') \ adjusted_net.α_vector #Solve the traffic equations
@@ -375,7 +373,7 @@ adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R = 0.7, κ = 3.0)
 @show ρ_star;
 ```
 
-Now, after you take time to understand the code and computations above, assume we are in one of three test cases, the **always slow** case, the **always fast** case, or the **super fast modulation** case. Since each of these cases agree with a (non-modulated) Open Jackson Network we'll use these cases as test code later. At this point, set parameters for each scenario and each of these cases (choose the $\gamma_1$ and $R^{(1)}$ parameters as you like, as long as they approximate these cases; keep $\kappa = 2$). Then for each of the 4 scenarios and each of the 3 cases create a plot of the Open Jackson Network **total steady state mean queue lengths** as a function of $\rho^*$. For this, simply use the fact that the theoretical steady state mean queue length for individual queue $i$ is $\rho_i/(1-\rho_i)$. Then superimpose (add) the queue length of all $L$ queues in the scenario. Note the plots you create will not be affected by the type of test case (always slow, always fast, or super fast modulation). So it is enough to present 4 plots (no need for 12). Still, you will use this code below for testing. The idea here is that you know what type of behavior to expect from the network in these cases. 
+Now, after you take time to understand the code and computations above, assume we are in one of three test cases, the **always slow** case, the **always fast** case, or the **super fast modulation** case. Since each of these cases agree with a (non-modulated) Open Jackson Network we'll use these cases as test code later. At this point, set parameters for each scenario and each of these cases (choose the $\gamma_1$ and $R^{(1)}$ parameters as you like, as long as they approximate these cases; keep $\kappa = 2$). Then for each of the 4 scenarios and each of the 3 cases create a plot of the Open Jackson Network **total steady state mean queue lengths** as a function of $\rho^*$. For this, simply use the fact that the theoretical steady state mean queue length for individual queue $i$ is $\rho_i/(1-\rho_i)$. Then add the queue length of all $L$ queues in the scenario. Note the plots you create will not be affected by the type of test case (always slow, always fast, or super fast modulation). So it is enough to present 4 plots (no need for 12). Still, you will use this code below for testing. The idea here is that you know what type of behavior to expect from the network in these cases. 
 
 ## Task 3: A Simulation Engine Based on Queue States (30pts)
 
@@ -453,5 +451,5 @@ Now that the simulation appears to be working correctly (based on your tests abo
 
 For each of the four scenarios stay with $\kappa = 2$ and $\gamma_1 = 0.1$. Now consider $R^{(1)} \in \{0.1, 0.2, 0.3, 0.4, 0.5, 0.9\}$. Use these 24 parameter values ($6\times 4$) to run simulations and create plots of the estimated mean total queue length as a function of $\rho^*$. A total of 24 curves on four plots, one plot for each scenario (with 6 curves in a plot). In all plots, the x-axis is always $\rho^*$ and the y-axis is the estimated total steady queue size in the network. Make sure the legend is properly marked and placed on each plot and that you have an easy script to create all plots. If you have any conclusions from your simulation plots, briefly describe them. Ponder why you get the curves that you get.  
 
-**Tip**: Start with short simulation runs to make sure your plots are well formatted. Then once formatting is complete, go for longer runs to decrease the variance of the estimated curves. Note that in each case you will use a grid of $\rho^*$, so there are many (e.g. 100) simulation runs per curve. As you develop this, start with a smaller grid.
+**Tip**: Start with short simulation runs to make sure your plots are well formatted. Then once formatting is complete, go for longer runs to decrease the variance of the estimated curves. Note that in each case you will use a grid of $\rho^*$, so there are many simulation runs per curve (e.g. 100) . As you develop this, start with a smaller grid.
 

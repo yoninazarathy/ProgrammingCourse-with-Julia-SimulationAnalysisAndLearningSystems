@@ -1,6 +1,7 @@
 using Weave
 cd(@__DIR__)
 using Pkg; Pkg.activate("..")
+Pkg.instantiate()
 cd("..")
 
 # https://github.com/JunoLab/Weave.jl/issues/436#issuecomment-1600972329
@@ -11,8 +12,8 @@ kwargs = (doctype = "md2html", out_path = "assessment_html", template = "math250
 assesmentSubfolder = "2025Assessment"
 
 # weave("markdown/$(assesmentSubfolder)/bighw.jmd"; kwargs...)
-weave("markdown/$(assesmentSubfolder)/project1.jmd"; kwargs...)
-# weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
+# weave("markdown/$(assesmentSubfolder)/project1.jmd"; kwargs...)
+weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
 # weave("markdown/$(assesmentSubfolder)/project3.jmd"; kwargs...)#
 
 
