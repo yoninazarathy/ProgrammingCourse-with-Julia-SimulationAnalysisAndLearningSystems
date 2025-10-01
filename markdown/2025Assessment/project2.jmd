@@ -308,7 +308,7 @@ This task does not involve any coding or computation. Your answer can be in para
 Also answer the following: If you were actually using this model to assess congestion at the park, would it be useful or not? What would you use such a model for in the context of the park? What operational answers can you get with the aid of such simulations? To get insight for answering this question, you may (but are not required to) reference the perspective seminar lecture by Dr. Anna Foeglein. In that lecture Anna describes her work as a simulation professional.
 
 
-# Task 2: Computation for Jackson Networks (10pts)
+# Task 2: Computation for Jackson Networks (12pts)
 
 We provide you with the functions `maximal_alpha_scaling()` and `set_scenario()` for adapting parameters of a scenario for a desired $\rho^*$ value. These functions also set modulation related parameters, $\kappa$, $\gamma_1$ and $R^{(1)}$.
 
@@ -375,7 +375,7 @@ adjusted_net = set_scenario(scenario2, 0.7; γ₁ = 0.1, R1 = 0.7, κ = 3.0)
 
 Now, after you take time to understand the code and computations above, assume we are in one of three test cases, the **always slow** case, the **always fast** case, or the **super fast modulation** case. Since each of these cases agree with a (non-modulated) Open Jackson Network we'll use these cases as test code later. At this point, set parameters for each scenario and each of these cases (choose the $\gamma_1$ and $R^{(1)}$ parameters as you like, as long as they approximate these cases; keep $\kappa = 2$). Then for each of the 4 scenarios and each of the 3 cases create a plot of the Open Jackson Network **total steady state mean queue lengths** as a function of $\rho^*$. For this, simply use the fact that the theoretical steady state mean queue length for individual queue $i$ is $\rho_i/(1-\rho_i)$. Then add the queue length of all $L$ queues in the scenario. Note the plots you create will not be affected by the type of test case (always slow, always fast, or super fast modulation). So it is enough to present 4 plots (no need for 12). Still, you will use this code below for testing. The idea here is that you know what type of behavior to expect from the network in these cases. 
 
-## Task 3: A Simulation Engine Based on Queue States (30pts)
+## Task 3: A Simulation Engine Based on Queue States (33pts)
 
 Create a simulation engine which can be run either with the following `sim_net_trace` function or the `sim_net_estimation` function.
 
@@ -445,7 +445,7 @@ Now you can test/explore the simulation in several ways, each time comparing to 
 
 These tests may be placed in your `test` folder. For them to be automatic you would require thresholds as they are statistical (noisy tests). So making the tests automatic is not required.  
 
-## Task 5: Analysis of the effect of modulation on Mean Queue Sizes (15pts)
+## Task 5: Analysis of the effect of modulation on Mean Queue Sizes (20pts)
 
 Now that the simulation appears to be working correctly (based on your tests above), use your simulation engine to carry out a study. In particular we are interested in the effect of modulation on mean queue sizes. For networks with the same $\rho^*$, how does modulation affect mean queues? We know that as $\rho^*$ increases from $0$ towards $1$, mean queue sizes increase. But what about modulation? The answer to this is not clear.
 
