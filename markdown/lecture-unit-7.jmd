@@ -2,7 +2,7 @@
 
 In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and simulation, as well as structured software design. 
 
-[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhattan Project by Stan Ulam, John von Neuman and Nicholas Metropolis to describe a new type of statistical sampling method they devised for performing calculations on the ENIAC (the first programmable, electronic computer) — and they chose the name on the basis of where Ulam's uncle spent considerable time gambling.
+[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhattan Project by Stan Ulam, John von Neuman and Nicholas Metropolis to describe a new type of statistical sampling - the name chosen based on the city where Ulam's uncle spent considerable time gambling. The method was used to compute the random scattering of neutrons within a nuclear device, first with an analog device called the [FERMIAC](https://hackaday.com/2015/09/11/fermiac-the-computer-that-advanced-the-manhattan-project) and shortly later on the ENIAC (the first programmable, electronic computer). 
 
 The concept of statistical sampling from a distribution was not new — it was known how to solve a problem involving randomness or uncertainty by running a series of deterministic calculations over e.g. different initial conditions chosen from a distribution at random. The new insight was that there are a wide range of deterministic problems that could be solved via random simulations (such as simulated annealing), which became known as the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method). These days, for either case it is common to say you "use Monte Carlo" whenever you use some form of randomness (or more typically, pseudorandomness) as part of an algorithm or computation.
 
@@ -12,16 +12,15 @@ The mathematics and modelling concepts that this unit covers are:
 
 * A light introduction to (uniform) pseudorandom numbers. How they are generated and what to expect from them.
 * Generation of random numbers drawn from arbitrary distributions based on _uniform_ pseudorandom numbers.
-* A light overview of multiple applications of pseudorandom numbers including the bootstrap method in statistics and Markov-chain Monte Carlo (MCMC) — this is just an overview.
 * Discrete event simulation modelling and the structure of a discrete event simulation engine.
-* Understanding the heap data structure which is the best known implementation of a priority queue (needed for discrete event simulation engine).
+* Time permitting, a light overview of multiple applications of pseudorandom numbers including the bootstrap method in statistics and Markov-chain Monte Carlo (MCMC).
 
 In addition to the mathematical and modelling concepts that you'll pick up in this unit, you will also further your understanding of programming, data structures, and Julia. Specifically you will cover:
 
 * The heap data structure and its inner workings.
 * More practice with parametric types and designing types (`struct`s).
 * Working with Julia modules and structuring a larger program.
-* Further understanding how to benchmark and optimize code.
+* How to test, benchmark and optimize your code
 
 In terms of Monte Carlo and discrete event simulation, you will be learning different ways to run simulations and how interpret the accuracy (statistic significance) of the results. You will be building an "engine" for solving not just one mathematical problem, but an entire class of problems specified by input data (configuration).
 
@@ -85,8 +84,9 @@ $$
 x_{n+1} = (a \,x_n + c ) ~\mbox{mod}~ m.
 $$
 
-The integer parameters $a$, $c$ and $m$ are fixed and specify the details of the LCG. Some number theory research has determined "good" values of $a$ and $c$ for specific values of $m$. For example, for $m=2^{32}$, setting $a=69069$ and $c=1$ yields sensible performance (other possibilities work well, but not all). Here we generate values based on this LCG: 
+The integer parameters $a$, $c$ and $m$ are fixed and specify the details of the LCG. Some number theory research has determined "good" values of $a$ and $c$ for specific values of $m$. For example, for $m=2^{32}$, setting $a=69069$ and $c=1$ yields sensible performance. The choice needs to be made carefully as many options yield poor performance. For one famously bad example, see the IBM [RANDU](https://en.wikipedia.org/wiki/RANDU) generator.
 
+Here we generate values based on the following LCG: 
 
 ```julia
 using Plots, LaTeXStrings, Measures
@@ -395,7 +395,7 @@ So long as the rejection probability is not too large (very close to 1), this ca
 
 #### Poisson distribution
 
-To finish off this section (optional) here is a code to generate a Poisson random variable with (mean) parameter $\lambda$:
+To finish off this section (optional) here is a code to generate a Poisson random variable with parameter $\lambda$ - the distribution over number of events $k$ occurring within a time interval, given that events occur independently and at a mean rate of $\lambda$ within the time interval.
 
 ```julia
 using StatsBase, Distributions, Plots
