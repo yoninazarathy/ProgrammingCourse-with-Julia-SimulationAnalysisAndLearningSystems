@@ -123,7 +123,7 @@ $$
 R^{(1)} = \frac{\gamma_2}{\gamma_1 + \gamma_2} = \frac{\gamma_1^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
 $$
 
-Similarly the long term proportion of time that the system is in `fast`, $R^{(2)}$ is just $1-R^{(2)}$ or,
+Similarly the long term proportion of time that the system is in `fast`, $R^{(2)}$ is just $1-R^{(1)}$ or,
 
 $$
 R^{(2)} = \frac{\gamma_1}{\gamma_1 + \gamma_2} = \frac{\gamma_2^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
