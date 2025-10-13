@@ -391,40 +391,114 @@ c = [x[i]^2 + y[i]^2 <= 1 ? :blue : :red for i in 1:length(x)]
 scatter(x, y; c, xlabel = "x", ylabel = "y", label = "", aspect_ratio = :equal)
 ```
 
-So long as the rejection probability is not too large (very close to 1), this can be an efficient technique.  In fact, many of Julia's fast random number generators, including `randn()` use a clever variant of this technique called the Ziggurat algorithm.
+So long as the rejection probability is not too large (very close to 1), this can be an efficient technique. In fact, many of Julia's fast random number generators, including `randn()` use a clever variant of this technique called the Ziggurat algorithm.
 
-#### Poisson distribution
+#### Efficient sampling of discrete probability distributions
 
-To finish off this section (optional) here is a code to generate a Poisson random variable with parameter $\lambda$ - the distribution over number of events $k$ occurring within a time interval, given that events occur independently and at a mean rate of $\lambda$ within the time interval.
+To finish off this section we're going to revisit random sampling of discrete
+distributions and talk about the "alias table" algorithm. If we compare our
+version of `randn()` above with Julia's builtin version, we see that optimized
+versions of numerical algorithms can often be far faster than a straightforward
+implementation of a mathematical idea, even if we can invert the CDF. Thus in
+practice, practical random sampling code often relies more on numerical tricks
+and algorithmic optimizations than a simple mathematical formula.
+
+The [alias tables algorithm](https://en.wikipedia.org/wiki/Alias_method) is one
+such case and is used as the underlying sampler for `Distributions.Categorical`.
+It's relatively simple to implement and understand so we'll show an example
+implementation here as a flavour of the kind of practical numerical code you'll
+see. For an optimized and carefully checked implementation see the Julia
+package AliasTables.jl.
+
+Starting with a discrete probability density `[p[i] for i in 1:n]`, alias table
+sampling conceptually generates a `i` between 1 and `n` and random number $z$
+in $[0,1/n)$, producing `i` when `z < p[i]`, and "some other value `k`"
+otherwise. The key insight is that we may always precompute an array `K` such
+that we can just return `k = K[i]` for the alternative case. Here's the
+sampling code. In practice, we scale `U = n*p` and use a random number `y` in
+$[0,1)$ in the code:
 
 ```julia
-using StatsBase, Distributions, Plots
+function alias_sample(U,K)
+    n = length(U)
 
-# A (not immediately) obvious method to generate Poisson random variables with mean λ
-function rand_poisson(λ)
-    k = 0
-    p = 1
-    while p > exp(-λ)
-        k = k + 1
-        p = p * rand()
+    x = rand()*n
+
+    offset = floor(Int, x)
+    y = x - offset    # this is z*n in our description above
+    i = offset + 1
+
+    if y < U[i]
+        return i
+    else
+        return K[i] # The "alias" for i
     end
-    return k - 1
 end
+```
 
-xGrid = 0:16
-λ = 5.5
-N = 1_000_000
+Generating `i` when `y < U[i]` is correct by construction: the probability is
+`1/n` for the choice of `i` multiplied by `U[i]` for the choice of `y` which is
+$(1/n * (p[i]*n)) = p[i]$.
 
-pDist = Poisson(λ)
-bPmf = pdf.(pDist,xGrid)
-data = counts([rand_poisson(λ) for _ in 1:N], xGrid)/N
+But what if `U[i] > 1`? That is, there's more than $1/n$ probability in the
+`i`th slot? In that case, we need to redirect other slots `j` into the slot
+with excess probability. We can do this as follows:
 
-plot(xGrid, data, 
-	line=:stem, marker=:circle, 
-	c=:blue, ms=10, msw=0, lw=4, label="MC estimate")
-plot!(xGrid, bPmf, line=:stem, 
-	marker=:xcross, c=:red, ms=6, msw=0, lw=2, label="PMF",
-	ylims=(0,0.2), xlabel="x", ylabel="Probability of x events")
+```julia
+function alias_setup(p)
+    if sum(p) ≉ 1
+        throw(ArgumentError("Probability distribution is not normalized"))
+    end
+
+    n = length(p)
+    U = zeros(n)
+    K = zeros(Int, n)
+
+    # Initialize U. U[i] is "overfull" if U[i] > 1 and "underfull" if < 1.
+    # A uniform distribution will have U[i] == 1
+    U .= n .* p
+
+    underfull = Int[]
+    overfull = Int[]
+
+    for i = 1:n
+        if U[i] > 1
+            push!(overfull, i)
+        else
+            push!(underfull, i)
+        end
+    end
+
+    while !isempty(overfull)
+        # @info "" overfull U[overfull]
+        i = pop!(overfull)
+        j = pop!(underfull)
+        # Allocate all the "extra" probability (1 - U[j]) to U[i]
+        K[j] = i
+        new_Ui = U[i] + U[j] - 1
+        U[i] = new_Ui
+        if new_Ui < 1
+            push!(underfull, i)
+        elseif new_Ui > 1 && !(new_Ui ≈ 1)
+            push!(overfull, i)
+        end
+    end
+    return U, K
+end
+```
+
+```julia
+p = [0.1, 0.3, 0.1, 0.05, 0.45]
+
+U, K = alias_setup(p);
+```
+
+Let's look quickly at the distribution of samples:
+
+```julia
+N_samples = 10000
+histogram([alias_sample(U, K) for _ in 1:N_samples])
+bar!(p*N_samples, xlabel="index", ylabel="Samples")
 ```
 
 # Discrete event simulation basics
@@ -563,15 +637,16 @@ Random.seed!(1)
 
 function queue_simulator(T, arrival_function, service_function, capacity = Inf, init_queue = 0)
     t = 0.0
-    queue = init_queue
-    queue_integral = 0.0
+    queue = init_queue    # Length of the queue
+    queue_integral = 0.0  # Total time all spent in the queue by all items (/people etc)
 
     next_arrival = arrival_function()
-    next_service = queue == 0 ? Inf : service_function()
+    next_service = init_queue == 0 ? Inf : service_function()
 
     while t < T
         t_prev = t
         q_prev = queue
+        # Choose which type of event is next, a service or arrival
         if next_service < next_arrival
             t = next_service
             queue -= 1
@@ -624,8 +699,18 @@ mm1k_estimate = queue_simulator(
 )
 
 println("The load on the system: $(ρ)")
-println("Queueing theory: $((mm1_theory, md1_theory, mm1k_theory))")
-println("Via simulation: $((mm1_estimate, md1_estimate, mm1k_estimate))")
+println("""
+Queueing theory:
+    M/M/1   $mm1_theory
+    M/D/1   $md1_theory
+    M/M/1/K $mm1k_theory
+""")
+println("""
+Estimated via simulation:
+    M/M/1   $mm1_estimate
+    M/D/1   $md1_estimate
+    M/M/1/K $mm1k_estimate
+""")
 ```
 
 Note: We simulate M/D/1 again below using a different software approach and there we present a trajectory of the queue size (see figure below).
@@ -1597,7 +1682,7 @@ Time permitting, we may also discuss the work that goes into developing such pac
 
 * A few bits about Meta-programming and further understanding of the compilation process.
 * More on type inference and performance implications. `@code_warntype`, `@code_llvm`, `@code_native`.
-* More on profiling and performance optimization. [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl); `@btime` and `@benchmark`.
+* More on profiling and performance optimization. Benchmarks with [Chairmarks.jl](https://chairmarks.lilithhafner.com) and the `@b` macro.
 
 # Basic Monte Carlo based statistical analysis
 
