@@ -1,13 +1,13 @@
-# Project \#3 - Semester 2, 2024
+# Project \#3 - Semester 2, 2025
 # Analysis and visualization of Data
 
-(last edit: October 21, 2024)
+(last edit: October 20, 2025)
 
-[explainer video](https://www.youtube.com/watch?v=-K6_RYyXG6w).
+<!-- [explainer video](https://www.youtube.com/watch?v=-K6_RYyXG6w). -->
 
-**Due:** Thursday, 14, November, 2024, 16:00. Late submissions are not accepted at all (the semester is finishing). This is an individual work project.
+**Due:** Thursday, 20, November, 2025, 16:00. Late submissions are not accepted at all (the semester is finishing). This is an individual work project.
 
-**Note:** The teaching staff will only answer questions (via Ed and consultation hours) regarding this assignment up to the late evening of Wednesday 13/11. The 7:00pm Wednesday zoom consultation hours will be held up until 13/11. These will be the only weekly contact hours after week 13.
+**Note:** The teaching staff will only answer questions (via Ed and consultation hours) regarding this assignment up to the late evening of Wednesday 19/11. <!--The 7:00pm Wednesday zoom consultation hours will be held up until 13/11. These will be the only weekly contact hours after week 13.-->
 
 **Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are **20** points for creativity and originality. The remaining **70** points are for the individual tasks of project.
 
@@ -15,11 +15,11 @@
 
 You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required. The animation movie you create should **not** be in the `analysis.ipynb` notebook so that its size is note excessive. Instead, save the animation movie in the repo with a link to it, or store it elsewhere on the web with a sharable link.
 
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator prior to submission and ideally as soon as possible. 
 
-The PDF file should be a nice formatted file that has:
+The PDF file should be a nicely formatted file that has:
 
-* Your name, student number, and assignment title (Project 3 - 2024) on the top.
+* Your name, student number, and assignment title (Project 3 - 2025) on the top.
 * A (clickable) link to your GitHub repo.
 * A PDF printout of your `analysis.ipynb` notebook.
 
@@ -29,7 +29,7 @@ As with previous assignments you can comment on questions in this PDF (e.g. when
 
 Marking responses will be made by the teaching staff via blackboard. 
 
-**Individual work**: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available. 
+**Individual work**: This is an **individual work** project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available. 
 
 **Marking Criteria**: There are 100 points total.
 
@@ -46,16 +46,16 @@ Marking responses will be made by the teaching staff via blackboard.
 ## Setting up your GitHub repo for hand-in (10pts):
 
 * Ideally use the same account you used for previous assignments. 
-* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2024-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2024-PROJECT3`.
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2025-PROJECT3`.
 * Make sure the repo is **private**.
-* Invite the course GitHub user, `uqMATH2504` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
+* Invite the course GitHub user, `MATH2504-staff-2025` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
 * Do **not** make any changes (commits) to the repo after the project due date. 
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
-* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+<!--* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.-->
 
 Your GitHub repo should be formatted exactly as follows:
 * Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
-* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private.
 * Have a `.gitignore` file. 
 * Have basic running instructions on how to run the code. 
 * Have the main Jupyter notebooks as instructed above. In the notebook have `using Pkg` and `Pkg.activate(".")` commands at the top so that you work in an environment of your current directory. 
