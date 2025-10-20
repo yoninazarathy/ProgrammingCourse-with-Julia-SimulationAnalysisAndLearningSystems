@@ -725,7 +725,6 @@ Instead of writing a specialized discrete event simulation code for each specifi
 
 ```julia
 using DataStructures
-import Base: isless
 
 abstract type Event end
 abstract type State end
@@ -737,7 +736,7 @@ struct TimedEvent
 end
 
 # Comparison of two timed events - this will allow us to use them in a heap/priority-queue
-isless(te1::TimedEvent, te2::TimedEvent) = te1.time < te2.time
+Base.isless(te1::TimedEvent, te2::TimedEvent) = te1.time < te2.time
 
 """
     new_timed_events = process_event(time, state, event)
@@ -940,17 +939,17 @@ A heap is based on an **(almost) complete balanced binary tree** data structure.
 
 ![Almost Complete Binary Tree](../web_img/tree1.jpg)
 
-Here we numbered the node in binary sequentially where the root is $1$, it's two leafs are $10$, and $11$, the third layer has $100$, $101$, $110$, and $111$, and so fourth. In this example there are $12$ nodes all together. Notice they are compacted on the final layer to the left. 
+Here we numbered the node in binary sequentially where the root is $1$, its two leaves are $10$, and $11$, the third layer has $100$, $101$, $110$, and $111$, and so fourth. In this example there are $12$ nodes all together. Notice they are compacted on the final layer to the left. 
 
 If we had $1$, $3$, $7$, $15$, $31$, or $63$ nodes (etc.) the tree would be complete. Otherwise it is in general called almost complete. 
 
-A nice thing about this layout of the tree is that the **path** to any node is determined by it's binary representation. To do this omit the MSB (most significant bit) of the number of the node. Then we take the bits from left to right (starting one bit to the right of the MSB), and consider "0" as going left, and "1" as going right. So for example the path to the node $1010$ goes left $\rightarrow$ right $\rightarrow$ left.
+A nice thing about this layout of the tree is that the **path** to any node is determined by its binary representation. To do this omit the MSB (most significant bit) of the number of the node. Then we take the bits from left to right (starting one bit to the right of the MSB), and consider "0" as going left, and "1" as going right. So for example the path to the node $1010$ goes left $\rightarrow$ right $\rightarrow$ left.
 
 Almost complete binary arrays are special in that they can actually be laid out in memory sequentially:
 
 ![Almost Complete Binary Tree in memory](../web_img/tree2.png)
 
-With this layout you can easily find the array index **left child**, **right child**, or **parent** of each node. In fact, there is $O(1)$ access to any numbered node. This differs from most other trees (not necessarily almost complete binary trees) where a **dangled** implementation is needed. In such a dangled implementation, pointers or references need to be kept between nodes. Here is for example a struct for such a node which keeps a string inside it:
+With this layout you can easily find the array index **left child**, **right child**, or **parent** of each node. In fact, there is $O(1)$ access to any numbered node. This differs from many other trees (not necessarily almost complete binary trees) where a **linked** implementation is needed if the tree is to be mutated efficiently. In such a linked implementation, pointers or references need to be kept between nodes. Here is for example a struct for such a node which keeps a string inside it:
 
 ```julia
 mutable struct Node
@@ -963,7 +962,14 @@ mutable struct Node
 end
 ```
 
-Since in this course we didn't get a chance to see such dangled implementations elsewhere, and since they are ubiquitous with classical and useful data structures such as general balanced trees, linked lists, graphs, and more, we now present an implementation of such a complete binary tree using the `Node` struct above. We then use it for a heap, which we describe below. 
+Since in this course we didn't get a chance to see such linked implementations
+elsewhere, and since they are ubiquitous with classical and useful data
+structures such as general balanced trees, linked lists, graphs, and more, we
+now present an implementation of such a complete binary tree using the `Node`
+struct above. We then use it for a heap, which we describe below. We emphasize
+that this is strictly for pedagogical purposes and in practice heap updates are
+restricted enough that an array based implementation is very efficient and
+should be preferred for production code.
 
 This specific case stores `value` elements of type `String`. However this can be generalized to store any types of values.
 
@@ -1020,9 +1026,7 @@ end
 Now lets implement the most important methods of this tree: `push!()` and `pop!()`. The key logic in these functions is to find the "next available spot" in push and to put an element there. Similarly in `pop!()` we remove the element from the last spot and put it in place of the root, which is removed:
 
 ```julia
-import Base: push!
-
-function push!(tree::BalancedBinaryTree, value::String)::BalancedBinaryTree
+function Base.push!(tree::BalancedBinaryTree, value::String)::BalancedBinaryTree
     new_node = Node(value)
     
     # If tree is empty just add a root
@@ -1063,8 +1067,7 @@ end
 ```
 
 ```julia
-import Base: pop!
-function pop!(tree::BalancedBinaryTree)::String
+function Base.pop!(tree::BalancedBinaryTree)::String
     ret_val = tree.root.value
     
     # if there is only the root then remove it
@@ -1082,24 +1085,24 @@ function pop!(tree::BalancedBinaryTree)::String
     while true
         if num & mask != 0  # If bit is "1" then go right
             if mask == 1
-                node_to_replace_with_root = current_node.rchild
+                new_root = current_node.rchild
                 current_node.rchild = nothing
-                node_to_replace_with_root.parent = nothing
-                node_to_replace_with_root.rchild = tree.root.rchild
-                node_to_replace_with_root.lchild = tree.root.lchild
-                tree.root = node_to_replace_with_root
+                new_root.parent = nothing
+                new_root.rchild = tree.root.rchild
+                new_root.lchild = tree.root.lchild
+                tree.root = new_root
                 break
             else  # not last one on the right
                 current_node = current_node.rchild 
             end
         else  # If here then bit is "0" and go left
             if mask == 1
-                node_to_replace_with_root = current_node.lchild
+                new_root = current_node.lchild
                 current_node.lchild = nothing
-                node_to_replace_with_root.parent = nothing
-                node_to_replace_with_root.rchild = tree.root.rchild
-                node_to_replace_with_root.lchild = tree.root.lchild
-                tree.root = node_to_replace_with_root                
+                new_root.parent = nothing
+                new_root.rchild = tree.root.rchild
+                new_root.lchild = tree.root.lchild
+                tree.root = new_root                
                 break
             else  # not last one on the left
                 current_node = current_node.lchild
@@ -1141,7 +1144,7 @@ println("Now the tree is:")
 print(tree)
 ```
 
-This is all nice and good, but now lets use this type of tree for a **heap**. The heap is an almost complete binary tree with values that can be compared and with the critical **partial order**: Each node is larger (not smaller) than its children. This then allows to pop in $O(1)$ time since the maximum is the root. But it also allows to insert in $O(log~n)$ time!  
+This is all nice and good, but now lets use this type of tree for a **heap**. The heap is an almost complete binary tree with values that can be compared and with the critical **partial order**: Each node is larger (not smaller) than its children. This then allows to pop in $O(1)$ time since the maximum is the root. But it also allows to insert in $O(log~n)$ time (Q: why $log(n)$?)
 
 Let's look at an implementation using the tree we constructed above:
 
@@ -1176,14 +1179,14 @@ end
 And here is how we use it to push:
 
 ```julia
-function push!(heap::MaxHeap, value::String)::MaxHeap
+function Base.push!(heap::MaxHeap, value::String)::MaxHeap
     push!(heap.tree, value)
     sift_up!(last_node(heap.tree))
     return heap
 end
 ```
 
-Note that it uses a way to find the "last node" of the tree, so we'll need that in the tree (it uses similar logic to push! of the tree and would have been simpler in an array implementation:
+Note that it uses a way to find the "last node" of the tree, so we'll need that as well (it uses similar logic to `push!` and would have been simpler in an array implementation):
 
 ```julia
 function last_node(tree::BalancedBinaryTree)::Node
@@ -1253,7 +1256,7 @@ end
 We can now use it in `pop!`:
 
 ```julia
-function pop!(heap::MaxHeap)::String
+function Base.pop!(heap::MaxHeap)::String
     ret_val = pop!(heap.tree)
     heap.tree.root !== nothing && sift_down!(heap.tree.root)
     return ret_val
@@ -1281,7 +1284,7 @@ push!(heap, "McEwen, John")
 push!(heap, "Holt, Harold")
 
 println("Tree of heap:")
-print(heap)
+println(heap)
 
 println("Printing in reverse alphabetical order: ")
 
@@ -1311,7 +1314,7 @@ A module is a "namespace" - it is a place to hold variables, functions and types
  * `Base` is the standard library defining much of the functionality for arrays, dictionaries, strings, etc.
  * `Main` is created at startup and by default all the variables and function you define in the REPL lives here.
 
-You can a new module with the `module` keyword:
+You can define a new module with the `module` keyword:
 
 ```julia
 module MyModule
@@ -1339,7 +1342,7 @@ By default, the module will be `using Base` (this can be removed by using `barem
 
 Modules have a set of `export`s. While some code is intended to be "internal" to the module, the export statement signals which types, functions and variables are intended for users of the module, and things marked with `export` are automatically imported with the `using` statement. Sometimes you want to parts of the package as public without exporting them into the user's namespace - for this you can use the `public` keyword (new in Julia 1.11).
 
-By default, `using` and `import` will consult the package manager to look up the name (we will discuss this later). To avoid this and use a locally defined module in the current scope prefix with a single `.`, such as `using .MyModule`. Since modules have a `parentmodule()`, you can navigate to any other module in the hierarchy by adding more `.`s, such as `using ..MyModule`.
+By default, `using` and `import` will consult the package manager to look up the name (we will discuss this later). To avoid this and use a locally defined module in the current scope, prefix the module name with a single `.` such as `using .MyModule`. Since modules have a `parentmodule()`, you can navigate to any other module in the hierarchy by adding more `.`s, such as `using ..MyModule`.
 
 A good module name describes the topic covered by the module. The module name shouldn't clash with one of it's exports, so if the module is about a particular datatype it is common to pluralize it (e.g. the `DataFrames` module deals with the `DataFrame` type).
 
@@ -1358,6 +1361,8 @@ module MaxHeaps
 # Generally, put the exports at the top so they are easy to discover
 export MaxHeap
 
+# Module "top level" statements are executed in order so we define
+# types before they're used in the method signatures below
 mutable struct Node{T}
     parent::Union{Node{T}, Nothing}
     lchild::Union{Node{T}, Nothing}
@@ -1522,24 +1527,24 @@ function Base.pop!(tree::BalancedBinaryTree)::String
     while true
         if num & mask != 0  # If bit is "1" then go right
             if mask == 1
-                node_to_replace_with_root = current_node.rchild
+                new_root = current_node.rchild
                 current_node.rchild = nothing
-                node_to_replace_with_root.parent = nothing
-                node_to_replace_with_root.rchild = tree.root.rchild
-                node_to_replace_with_root.lchild = tree.root.lchild
-                tree.root = node_to_replace_with_root
+                new_root.parent = nothing
+                new_root.rchild = tree.root.rchild
+                new_root.lchild = tree.root.lchild
+                tree.root = new_root
                 break
             else  # not last one on the right
                 current_node = current_node.rchild 
             end
         else  # If here then bit is "0" and go left
             if mask == 1
-                node_to_replace_with_root = current_node.lchild
+                new_root = current_node.lchild
                 current_node.lchild = nothing
-                node_to_replace_with_root.parent = nothing
-                node_to_replace_with_root.rchild = tree.root.rchild
-                node_to_replace_with_root.lchild = tree.root.lchild
-                tree.root = node_to_replace_with_root                
+                new_root.parent = nothing
+                new_root.rchild = tree.root.rchild
+                new_root.lchild = tree.root.lchild
+                tree.root = new_root                
                 break
             else  # not last one on the left
                 current_node = current_node.lchild
@@ -1617,15 +1622,25 @@ Packages are designed for sharing code - either open-source code in the communit
 
 There are a number of optional things that a package might contain, which the package manager knows how to deal with. Most importantly:
 
- * A `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
  * A git repository (tracked by the package registry).
  * A test suite (Julia and github can help you automate testing).
+ * Optionally, a `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
 
-When you use a `Manifest.toml` you are "locking" your code to use certain versions of packages. Otherwise when you install packages you will get the latest version compatible version of Julia and other dependencies. While using the latest version of code is generally good, occassiionally packages introduce bugs or change the API in a breaking way, and for complex, production-grade code it is necessary to have a high degree of stability to ensure your code continues to function and doesn't break unexpectedly. (This issue becomes more important the larger the codebase and number of dependencies).
+When you use a `Manifest.toml` you are "locking" your code to use certain versions of packages. Otherwise when you install packages you will get the latest version compatible version of Julia and other dependencies. While using the latest version of code is generally good, occassiionally packages introduce bugs or change the API in a breaking way, and for complex, production-grade code it is necessary to have a high degree of stability to ensure your code continues to function and doesn't break unexpectedly. This issue becomes more important the larger the codebase and number of dependencies.
 
 ## Creating packages - demonstration
 
 Let's construct a package live and edit its code! We'll use PkgTemplates.jl and Revise.jl along with the REPL for a smooth package development experience.
+
+```julia; eval = false
+using PkgTemplates
+
+# `Template` has a lot of options
+template = Template(user="my_github_user", plugins=[!CompatHelper, !TagBot])
+
+# Generate the new package using the template:
+package_dir = template("MaxHeaps")
+```
 
 ## Package Tests
 
