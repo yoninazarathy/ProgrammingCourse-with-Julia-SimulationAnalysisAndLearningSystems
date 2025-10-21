@@ -1617,14 +1617,14 @@ A file is loaded by using `include` such as `include("file.jl")`, which evaluate
 
 Packages are designed for sharing code - either open-source code in the community, or private code within an organization. A package has a small set of rules to help the Julia and the package manager to load your code:
 
- * A package `Foo` must contain a module defined called `Foo` in the file `src/Foo.jl`.
- * The root directory must contain a `Package.toml` file with the name of the package and a UUID of the package, plus any *direct* package dependencies.
+* A package `Foo` must define a module called `Foo` in the file `src/Foo.jl`.
+* The root directory must contain a `Package.toml` file with the name of the package and a UUID of the package, plus any *direct* package dependencies.
 
 There are a number of optional things that a package might contain, which the package manager knows how to deal with. Most importantly:
 
- * A git repository (tracked by the package registry).
- * A test suite (Julia and github can help you automate testing).
- * Optionally, a `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
+* A git repository (tracked by the package registry).
+* A test suite with entry point `test/runtests.jl` (Julia and github can help you automate testing) 
+* Optionally, a `Manifest.toml` file (containing the precise version of every package used as well as all the *indirect* package dependencies).
 
 When you use a `Manifest.toml` you are "locking" your code to use certain versions of packages. Otherwise when you install packages you will get the latest version compatible version of Julia and other dependencies. While using the latest version of code is generally good, occassiionally packages introduce bugs or change the API in a breaking way, and for complex, production-grade code it is necessary to have a high degree of stability to ensure your code continues to function and doesn't break unexpectedly. This issue becomes more important the larger the codebase and number of dependencies.
 
@@ -1652,7 +1652,7 @@ On the technical side, each change to the code has a chance of breaking some fun
 
 On the human side, it's ideal to know about any broken code right away before you forget about the details of the changes you were making. It's far easier, faster, cheaper and *just more fun* to get the code correct at the time rather than having to hunt down a problem later.
 
-If you have a multi-person project, tests give the project scalability: new contributors can add code to the project without breaking things, and the burden on the maintainers to check that new code is much less because the tests are a proof that things still work after some new change. And remember: in three years time it's likely you'll have forgotten all the details of your project - *you* become the new contributor but your past-self isn't around anymore to review your new code! Even for single person projects the tests keep you honest and hold your hand as you get back into changing your old code and remembering how it works.
+If you have a multi-person project, tests give the project scalability: new contributors can add code to the project without breaking things, and the burden on the maintainers to check that new code is much less because the tests are a proof that things still work after some new change. And remember: in three years time it's likely you'll have forgotten many details of your project - *you* become the new contributor but your past-self isn't around anymore to review your new code. Even for single person projects the tests keep you honest and hold your hand as you get back into changing your old code and remembering how it works.
 
 ### When to write tests, how many tests, what flavour of tests?
 
@@ -1686,10 +1686,10 @@ Here's a grab bag of packages developed by me (Claire Foster) and collaborators.
 * A package for underscore placeholder syntax [Underscores.jl](https://github.com/c42f/Underscores.jl) (you may find this useful in the next unit)
 
 We'll talk about the open source maintainence workflow with reference to a relatively old package `PlyIO` (started in Julia version 0.5 - before Project.toml existed!), including:
-* Issues / bug reports (as a simple example, https://github.com/JuliaGeometry/PlyIO.jl/issues/21)
-* Pull Requests (https://github.com/JuliaGeometry/PlyIO.jl/pull/22)
-* Testing for Continuous Integration (https://github.com/JuliaGeometry/PlyIO.jl/actions/runs/11320934127/job/31479240290?pr=22)
-* Releasing new versions in the General registry (https://github.com/JuliaGeometry/PlyIO.jl/commit/a19d73080cbac01a2d4ef91ce042f39e4cbf2045)
+* Issues / bug reports (as a simple example, <https://github.com/JuliaGeometry/PlyIO.jl/issues/21>)
+* Pull Requests (<https://github.com/JuliaGeometry/PlyIO.jl/pull/22>)
+* Testing for Continuous Integration (<https://github.com/JuliaGeometry/PlyIO.jl/actions/runs/11320934127/job/31479240290?pr=22>)
+* Releasing new versions in the General registry (<https://github.com/JuliaGeometry/PlyIO.jl/commit/a19d73080cbac01a2d4ef91ce042f39e4cbf2045>)
 
 Time permitting, we may also discuss the work that goes into developing such packages and some history and design philosopy.
 
@@ -1737,9 +1737,9 @@ $$
 p(\mathbf{x}) \propto e^{- E_{\mathbf{x}} / k_B T}
 $$
 
-The state space for $\mathbf{x}$ may be huge. Calculating the constant of proportionality (the "partition function") analytically is difficult but with it you can trivially calculate the macroscopic quantities of the system (mean energy, entropy, etc) via differentiation. Similarly, if we can sample the "microstates" it is straightforward to estimate the physical properties. So this is our goal here.
+The state space for $\mathbf{x}$ may be huge. Calculating the constant of proportionality (the "partition function" $Z = \sum_{\mathbf{x}} e^{- E_{\mathbf{x}} / k_B T}$) analytically is difficult but with it you can calculate the macroscopic quantities of the system (mean energy, entropy, etc) via simple differentiation. Similarly, if we can sample the "microstates" it is straightforward to estimate the physical properties. So this is our goal here.
 
-In such a case, there are algorithms for generating random variables that are approximaltly distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribtuion, even without knowing $K$.
+In such a case, there are algorithms for generating random variables that are approximately distributed according to the target distribution even though the normalizing constant is not known and can only be computed via integration which quickly becomes infeasible as the dimensions grow (see Unit 3). A suite of algorithms is known is MCMC, with a famous case being the [Metropolis–Hastings algorithm](https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm), allows to still generate random variables from the distribtuion, even without knowing $K$.
 
 MCMC algorithms implictly construct a Markov chain that has a steady-state distribution which is equal to the target probability distribution. Then, generation of random sequences from this new Markov chain allows us to approximately sample the target distribution. Without going into the details of the algorithm, let's see this in action in the context of Bayesian statistics.
 
@@ -1787,41 +1787,41 @@ alpha, beta = 8, 2
 prior(theta) = pdf(Gamma(alpha, 1/beta), theta)
 data = [2,1,0,0,1,0,2,2,5,2,4,0,3,2,5,0]
 
-like(theta) = *([pdf(Poisson(theta),x) for x in data]...)
-posteriorUpToK(theta) = like(theta)*prior(theta)
+likelihood(theta) = prod(pdf(Poisson(theta),x) for x in data)
+posteriorUpToK(theta) = likelihood(theta)*prior(theta)
 ```
 
-Now an MCMC technique (with details omitted here) uses a proposal density (`foldedNormalPDF` here) and implements the `sampler()` function which magically samples from the posterior (unormalized probability distribution).
+Now an MCMC technique (the aforementioned Metropolis-Hastings algorithm) uses a proposal density (`foldedNormalPDF` here) and implements the `sampler()` function which magically samples from the posterior (unormalized probability distribution).
 
 ```julia
 sig = 0.5
-foldedNormalPDF(x,mu) = (1/sqrt(2*pi*sig^2))*(exp(-(x-mu)^2/2sig^2)
-                                                + exp(-(x+mu)^2/2sig^2))
+foldedNormalPDF(x, mu) = (1/sqrt(2*pi*sig^2)) *
+                         (exp(-(x-mu)^2/(2*sig^2)) + exp(-(x+mu)^2/(2*sig^2)))
 foldedNormalRV(mu) = abs(rand(Normal(mu,sig)))
 
-function sampler(piProb,qProp,rvProp)
+# Metropolis-Hastings sampler
+# NOTE: `posteriorDensity` is unnormalized (`proposalDensity` may be too)
+function sampler(posteriorDensity, proposalDensity, generateProposal)
     theta = 1
     warmN, N = 10^5, 10^6
     samples = zeros(N-warmN)
 
     for t in 1:N
-        while true
-            lamTry = rvProp(theta)
-            L = piProb(lamTry)/piProb(theta)
-            H = min(1,L*qProp(theta,lamTry)/qProp(lamTry,theta))
-            if rand() < H
-                theta = lamTry
-                if t > warmN
-                    samples[t-warmN] = theta
-                end
-                break
-            end
+        thetaTry = generateProposal(theta)
+        L = posteriorDensity(thetaTry)/posteriorDensity(theta)
+        H = L * proposalDensity(theta,thetaTry) / proposalDensity(thetaTry,theta)
+        if rand() < H
+            # Accept proposal
+            theta = thetaTry
+        end
+        if t > warmN
+            samples[t-warmN] = theta
         end
     end
     return samples
 end
 
-mcmcSamples = sampler(posteriorUpToK,foldedNormalPDF,foldedNormalRV);
+mcmcSamples = sampler(posteriorUpToK, foldedNormalPDF, foldedNormalRV);
 ```
 
 If we want now a point estimate we can use the mean:
@@ -1840,10 +1840,10 @@ thetaRange = 0:0.01:10
 plot!(thetaRange, prior.(thetaRange), 
 	c=:blue, label="Prior distribution")
 
-closedFormPosterior(lam)=pdf(Gamma(alpha + sum(data),1/(beta+length(data))),lam)
+closedFormPosterior(theta) = pdf(Gamma(alpha + sum(data),1/(beta+length(data))), theta)
 plot!(thetaRange, closedFormPosterior.(thetaRange), 
-	c=:red, label="Posterior distribution", 
-	xlims=(0, 10), ylims=(0, 1.2),
+	c=:red, label="True posterior distribution", 
+	xlims=(0, 10), ylims=(0, 1.25),
     xlabel=L"\theta",ylabel="Density")
 ```
 
@@ -1854,9 +1854,9 @@ In this simple example, MCMC is not needed. But in other examples, MCMC or more 
 
 # Other simulations
 
-In addition to discrete event simulation, there are many other forms of simulations. For example you may consider simple Markov chain simulations as appearing in HW2. But you can also consider [https://en.wikipedia.org/wiki/Continuous-time_Markov_chain](Continuous-time Markov chain) which can be simulated via the [Doob-Gillespie algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm). In such models the state space is represented by a countable (or finite) set, and at any point of time there is an instentanious chance from a transition from one state to another. 
+In addition to discrete event simulation, there are many other forms of simulations. For example you may consider simple Markov chain simulations as appearing in HW2. But you can also consider [Continuous-time Markov chain](https://en.wikipedia.org/wiki/Continuous-time_Markov_chain) which can be simulated via the [Doob-Gillespie algorithm](https://en.wikipedia.org/wiki/Gillespie_algorithm). In such models the state space is represented by a countable (or finite) set, and at any point of time there is an instentanious chance from a transition from one state to another. 
 
-As an example consider a [stochastic SEIR epidemic model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) with transition rates,
+As an example consider a [stochastic SEIR epidemic model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology) - (also less-confusingly called "SLIR") with the following transitions between suceptible, exposed ("latently infected"), infected and removed states:
 
 $$
 \begin{aligned}
@@ -1876,10 +1876,13 @@ beta, delta, gamma = 0.25, 0.4, 0.1
 initialInfect = 0.025
 M = 1000
 I0 = Int(floor(initialInfect*M))
-N = 30
 
-function simulateSIRDoobGillespie(beta,delta,gamma,I0,M,T)
-    t, S, E, I, R = 0.0, M-I0, 0, I0, 0
+function simulateSIRDoobGillespie(beta, delta, gamma, I0, M, T)
+    t = 0.0
+    S = M-I0
+    E = 0
+    I = I0
+    R = 0
     tValues, sValues, eValues, iValues, rValues = [0.0], [S], [E], [I], [R]
     while t<T
         infectionRate = beta*I*S
@@ -1906,14 +1909,15 @@ end
 tV,sV,eV,iV,rV = simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)
 lastT = tV[end]
 
+N = 30
 finals = [simulateSIRDoobGillespie(beta/M,delta,gamma,I0,M,Inf)[5][end] 
-                for _ in 1:N]/M
+          for _ in 1:N]/M
 
-p1 = plot(tV,sV/M,label = "Susceptible", c=:green)
-plot!(tV,eV/M,label = "Exposed", c=:blue)
-plot!(tV,iV/M,label = "Infected",c=:red)
-plot!(tV,rV/M,label = "Removed", c=:yellow,
-    xlabel = "Time", ylabel = "Proportion",
-    legend = :topleft, xlim = (0,lastT*1.05))
-scatter!(lastT*1.025*ones(N),finals, c = :yellow,label= "Final Infected")
+p1 = plot(tV,sV/M,label = "Susceptible")
+plot!(tV,eV/M, label = "Exposed")
+plot!(tV,iV/M, label = "Infected")
+plot!(tV,rV/M, label = "Removed", c = :purple,
+      xlabel = "Time", ylabel = "Proportion",
+      legend = :topleft, xlim = (0,lastT*1.05))
+scatter!(lastT*1.025*ones(N),finals, c = :purple, label="Final Infected")
 ```
