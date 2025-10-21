@@ -77,25 +77,27 @@ As there are missing entries in this dataset, handle missing values for each of 
 
 **Task 1 Exploratory data of single variables (10 pts)**
 
-Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Keep in mind that different type of data requires different plots.
+Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, ...) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Make sure to choose appropriate diagram types as different types of data require different types of plots.
 
 **Task 2 Exploratory data analysis comparing variables (10 pts)**
 
-Create several plots that present the house price as a function of distance to the city, house size (e.g. land size, rooms, car ports, etc...), and some combination of these variables. In presenting these plots, visually search for relationships between variables.
+Create several plots that present the house price as a function of one or more other variables, e.g. distance to the city, house/land size, rooms, car ports, etc. . In presenting these plots, visually search for relationships between variables.
 
 **Task 3 Exploratory data analysis over time (10 pts)**
 
-Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold (`Type = "h"`) over time. 
+Create several plots that visualize trends in the data over time. Specifically plot the total transaction amount, the number of sales, and the fraction of sales which were houses (Type = "h"). You may aggregate values into months.
 
 **Task 4 Linear Regression Models (15 pts)**
 
-Review your results of Task 2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://statisticswithjulia.org/) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
+Review your results of Task 2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://link.springer.com/book/10.1007/978-3-030-70901-3) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
 
 **Task 5 Location data over time movie on map (25 points)**
 
 Your goal here is to create a quality animation (movie) presenting location data over time of the Melbourne Housing Data. The movie should use a background metropolitan Map and present some animation over a timeline of the trends of houses being sold in the Melbourne area. For examples circles with sizes of the deals can pop-up and disappear. Other features are possible also. Presenting additional animated or summarized statistics alongside the movie is also possible and encouraged.  
 
-It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
+It is recommended to use either Plots.jl or Makie.jl. You'll need to find out how to make it work without help from the course team. 
+<!--It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
+-->
 
 Please keep the movie shorter than 1 minute. 
 
