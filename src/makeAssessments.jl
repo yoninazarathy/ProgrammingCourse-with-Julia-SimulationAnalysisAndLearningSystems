@@ -13,7 +13,7 @@ assesmentSubfolder = "2025Assessment"
 
 # weave("markdown/$(assesmentSubfolder)/bighw.jmd"; kwargs...)
 # weave("markdown/$(assesmentSubfolder)/project1.jmd"; kwargs...)
-# weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
+weave("markdown/$(assesmentSubfolder)/project2.jmd"; kwargs...)
 weave("markdown/$(assesmentSubfolder)/project3.jmd"; kwargs...)#
 
 

@@ -14,7 +14,7 @@
 
 **Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
 
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator. It is also important to name the repo *exactly* as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>-2504-2025-PROJECT2`. So for example if your names are "Little Pug" and "Big Hound" the repo name should be `Little-Pug__Big-Hound-2504-2025-PROJECT2`. Please invite `MATH2504-staff-2025` as a collaborator as early as possible.
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator. It is also important to name the repo *exactly* as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>-2504-2025-PROJECT2`. So for example if your names are "Little Pug" and "Big Hound" the repo name should be `Little-Pug__Big-Hound-2504-2025-PROJECT2`. Please invite `uqMATH2504` as a collaborator as early as possible.
 
 The PDF file should be a nicely formatted file that includes:
 
@@ -49,7 +49,7 @@ Marking responses will be made by the teaching staff by annotating (or leaving t
 
 * Ideally use the same accounts you used for PROJECT1 and BigHW. Choose one of the team members to "own" the repo and the other(s) will be invited as collaborators.  
 * Make sure the repo is **private**.
-* Invite the course GitHub user, `MATH2504-staff-2025` as a collaborator and follow up, in case the invitation is not accepted. You may do so early on while working on the project, and must do this no later than the project due date. 
+* Invite the course GitHub user, `uqMATH2504` as a collaborator and follow up, in case the invitation is not accepted. You may do so early on while working on the project, and must do this no later than the project due date. 
 * Do **not** make any changes (commits) to the repo after the project due date. 
 * Create a local clone of the repo. It is recommended to use the `git` command via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
 

@@ -15,13 +15,13 @@
 
 You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required. The animation movie you create should **not** be in the `analysis.ipynb` notebook so that its size is note excessive. Instead, save the animation movie in the repo with a link to it, or store it elsewhere on the web with a sharable link.
 
-Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `MATH2504-staff-2025` be invited as a collaborator prior to submission and ideally as soon as possible. 
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
 
 The PDF file should be a nicely formatted file that has:
 
 * Your name, student number, and assignment title (Project 3 - 2025) on the top.
 * A (clickable) link to your GitHub repo.
-* A PDF printout of your `analysis.ipynb` notebook.
+* A PDF printout of your `analysis.ipynb` notebook including the graphics from Task 5.
 
 Use a PDF merging utility to create the PDF file. Do not worry about extra white space occurring due to Jupyter notebook PDF printouts.
 
@@ -48,7 +48,7 @@ Marking responses will be made by the teaching staff via blackboard.
 * Ideally use the same account you used for previous assignments. 
 * Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2025-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2025-PROJECT3`.
 * Make sure the repo is **private**.
-* Invite the course GitHub user, `MATH2504-staff-2025` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
 * Do **not** make any changes (commits) to the repo after the project due date. 
 * Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
 <!--* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.-->
@@ -91,15 +91,16 @@ Create several plots that visualize trends in the data over time. Specifically p
 
 Review your results of Task 2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://link.springer.com/book/10.1007/978-3-030-70901-3) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
 
-**Task 5 Location data over time movie on map (25 points)**
+**Task 5 Location data on map (25 points)**
 
-Your goal here is to create a quality animation (movie) presenting location data over time of the Melbourne Housing Data. The movie should use a background metropolitan Map and present some animation over a timeline of the trends of houses being sold in the Melbourne area. For examples circles with sizes of the deals can pop-up and disappear. Other features are possible also. Presenting additional animated or summarized statistics alongside the movie is also possible and encouraged.  
+Your goal here is to create a quality visualisation presenting location data of the Melbourne Housing Data. The grapics should use a background metropolitan Map and present the houses being sold in the Melbourne area in the year 2017, namely during the month in which you (!) were born. 
 
-It is recommended to use either Plots.jl or Makie.jl. You'll need to find out how to make it work without help from the course team. 
+Single house purchases should be represented by circles whose sizes or color scale with the purchase price. Other features are possible also. Presenting additional summarized statistics alongside the graphics is also possible and encouraged.  
+
+It is recommended to use Plots.jl and other packages such as Images.jl. You'll need to find out how to make it work without help from the course team. 
 <!--It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
 -->
 
-Please keep the movie shorter than 1 minute. 
+Finally include a pdf of the graphics and other output of your pdf submission.
 
-Note that it is typically not recommended to upload big binary files onto GitHub. In this case, you can do this with the movie file, but avoid making (many) multiple commits of this file. 
 
