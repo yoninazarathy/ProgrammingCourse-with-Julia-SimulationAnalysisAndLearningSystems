@@ -4,7 +4,7 @@ In this unit we learn how to deal with heterogenous datasets using data frames. 
 
 # Databases
 
-This course doesn't touch databases, a rich topic of its own. (Do not confuse the term database with data structures or data frames). A database is a system that stores information in an organized and flexible manner. Many databases are **relational databases** and this means that they are comprised of multiple data tables that are associated via relations. The most common language for dealing with such databases is [SQL](https://en.wikipedia.org/wiki/SQL). It is not a general programming language but rather a language for querying, modifying, and managing databases. At UQ you can study more about databases in the [INFS2200 course](https://my.uq.edu.au/programs-courses/course.html?course_code=infs2200) as well as several other more advanced courses. 
+This course doesn't touch databases, a rich topic of its own. (Do not confuse the term database with data structures or data frames). A database is a system that stores information in an organized and flexible manner. Many databases are **relational databases** and this means that they are comprised of multiple data tables that can be used together. The most common language for dealing with such databases is [SQL](https://en.wikipedia.org/wiki/SQL). It is not a general programming language but rather a language for querying, modifying, and managing databases. At UQ you can study more about databases in the [INFS2200 course](https://my.uq.edu.au/programs-courses/course.html?course_code=infs2200) as well as several other more advanced courses. 
 
 We now show you an example of database and a few things you may expect from SQL.
 
@@ -28,7 +28,7 @@ Outside of mathematics, the kinds of relations normally modelled in databases ar
 | `"Bob"` | `2005-12-10` | `false` |
 | `"Charlie"` | `2004-09-21` | `true` |
 
-Note that this particular relation is also a function, since `is_adult` has a functional relationship with `birthdate`.
+Note that the latter two colums of this particular relation are a function if we assume `is_adult` is defined in terms of age (and thus in terms of `birthdate`).
 
 In many relations, there are uniqueness constraints - for example  the `name` might identify each row uniquely, or there may be a specific `ID` column to deal with different people sharing the same name. Such unique constraints are called "keys" and the primary identifier that you might use to fetch a particular row is called the "primary key".
 
@@ -36,7 +36,7 @@ In many relations, there are uniqueness constraints - for example  the `name` mi
 
 A single relation is a restrictive way to model your data. However, by allowing multiple relations, we can capture the various sets of data in the system, and piece them together by their _relationships_. 
 
-For example, each person in the table above might be related to other things. They might have jobs, bank accounts, etc. Within a single business a person might be a customer, a supplier and an employee, and for different purposes we might want data associated with that person (e.g. their birthdate might relate to promotions for customers, payrates for employees, etc).
+For example, each person in the table above might be related to other things. They might have jobs, bank accounts, etc. Within a single business a person might be a customer, a supplier and an employee, and for different purposes we might want data associated with that person (e.g. their birthdate might relate to advertizing promotions to customers, payrates for employees, etc).
 
 Generally, to make keeping track of data easy, in a relational database you would store that person _just once_ and create relationships between that person and other things. That way, if something changes about that person, it only needs to be updated in one place, and data remains consistent everywhere.
 
@@ -86,7 +86,9 @@ WHERE users.user_id = 251
 
 This will now return just two rows (for Microsoft, and the Bill & Melinda Gates Foundation), and is much less effort for the database, the network and the client. In real-world settings, complex joins could link data spanning dozens of tables.
 
-We won't be using SQL in this course but it is so pervasive in industry that is essential that you know that it exists, and not to be afraid to use it! (It is a very useful and desirable skill!).
+There are several Julia libraries for interacting with SQL databases including the likes of [LibPQ.jl](https://github.com/JuliaDatabases/LibPQ.jl) allowing queries to be executed on a PostgreSQL database and the results returned as convenient Julia data structures. There's even an SQL REPL in [SQLRepl.jl](https://github.com/c42f/SQLREPL.jl) if you want to execute SQL queries interactively and mix them with variables from your normal Julia session.
+
+We won't be writing SQL in this course but it is so pervasive in industry that is essential that you know that it exists and not to be afraid to use it! (It is a very useful and desirable skill!) All the relational data concepts expressed in SQL above also apply to in-memory data analysis using Julia and we show various examples of this next.
 
 # Dataframes
 
@@ -522,9 +524,93 @@ We could analyse this data another hundred ways. Some questions that come to min
  * Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia received a lot of medals during the Sydney 2000 Olympics.
  * Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning.
 
-# Memory management
+## Fitting linear models
 
-Generally, when we deal with data we have three rough "sizes" to worry about.
+Here we'll briefly show how to fit linear models to your data using the package
+GLM.jl. A one dimensional linear model may be written 
+
+$$
+Y = \beta_0 + \beta_1 X + \epsilon
+$$
+
+where $Y$ is some dependent variable to be predicted, $X$ is the independent
+variable and $\epsilon$ is some random noise. The task of fitting is to
+estimate the model parameters $\beta_0$ and $\beta_1$; one may also want to
+estimate the variance of the noise $\epsilon$. Simple linear models like this
+(and the multidimensional generalization) can be fit with least squares to give
+the maximum liklihood estimate of the parameters $\beta$.
+
+Let's look at a simple example from the athletes data
+
+```julia
+using GLM, Underscores
+
+df = DataFrame(CSV.File("../data/athlete_events.csv"; missingstring = "NA"))
+
+rowing_by_year = @_ df |> 
+   groupby(__, [:Year, :Sport]) |>
+   combine(__, nrow => :Count) |>
+   sort(__, :Year) |>
+   filter(:Sport => ==("Rowing"), __)
+
+model = lm(@formula(Count ~ Year), rowing_by_year)
+
+scatter(rowing_by_year.Year, rowing_by_year.Count, label="Data")
+plot!(rowing_by_year.Year, predict(model, rowing_by_year), label="Prediction")
+```
+
+Q: Is this linear fit a reasonable thing to do? (What's going on after 2000?)
+
+Let's now look at how to fit a multidimensional model using GLM.jl. In the
+multidimensional case we have several independent variables $X_1, \dots, X_p$
+and several dependent variables $Y_1, \dots, Y_n$:
+
+$$
+Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \dots \beta_p X_{ip} + \epsilon_i
+$$
+
+Here's an example of fitting CPU performance for some historical CPUs, taken
+from the book "Statistics with Julia":
+
+```julia
+using RDatasets, Statistics
+
+df = dataset("MASS", "cpus")
+df.Freq = map( x->10^9/x , df.CycT)
+
+model = lm(@formula(Perf ~ MMax + Cach + ChMax + Freq), df)
+println("n = ", size(df)[1])
+println("(Avg,Std) of observed performance: ", (mean(df.Perf),std(df.Perf)))
+model
+```
+
+Using the model to predict:
+
+```julia
+pred(x) = round(coef(model)'*vcat(1,x), digits = 3)
+println("Estimated performance test computers: for computer A: ", pred([32000, 32, 32, 4*10^7]))
+
+# Using the data and the `predict()` function
+test_data = DataFrame(
+    name  = ["Computer A", "Computer B"],
+    MMax  = [32000,        32000],
+    Cach  = [32,           16],
+    ChMax = [32,           32],
+    Freq  = [4*10^7,       6*10^7],
+)
+
+println("Estimated performance test computers:")
+println(predict(model, test_data))
+```
+
+Note that GLM stands for "generalized linear model" and the GLM.jl package can
+fit more general models - specifically those where the left and right hand
+sides are related by a nonlinear "link function", and where the random noise is
+not normally distributed.
+
+# Memory management in data workflows
+
+Generally in data heavy workflows we have three rough "sizes" to worry about.
 
  1. Small data: data fits in RAM. Just load it up and process it all at once. We are doing this in this course.
  2. Medium data: data is too big for RAM, but it fits on disk. Incrementally load "chunks" from disk, save the results, and load the next chunk, etc - known as "out-of-core" processing. Multiple such steps might be required in a "pipeline". Reading and writing to disk is slower than RAM, and processing might take so long that restarting from scratch (after a fault or power blackout, for example) is not realistic, so you generally need to be able to save and restore your intermediate state, or update your data incrementally. A typical SQL database is in this category, handling the persistence, fault-tolerance and pipelining for you automatically.
@@ -533,6 +619,4 @@ Generally, when we deal with data we have three rough "sizes" to worry about.
 The boundaries between these regimes depends on your computer hardware. As you get step up, the complexity increases rapidly, especially with respect to fault tolerance.
 
 At my previous job with [Fugro](https://www.fugro.com/) we processed petabytes of LiDAR, imagery and positioning data to create a 3D model of the world. We used AWS to store and index the data, as well as process it. The effort in "data engineering" was as much as was required in the "data science". Generally, it pays to have your data sorted out before attempting any higher-order analytics at scale (such as machine learning, below).
-
-We'll go to the REPL for a practical demonstration of out-of-core techniques.
 
