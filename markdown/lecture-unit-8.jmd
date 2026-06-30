@@ -527,7 +527,7 @@ We could analyse this data another hundred ways. Some questions that come to min
 ## Fitting linear models
 
 Here we'll briefly show how to fit linear models to your data using the package
-GLM.jl. A one dimensional linear model may be written 
+**GLM.jl**. A one dimensional linear model may be written 
 
 $$
 Y = \beta_0 + \beta_1 X + \epsilon
