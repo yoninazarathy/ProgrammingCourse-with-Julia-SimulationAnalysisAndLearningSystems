@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Unit 8: Working with heterogenous datasets and a view towards machine learning</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="lecture-unit-8_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lecture-unit-8_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="lecture-unit-8_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="lecture-unit-8_files/libs/quarto-html/popper.min.js"></script>
+<script src="lecture-unit-8_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lecture-unit-8_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lecture-unit-8_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lecture-unit-8_files/libs/quarto-html/quarto-syntax-highlighting-4bd490e9cd57f2396cbd188312c0541c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="lecture-unit-8_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lecture-unit-8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lecture-unit-8_files/libs/bootstrap/bootstrap-888e7731d048cfaa148b823e8fc1b2fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#unit-8-working-with-heterogenous-datasets-and-a-view-towards-machine-learning" id="toc-unit-8-working-with-heterogenous-datasets-and-a-view-towards-machine-learning" class="nav-link active" data-scroll-target="#unit-8-working-with-heterogenous-datasets-and-a-view-towards-machine-learning"><span class="header-section-number">1</span> Unit 8: Working with heterogenous datasets and a view towards machine learning</a></li>
+  <li><a href="#databases" id="toc-databases" class="nav-link" data-scroll-target="#databases"><span class="header-section-number">2</span> Databases</a>
+  <ul class="collapse">
+  <li><a href="#relations" id="toc-relations" class="nav-link" data-scroll-target="#relations"><span class="header-section-number">2.1</span> Relations</a></li>
+  <li><a href="#relational-schema" id="toc-relational-schema" class="nav-link" data-scroll-target="#relational-schema"><span class="header-section-number">2.2</span> Relational schema</a></li>
+  <li><a href="#sql" id="toc-sql" class="nav-link" data-scroll-target="#sql"><span class="header-section-number">2.3</span> SQL</a></li>
+  </ul></li>
+  <li><a href="#dataframes" id="toc-dataframes" class="nav-link" data-scroll-target="#dataframes"><span class="header-section-number">3</span> Dataframes</a>
+  <ul class="collapse">
+  <li><a href="#basic-data-exploration" id="toc-basic-data-exploration" class="nav-link" data-scroll-target="#basic-data-exploration"><span class="header-section-number">3.1</span> Basic data exploration</a></li>
+  <li><a href="#simple-analysis" id="toc-simple-analysis" class="nav-link" data-scroll-target="#simple-analysis"><span class="header-section-number">3.2</span> Simple analysis</a></li>
+  <li><a href="#row--and-column-based-storage" id="toc-row--and-column-based-storage" class="nav-link" data-scroll-target="#row--and-column-based-storage"><span class="header-section-number">3.3</span> Row- and column-based storage</a></li>
+  <li><a href="#dataframes-1" id="toc-dataframes-1" class="nav-link" data-scroll-target="#dataframes-1"><span class="header-section-number">3.4</span> DataFrames</a>
+  <ul class="collapse">
+  <li><a href="#constructing-dataframes" id="toc-constructing-dataframes" class="nav-link" data-scroll-target="#constructing-dataframes"><span class="header-section-number">3.4.1</span> Constructing dataframes</a></li>
+  <li><a href="#indexing-dataframes" id="toc-indexing-dataframes" class="nav-link" data-scroll-target="#indexing-dataframes"><span class="header-section-number">3.4.2</span> Indexing dataframes</a></li>
+  <li><a href="#filtering-dataframes" id="toc-filtering-dataframes" class="nav-link" data-scroll-target="#filtering-dataframes"><span class="header-section-number">3.4.3</span> Filtering dataframes</a></li>
+  <li><a href="#select-and-transform" id="toc-select-and-transform" class="nav-link" data-scroll-target="#select-and-transform"><span class="header-section-number">3.4.4</span> <code>select</code> and <code>transform</code></a></li>
+  <li><a href="#groupby-and-combine" id="toc-groupby-and-combine" class="nav-link" data-scroll-target="#groupby-and-combine"><span class="header-section-number">3.4.5</span> <code>groupby</code> and <code>combine</code></a></li>
+  <li><a href="#innerjoin" id="toc-innerjoin" class="nav-link" data-scroll-target="#innerjoin"><span class="header-section-number">3.4.6</span> <code>innerjoin</code></a></li>
+  </ul></li>
+  <li><a href="#more-analysis" id="toc-more-analysis" class="nav-link" data-scroll-target="#more-analysis"><span class="header-section-number">3.5</span> More analysis</a>
+  <ul class="collapse">
+  <li><a href="#athlete-height" id="toc-athlete-height" class="nav-link" data-scroll-target="#athlete-height"><span class="header-section-number">3.5.1</span> Athlete height</a></li>
+  <li><a href="#histograms" id="toc-histograms" class="nav-link" data-scroll-target="#histograms"><span class="header-section-number">3.5.2</span> Histograms</a></li>
+  <li><a href="#further-questions" id="toc-further-questions" class="nav-link" data-scroll-target="#further-questions"><span class="header-section-number">3.5.3</span> Further questions</a></li>
+  </ul></li>
+  <li><a href="#fitting-linear-models" id="toc-fitting-linear-models" class="nav-link" data-scroll-target="#fitting-linear-models"><span class="header-section-number">3.6</span> Fitting linear models</a></li>
+  </ul></li>
+  <li><a href="#memory-management-in-data-workflows" id="toc-memory-management-in-data-workflows" class="nav-link" data-scroll-target="#memory-management-in-data-workflows"><span class="header-section-number">4</span> Memory management in data workflows</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="lecture-unit-8.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Unit 8: Working with heterogenous datasets and a view towards machine learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="unit-8-working-with-heterogenous-datasets-and-a-view-towards-machine-learning" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Unit 8: Working with heterogenous datasets and a view towards machine learning</h1>
+<p>In this unit we learn how to deal with heterogenous datasets using data frames. We then explore basic concepts of machine learning. A deep dive into deep learning at UQ is in the <a href="https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3007">STAT3007 course</a>. Theory of machine learning (and statistical learning) is also studied in <a href="https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3006">STAT3006</a>. Other aspects of applied statistics and data analysis are studied in <a href="https://my.uq.edu.au/programs-courses/course.html?course_code=STAT3500">STAT3500</a>. Our purpose with this unit is just to touch the tip of the iceberg on issues of data analysis and machine learning. The Julia language knowledge acquired in the previous units should help.</p>
+</section>
+<section id="databases" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Databases</h1>
+<p>This course doesn’t touch databases, a rich topic of its own. (Do not confuse the term database with data structures or data frames). A database is a system that stores information in an organized and flexible manner. Many databases are <strong>relational databases</strong> and this means that they are comprised of multiple data tables that can be used together. The most common language for dealing with such databases is <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>. It is not a general programming language but rather a language for querying, modifying, and managing databases. At UQ you can study more about databases in the <a href="https://my.uq.edu.au/programs-courses/course.html?course_code=infs2200">INFS2200 course</a> as well as several other more advanced courses.</p>
+<p>We now show you an example of database and a few things you may expect from SQL.</p>
+<section id="relations" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="relations"><span class="header-section-number">2.1</span> Relations</h2>
+<p>A “relation” is a mathematical term for a set over <em>tuples</em> (or <em>named</em> tuples), and is a generalization of a function.</p>
+<p>For example, consider the function <span class="math inline">\(y = f(x)\)</span>. (The <em>names</em> here are <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>). An equivalent relation <span class="math inline">\(f\)</span> can be constructed as a set of tuples of the form <span class="math inline">\((x, y)\)</span>. A particular tuple <span class="math inline">\((x, y)\)</span> is in the relation <span class="math inline">\(f\)</span> if and only if <span class="math inline">\(y = f(x)\)</span>.</p>
+<p>Other things which are not strictly functions may be relations. For example, we can construct a relation of real numbers <span class="math inline">\((x, y)\)</span> where <span class="math inline">\(x = y^2\)</span>. Or, equivalently, <span class="math inline">\(y = \pm\sqrt{x}\)</span>. Positive values of <span class="math inline">\(x\)</span> correspond to two values of <span class="math inline">\(y\)</span> (positive or negative square root). When <span class="math inline">\(x\)</span> equals zero, there is only one solution for <span class="math inline">\(y\)</span> (also zero). And for negative <span class="math inline">\(x\)</span> there are no real <span class="math inline">\(y\)</span> that satisfy the relation. Note that I say “relation” and not “function” here - functions are only a subset of relations.</p>
+<p>Just like functions may have multiple inputs (<span class="math inline">\(x = f(a, b, c)\)</span>), a relation may consist of tuples of any size (including zero!). And both functions and relations can exist over finite, discrete sets.</p>
+<p>There are precisely two relations over tuples of size zero (i.e.&nbsp;<span class="math inline">\(()\)</span>) - the empty relation, and the relation containing the empty tuple <span class="math inline">\(()\)</span>. You can use this fact to build up a kind of boolean logic in the language of relations, where the empty relation is <code>false</code> and the relation containing <span class="math inline">\(()\)</span> is <code>true</code>.</p>
+<p>Outside of mathematics, the kinds of relations normally modelled in databases are of the discrete, finite-sized variety. A relation over tuples <span class="math inline">\((a, b, c)\)</span> is equivalent to table with three columns <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> and <span class="math inline">\(c\)</span>. In a <em>strictly</em> relational databases, the ordering of the rows is irrelevant, and you cannot have two identical rows in the database (though in practice many databases in use may also deal with “bags” rather than “sets” of tuples, where rows can be repeated). The fields <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> and <span class="math inline">\(c\)</span> are drawn from their own set of possibilities, or <em>datatype</em>. For example, you might have <code>(name, birthdate, is_adult)</code> where <code>name</code> may be a string, <code>birthdate</code> may be a date, and <code>is_adult</code> may be a boolean.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><code>name</code></th>
+<th><code>birthdate</code></th>
+<th><code>is_adult</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>"Alice"</code></td>
+<td><code>2003-05-13</code></td>
+<td><code>true</code></td>
+</tr>
+<tr class="even">
+<td><code>"Bob"</code></td>
+<td><code>2005-12-10</code></td>
+<td><code>false</code></td>
+</tr>
+<tr class="odd">
+<td><code>"Charlie"</code></td>
+<td><code>2004-09-21</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Note that the latter two colums of this particular relation are a function if we assume <code>is_adult</code> is defined in terms of age (and thus in terms of <code>birthdate</code>).</p>
+<p>In many relations, there are uniqueness constraints - for example the <code>name</code> might identify each row uniquely, or there may be a specific <code>ID</code> column to deal with different people sharing the same name. Such unique constraints are called “keys” and the primary identifier that you might use to fetch a particular row is called the “primary key”.</p>
+</section>
+<section id="relational-schema" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="relational-schema"><span class="header-section-number">2.2</span> Relational schema</h2>
+<p>A single relation is a restrictive way to model your data. However, by allowing multiple relations, we can capture the various sets of data in the system, and piece them together by their <em>relationships</em>.</p>
+<p>For example, each person in the table above might be related to other things. They might have jobs, bank accounts, etc. Within a single business a person might be a customer, a supplier and an employee, and for different purposes we might want data associated with that person (e.g.&nbsp;their birthdate might relate to advertizing promotions to customers, payrates for employees, etc).</p>
+<p>Generally, to make keeping track of data easy, in a relational database you would store that person <em>just once</em> and create relationships between that person and other things. That way, if something changes about that person, it only needs to be updated in one place, and data remains consistent everywhere.</p>
+<p>Here is an example of a more complex example - an imagining of how <em>LinkedIn</em> might store their data in a relational database (taken from “Designing Data-Intensive Applications” by Martin Kleppmann).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../web_img/schema.png" class="img-fluid figure-img"></p>
+<figcaption>From <em>Designing Data-Intensive Applications</em> by Martin Kleppmann</figcaption>
+</figure>
+</div>
+</section>
+<section id="sql" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sql"><span class="header-section-number">2.3</span> SQL</h2>
+<p>The most popular way to interact with relational data is with via a language called SQL (originally “SEQUEL”, pronounced that way, backronymed to “structured query language”).</p>
+<p>The language is from 1973 and doesn’t look like most other programming languages. With it, you declare a “query” and the database will find the best way to return the results. It is a form of <a href="https://en.wikipedia.org/wiki/Declarative_programming">declarative programming</a>. Here is an example of getting some columns of data from the <code>users</code> table:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> user_id, first_name, last_name</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> users</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can filter the rows via a <code>WHERE</code> clause. Let’s say you knew the <code>user_id</code> for Bill Gates and you wanted just his data:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> user_id, first_name, last_name</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> users</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> user_id <span class="op">=</span> <span class="dv">251</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Data in different tables are related via the <code>JOIN</code> statement</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> users.user_id, first_name, last_name, <span class="kw">organization</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> positions <span class="kw">ON</span> positions.user_id <span class="op">=</span> users.user_id</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> users</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note we have to prefix the shared column names with the corresponding table (although in this case the difference is not particularly important, your query cannot be ambiguous).</p>
+<p>But there is a problem here. This query would create a large amount of data, that the database would need to collect and send over the network to you. In the worst case, performing such a query could bring down a large system!</p>
+<p>Generally, you have something more precise in mind. Like - which organizations has Bill Gates worked at?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> users.user_id, first_name, last_name, <span class="kw">organization</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> positions <span class="kw">ON</span> positions.user_id <span class="op">=</span> users.user_id</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> users</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> users.user_id <span class="op">=</span> <span class="dv">251</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will now return just two rows (for Microsoft, and the Bill &amp; Melinda Gates Foundation), and is much less effort for the database, the network and the client. In real-world settings, complex joins could link data spanning dozens of tables.</p>
+<p>There are several Julia libraries for interacting with SQL databases including the likes of <a href="https://github.com/JuliaDatabases/LibPQ.jl">LibPQ.jl</a> allowing queries to be executed on a PostgreSQL database and the results returned as convenient Julia data structures. There’s even an SQL REPL in <a href="https://github.com/c42f/SQLREPL.jl">SQLRepl.jl</a> if you want to execute SQL queries interactively and mix them with variables from your normal Julia session.</p>
+<p>We won’t be writing SQL in this course but it is so pervasive in industry that is essential that you know that it exists and not to be afraid to use it! (It is a very useful and desirable skill!) All the relational data concepts expressed in SQL above also apply to in-memory data analysis using Julia and we show various examples of this next.</p>
+</section>
+</section>
+<section id="dataframes" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Dataframes</h1>
+<p>Working with tabular data is a central part of data analysis (think Excel). Data has rows (observations) and columns (variables/features). Typically a row would be for an individual, or item, or event. Typically a column would be for attributes of the individual, properties of the events, etc. Variables can be numerical, categorical, strings, or even more complex entities (e.g.&nbsp;images, arrays or dictionaries).</p>
+<p>The datafile <code>athlete_events.csv</code> is a moderately sized dataset available from <a href="https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results">Kaggle</a> covering all athletes that have participated the Summer or Winter Olympics between 1896 and 2016. The CSV file contains 40MB of data over 15 columns and more than 27,000 rows, which is “small data” for a modern computer (but would have been challenging in the 1980’s). In this context, “big data” is too large to be handled by a single machine, and we’ll discuss “big data” and “medium data” later.</p>
+<p>You have already seen how to read and write from CSV files in Unit 3 where you also explored JSON files. You may recall using the <code>DataFrames.jl</code> package in that unit. We now take a deeper dive into the concept of dataframes.</p>
+<p>We will use <code>athlete_events.csv</code> to show basic functionality of the <a href="https://dataframes.juliadata.org/stable/">DataFrames.jl</a> and <a href="https://github.com/JuliaData/TypedTables.jl">TypedTables.jl</a> packages. In a sense these packages are alternatives. Seeing some functionality from each may be useful for gaining a general understanding of what to expect from such packages. If you work with Python, then using <a href="https://pandas.pydata.org/">pandas</a> is the common alternative. Similarly if you work with the R language then the built-in dataframes are common.</p>
+<section id="basic-data-exploration" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="basic-data-exploration"><span class="header-section-number">3.1</span> Basic data exploration</h2>
+<p>Whenever you receive a dataset, it takes some time to understand its contents. This process is generally known as “data exploration”. To do so, we generally load (a subset of) the data from disk and do some basic analysis in a Jupyter notebook or at the REPL.</p>
+<p>We were introduced to CSV files earlier in the course. Here’s the first few lines of our file:</p>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">open</span>(<span class="st">"../data/athlete_events.csv"</span>) <span class="cf">do</span> io</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   i <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="cf">while</span> i <span class="op">&lt;</span> <span class="fl">5</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">println</span>(<span class="fu">readline</span>(io))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   i <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>SystemError: opening file "../data/athlete_events.csv": No such file or directory
+Stacktrace:
+ [1] <span class="ansi-bold">systemerror</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">p</span>::String, <span class="ansi-bright-black-fg">errno</span>::Int32; <span class="ansi-bright-black-fg">extrainfo</span>::Nothing<span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">error.jl:186</span>
+ [2] <span class="ansi-bold">open</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">fname</span>::String; <span class="ansi-bright-black-fg">lock</span>::Bool, <span class="ansi-bright-black-fg">read</span>::Nothing, <span class="ansi-bright-black-fg">write</span>::Nothing, <span class="ansi-bright-black-fg">create</span>::Nothing, <span class="ansi-bright-black-fg">truncate</span>::Nothing, <span class="ansi-bright-black-fg">append</span>::Nothing<span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">iostream.jl:317</span>
+ [3] <span class="ansi-bold">open</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">iostream.jl:296</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [4] <span class="ansi-bold">open</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">f</span>::var"#2#3", <span class="ansi-bright-black-fg">args</span>::String; <span class="ansi-bright-black-fg">kwargs</span>::@Kwargs<span class="ansi-bright-black-fg">{}</span><span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">io.jl:410</span>
+ [5] <span class="ansi-bold">open</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">f</span>::Function, <span class="ansi-bright-black-fg">args</span>::String<span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">Base</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">io.jl:409</span>
+ [6] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:125</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>do</code> syntax here injects a function which takes <code>io::IO</code> (an I/O stream for our file) into the first argument of the <code>open</code> function. It is syntax sugar. The <code>open</code> function is designed such that when the inner function returns or throws an error, <code>open</code> will automatically close the file to avoid resource leakage.</p>
+<p>We can use the <em>CSV.jl</em> package to read the data and the <em>DataFrames.jl</em> package to hold the tabular data. We note in the above the appearance of <code>"NA"</code> for missing data, which we can use to help load the file.</p>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">CSV</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>csv_file <span class="op">=</span> CSV.<span class="fu">File</span>(<span class="st">"../data/athlete_events.csv"</span>; missingstring <span class="op">=</span> <span class="st">"NA"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(csv_file)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Data size: "</span>, <span class="fu">size</span>(df))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Columns in the data: "</span>, <span class="fu">names</span>(df))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>ArgumentError: "../data/athlete_events.csv" is not a valid file or doesn't exist
+Stacktrace:
+ [1] <span class="ansi-bold">macro expansion</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">context.jl:314</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [2] <span class="ansi-bold">Context</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">none:0</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [3] <span class="ansi-bold">CSV.Context</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">source</span>::CSV.Arg, <span class="ansi-bright-black-fg">header</span>::CSV.Arg, <span class="ansi-bright-black-fg">normalizenames</span>::CSV.Arg, <span class="ansi-bright-black-fg">datarow</span>::CSV.Arg, <span class="ansi-bright-black-fg">skipto</span>::CSV.Arg, <span class="ansi-bright-black-fg">footerskip</span>::CSV.Arg, <span class="ansi-bright-black-fg">transpose</span>::CSV.Arg, <span class="ansi-bright-black-fg">comment</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignoreemptyrows</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignoreemptylines</span>::CSV.Arg, <span class="ansi-bright-black-fg">select</span>::CSV.Arg, <span class="ansi-bright-black-fg">drop</span>::CSV.Arg, <span class="ansi-bright-black-fg">limit</span>::CSV.Arg, <span class="ansi-bright-black-fg">buffer_in_memory</span>::CSV.Arg, <span class="ansi-bright-black-fg">threaded</span>::CSV.Arg, <span class="ansi-bright-black-fg">ntasks</span>::CSV.Arg, <span class="ansi-bright-black-fg">tasks</span>::CSV.Arg, <span class="ansi-bright-black-fg">rows_to_check</span>::CSV.Arg, <span class="ansi-bright-black-fg">lines_to_check</span>::CSV.Arg, <span class="ansi-bright-black-fg">missingstrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">missingstring</span>::CSV.Arg, <span class="ansi-bright-black-fg">delim</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignorerepeated</span>::CSV.Arg, <span class="ansi-bright-black-fg">quoted</span>::CSV.Arg, <span class="ansi-bright-black-fg">quotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">openquotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">closequotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">escapechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">dateformat</span>::CSV.Arg, <span class="ansi-bright-black-fg">dateformats</span>::CSV.Arg, <span class="ansi-bright-black-fg">decimal</span>::CSV.Arg, <span class="ansi-bright-black-fg">groupmark</span>::CSV.Arg, <span class="ansi-bright-black-fg">truestrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">falsestrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">stripwhitespace</span>::CSV.Arg, <span class="ansi-bright-black-fg">type</span>::CSV.Arg, <span class="ansi-bright-black-fg">types</span>::CSV.Arg, <span class="ansi-bright-black-fg">typemap</span>::CSV.Arg, <span class="ansi-bright-black-fg">pool</span>::CSV.Arg, <span class="ansi-bright-black-fg">downcast</span>::CSV.Arg, <span class="ansi-bright-black-fg">lazystrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">stringtype</span>::CSV.Arg, <span class="ansi-bright-black-fg">strict</span>::CSV.Arg, <span class="ansi-bright-black-fg">silencewarnings</span>::CSV.Arg, <span class="ansi-bright-black-fg">maxwarnings</span>::CSV.Arg, <span class="ansi-bright-black-fg">debug</span>::CSV.Arg, <span class="ansi-bright-black-fg">parsingdebug</span>::CSV.Arg, <span class="ansi-bright-black-fg">validate</span>::CSV.Arg, <span class="ansi-bright-black-fg">streaming</span>::CSV.Arg<span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">CSV</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">context.jl:0</span>
+ [4] <span class="ansi-bold">#File#18</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">file.jl:222</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [5] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:140</span></pre>
+</div>
+</div>
+</div>
+<p>Since the data is large, we don’t usually want to print it all. The <code>first</code> and <code>last</code> functions can be helpful:</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df, <span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:149</span></pre>
+</div>
+</div>
+</div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">last</span>(df, <span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:153</span></pre>
+</div>
+</div>
+</div>
+<p>This dataset appears to be sorted by last name. Each row corresponds to an entrant to an event. The ID column identifies each unique athlete.</p>
+<p>A <code>DataFrame</code> is indexed like a 2D container of rows and columns. The <code>:</code> symbol means “all”.</p>
+<div id="10" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">:</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:161</span></pre>
+</div>
+</div>
+</div>
+<p>Internally, a dataframe stores one vector of data per column. You can access any of them conveniently as “properties” with <code>.</code> syntax:</p>
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df.ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:167</span></pre>
+</div>
+</div>
+</div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df.Height</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:171</span></pre>
+</div>
+</div>
+</div>
+<p>As you can see from above, some data can be missing. How many heights are missing?</p>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ismissing</span>.(df.Height) <span class="op">|&gt;</span> count <span class="co"># Piping: `f(x) |&gt; g` syntax means `g(f(x))`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:177</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>count</code> function counts the number of <code>true</code> values.</p>
+<p>How many unique athletes are there?</p>
+<div id="18" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df.ID) <span class="op">|&gt;</span> length</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:185</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>unique</code> operation has extra methods defined for <code>DataFrame</code>s. We can get the athlete data like so:</p>
+<div id="20" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>athlete_df <span class="op">=</span> <span class="fu">unique</span>(df, <span class="op">:</span>ID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:191</span></pre>
+</div>
+</div>
+</div>
+<p>It keeps all columns of the first row containing each distinct ID, which will we take as representative (for their Sex, Height, Weight, etc).</p>
+</section>
+<section id="simple-analysis" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="simple-analysis"><span class="header-section-number">3.2</span> Simple analysis</h2>
+<p>Now we are becoming familiar with the dataset, we might like to see what insights we can gain. For example, let’s see how many men and women have competed.</p>
+<div id="22" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="op">==</span>(<span class="st">"M"</span>), athlete_df.Sex)  <span class="co"># `==(x)` creates a function `y -&gt; y == x`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:201</span></pre>
+</div>
+</div>
+</div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(<span class="op">==</span>(<span class="st">"F"</span>), athlete_df.Sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:205</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>count</code> function is useful, but this gets tiresome for many “groups” of data. The <a href="https://github.com/JuliaData/SplitApplyCombine.jl">SplitApplyCombine.jl</a> package contains useful functions for grouping data.</p>
+<div id="26" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">SplitApplyCombine</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">groupcount</span>(athlete_df.Sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:213</span></pre>
+</div>
+</div>
+</div>
+<p>Which allows us to explore larger sets of groupings:</p>
+<div id="28" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many athletes by country</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>team_sizes <span class="op">=</span> <span class="fu">groupcount</span>(athlete_df.Team)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:220</span></pre>
+</div>
+</div>
+</div>
+<p>One of the most powerful tricks in data analysis is to sort your data.</p>
+<div id="30" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(team_sizes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `team_sizes` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:225</span></pre>
+</div>
+</div>
+</div>
+<p>Note that <code>groupcount</code> is a specialization of the more flexible <code>group(keys, values)</code> function:</p>
+<div id="32" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">group</span>(athlete_df.Team, athlete_df.Name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:231</span></pre>
+</div>
+</div>
+</div>
+<p>Rather than acting at the level of vectors, you can group an entire <code>DataFrame</code> into a <code>GroupedDataFrame</code> with the <code>groupby</code> function provided by <em>DataFrames.jl</em>:</p>
+<div id="34" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> <span class="fu">groupby</span>(athlete_df, <span class="op">:</span>Team)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:237</span></pre>
+</div>
+</div>
+</div>
+<p>You can apply an operation to each group and bring the data together into a single <code>DataFrame</code> via the <code>combine</code> function.</p>
+<div id="36" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">combine</span>(gdf, nrow <span class="op">=&gt;</span> <span class="op">:</span>Count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `gdf` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:243</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>nrow =&gt; :Count</code> syntax is a convenience provided by <em>Dataframes.jl</em>. We’ll explain how it works below.</p>
+</section>
+<section id="row--and-column-based-storage" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="row--and-column-based-storage"><span class="header-section-number">3.3</span> Row- and column-based storage</h2>
+<p>What is a dataframe?</p>
+<p>It is a data structure containing rows and columns. Internally it keeps each column of data as its own vector, which you can access as a property with <code>.</code></p>
+<div id="38" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>athlete_df.Height</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:255</span></pre>
+</div>
+</div>
+</div>
+<p>To construct a row, you need to grab the corresponding element from each vector.</p>
+<div id="40" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(<span class="fu">eachrow</span>(df))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:261</span></pre>
+</div>
+</div>
+</div>
+<p>Or, you can use 2D indexing, as before</p>
+<div id="42" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fl">1</span>, <span class="op">:</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `df` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Hint: a global variable of this name also exists in Rmath.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:267</span></pre>
+</div>
+</div>
+</div>
+<p>In this case there are 15 columns, so the computer must fetch data from 15 different places. This means that, for dataframes, operating with columns is faster than with rows. DataFrames are specialized for whole-of-table analytics, where each individual step in your analysis probably only involves a small number of columns.</p>
+<p>There are other data structures you can use which store the data as rows. Most SQL databases will store their data like this. Traditional “transactional” databases are typically driven with reads and writes to one (or a few) rows at a time, and row-based storage is more efficient for such workloads. Some of the modern “analytics” databses will use column-based storage.</p>
+<p>In Julia, perhaps the simplest such data structure is a <code>Vector</code> of <code>NamedTuple</code>s. We can create one straightforwardly from a <code>CSV.File</code>:</p>
+<div id="44" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">NamedTuple</span>.(csv_file)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `csv_file` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:277</span></pre>
+</div>
+</div>
+</div>
+<p>The above constructs a <code>NamedTuple</code> for each row of the CSV file and and returns it as a <code>Vector</code>.</p>
+<p>This is a great data structure that you can use “out of the box” with no packages, and your “everyday” analysis work will usually be fast so long as you do not have many, many columns.</p>
+<p>If you want to use an identical interface with row-based storage, there is the <a href="https://github.com/JuliaData/TypedTables.jl">TypedTables</a> package. In this package, a <code>Table</code> is an <code>AbstractArray{&lt;:NamedTuple}</code>, each column is stored as its own vector, and when you index the table <code>table[i]</code> it assembles the row as a <code>NamedTuple</code> for you.</p>
+<div id="46" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">TypedTables</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Table</span>(csv_file)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `csv_file` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:288</span></pre>
+</div>
+</div>
+</div>
+<p>Sometimes plain vectors or (typed) tables may be more convenient or faster than dataframes, and sometimes dataframes will be more convenient and faster than plain vectors or typed tables. Another popular approach is to use <em>Query.jl</em>. For your assessment you may use whichever approach you like best.</p>
+</section>
+<section id="dataframes-1" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="dataframes-1"><span class="header-section-number">3.4</span> DataFrames</h2>
+<p>For now we will double-down on DataFrames.jl.</p>
+<p>Here is a <a href="https://www.ahsmart.com/assets/pages/data-wrangling-with-data-frames-jl-cheat-sheet/DataFramesCheatSheet_v1.x_rev1.pdf">nice cheatsheet for the syntax of DataFrames</a>, and I recommend downloading and possibly even printing it out for your convenience.</p>
+<section id="constructing-dataframes" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="constructing-dataframes"><span class="header-section-number">3.4.1</span> Constructing dataframes</h3>
+<p>A <code>DataFrame</code> can be constructed directly from data columns.</p>
+<div id="48" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(a <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], b <span class="op">=</span> [<span class="fl">2.0</span>, <span class="fl">4.0</span>, <span class="fl">6.0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>You can get or set columns to the dataframe with <code>.</code> property syntax.</p>
+<div id="50" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df.a</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3-element Vector{Int64}:
+ 1
+ 2
+ 3</code></pre>
+</div>
+</div>
+<div id="52" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.c <span class="op">=</span> [<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: left;">B</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="indexing-dataframes" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="indexing-dataframes"><span class="header-section-number">3.4.2</span> Indexing dataframes</h3>
+<p>A dataframe is indexed a bit like a 2D matrix - the first index is the row and the second is the column.</p>
+<div id="54" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fl">1</span>, <span class="op">:</span>c]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>"A"</code></pre>
+</div>
+</div>
+<p>The <code>:c</code> here is a <code>Symbol</code>, which is a kind of “compiler string”. The compiler stores the names of your types, fields, variables, modules and functions as <code>Symbol</code>. In fact, the syntax <code>df.c</code> is just sugar for <code>getproperty(df, :c)</code>. You can get multiple rows and/or columns.</p>
+<div id="56" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fl">1</span>, <span class="op">:</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>DataFrameRow (3 columns)</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="58" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df[<span class="op">:</span>, <span class="op">:</span>c]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3-element Vector{String}:
+ "A"
+ "B"
+ "C"</code></pre>
+</div>
+</div>
+<div id="60" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, [<span class="op">:</span>a, <span class="op">:</span>c]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">B</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="filtering-dataframes" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="filtering-dataframes"><span class="header-section-number">3.4.3</span> Filtering dataframes</h3>
+<p>The <code>filter</code> function returns a collection where the elements satisfy some predicate function (i.e.&nbsp;a function that returns a <code>Bool</code>). We can grab just the odd-numbered rows from <code>df</code> by running <code>filter</code> over each row.</p>
+<div id="62" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(row <span class="op">-&gt;</span> <span class="fu">isodd</span>(row.a), df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Unfortunately, in this case this is quite inefficient. For each row the program must</p>
+<ol type="1">
+<li>construct a <code>DataFrameRow</code></li>
+<li>access the <code>a</code> field <em>dynamically</em></li>
+<li>compute <code>isodd</code></li>
+</ol>
+<p>This is slower than we’d like because the compiler doesn’t really know what columns are in a <code>DataFrame</code> (or a <code>DataFrameRow</code>) and what type they may be. Every time we do step 2 there is a lot of overhead.</p>
+<p>To fix this problem <em>DataFrames.jl</em> introduced special syntax of the form:</p>
+<div id="64" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="op">:</span>a <span class="op">=&gt;</span> isodd, df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This will automatically extract the <code>:a</code> column <em>just once</em> and use it to construct a fast &amp; fully compiled predicate function. Another way to think about how this works is via indexing:</p>
+<div id="66" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">isodd</span>.(df.a), <span class="op">:</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>So first we find:</p>
+<div id="68" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">isodd</span>.(df.a)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>3-element BitVector:
+ 1
+ 0
+ 1</code></pre>
+</div>
+</div>
+<p>And afterwards we take a subset of the rows.</p>
+<div id="70" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df[[<span class="fl">1</span>,<span class="fl">3</span>], <span class="op">:</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="select-and-transform" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="select-and-transform"><span class="header-section-number">3.4.4</span> <code>select</code> and <code>transform</code></h3>
+<p>You can grab one-or-more columns via <code>select</code>:</p>
+<div id="72" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(df, [<span class="op">:</span>a, <span class="op">:</span>c])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">A</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">B</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">C</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The columns can be modified or even renamed as a part of this process. This is more useful with <code>transform</code>, which keeps the existing columns and lets you add new ones:</p>
+<div id="74" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(df, <span class="op">:</span>b <span class="op">=&gt;</span> mean <span class="op">=&gt;</span> <span class="op">:</span>mean_b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×4 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean_b</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>You can read this as “take column <code>b</code>, do <code>mean</code> on it, and put the result in column <code>mean_b</code>”. A new dataframe is constructed, and <code>df</code> is unmodified.</p>
+<p>Note that the transformation applies to whole columns. If you want to transform just a single row at a time, wrap the function in a <code>ByRow</code>.</p>
+<div id="76" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">transform!</span>(df, <span class="op">:</span>a <span class="op">=&gt;</span> <span class="fu">ByRow</span>(isodd) <span class="op">=&gt;</span> <span class="op">:</span>a_isodd, <span class="op">:</span>c <span class="op">=&gt;</span> <span class="fu">ByRow</span>(lowercase) <span class="op">=&gt;</span> <span class="op">:</span>c_lowercase)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×5 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a_isodd</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c_lowercase</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Bool">Bool</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">a</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">false</td>
+<td style="text-align: left;">b</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">c</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Here we used <code>transform!</code> (note the <code>!</code>) which mutates <code>df</code>.</p>
+</section>
+<section id="groupby-and-combine" class="level3" data-number="3.4.5">
+<h3 data-number="3.4.5" class="anchored" data-anchor-id="groupby-and-combine"><span class="header-section-number">3.4.5</span> <code>groupby</code> and <code>combine</code></h3>
+<p>The <code>groupby</code> function will group a <code>DataFrame</code> into a collection of <code>SubDataFrame</code>s:</p>
+<div id="78" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> <span class="fu">groupby</span>(df, <span class="op">:</span>a_isodd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<p><b>GroupedDataFrame with 2 groups based on key: a_isodd</b></p><div><div style="float: left;"><span>First Group (1 row): a_isodd = false</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a_isodd</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c_lowercase</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Bool">Bool</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">false</td>
+<td style="text-align: left;">b</td>
+</tr>
+</tbody>
+</table>
+</div><p>⋮</p><div><div style="float: left;"><span>Last Group (2 rows): a_isodd = true</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a_isodd</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c_lowercase</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Bool">Bool</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">a</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: left;">c</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>You can combine these together by applying a bulk transformation to each group</p>
+<div id="80" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">combine</span>(gdf, <span class="op">:</span>b <span class="op">=&gt;</span> sum, <span class="op">:</span>c <span class="op">=&gt;</span> join)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a_isodd</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b_sum</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">c_join</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Bool">Bool</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">false</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: left;">B</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">true</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: left;">AC</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>This is known as the split-apply-combine strategy, and the pattern comes up frequently.</p>
+</section>
+<section id="innerjoin" class="level3" data-number="3.4.6">
+<h3 data-number="3.4.6" class="anchored" data-anchor-id="innerjoin"><span class="header-section-number">3.4.6</span> <code>innerjoin</code></h3>
+<p>We won’t use this a lot in this course, but you can perform a relational join between dataframes with the <code>innerjoin</code> function. (Note that the <code>join</code> function is for joining strings together into longer strings)</p>
+<div id="82" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>names_df <span class="op">=</span> <span class="fu">DataFrame</span>(ID <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>], Name <span class="op">=</span> [<span class="st">"John Doe"</span>, <span class="st">"Jane Doe"</span>, <span class="st">"Joe Blogs"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">John Doe</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Jane Doe</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Joe Blogs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="84" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>jobs <span class="op">=</span> <span class="fu">DataFrame</span>(ID <span class="op">=</span> [<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>], Job <span class="op">=</span> [<span class="st">"Lawyer"</span>, <span class="st">"Doctor"</span>, <span class="st">"Farmer"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>3×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Job</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Lawyer</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Doctor</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Farmer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="86" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>DataFrames.<span class="fu">innerjoin</span>(names_df, jobs; on <span class="op">=</span> <span class="op">:</span>ID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>2×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Job</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">John Doe</td>
+<td style="text-align: left;">Lawyer</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Jane Doe</td>
+<td style="text-align: left;">Doctor</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Only rows with matching <code>:ID</code>s are kept.</p>
+</section>
+</section>
+<section id="more-analysis" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="more-analysis"><span class="header-section-number">3.5</span> More analysis</h2>
+<p>Now that we know a little bit more about the tools, let’s use them to see what insights we can glean from our Olympic athlete data.</p>
+<section id="athlete-height" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="athlete-height"><span class="header-section-number">3.5.1</span> Athlete height</h3>
+<p>We can see that, on average, male competitors are taller than female competitors.</p>
+<div id="88" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(athlete_df.Height[athlete_df.Sex <span class="op">.==</span> <span class="st">"M"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:450</span></pre>
+</div>
+</div>
+</div>
+<p>Oops. Not all athletes have a <code>Height</code> attribute.</p>
+<div id="90" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">skipmissing</span>(athlete_df.Height[athlete_df.Sex <span class="op">.==</span> <span class="st">"M"</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:456</span></pre>
+</div>
+</div>
+</div>
+<div id="92" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">skipmissing</span>(athlete_df.Height[athlete_df.Sex <span class="op">.==</span> <span class="st">"F"</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:460</span></pre>
+</div>
+</div>
+</div>
+<p>The males are a bit more than 10cm taller, on average.</p>
+<p>OK, now let’s perform a slightly more complex analysis. We will answer the question - has athlete height has changed over time? What do you think?</p>
+<p>We can plot the average height as a function of <code>Year</code>. To see how to do that, first we’ll repeat the above using the tools of <em>DataFrames.jl</em>:</p>
+<div id="94" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>athlete_by_gender <span class="op">=</span> <span class="fu">groupby</span>(athlete_df, <span class="op">:</span>Sex)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">combine</span>(athlete_by_gender, <span class="op">:</span>Height <span class="op">=&gt;</span> mean <span class="op">∘</span> skipmissing <span class="op">=&gt;</span> <span class="op">:</span>Height)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:470</span></pre>
+</div>
+</div>
+</div>
+<p>Given that, it’s pretty straightforward to do this as a function of year.</p>
+<div id="96" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>athlete_by_year <span class="op">=</span> <span class="fu">groupby</span>(athlete_df, <span class="op">:</span>Year)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>height_by_year <span class="op">=</span> <span class="fu">combine</span>(athlete_by_year, <span class="op">:</span>Height <span class="op">=&gt;</span> mean <span class="op">∘</span> skipmissing <span class="op">=&gt;</span> <span class="op">:</span>Height)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(height_by_year.Year, height_by_year.Height, ylim <span class="op">=</span> [<span class="fl">155</span>, <span class="fl">182</span>]; ylabel <span class="op">=</span> <span class="st">"Height (cm)"</span>, xlabel <span class="op">=</span> <span class="st">"Year"</span>, legend <span class="op">=</span> <span class="cn">false</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:478</span></pre>
+</div>
+</div>
+</div>
+<p>This doesn’t show anything interesting. Yet. There are a few confounding factors to eliminate first.</p>
+<p>First, there is something going on strange with the years, which started at 4-year increments and changed to 2-year increments. This is due to Winter Olympics moving to a different year to the Summer Olympics in 1994.</p>
+<div id="98" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>athlete_by_games <span class="op">=</span> <span class="fu">groupby</span>(athlete_df, [<span class="op">:</span>Year, <span class="op">:</span>Season])</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>height_by_games <span class="op">=</span> <span class="fu">combine</span>(athlete_by_games, <span class="op">:</span>Height <span class="op">=&gt;</span> mean <span class="op">∘</span> skipmissing <span class="op">=&gt;</span> <span class="op">:</span>Height)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(height_by_games.Year, height_by_games.Height, ylim <span class="op">=</span> [<span class="fl">155</span>, <span class="fl">182</span>]; ylabel <span class="op">=</span> <span class="st">"Height (cm)"</span>, xlabel <span class="op">=</span> <span class="st">"Year"</span>, group <span class="op">=</span> height_by_games.Season, legend <span class="op">=</span> <span class="op">:</span>bottomright)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:488</span></pre>
+</div>
+</div>
+</div>
+<p>The type of sport might affect the height of the competitors (think basketball players vs jockeys) so it’s good to split these groups. Here it seems that winter competitors are slightly shorter than summer competitors.</p>
+<p>The second confounding factor is that women have increasingly became a larger fraction of the competitors at the Olympics, so we will split also by gender.</p>
+<div id="100" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>athlete_by_cohort <span class="op">=</span> <span class="fu">groupby</span>(athlete_df, [<span class="op">:</span>Year, <span class="op">:</span>Season, <span class="op">:</span>Sex])</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>height_by_cohort <span class="op">=</span> <span class="fu">combine</span>(athlete_by_cohort, <span class="op">:</span>Height <span class="op">=&gt;</span> mean <span class="op">∘</span> skipmissing <span class="op">=&gt;</span> <span class="op">:</span>Height)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(height_by_cohort.Year, height_by_cohort.Height, ylim <span class="op">=</span> [<span class="fl">155</span>, <span class="fl">182</span>]; ylabel <span class="op">=</span> <span class="st">"Height (cm)"</span>, xlabel <span class="op">=</span> <span class="st">"Year"</span>, group <span class="op">=</span> <span class="fu">tuple</span>.(height_by_cohort.Season, height_by_cohort.Sex), legend <span class="op">=</span> <span class="op">:</span>bottomright)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_df` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:498</span></pre>
+</div>
+</div>
+</div>
+<p>Whoa! Now we clearly see that heights have trended up at least 5cm since 1900!</p>
+<p>What’s going on here? I suspect it is a combination of several facts:</p>
+<ol type="1">
+<li>On average, people born before the end of World War 2 were shorter, due to nutritional changes.</li>
+<li>Sport has become more elite and competitive over the years, and height may correlate with success in many Olympic sports.</li>
+<li>Women competitors have become more prevalent over time, reducing the average height of <em>all</em> competitors.</li>
+<li>Similarly, winter competitors may have become more prevalent over time, who appear to be shorter than the summer cohorts.</li>
+</ol>
+<p>We can easily verify #3 above.</p>
+<div id="102" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>gender_by_games <span class="op">=</span> <span class="fu">combine</span>(athlete_by_games, <span class="op">:</span>Sex <span class="op">=&gt;</span> (s <span class="op">-&gt;</span> <span class="fu">count</span>(<span class="op">==</span>(<span class="st">"F"</span>), s) <span class="op">/</span> <span class="fu">length</span>(s)) <span class="op">=&gt;</span> <span class="op">:</span>Fraction_Female)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gender_by_games.Year, gender_by_games.Fraction_Female, ylim <span class="op">=</span> [<span class="fl">0</span>, <span class="fl">1</span>]; ylabel <span class="op">=</span> <span class="st">"Fraction female"</span>, xlabel <span class="op">=</span> <span class="st">"Year"</span>, group <span class="op">=</span> gender_by_games.Season, legend <span class="op">=</span> <span class="op">:</span>topright)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_by_games` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:515</span></pre>
+</div>
+</div>
+</div>
+<p>Note that we could have given up our analysis with the first plot, above, and arrived at completely the wrong conclusion!</p>
+<p>Having these tools under your belt is a very useful skill. It is quite common that you need to have the skills to dig under the surface to get a correct understanding of data. It is just as useful to debunk a myth or assumption as it is to find a hitherto unknown correlation.</p>
+</section>
+<section id="histograms" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="histograms"><span class="header-section-number">3.5.2</span> Histograms</h3>
+<p>These are just the means, we can also compare the statistic distribution (for the 2016 games, say):</p>
+<div id="104" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(<span class="fu">collect</span>(<span class="fu">skipmissing</span>(athlete_by_cohort[(<span class="fl">2016</span>, <span class="st">"Summer"</span>, <span class="st">"M"</span>)].Height)), xlabel <span class="op">=</span> <span class="st">"Height (cm)"</span>, opacity <span class="op">=</span> <span class="fl">0.5</span>, label <span class="op">=</span> <span class="st">"Male"</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram!</span>(<span class="fu">collect</span>(<span class="fu">skipmissing</span>(athlete_by_cohort[(<span class="fl">2016</span>, <span class="st">"Summer"</span>, <span class="st">"F"</span>)].Height)), opacity <span class="op">=</span> <span class="fl">0.5</span>, label <span class="op">=</span> <span class="st">"Female"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>UndefVarError: `athlete_by_cohort` not defined in `Main.Notebook`
+Suggestion: add an appropriate import or assignment. This global was declared but not assigned.
+Stacktrace:
+ [1] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:528</span></pre>
+</div>
+</div>
+</div>
+<p>The <code>histogram</code> function is useful for identifying features of distributions (e.g.&nbsp;if it is bimodal).</p>
+</section>
+<section id="further-questions" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="further-questions"><span class="header-section-number">3.5.3</span> Further questions</h3>
+<p>We could analyse this data another hundred ways. Some questions that come to mind are:</p>
+<ul>
+<li>How does team success relate to socioeconomic indicators of their home country, such as GDP per capita? Do richer countries do comparatively better than poorer countries? To do this, we would need to <em>join</em> the data with country data.</li>
+<li>Does team success depend on the distance between the host of the Olympics and the home nation? For example, Australia received a lot of medals during the Sydney 2000 Olympics.</li>
+<li>Can we predict how well a team will do at a given Olympics, based on data like above? This is heading in the direction of machine learning.</li>
+</ul>
+</section>
+</section>
+<section id="fitting-linear-models" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="fitting-linear-models"><span class="header-section-number">3.6</span> Fitting linear models</h2>
+<p>Here we’ll briefly show how to fit linear models to your data using the package <strong>GLM.jl</strong>. A one dimensional linear model may be written</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 X + \epsilon
+\]</span></p>
+<p>where <span class="math inline">\(Y\)</span> is some dependent variable to be predicted, <span class="math inline">\(X\)</span> is the independent variable and <span class="math inline">\(\epsilon\)</span> is some random noise. The task of fitting is to estimate the model parameters <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>; one may also want to estimate the variance of the noise <span class="math inline">\(\epsilon\)</span>. Simple linear models like this (and the multidimensional generalization) can be fit with least squares to give the maximum liklihood estimate of the parameters <span class="math inline">\(\beta\)</span>.</p>
+<p>Let’s look at a simple example from the athletes data</p>
+<div id="106" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GLM</span>, <span class="bu">Underscores</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(CSV.<span class="fu">File</span>(<span class="st">"../data/athlete_events.csv"</span>; missingstring <span class="op">=</span> <span class="st">"NA"</span>))</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>rowing_by_year <span class="op">=</span> <span class="pp">@_</span> df <span class="op">|&gt;</span> </span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">groupby</span>(__, [<span class="op">:</span>Year, <span class="op">:</span>Sport]) <span class="op">|&gt;</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">combine</span>(__, nrow <span class="op">=&gt;</span> <span class="op">:</span>Count) <span class="op">|&gt;</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">sort</span>(__, <span class="op">:</span>Year) <span class="op">|&gt;</span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">filter</span>(<span class="op">:</span>Sport <span class="op">=&gt;</span> <span class="op">==</span>(<span class="st">"Rowing"</span>), __)</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">lm</span>(<span class="pp">@formula</span>(Count <span class="op">~</span> Year), rowing_by_year)</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="fu">scatter</span>(rowing_by_year.Year, rowing_by_year.Count, label<span class="op">=</span><span class="st">"Data"</span>)</span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot!</span>(rowing_by_year.Year, <span class="fu">predict</span>(model, rowing_by_year), label<span class="op">=</span><span class="st">"Prediction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre>ArgumentError: "../data/athlete_events.csv" is not a valid file or doesn't exist
+Stacktrace:
+ [1] <span class="ansi-bold">macro expansion</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">context.jl:314</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [2] <span class="ansi-bold">Context</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">./</span><span style="text-decoration:underline" class="ansi-bright-black-fg">none:0</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [3] <span class="ansi-bold">CSV.Context</span><span class="ansi-bold">(</span><span class="ansi-bright-black-fg">source</span>::CSV.Arg, <span class="ansi-bright-black-fg">header</span>::CSV.Arg, <span class="ansi-bright-black-fg">normalizenames</span>::CSV.Arg, <span class="ansi-bright-black-fg">datarow</span>::CSV.Arg, <span class="ansi-bright-black-fg">skipto</span>::CSV.Arg, <span class="ansi-bright-black-fg">footerskip</span>::CSV.Arg, <span class="ansi-bright-black-fg">transpose</span>::CSV.Arg, <span class="ansi-bright-black-fg">comment</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignoreemptyrows</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignoreemptylines</span>::CSV.Arg, <span class="ansi-bright-black-fg">select</span>::CSV.Arg, <span class="ansi-bright-black-fg">drop</span>::CSV.Arg, <span class="ansi-bright-black-fg">limit</span>::CSV.Arg, <span class="ansi-bright-black-fg">buffer_in_memory</span>::CSV.Arg, <span class="ansi-bright-black-fg">threaded</span>::CSV.Arg, <span class="ansi-bright-black-fg">ntasks</span>::CSV.Arg, <span class="ansi-bright-black-fg">tasks</span>::CSV.Arg, <span class="ansi-bright-black-fg">rows_to_check</span>::CSV.Arg, <span class="ansi-bright-black-fg">lines_to_check</span>::CSV.Arg, <span class="ansi-bright-black-fg">missingstrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">missingstring</span>::CSV.Arg, <span class="ansi-bright-black-fg">delim</span>::CSV.Arg, <span class="ansi-bright-black-fg">ignorerepeated</span>::CSV.Arg, <span class="ansi-bright-black-fg">quoted</span>::CSV.Arg, <span class="ansi-bright-black-fg">quotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">openquotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">closequotechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">escapechar</span>::CSV.Arg, <span class="ansi-bright-black-fg">dateformat</span>::CSV.Arg, <span class="ansi-bright-black-fg">dateformats</span>::CSV.Arg, <span class="ansi-bright-black-fg">decimal</span>::CSV.Arg, <span class="ansi-bright-black-fg">groupmark</span>::CSV.Arg, <span class="ansi-bright-black-fg">truestrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">falsestrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">stripwhitespace</span>::CSV.Arg, <span class="ansi-bright-black-fg">type</span>::CSV.Arg, <span class="ansi-bright-black-fg">types</span>::CSV.Arg, <span class="ansi-bright-black-fg">typemap</span>::CSV.Arg, <span class="ansi-bright-black-fg">pool</span>::CSV.Arg, <span class="ansi-bright-black-fg">downcast</span>::CSV.Arg, <span class="ansi-bright-black-fg">lazystrings</span>::CSV.Arg, <span class="ansi-bright-black-fg">stringtype</span>::CSV.Arg, <span class="ansi-bright-black-fg">strict</span>::CSV.Arg, <span class="ansi-bright-black-fg">silencewarnings</span>::CSV.Arg, <span class="ansi-bright-black-fg">maxwarnings</span>::CSV.Arg, <span class="ansi-bright-black-fg">debug</span>::CSV.Arg, <span class="ansi-bright-black-fg">parsingdebug</span>::CSV.Arg, <span class="ansi-bright-black-fg">validate</span>::CSV.Arg, <span class="ansi-bright-black-fg">streaming</span>::CSV.Arg<span class="ansi-bold">)</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-magenta-fg">CSV</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">context.jl:0</span>
+ [4] <span class="ansi-bold">#File#18</span>
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/.julia/packages/CSV/XLcqT/src/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">file.jl:222</span><span class="ansi-bright-black-fg"> [inlined]</span>
+ [5] top-level scope
+<span class="ansi-bright-black-fg">   @</span> <span class="ansi-bright-black-fg">~/nextcloud/MATH2504_2026/lecture/quarto/</span><span style="text-decoration:underline" class="ansi-bright-black-fg">lecture-unit-8.qmd:563</span></pre>
+</div>
+</div>
+</div>
+<p>Q: Is this linear fit a reasonable thing to do? (What’s going on after 2000?)</p>
+<p>Let’s now look at how to fit a multidimensional model using GLM.jl. In the multidimensional case we have several independent variables <span class="math inline">\(X_1, \dots, X_p\)</span> and several dependent variables <span class="math inline">\(Y_1, \dots, Y_n\)</span>:</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \dots \beta_p X_{ip} + \epsilon_i
+\]</span></p>
+<p>Here’s an example of fitting CPU performance for some historical CPUs, taken from the book “Statistics with Julia”:</p>
+<div id="108" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">RDatasets</span>, <span class="bu">Statistics</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">dataset</span>(<span class="st">"MASS"</span>, <span class="st">"cpus"</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>df.Freq <span class="op">=</span> <span class="fu">map</span>( x<span class="op">-&gt;</span><span class="fl">10</span><span class="op">^</span><span class="fl">9</span><span class="op">/</span>x , df.CycT)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> <span class="fu">lm</span>(<span class="pp">@formula</span>(Perf <span class="op">~</span> MMax <span class="op">+</span> Cach <span class="op">+</span> ChMax <span class="op">+</span> Freq), df)</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"n = "</span>, <span class="fu">size</span>(df)[<span class="fl">1</span>])</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"(Avg,Std) of observed performance: "</span>, (<span class="fu">mean</span>(df.Perf),<span class="fu">std</span>(df.Perf)))</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>n = 209
+(Avg,Std) of observed performance: (105.61722488038278, 160.83058719907774)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}
+
+Perf ~ 1 + MMax + Cach + ChMax + Freq
+
+Coefficients:
+───────────────────────────────────────────────────────────────────────────────────
+                    Coef.   Std. Error      t  Pr(&gt;|t|)     Lower 95%     Upper 95%
+───────────────────────────────────────────────────────────────────────────────────
+(Intercept)  -46.5763      7.62382      -6.11    &lt;1e-08  -61.6078      -31.5447
+MMax           0.00841457  0.000639214  13.16    &lt;1e-28    0.00715426    0.00967489
+Cach           0.872508    0.152825      5.71    &lt;1e-07    0.571189      1.17383
+ChMax          0.96736     0.234847      4.12    &lt;1e-04    0.504321      1.4304
+Freq           9.74951e-7  5.5502e-7     1.76    0.0805   -1.1936e-7     2.06926e-6
+───────────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+<p>Using the model to predict:</p>
+<div id="110" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pred</span>(x) <span class="op">=</span> <span class="fu">round</span>(<span class="fu">coef</span>(model)<span class="ch">'*vcat(1,x), digits = 3)</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Estimated performance test computers: for computer A: "</span>, <span class="fu">pred</span>([<span class="fl">32000</span>, <span class="fl">32</span>, <span class="fl">32</span>, <span class="fl">4</span><span class="op">*</span><span class="fl">10</span><span class="op">^</span><span class="fl">7</span>]))</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Using the data and the `predict()` function</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>test_data <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>   name  <span class="op">=</span> [<span class="st">"Computer A"</span>, <span class="st">"Computer B"</span>],</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>   MMax  <span class="op">=</span> [<span class="fl">32000</span>,        <span class="fl">32000</span>],</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>   Cach  <span class="op">=</span> [<span class="fl">32</span>,           <span class="fl">16</span>],</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>   ChMax <span class="op">=</span> [<span class="fl">32</span>,           <span class="fl">32</span>],</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>   Freq  <span class="op">=</span> [<span class="fl">4</span><span class="op">*</span><span class="fl">10</span><span class="op">^</span><span class="fl">7</span>,       <span class="fl">6</span><span class="op">*</span><span class="fl">10</span><span class="op">^</span><span class="fl">7</span>],</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Estimated performance test computers:"</span>)</span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="fu">predict</span>(model, test_data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Estimated performance test computers: for computer A: 320.564
+Estimated performance test computers:
+Union{Missing, Float64}[320.56388734263396, 326.10276642540515]</code></pre>
+</div>
+</div>
+<p>Note that GLM stands for “generalized linear model” and the GLM.jl package can fit more general models - specifically those where the left and right hand sides are related by a nonlinear “link function”, and where the random noise is not normally distributed.</p>
+</section>
+</section>
+<section id="memory-management-in-data-workflows" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Memory management in data workflows</h1>
+<p>Generally in data heavy workflows we have three rough “sizes” to worry about.</p>
+<ol type="1">
+<li>Small data: data fits in RAM. Just load it up and process it all at once. We are doing this in this course.</li>
+<li>Medium data: data is too big for RAM, but it fits on disk. Incrementally load “chunks” from disk, save the results, and load the next chunk, etc - known as “out-of-core” processing. Multiple such steps might be required in a “pipeline”. Reading and writing to disk is slower than RAM, and processing might take so long that restarting from scratch (after a fault or power blackout, for example) is not realistic, so you generally need to be able to save and restore your intermediate state, or update your data incrementally. A typical SQL database is in this category, handling the persistence, fault-tolerance and pipelining for you automatically.</li>
+<li>Big data: data is too big to fit on the hard drive of a single computer. Generally requires a distributed solution for both storage and processing. At this scale, it is “business as usual” for computers to die and hard drives or RAM to corrupt, and you can’t have your multi-million-dollar operation brought down by a single rogue bitflip. These days it is common and convenient to use cloud services for these situations - like those provided by Amazon (AWS), Microsoft (Azure) or Google (GCP).</li>
+</ol>
+<p>The boundaries between these regimes depends on your computer hardware. As you get step up, the complexity increases rapidly, especially with respect to fault tolerance.</p>
+<p>At my previous job with <a href="https://www.fugro.com/">Fugro</a> we processed petabytes of LiDAR, imagery and positioning data to create a 3D model of the world. We used AWS to store and index the data, as well as process it. The effort in “data engineering” was as much as was required in the “data science”. Generally, it pays to have your data sorted out before attempting any higher-order analytics at scale (such as machine learning, below).</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

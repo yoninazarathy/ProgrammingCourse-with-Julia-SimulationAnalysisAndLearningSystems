@@ -1,0 +1,30 @@
+project:
+  type: default
+  output-dir: html_pdf
+
+execute:
+  freeze: false
+  eval: true
+  error: true
+  warning: true
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-expand: 2
+    code-fold: false
+    code-overflow: wrap
+    highlight-style: tango
+    number-sections: true
+    
+  pdf:
+    pdf-engine: xelatex
+    documentclass: article
+    geometry:
+      - margin=1in
+    toc: true
+    number-sections: true
+    colorlinks: true
+    keep-tex: false
+    include-in-header: header.tex

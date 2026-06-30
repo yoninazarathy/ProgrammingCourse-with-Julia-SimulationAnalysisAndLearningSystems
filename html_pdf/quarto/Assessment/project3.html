@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Project #3 - Semester 2, 2025</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="project3_files/libs/clipboard/clipboard.min.js"></script>
+<script src="project3_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="project3_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="project3_files/libs/quarto-html/popper.min.js"></script>
+<script src="project3_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="project3_files/libs/quarto-html/anchor.min.js"></script>
+<link href="project3_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="project3_files/libs/quarto-html/quarto-syntax-highlighting-4bd490e9cd57f2396cbd188312c0541c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="project3_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="project3_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="project3_files/libs/bootstrap/bootstrap-888e7731d048cfaa148b823e8fc1b2fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#project-3---semester-2-2025" id="toc-project-3---semester-2-2025" class="nav-link active" data-scroll-target="#project-3---semester-2-2025"><span class="header-section-number">1</span> Project #3 - Semester 2, 2025</a></li>
+  <li><a href="#analysis-and-visualization-of-data" id="toc-analysis-and-visualization-of-data" class="nav-link" data-scroll-target="#analysis-and-visualization-of-data"><span class="header-section-number">2</span> Analysis and visualization of Data</a>
+  <ul class="collapse">
+  <li><a href="#setting-up-your-github-repo-for-hand-in-10pts" id="toc-setting-up-your-github-repo-for-hand-in-10pts" class="nav-link" data-scroll-target="#setting-up-your-github-repo-for-hand-in-10pts"><span class="header-section-number">2.1</span> Setting up your GitHub repo for hand-in (10pts):</a>
+  <ul class="collapse">
+  <li><a href="#housing-prices-data" id="toc-housing-prices-data" class="nav-link" data-scroll-target="#housing-prices-data"><span class="header-section-number">2.1.1</span> Housing Prices Data</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="project3.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project #3 - Semester 2, 2025</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="project-3---semester-2-2025" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Project #3 - Semester 2, 2025</h1>
+</section>
+<section id="analysis-and-visualization-of-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Analysis and visualization of Data</h1>
+<p>(last edit: October 20, 2025)</p>
+<!-- [explainer video](https://www.youtube.com/watch?v=-K6_RYyXG6w). -->
+<p><strong>Due:</strong> Thursday, 20, November, 2025, 16:00. Late submissions are not accepted at all (the semester is finishing). This is an individual work project.</p>
+<p><strong>Note:</strong> The teaching staff will only answer questions (via Ed and consultation hours) regarding this assignment up to the late evening of Wednesday 19/11. <!--The 7:00pm Wednesday zoom consultation hours will be held up until 13/11. These will be the only weekly contact hours after week 13.--></p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. There are <strong>10</strong> points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are <strong>20</strong> points for creativity and originality. The remaining <strong>70</strong> points are for the individual tasks of project.</p>
+<p><strong>Submission format:</strong> This project should be submitted via a GitHub Repo, a <strong>single</strong> PDF file, and a voice recording via Blackboard. The GitHub repo should have a jupyter notebook called <code>analysis.ipynb</code>.</p>
+<p>You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required. The animation movie you create should <strong>not</strong> be in the <code>analysis.ipynb</code> notebook so that its size is note excessive. Instead, save the animation movie in the repo with a link to it, or store it elsewhere on the web with a sharable link.</p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>uqMATH2504</code> be invited as a collaborator prior to submission and ideally as soon as possible.</p>
+<p>The PDF file should be a nicely formatted file that has:</p>
+<ul>
+<li>Your name, student number, and assignment title (Project 3 - 2025) on the top.</li>
+<li>A (clickable) link to your GitHub repo.</li>
+<li>A PDF printout of your <code>analysis.ipynb</code> notebook including the graphics from Task 5.</li>
+</ul>
+<p>Use a PDF merging utility to create the PDF file. Do not worry about extra white space occurring due to Jupyter notebook PDF printouts.</p>
+<p>As with previous assignments you can comment on questions in this PDF (e.g.&nbsp;when asked to answer things not via code). The Jupyter notebook in the GitHub should be “runnable”. That is, course staff should be able to download the notebook your repo and run it after activating the environment in the working directory based on your <code>Project.toml</code> file which specifies the dependencies used.</p>
+<p>Marking responses will be made by the teaching staff via blackboard.</p>
+<p><strong>Individual work</strong>: This is an <strong>individual work</strong> project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available.</p>
+<p><strong>Marking Criteria</strong>: There are 100 points total.</p>
+<ul>
+<li><p>10 points are allocated for following instructions and the GitHub repo. Any deviation from the instructions will imply these points are lost.</p></li>
+<li><p>20 points are allocated for creativity and originality. These points will be given in full to projects that are deemed creative in terms of their analysis and presentation.</p></li>
+<li><p>70 points are for individual tasks.</p></li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. Nevertheless, <strong>in this project you are mostly creating scripting code for data analysis and ML experimentation</strong> so it can be looser in nature. That is, in contrast to previous projects, the code may be less generic. Nevertheless, define functions as needed to avoid duplication (copy pasting) of code where possible.</p></li>
+</ul>
+<hr>
+<section id="setting-up-your-github-repo-for-hand-in-10pts" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="setting-up-your-github-repo-for-hand-in-10pts"><span class="header-section-number">2.1</span> Setting up your GitHub repo for hand-in (10pts):</h2>
+<ul>
+<li>Ideally use the same account you used for previous assignments.</li>
+<li>Create a new repo for this assignment. Name the repo exactly as <code>&lt;&lt;FIRST NAME&gt;&gt;-&lt;&lt;LAST NAME&gt;&gt;-2504-2025-PROJECT3</code>. So for example if your name is “Ada Lovelace”, the repo name should be <code>Ada-Lovelace-2504-2025-PROJECT3</code>.</li>
+<li>Make sure the repo is <strong>private</strong>.</li>
+<li>Invite the course GitHub user, <code>uqMATH2504</code> as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.</li>
+<li>Do <strong>not</strong> make any changes (commits) to the repo after the project due date.</li>
+<li>Create a local clone of the repo. It is recommended that use use <code>git</code> command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc). <!--* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.--></li>
+</ul>
+<p>Your GitHub repo should be formatted exactly as follows: * Have a <code>README.md</code> file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). * Have a <code>LICENSE.md</code> file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private. * Have a <code>.gitignore</code> file. * Have basic running instructions on how to run the code. * Have the main Jupyter notebooks as instructed above. In the notebook have <code>using Pkg</code> and <code>Pkg.activate(".")</code> commands at the top so that you work in an environment of your current directory. * Add dependencies to this environment and this will create a <code>Project.toml</code> file which should also be part of your repo. * A <code>data</code> folder with the housing data and any other data needed. * You can upload the movie animation you create to GitHub, but make sure it is not part of the notebook so that the notebook is not heavy. Also make sure that your movie is not too heavy.</p>
+<section id="housing-prices-data" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="housing-prices-data"><span class="header-section-number">2.1.1</span> Housing Prices Data</h3>
+<p>You deal with a <a href="https://www.kaggle.com/datasets/anthonypino/melbourne-housing-market">house prices dataset</a> available from Kaggle.</p>
+<p>Your overarching purpose is to carry out basic exploratory analysis of this dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.</p>
+<p>We look at the <code>Melbourne_housing_FULL.csv</code> file. You can download the file from Kaggle and place it in a <code>data</code> folder in your repo. Your scripts should access this file.</p>
+<p>Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc.</p>
+<p>As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to (don’t drop all rows for all tasks). In certain cases, if you see a sensible way to impute (replace/make-up data), feel free to do so and explain your imputation strategy.</p>
+<p><strong>Task 1 Exploratory data of single variables (10 pts)</strong></p>
+<p>Create several summaries and plots (e.g.&nbsp;histograms, or cumulative distributions, bar plots, …) of the following variables: <code>Rooms</code>, <code>Price</code>, <code>Method</code>, <code>Distance</code>, and <code>Landsize</code>. Make sure to choose appropriate diagram types as different types of data require different types of plots.</p>
+<p><strong>Task 2 Exploratory data analysis comparing variables (10 pts)</strong></p>
+<p>Create several plots that present the house price as a function of one or more other variables, e.g.&nbsp;distance to the city, house/land size, rooms, car ports, etc. . In presenting these plots, visually search for relationships between variables.</p>
+<p><strong>Task 3 Exploratory data analysis over time (10 pts)</strong></p>
+<p>Create several plots that visualize trends in the data over time. Specifically plot the total transaction amount, the number of sales, and the fraction of sales which were houses (Type = “h”). You may aggregate values into months.</p>
+<p><strong>Task 4 Linear Regression Models (15 pts)</strong></p>
+<p>Review your results of Task 2 and try to fit several linear regression models for predicting house price as a function of variables. Use <code>GLM.jl</code>. See usage examples from <a href="https://link.springer.com/book/10.1007/978-3-030-70901-3">Chapter 8 of Statistics with Julia</a> or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.</p>
+<p><strong>Task 5 Location data on map (25 points)</strong></p>
+<p>Your goal here is to create a quality visualisation presenting location data of the Melbourne Housing Data. The grapics should use a background metropolitan Map and present the houses being sold in the Melbourne area in the year 2017, namely during the month in which you (!) were born.</p>
+<p>Single house purchases should be represented by circles whose sizes or color scale with the purchase price. Other features are possible also. Presenting additional summarized statistics alongside the graphics is also possible and encouraged.</p>
+<p>It is recommended to use Plots.jl and other packages such as Images.jl. You’ll need to find out how to make it work without help from the course team. <!--It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
+--></p>
+<p>Finally include a pdf of the graphics and other output of your pdf submission.</p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
