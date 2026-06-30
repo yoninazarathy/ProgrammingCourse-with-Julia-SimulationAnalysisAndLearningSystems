@@ -1,0 +1,134 @@
+# Project \#1 - Semester 2, 2021
+# Univariate Polynomials with Integer Coefficients (+ perspective seminar summary)
+
+(last edit: Sep 13, 2021)
+
+**Due:** End of Day, Friday, 24, September, 2021. Late submissions are not accepted.
+
+**Note:** The teaching staff will only answer questions (via Piazza, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 22/9.
+
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, and neat output. There are **10** additional points for setting up the GitHub repo properly. There are **10** points for the summary of Amy Chan's perspective seminar. The remaining **70** points are for the project with more details to be updated.
+
+**Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2021-PROJECT1`. So for example if your name is "Jeannette Young", the repo name should be `Jeannette-Young-2504-2021-PROJECT1`.
+
+The PDF file should be a nice formatted file that has:
+
+* Your name, student number, and assignment title (Project 1 - 2021) on the top.
+* Your answer to the perspective seminar question.
+* A (clickable) link to your GitHub repo.
+* An illustration of the code and output for `example_script.jl`: Show the lines of the script and display the corresponding output. 
+* An illustration of the output of `test/runtests.jl`. 
+* The main body of the PDF file is then an indication of each location of the code project where you made changes and improvements, in view of the tasks below. That is, present the new snippets of code that you created and indicate what they do.
+
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
+
+Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo. A very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
+
+**Individual work**: This is an individual work assignment. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means about how to go about certain tasks.
+
+**Marking Criteria**: 
+
+* 10 points are allocated for following instructions. 
+
+* 10 points are allocated for setting up the GitHub hand-in according to the instructions.
+
+* 10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness (the writeup should answer all questions posed). 2 points of originality and style.
+
+* 70 points are for the polynomial project itself. Points are awarded for completing each of the tasks with full marks given to clean readable code that completes the task. 
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts):
+
+* Ideally use the same account you used for HW2. 
+* Ideally we would like you to **fork** the GitHub repo [https://github.com/yoninazarathy/2504\_2021\_project1](https://github.com/yoninazarathy/2504_2021_project1). The new forked repo under your GitHub account should then be made private. However, GitHub does not allow to make forked repositories private. So instead **duplicate** the repository as described [here](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository). You will first create your new repository and then follow the 4 steps under "Mirroring a repository".
+* Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted like the original repo that you forked with additional files and modifications based on the tasks below.
+
+* Note: make sure that there aren't any excessive files in your submission repo. An exception is perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF. Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+
+## Perspective seminar question (10pts)
+
+Write a 1-4 paragraph summary of Amy Chan's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person and refer to the speaker as "Dr. Chan", or "Amy", or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions:
+
+1. What was Amy’s career path, and her relationship with software, mathematics, and statistics?
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, platforms, and the like. Was this the first time that you heard about any of these tools?
+1. Have you picked up any tips from Amy’s talk, which you can perhaps use in your career down the road?
+1. Feel free to state anything else that you found interesting from the talk.
+
+
+## Main project task (70pts)
+
+You will build your project on top of the [project GitHub repository](https://github.com/yoninazarathy/2504_2021_project1) by making modifications, additions, and improvements. Your first goal is to understand every bit of code of the basic repository. After that you will make improvements, additions, and cleanups.
+
+### Task 1 (5 pts) - Getting it to run, improving pretty printing, and creating your own example script.
+
+Once you create your own repository you can make sure it works. Run the code of `test/runtests.jl` and `example_script.jl`. At this point study the functionality of the repository as a user. That is look at the function signatures but not at the function implementation.  Understand what it can do. 
+
+Now create your own example script, `example_script_2.jl`, with a few "thoughtful polynomials" of your own. Your script should run and demonstrate how the code in the repository works. It should also contain some intermediate printing output (e.g. using `println`) that describes what is going on. So basically, `example_script_2.jl` is an improvement over the minimally supplied `example_script.jl`. With your improved script make sure you illustrate the key functionality of most of the operations available via the software. Make sure you choose sensible example polynomials and residue classes (primes) to work with.
+
+In addition, as part of this task improve the "pretty printing" of the polynomials. At the moment terms with power `0` or `1` are printed as `x^0` and `x^1`. Similarly negative coefficients are still preceded by a `+` symbol. Improve this so that polynomials are displayed as cleanly as possible.
+
+### Task 2 (10pts) - Refactoring the data structure used
+
+As you can see, a heap data structure is used for storing the terms of the polynomial. This can be good in contexts beyond the current application such as polynomials with multiple variables, or polynomials with rational coefficients. However for our purpose, the heap is not really useful. In fact, it is a hinderance at times. 
+
+Your job with this task is to replace the heap with one of (your choice):
+* A simple array of terms.
+* A dictionary of terms. 
+
+As you do this, make sure that all of the functionality of the project remains intact by re-running the tests as well as creating your own additional tests if needed. Make sure that the invariant of not having two terms of the same degree is kept. Similarly, if the polynomial is $0$ then have the array or the dictionary empty. 
+
+### Task 3 (15pts) - Creating a polynomial mod p datatype and further refactoring
+
+You may notice that `Polynomial` datatype does not know the field of the coefficients. Hence operations such as `divide`, `gcd`, or `factor` need to continuously use `mod` and are often with an "unnatural" interface where they return a function which is then gets $p$ (the prime) as an argument. However, for much of the functionality of this project we do consider the polynomials as "mod p".
+
+Your task here is to create a type `PolynomialModP` which has a polynomial (of type `Polynomial`) as an element as well as a prime number as an element. This `PolynomialModP` type will then support the same arithmetic operations as `Polynomial` but will keep all the coefficients in the range $0,1,2,\ldots,p-1$ where $p$ is the prime number of the instance. Unlike the current usage of polynomial arithmetic, your new type will be easier to work with when carrying out division, gcd, and factorization. 
+
+Create units tests for this type just like the ones that currently exist in the package and make sure all of the functionality is kept working (only to this restricted set of polynomials).
+
+Your new datatype should still rely on existing functionality of the type `Polynomial`. But, for example, after doing arithmetic operations, it should ensure that all coefficients are represented mod $p$. 
+
+Once this type is created, "remove" the division and gcd/Euclidean operations out of polynomial. That is, it should no longer be possible to do `p1 ÷ p2` where `p1` and `p2` are of the `Polynomial` type. This means you should update/trim the units tests for `Polynomial` and have the new units tests for your new `PolynomialModP` type.
+
+With this refactoring, the `pow_mod` function should no longer be supported for polynomials. Instead make a version of this, using `^` for `PolynomialModP`.
+
+The `show` method for `PolynomialModP` should also indicate that it is mod p.
+
+### Task 4 (10pts) - Improving multiplication
+
+The current multiplication implementation is not efficient. Create some benchmarking test that in addition to testing the validity of multiplication also quantifies performance for an increasing size of polynomials. 
+
+Now implement a different better form of multiplication using the **Chinese Remainder Theorem** (CRT) as presented in the lecture (previously it was stated to use "interpolation", but using the CRT is easier). Test it and benchmark it against the old multiplication (it is recommended to keep the old form in another function or method). 
+
+You will need to implement multiplication for your `PolynomialModP` type first.  Then the generic multiplication algorithm will compute products of a sufficient number of primes using your mod p multiplication, and then use the CRT to construct the solution in $Z[x]$.
+
+Your tests and benchmarks should also be for the your new `PolynomialModP` type and its operations. 
+
+
+### Task 5 (10pts) - Improving power
+
+Similarly to multiplication, you may notice the the implementation of the power operator, `^` as well as `pow_mod` (or its new version in `PolynomialModP`), can be made more efficient. For example if you have a polynomial `f` and raise it to the power `2^n` then instead of doing about `2^n` multiplications you can do about `n`. This can also be done for powers that are not `2^n`. Implement this better power and make sure it works via unit tests. Again this should work both for `Polynomial` and `PolynomialModP`.
+
+A method for optimizing the "w^p mod p" calculation for w a polynomial and p a prime, will be covered in the lectures. You should use this method where applicable.
+
+### Task 6 (20pts) - Factorization mod p
+
+Now that you have efficient multiplication, power, and the datatype `PolynomialModP` together with the other working operations. Adapt the polynomial factorization to use this new functionality. The current code (supplied with the basic project) works for limited cases but can get stuck on certain examples. 
+
+With your new code, test on a wider set of examples including bigger primes. Create unit tests for factorization and create benchmarks that test how your factorization works with a compute budget of about 120 seconds on your computer.
+
+Also, factorization when the prime is `3` currently doesn't always work. Find the problem with this factorization, fix it, and make it work.
+
+Your modification should include modification and enhancement of the current unit tests.

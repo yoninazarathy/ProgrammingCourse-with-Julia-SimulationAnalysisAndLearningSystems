@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../img/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504, Programming of Simulation, Analysis, and Learning Systems (Semester 2, 2025)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <br>
+
+        <h1>Project #2 - Semester 2, 2025</h1>
+<h1>Discrete Event Simulation of a Modulated Queueing Network &#40;&#43; perspective seminar summary&#41;</h1>
+<p>&#40;last edit: Sep 30, 2025&#41;</p>
+<p><strong>Due:</strong> Friday, 24 October, 2025, 16:00. Late submissions are not accepted. <strong>Work in pairs</strong> - you must have a single partner for submission. Any deviation from this requires special permission from the course coordinator.</p>
+<p><strong>Note:</strong> The teaching staff will only answer questions &#40;via Ed, consultation hour, or practicals&#41; regarding this assignment up to the late evening of Wednesday October 22.</p>
+<p><strong>Weights and marking criteria:</strong> Total number of points: <strong>100</strong>. </p>
+<ul>
+<li><p>There are <strong>10</strong> points for handing in according to the hand-in instructions, including a voice recording, neat output, and most importantly the GitHub repo. </p>
+</li>
+<li><p>The remaining <strong>90</strong> points are for the project itself. </p>
+</li>
+<li><p>In general, points <strong>will be</strong> deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. </p>
+</li>
+</ul>
+<p><strong>Submission format:</strong> This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. </p>
+<p>Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made <strong>private</strong> and the course user name <code>uqMATH2504</code> be invited as a collaborator. It is also important to name the repo <em>exactly</em> as <code>&lt;&lt;FIRST NAME1&gt;&gt;-&lt;&lt;LAST NAME1&gt;&gt;__&lt;&lt;FIRST NAME2&gt;&gt;-&lt;&lt;LAST NAME2&gt;&gt;-2504-2025-PROJECT2</code>. So for example if your names are &quot;Little Pug&quot; and &quot;Big Hound&quot; the repo name should be <code>Little-Pug__Big-Hound-2504-2025-PROJECT2</code>. Please invite <code>uqMATH2504</code> as a collaborator as early as possible.</p>
+<p>The PDF file should be a nicely formatted file that includes:</p>
+<ul>
+<li><p>Your names, student numbers, and assignment title &#40;Project 2 - 2025&#41; on the top.</p>
+</li>
+<li><p>A &#40;clickable&#41; link to your GitHub repo.</p>
+</li>
+<li><p>Instructions on how to run the main simulation code in the repo via an easy to use <code>simulation_script.jl</code> file.</p>
+</li>
+<li><p>All of the project code formatted in an organized manner.</p>
+</li>
+<li><p>Output and answers to specific questions formatted in an organized manner.</p>
+</li>
+<li><p>Plots and graphs should have clean organized labels, legends, etc.</p>
+</li>
+</ul>
+<p>The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use <code>include&#40;&#41;</code> to run Julia code if appropriate. You also comment on questions in this PDF &#40;e.g. when asked to answer things not via code&#41;. If desired you could keep this jupyter notebook &#40;<code>.ipynb</code> file&#41; in the repo. However, this Jupyter notebook will not be checked &#40;only the PDF file&#41;, and it isn&#39;t required to be a &quot;runnable&quot; notebook. In any case, please avoid pixelated screenshots of code, so for example if you choose to format your PDF file in MS-word &#40;instead of Jupyter&#41;, make sure the code is cleanly formatted, and readable &#40;<a href="https://carbon.now.sh">this page</a> may be useful&#41;. </p>
+<p>Marking responses will be made by the teaching staff by annotating &#40;or leaving textual comments&#41; regarding <strong>selected parts</strong> of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo and potentially run <code>simulation_script.jl</code>. A very readable and clean PDF file is important. In printing Jupyter to PDF &#40;or exporting to PDF&#41; there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.</p>
+<p><strong>Work in pairs but discuss with others</strong>: This is work in pairs. Plagiarism between groups will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Answering Ed questions of others is recommended.</p>
+
+<!--  
+
+**Marking Criteria**: 
+
+* 10 points are allocated for following instructions and the GitHub repo.
+
+* 10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness (the writeup should answer all questions posed). 2 points of originality and style.
+
+* 90 points are for the simulation project itself.
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
+ -->
+
+<hr />
+<h2>Setting up your GitHub repo for hand-in &#40;10pts&#41;</h2>
+<ul>
+<li><p>Ideally use the same accounts you used for PROJECT1 and BigHW. Choose one of the team members to &quot;own&quot; the repo and the other&#40;s&#41; will be invited as collaborators.  </p>
+</li>
+<li><p>Make sure the repo is <strong>private</strong>.</p>
+</li>
+<li><p>Invite the course GitHub user, <code>uqMATH2504</code> as a collaborator and follow up, in case the invitation is not accepted. You may do so early on while working on the project, and must do this no later than the project due date. </p>
+</li>
+<li><p>Do <strong>not</strong> make any changes &#40;commits&#41; to the repo after the project due date. </p>
+</li>
+<li><p>Create a local clone of the repo. It is recommended to use the <code>git</code> command via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism &#40;VS-Code, GitHub desktop, etc&#41;.</p>
+</li>
+</ul>
+<p>Your GitHub repo should be formatted exactly as follows:</p>
+<ul>
+<li><p>Have a <code>README.md</code> file which states your names, the assignment title, and has a &#40;clickable&#41; link to the assignment instructions on the course website &#40;to this document&#41;. </p>
+</li>
+<li><p>Have a <code>LICENSE.md</code> file. Choose a license as you wish &#40;for example the MIT license&#41;. However keep in mind that you must keep the submission private until the end of the semester.</p>
+</li>
+<li><p>Have a <code>.gitignore</code> file.</p>
+</li>
+<li><p>Have basic running instructions on how to run the code. This can be similar to what was provided for Project 1 &#40;polynomials&#41;. </p>
+</li>
+<li><p>Have <code>src</code> and <code>test</code> folders similarly to Project 1.</p>
+</li>
+<li><p>Note: make sure that your submission repo contains only those files mentioned above &#40;with the exception of perhaps a Jupyter <code>.ipynb</code> file if you choose to use it for creating the PDF&#41;. You may use the <code>.gitignore</code> file to ensure <code>git</code> does not commit additional files and output files to your <code>repo</code>.</p>
+</li>
+<li><p>All code &#40;except for scripting&#41; is to be part of a Julia module &#40;with the <a href="https://docs.julialang.org/en/v1/manual/modules/">module statement</a>&#41;. Call the module <code>ModulatedJacksonSim</code>. &#40;To avoid confusion, be aware that &quot;modulated&quot; for the network has nothing to do with &quot;module&quot; as in the module statement&#41;.</p>
+</li>
+<li><p>Make sure the project has a <code>Manifest.toml</code> and a <code>Project.toml</code> file that specify all the dependencies exactly. Do not have extra dependencies that are not used.</p>
+</li>
+<li><p>Have a <code>simulation_script.jl</code> file which runs all of the code needed for the tasks. As this script runs, make sure it prints some light intermediate output &#40;e.g. progress&#41;, especially for simulations that take significant time to run.</p>
+</li>
+</ul>
+<p>Since this project involves work in pairs, it is recommended that you try to use GitHub effectively. You may work on parallel branches with frequent merges &#40;but this is not required&#41;, or work on the same branch via peer programming. The way you develop is not being assessed, still it is recommended you make good use of GitHub.</p>
+
+<!-- 
+## Perspective seminar question (10pts)
+
+Write a 1-4 paragraph summary of Dr. Maithili Mehta's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person, or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions:
+
+1. What was Maithili's career path, and her relationship with software and mathematics?
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, simulation platforms, and the like. Was this the first time that you heard about any of these tools?
+1. Have you picked up any tips from Maithili's talk, which you can perhaps use in your career down the road?
+1. Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous talk.
+
+Note: Since the submission is in pairs you should only submit a single writeup for the pair/group.
+ -->
+
+<h2>Overview of the model</h2>
+<p>You may want to listen to last year&#39;s <a href="https://www.youtube.com/watch?v&#61;VI2usNCmVmg">Explainer video</a> by Yoni Nazarathy.</p>
+<p>Your key task is to create a discrete event simulation engine for stochastic models that are called &quot;Modulated Open Jackson Networks&quot;. <a href="https://en.wikipedia.org/wiki/Jackson_network">Jackson networks</a> are well studied in classical &quot;applied probability&quot; and &quot;stochastic modelling&quot;. The phrase &quot;modulated&quot; means that the parameters of the network vary over time. <!-- "Modulated" networks are less amenable to closed form mathematical results (explicit formulas) - and this is why we will use discrete event simulation to analyze them. --> The &quot;Open&quot; phrase implies that customers may enter and leave these networks &#40;in contrast with &quot;closed&quot; networks that have a finite number of customers&#41;. <!-- Note: you do not need to dive deeply into the Wikipedia entries or other literature. All the information you need about the model is supplied in this project description. --></p>
+<p>A Jackson network &#40;or &quot;open Jackson network&quot;&#41; is a network of queues &#40;also known as &quot;nodes&quot; or &quot;stations&quot;&#41; where customers &#40;also known as &quot;jobs&quot;&#41; arrive from the outside world, are served at the queues in a &quot;first-come first-served manner&quot; and then move to other nodes or leave. As a very rough motivational example consider an amusement park. There are multiple rides, and individuals move throughout the park and queue up for rides. At any point &#40;after finishing a ride&#41; an individual may go home, or, alternatively, go to the next ride, and so forth. <!-- However, this is just a rough motivation and there are several significant differences between the (modulated) Jackson network models you will simulate and what may constitute something like an amusement park. You are asked to discuss these differences in Task 1. --> Below is a detailed mathematical description of the model.</p>
+<p>There are <span class="math">$L$</span> stations &#40;e.g. <span class="math">$L=5$</span> or <span class="math">$L=100$</span>&#41; and each station has a  <strong>server</strong> and a <strong>waiting buffer</strong> &#40;or queue&#41;. There are jobs traversing through the network and the stations. If needed, jobs can be uniquely identified &#40;numbered&#41; via <span class="math">$\ell=1,2,3,\ldots$</span> and it is expected that the simulation processes thousands, or millions of jobs, so that if you track individual jobs then <span class="math">$\ell$</span> is an increasing counter of the jobs.</p>
+<p>A job&#39;s location can be one of:</p>
+<ul>
+<li><p>Out of the system prior to arrival &#40;the job still doesn&#39;t exist&#41;.</p>
+</li>
+<li><p>In the system in a buffer of one of the stations &#40;queueing - i.e. waiting for its turn to enter service&#41;.</p>
+</li>
+<li><p>In the system at one of the stations being served by the server at that station. This means it is &quot;at the head&quot; of the queue &#40;and being served&#41;.</p>
+</li>
+<li><p>Out of the system after leaving.</p>
+</li>
+</ul>
+<p><em>Warning:</em> Your simulation should <strong>not</strong> have entities for individual jobs, but rather only have counts and general descriptors as the system state. The description above about the location of a job is merely for understanding the system being simulated. If you were interested in estimating other quantities such as the distribution of the time for a job in the simulation, then you would have to keep track of individual jobs.</p>
+<p>Time is continuous, <span class="math">$t \ge 0$</span>. In this continuous time system, jobs arrive to the system according to a random process and traverse between the stations as we describe now.</p>
+<p>Each station <span class="math">$i=1,\ldots,L$</span> has a service rate <span class="math">$\mu_i > 0$</span> which is the inverse of the mean expected time it takes the server to process a job. Each station has a queue which has infinite capacity - i.e. there is no limit on the number of jobs in the queue. Jobs are served one by one at each station, where the mean service duration of each job is <span class="math">$\mu_i^{-1}$</span> and that duration is statistically independent from all other services at that node and at other nodes. </p>
+<p>When a job arrives to station <span class="math">$i$</span>, if the server is free &#40;and this means there are no jobs in the buffer&#41; the job immediately starts to receive service from the server. If the server is busy, the job queues for service and waits for its turn. Jobs may arrive either after finishing service at another node, or directly from the outside world.</p>
+<p>The rate of arrivals of jobs to nodes from the outside world is <span class="math">$\alpha_i \ge 0$</span> for node <span class="math">$i$</span>. Hence for nodes <span class="math">$i$</span> with external arrivals &#40;<span class="math">$\alpha_i > 0$</span>&#41;, the mean duration between external arrivals is <span class="math">$1/\alpha_i$</span>. In this project we&#39;ll consider the durations of times between external arrivals to be exponentially distributed. This makes external arrival processes &quot;Poisson processes&quot; &#40;this is also a mathematical detail that is not important for the carrying out the project&#41;. </p>
+<p>As for the durations of service times we will set them also as exponentially distributed. This assumption of Poisson arrival processes and exponentially distributed service time is what makes the network an &quot;Open Jackson network&quot;. Mathematically it means the network can be described by a &quot;continuous time Markov chain&quot; &#40;you do not need to know these details for this project&#41;. In such a case, some explicit results exist and you could use these to test some parts &#40;this is in Task 2 and Task 3&#41;. However, the <strong>modulation</strong> component of the model, described below, implies that generally, the model is more complicated than an Open Jackson Network. In this case, explicit results are much more scarce and hence the simulation model may yield information that is not available otherwise.</p>
+<p>When a job completes service it either leaves the system immediately, or immediately moves to another buffer. The choice of its destination is based on the routing matrix <span class="math">$P$</span>. Here <span class="math">$P_{i,j}$</span> is probability of going to station j after completing service in station <span class="math">$i$</span>.  It is assumed that <span class="math">$P$</span> has non-negative entries and has a spectral radius less than <span class="math">$1$</span>. Mathematically this means that the maximal absolute value of eigenvalues of <span class="math">$P$</span> is less than 1. It also means that jobs may always eventually leave the system and that at least some rows of the matrix <span class="math">$P$</span> sum up to less than <span class="math">$1$</span>. The probability of a job leaving the system &#40;immediately&#41; after service at station <span class="math">$i$</span> is <span class="math">$1 - \sum_{j=1}^L P_{i,j}$</span>.</p>
+<p><em>Tip:</em> Recall &#40;4&#41; from Question 14 of BigHW. The <code>sample&#40;&#41;</code> function from <code>StatsBase.jl</code> may help generate the location &#40;node&#41; of the next job when carrying out the simulation. Yet keep in mind that &quot;outside of the system&quot; is also a possible location.</p>
+<p>Now let us now describe how <strong>modulation</strong> takes place. With this model feature, the service rates of nodes are not fixed at <span class="math">$\mu_1,\ldots,\mu_L$</span> but rather alternate between the rates <span class="math">$\mu_1,\ldots,\mu_L$</span> and the rates <span class="math">$\kappa\mu_1,\ldots,\kappa\mu_L$</span>, with <span class="math">$\kappa>1$</span>. I.e the second set of rates is &quot;faster&quot; than the first set of rates. Hence the system is either in &quot;slow mode&quot; &#40;rates denoted <span class="math">$\mu_i$</span>&#41;, or is &quot;fast mode&quot; &#40;rates denoted <span class="math">$\kappa\mu_i$</span>&#41;. At any given time, the mode of the system is either <code>slow</code> or <code>fast</code> and when this change happens, all rates instantly change. Very loosely, in the amusement park setting you can think of <code>slow</code> as a situation where rides only work with some employees and equipment while <code>fast</code> is a situation where rides work with more employees and equipment and operate faster. Modulation is then the process of changing between <code>slow</code> and <code>fast</code> back and forth. </p>
+<p>The process of changing &#40;modulating&#41; between &quot;slow mode&quot; &#40;<code>slow</code>&#41; and &quot;fast mode&quot; &#40;<code>fast</code>&#41; occurs independently of the jobs in the system, and for all servers together. Specifically the system changes between <code>slow</code> and <code>fast</code> and back as follows: <code>slow</code> durations are exponentially distributed with mean <span class="math">$\gamma_1^{-1}$</span> where <span class="math">$\gamma_1 > 0$</span>. <code>fast</code> durations are exponentially distributed with mean <span class="math">$\gamma_2^{-1}$</span> where <span class="math">$\gamma_2 > 0$</span>. The system alternates between <code>slow</code> and <code>fast</code> and back based on such independent random variables. The system starts in <code>slow</code>, then changes to <code>fast</code>, then back to <code>slow</code>, and so fourth. We denote the long term proportion of time that the system is <code>slow</code> via <span class="math">$R^{(1)}$</span>. This quantity is,</p>
+<p class="math">\[
+R^{(1)} = \frac{\gamma_2}{\gamma_1 + \gamma_2} = \frac{\gamma_1^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
+\]</p>
+<p>Similarly the long term proportion of time that the system is in <code>fast</code>, <span class="math">$R^{(2)}$</span> is just <span class="math">$1-R^{(1)}$</span> or,</p>
+<p class="math">\[
+R^{(2)} = \frac{\gamma_1}{\gamma_1 + \gamma_2} = \frac{\gamma_2^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
+\]</p>
+<p>Note that if <span class="math">$R^{(1)} = 1$</span> or <span class="math">$R^{(2)} = 1$</span> it means that the system is either always <code>slow</code> or respectively always <code>fast</code>. This can be approximated for &quot;always <code>slow</code>&quot; by sending <span class="math">$\gamma_1 \to 0$</span> &#40;infinitely small &quot;changing to fast&quot; rate&#41;. Similarly <span class="math">$\gamma_2 \to 0$</span> will achieve &quot;always <code>fast</code>&quot;. We call these <strong>test cases</strong> the <strong>always slow</strong> and <strong>always fast</strong> test cases. They are important because in this case the network is essentially just an Open Jackson Network &#40;not modulated&#41;.</p>
+<p>When the system changes mode &#40;<code>slow</code> to <code>fast</code> or the other way&#41;, any service time of a job currently in service is purged and the service restarts for that job at a new service duration according to the new mode. So for example assume that server number 7 has a job that entered service at time <code>9.9</code> when the system was <code>slow</code>. This means that at time <code>9.9</code> the service duration was drawn with rate <span class="math">$\mu_7$</span>. Say that this duration is <code>3.3</code>. Hence the job is due to leave service at time <code>13.2</code>. Now assume that at time <code>11.4</code> the system switches to <code>fast</code> mode. Then at that point the job in service for server 7 needs to forget that it is due to leave at time <code>13.2</code> and instead a new service duration is drawn. That duration is exponentially distributed with rate <span class="math">$\kappa\mu_7$</span>. Say the new service duration is <code>2.3</code>, the job is now due to finish service at <code>11.4&#43;2.3&#61;13.7</code>.</p>
+<p>In a modelling setting we may expect to have the modulation occur at a rate much slower than the arrival and service rates. I.e. the rates <span class="math">$\alpha_i$</span>, <span class="math">$\mu_i$</span>, and <span class="math">$\kappa\mu_i$</span> should generally be much larger than the rates of modulation, <span class="math">$\gamma_1$</span> and <span class="math">$\gamma_2$</span>. For example in the amusement park example we can believe that staffing levels change in the order of hours while arrivals and ride durations are in the orders of seconds and minutes. </p>
+<p>While this may not be useful for modelling real scenarios, if we take <span class="math">$\gamma_1 \to \infty$</span> and <span class="math">$\gamma_2 \to \infty$</span> &#40;very quick modulation&#41;, and under the exponential random variable assumptions, it will mean that the system acts like a non-modulated network &#40;just an Open Jackson Network&#41; with service rates,</p>
+<p class="math">\[
+\tilde{\mu}_i =  R^{(1)} \mu_i + R^{(2)} \kappa\mu_i.
+\]</p>
+<p>We call this <span class="math">$\gamma_1 \to \infty$</span> and <span class="math">$\gamma_2 \to \infty$</span> case the <strong>super fast modulation</strong> case. It is an important test case because like the <strong>always slow</strong> and <strong>always fast</strong> test cases, it should also yield results as an Open Jackson Network &#40;non modulated&#41; with service rates <span class="math">$\tilde{\mu}$</span>. </p>
+<p>These averaged service rates, <span class="math">$\tilde{\mu}_i$</span>, are also important in the stability condition we describe below. Note also below, that when we consider notation like <span class="math">$\mu$</span>, or <span class="math">$\tilde{\mu}$</span>, or <span class="math">$\alpha$</span>, we refer to the <span class="math">$L$</span> dimensional vector of the individual entries.</p>
+<h2>Overview of model parameters</h2>
+<p><strong>The parameters of the network that we shall use are:</strong></p>
+<ul>
+<li><p>The dimension of the network &#40;number of nodes&#41;: <span class="math">$L$</span>.</p>
+</li>
+<li><p>The external arrival rates: <span class="math">$\alpha_1,\ldots,\alpha_L$</span>, with <span class="math">$\alpha_i \ge 0$</span> for all <span class="math">$i$</span>, and <span class="math">$\alpha_i > 0$</span> for at least one <span class="math">$i$</span>. &#40;Vector <span class="math">$\alpha$</span>&#41;.</p>
+</li>
+<li><p>The slow &#40;normal&#41; service rates: <span class="math">$\mu_1,\ldots,\mu_L$</span>, with <span class="math">$\mu_i > 0$</span> for all <span class="math">$i$</span>. &#40;Vector <span class="math">$\mu$</span>&#41;.</p>
+</li>
+<li><p>The speedup parameter <span class="math">$\kappa$</span> with <span class="math">$\kappa > 1$</span>.</p>
+</li>
+<li><p>The modulation rates. Slow to fast: <span class="math">$\gamma_1$</span>. Fast to slow: <span class="math">$\gamma_2$</span>.</p>
+</li>
+<li><p>The <span class="math">$L \times L$</span> routing matrix <span class="math">$P$</span>.</p>
+</li>
+</ul>
+<p>Note that with the introduction of the speedup parameter we have the averaged service rate vector as,</p>
+<p class="math">\[
+\tilde{\mu} =  R^{(1)} \mu + R^{(2)} \kappa \mu = \frac{\gamma_1 \kappa + \gamma_2}{\gamma_1 + \gamma_2} \mu.
+\]</p>
+<p>Note also that we may want to use the pair &#40;<span class="math">$\gamma_1$</span>, <span class="math">$R^{(1)}$</span>&#41; as parameters instead of &#40;<span class="math">$\gamma_1$</span>, <span class="math">$\gamma_2$</span>&#41;. That is, we would like to specify <span class="math">$\gamma_1$</span> which is the rate of modulation &#40;<code>slow</code> to <code>fast</code>&#41; and <span class="math">$R^{(1)}$</span> which is the proportion of time for <code>slow</code>. With this we just set</p>
+<p class="math">\[
+\gamma_2 = \gamma_1 \frac{R^{(1)}}{1-R^{(1)}}.
+\]</p>
+<p><em>Tip:</em> You&#39;ll be generating a lot of exponentially distributed random variables. For example this is a distribution with <span class="math">$\mu = 2.5$</span> or a mean of <span class="math">$0.4$</span>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Distributions</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>Statistics</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>μ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.5</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>dist</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>Exponential</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>/</span><span class='hljl-n'>μ</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Theoretical:&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>/</span><span class='hljl-nf'>mean</span><span class='hljl-p'>(</span><span class='hljl-n'>dist</span><span class='hljl-p'>)</span><span class='hljl-t'>            </span><span class='hljl-cs'>#this is the mean() method from Distributions (theoretical mean)</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\n</span><span class='hljl-s'>Monte Carlo:&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>data</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-n'>dist</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>_</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>6</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>/</span><span class='hljl-nf'>mean</span><span class='hljl-p'>(</span><span class='hljl-n'>data</span><span class='hljl-p'>);</span><span class='hljl-t'>            </span><span class='hljl-cs'>#This is mean() from Base/Distributions (the sample mean)</span>
+</pre>
+
+
+<pre class="output">
+Theoretical:
+1 / mean&#40;dist&#41; &#61; 2.5
+
+Monte Carlo:
+1 / mean&#40;data&#41; &#61; 2.500314795607279
+</pre>
+
+
+<h2>Arrival rates to nodes and traffic equations</h2>
+<p>Jobs arrive to nodes either from outside or internally after being routed to a node. Combining both of these arrivals, a basic quantity one can measure is the rate of arrivals to a given node <span class="math">$i$</span>. That is,</p>
+<p class="math">\[
+\lambda_i = \lim_{t \to \infty} \frac{A_i(t)}{t},
+\]</p>
+<p>where <span class="math">$A_i(t)$</span> is the number of arrivals &#40;either from the outside world or from other nodes&#41; to node <span class="math">$i$</span> during <span class="math">$[0,t]$</span>. This quantity can be measured via simulation &#40;as you will do&#41;, but it can also be computed directly via the matrix equation,</p>
+<p class="math">\[
+\lambda = P^\top \lambda + \alpha,
+\qquad
+\qquad
+\text{(Traffic equations)}
+\]</p>
+<p>where <span class="math">$\lambda$</span> is a &#40;column&#41; vector of <span class="math">$\lambda_i$</span> values, and <span class="math">$\alpha$</span> and <span class="math">$\mu$</span> are also column vectors of the respective quantities. These &quot;Traffic equations&quot; hold as long as the solution to the equation <span class="math">$\lambda = (I-P^\top)^{-1} \alpha$</span> satisfies, <span class="math">$\lambda < \tilde{\mu}$</span>. Here the inequality between vectors requires element-wise inequality on all elements. To understand the traffic equations further, look at them for each <span class="math">$i$</span>:</p>
+<p class="math">\[
+\lambda_i = \underbrace{\alpha_i}_{\rm external} + \underbrace{\sum_{j=1}^L P_{j,i} \lambda_j}_{\rm internal}.
+\]</p>
+<p><em>Intuition:</em> Observe that <span class="math">$\lambda_i$</span> is equated to the sum of external arrivals and all internal arrivals from other nodes <span class="math">$j$</span> routed with proportions <span class="math">$P_{j,i}$</span>. This holds as long as the input rates to all nodes <span class="math">$j$</span> are less than the averaged &#40;for modulation&#41; service rate.</p>
+<p>When <span class="math">$\lambda_i < \tilde{\mu}_i$</span> for all <span class="math">$i$</span>, we say the <strong>network is stable</strong> and this means that the arrival rate to each node is less than the effective service rate. In this <strong>stable</strong> case, as time goes to infinity, the network converges to statistical equilibrium or &quot;steady state&quot;. This means that if we consider a single long simulation, we may run a time average of that simulation to obtain steady state quantities.</p>
+<p>We will denote the <strong>load for node <span class="math">$i$</span></strong> via <span class="math">$\rho_i = \lambda_i/\tilde{\mu}_i$</span> and always work in a regime where <span class="math">$\rho_i < 1$</span> for all <span class="math">$i=1,\ldots,L$</span>. We denote <span class="math">$\rho^* = \max \{\rho_1,\ldots,\rho_L\}$</span> as the &quot;bottleneck load&quot;. Clearly, as long as <span class="math">$\rho^*<1$</span> the network is stable. The computed parameter <span class="math">$\rho^*$</span> is the parameter that we will vary for different scenarios and cases - details below.</p>
+<h2>Known queueing theory results and an overview of questions to investigate</h2>
+<p>In general, it is known that as each <span class="math">$\rho_i$</span> grows, the congestion in the individual queue at node <span class="math">$i$</span> increases in the sense that &quot;on average&quot;, there are larger steady state queues and longer wait times. Further, as <span class="math">$\rho^*$</span> grows, the general congestion in the network grows. Since we consider <span class="math">$\rho^* < 1$</span>, we only focus on networks that are stable, yet if <span class="math">$\rho^* \approx 1$</span>, e.g. <span class="math">$=0.95$</span>, they are highly congested. </p>
+<p>For a &#40;non-modulated&#41; Open Jackson Network, one can prove that the steady state queue length of each individual queue <span class="math">$i$</span> has a &quot;geometric distribution&quot; on <span class="math">$0, 1, 2,\ldots$</span> with a mean of <span class="math">$\rho_i/(1-\rho_i)$</span>. Many more such theoretical results exist, yet we skip the details. This relationship appears as follows: </p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Plots</span><span class='hljl-t'>
+</span><span class='hljl-n'>ρ_grid</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-ni'>0</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>0.01</span><span class='hljl-oB'>:</span><span class='hljl-nfB'>0.95</span><span class='hljl-t'>
+</span><span class='hljl-nf'>mean_steady_state_queue_size</span><span class='hljl-p'>(</span><span class='hljl-n'>ρ</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>ρ</span><span class='hljl-oB'>/</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>-</span><span class='hljl-n'>ρ</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#Theoretical steady state mean queue length (also of M/M/1 queue).</span><span class='hljl-t'>
+</span><span class='hljl-nf'>plot</span><span class='hljl-p'>(</span><span class='hljl-n'>ρ_grid</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>mean_steady_state_queue_size</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>ρ_grid</span><span class='hljl-p'>),</span><span class='hljl-t'> 
+        </span><span class='hljl-n'>xlabel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;ρ&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ylabel</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Mean steady state queue length</span><span class='hljl-se'>\n</span><span class='hljl-s'>for an individual node&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'>
+        </span><span class='hljl-n'>label</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>lw</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>c</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>:black</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>xlim</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-ni'>1</span><span class='hljl-p'>),</span><span class='hljl-t'>  </span><span class='hljl-n'>ylim</span><span class='hljl-oB'>=</span><span class='hljl-p'>(</span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-ni'>20</span><span class='hljl-p'>))</span>
+</pre>
+
+
+<img src="data:image/png;base64,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"  />
+
+<p>However with modulation, there is not an explicit simple relationship. One of the main goals of the project is to quantify the effect of modulation.</p>
+<p><em>Tip:</em> In the tasks below you are not expected to look at a node per se but rather at the whole network. You would thus create a superposition of graphs as above, where you sum up all of the queues in the network. When considering the whole network, your x-axis would not be an individual <span class="math">$\rho_i$</span> but rather <span class="math">$\rho^*$</span>.</p>
+<h2>Example scenarios &#40;networks&#41;</h2>
+<p>You will work with the following 4 scenarios. These are networks of size 3 nodes, 3 nodes, 5 nodes, or 100 nodes.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'>#You need to install the Parameters.jl package: https://github.com/mauro3/Parameters.jl</span><span class='hljl-t'>
+</span><span class='hljl-cs'>#You need to install the Accessors.jl package: https://github.com/JuliaObjects/Accessors.jl</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Parameters</span><span class='hljl-t'>  
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Accessors</span><span class='hljl-t'> 
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>LinearAlgebra</span><span class='hljl-t'>
+</span><span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Random</span><span class='hljl-t'> 
+
+</span><span class='hljl-nd'>@with_kw</span><span class='hljl-t'> </span><span class='hljl-k'>struct</span><span class='hljl-t'> </span><span class='hljl-n'>NetworkParameters</span><span class='hljl-t'> </span><span class='hljl-cs'>#The @with_kw macro comes from the Parameters.jl package and makes nice constructors</span><span class='hljl-t'>
+    </span><span class='hljl-n'>L</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int</span><span class='hljl-t'>
+    </span><span class='hljl-n'>α_vector</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Vector</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#This vector is a vector of α_i which can then be scaled</span><span class='hljl-t'>
+    </span><span class='hljl-n'>μ_vector</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Vector</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is the vector of service rates considered fixed</span><span class='hljl-t'>
+    </span><span class='hljl-n'>P</span><span class='hljl-oB'>::</span><span class='hljl-nf'>Matrix</span><span class='hljl-p'>{</span><span class='hljl-n'>Float64</span><span class='hljl-p'>}</span><span class='hljl-t'> </span><span class='hljl-cs'>#routing matrix</span><span class='hljl-t'>
+    </span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^-</span><span class='hljl-ni'>8</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#The rate of modulation slow to fast (default is that system is almost always slow)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>γ₂</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-cs'>#The rate of modulation fast to slow</span><span class='hljl-t'>
+    </span><span class='hljl-n'>κ</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-t'> </span><span class='hljl-cs'>#The speedup parameter</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'># Returns the averaged service rate vector (this is tilde μ)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>averaged_service_rate</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>::</span><span class='hljl-n'>NetworkParameters</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>*</span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>κ</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>μ_vector</span><span class='hljl-oB'>/</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Three queues in tandem</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-nfB'>0.5</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>],</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>])</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-cs'># Three queues in tandem with option to return back to first queue</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nd'>@set</span><span class='hljl-t'> </span><span class='hljl-n'>scenario1</span><span class='hljl-oB'>.</span><span class='hljl-n'>P</span><span class='hljl-t'>  </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-cs'>#The @set macro is from Accessors.jl and allows to easily make a </span><span class='hljl-t'>
+                                 </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-nfB'>1.0</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-cs'># modified copy of an (immutable) struct</span><span class='hljl-t'>
+                                 </span><span class='hljl-nfB'>0.3</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-p'>]</span><span class='hljl-t'> 
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-cs'># A ring of 5 queues</span><span class='hljl-t'>
+</span><span class='hljl-n'>scenario3</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-ni'>5</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>collect</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>5</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>0</span><span class='hljl-t'>  </span><span class='hljl-nfB'>.8</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-nfB'>.8</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-nfB'>.8</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-nfB'>.8</span><span class='hljl-p'>;</span><span class='hljl-t'>
+                                     </span><span class='hljl-nfB'>.8</span><span class='hljl-t'>  </span><span class='hljl-ni'>0</span><span class='hljl-t'>   </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-t'>    </span><span class='hljl-ni'>0</span><span class='hljl-p'>])</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>############################</span><span class='hljl-t'>
+</span><span class='hljl-cs'># A large arbitrary network</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>#Generate some random (arbitrary) matrix P</span><span class='hljl-t'>
+</span><span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-ni'>0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>L</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>100</span><span class='hljl-t'>
+</span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-n'>L</span><span class='hljl-p'>,</span><span class='hljl-n'>L</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>./</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>P</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>dims</span><span class='hljl-oB'>=</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#normalize rows by the sum</span><span class='hljl-t'>
+</span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>.*</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-nfB'>0.2</span><span class='hljl-t'> </span><span class='hljl-oB'>.+</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.7</span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-n'>L</span><span class='hljl-p'>))</span><span class='hljl-t'> </span><span class='hljl-cs'># multiply rows by factors in [0.2,0.9] </span><span class='hljl-t'>
+
+</span><span class='hljl-n'>scenario4</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>NetworkParameters</span><span class='hljl-p'>(</span><span class='hljl-t'>  </span><span class='hljl-n'>L</span><span class='hljl-oB'>=</span><span class='hljl-n'>L</span><span class='hljl-p'>,</span><span class='hljl-t'> 
+                                </span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>ones</span><span class='hljl-p'>(</span><span class='hljl-n'>L</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>μ_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.5</span><span class='hljl-t'> </span><span class='hljl-oB'>.+</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-n'>L</span><span class='hljl-p'>),</span><span class='hljl-t'>
+                                </span><span class='hljl-n'>P</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>P</span><span class='hljl-p'>);</span>
+</pre>
+
+
+
+<p>For each of these scenarios you can modify certain parameters. Importantly, the way we adjust for a desired <span class="math">$\rho^*$</span> is by adjusting the <code>α_vector</code>. Details below.</p>
+<h1>Task 1: Thinking about Modelling Assumptions &#40;5pts&#41;</h1>
+<p>This task does not involve any coding or computation. Your answer can be in paragraph form or bullet point form. Consider the Modulated Jackson Network model and the application of a &quot;Dream World&quot; amusement park. As mentioned above, the model can be used to model customer congestion in the amusement park. However, like any model it is at best a rough approximation of reality. Describe some features that exist in the amusement park setting that are <strong>not</strong> captured by the model. Similarly, describe model assumptions that may be <strong>unrealistic</strong> for the application of the amusement park.</p>
+<p>Also answer the following: If you were actually using this model to assess congestion at the park, would it be useful or not? What would you use such a model for in the context of the park? What operational answers can you get with the aid of such simulations? To get insight for answering this question, you may &#40;but are not required to&#41; reference the perspective seminar lecture by Dr. Anna Foeglein. In that lecture Anna describes her work as a simulation professional.</p>
+<h1>Task 2: Computation for Jackson Networks &#40;12pts&#41;</h1>
+<p>We provide you with the functions <code>maximal_alpha_scaling&#40;&#41;</code> and <code>set_scenario&#40;&#41;</code> for adapting parameters of a scenario for a desired <span class="math">$\rho^*$</span> value. These functions also set modulation related parameters, <span class="math">$\kappa$</span>, <span class="math">$\gamma_1$</span> and <span class="math">$R^{(1)}$</span>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-s'>&quot;&quot;&quot;
+Compute the maximal value by which we can scale the α_vector and be stable.
+&quot;&quot;&quot;</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>maximal_alpha_scaling</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>::</span><span class='hljl-n'>NetworkParameters</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>λ_base</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>P</span><span class='hljl-oB'>&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>\</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-cs'>#Solve the traffic equations</span><span class='hljl-t'>
+    </span><span class='hljl-n'>ρ_base</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>λ_base</span><span class='hljl-t'> </span><span class='hljl-oB'>./</span><span class='hljl-t'> </span><span class='hljl-nf'>averaged_service_rate</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#Determine the load ρ  </span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-nf'>minimum</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>./</span><span class='hljl-t'> </span><span class='hljl-n'>ρ_base</span><span class='hljl-p'>)</span><span class='hljl-t'> 
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>max_scalings</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>round</span><span class='hljl-oB'>.</span><span class='hljl-p'>(</span><span class='hljl-n'>maximal_alpha_scaling</span><span class='hljl-oB'>.</span><span class='hljl-p'>([</span><span class='hljl-n'>scenario1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>scenario2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>scenario3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>scenario4</span><span class='hljl-p'>]),</span><span class='hljl-n'>digits</span><span class='hljl-oB'>=</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;The maximal scalings for scenarios 1 to 4 are: </span><span class='hljl-si'>$max_scalings</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-s'>&quot;&quot;&quot;
+Use this function to adjust the network parameters to the desired ρ⋆, and other parameters
+&quot;&quot;&quot;</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>set_scenario</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>::</span><span class='hljl-n'>NetworkParameters</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>ρstar</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>κ</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>2.0</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-oB'>^-</span><span class='hljl-ni'>8</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>-</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^-</span><span class='hljl-ni'>8</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>κ</span><span class='hljl-t'> </span><span class='hljl-oB'>≤</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-nf'>error</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;κ is out of range&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>  
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>ρstar</span><span class='hljl-t'> </span><span class='hljl-oB'>≤</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-n'>ρstar</span><span class='hljl-t'> </span><span class='hljl-oB'>≥</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-nf'>error</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;ρ⋆ is out of range&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>  
+    </span><span class='hljl-p'>(</span><span class='hljl-n'>R1</span><span class='hljl-t'> </span><span class='hljl-oB'>≤</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-nf'>error</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;R¹ is out of range&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>  
+    </span><span class='hljl-n'>net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nd'>@set</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>γ₁</span><span class='hljl-t'>
+    </span><span class='hljl-n'>net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nd'>@set</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-t'> </span><span class='hljl-oB'>*</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-oB'>/</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>-</span><span class='hljl-n'>R1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#set γ₂ based on given γ₁ and R1</span><span class='hljl-t'>
+    </span><span class='hljl-n'>net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nd'>@set</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>κ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>κ</span><span class='hljl-t'>
+    </span><span class='hljl-n'>max_scaling</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>maximal_alpha_scaling</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nd'>@set</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-oB'>*</span><span class='hljl-n'>max_scaling</span><span class='hljl-oB'>*</span><span class='hljl-n'>ρstar</span><span class='hljl-t'> </span><span class='hljl-cs'>#max_scaling*ρstar is the scaling factor applied to the original alpha</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>net</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+The maximal scalings for scenarios 1 to 4 are: &#91;2.0, 1.4, 0.2, 0.216&#93;
+</pre>
+
+
+<p><strong>Note:</strong> In all cases in this project we aim to run simulations only for networks with <span class="math">$\rho^*<1$</span>. That is only for stable networks. So in any case of testing or analysis, make sure you adjust the parameters of the network using the <code>set_scenario</code> function. This type of simulation of stable networks allows us to take long time averages from simulations which approximate &quot;statistical steady state&quot;.</p>
+<p>For example set the parameters of scenario 2 to have <span class="math">$\rho^* = 0.7$</span>, a default <span class="math">$\kappa$</span>, a value of <span class="math">$\gamma_1 =  0.1$</span>, and a value of <span class="math">$R^{(1)} = 0.7$</span> we do:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>adjusted_net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>set_scenario</span><span class='hljl-p'>(</span><span class='hljl-n'>scenario2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.7</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>γ₁</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.7</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>#check computations for R1 and R2</span><span class='hljl-t'>
+</span><span class='hljl-n'>R1</span><span class='hljl-p'>,</span><span class='hljl-n'>R2</span><span class='hljl-oB'>=</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-oB'>/</span><span class='hljl-p'>(</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>+</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-p'>),</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>/</span><span class='hljl-p'>(</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₁</span><span class='hljl-oB'>+</span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>γ₂</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>R2</span><span class='hljl-t'>
+
+</span><span class='hljl-cs'>#We can check by solving the traffic equations</span><span class='hljl-t'>
+</span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>P</span><span class='hljl-oB'>&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>\</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-cs'>#Solve the traffic equations</span><span class='hljl-t'>
+</span><span class='hljl-n'>ρ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>./</span><span class='hljl-t'> </span><span class='hljl-nf'>averaged_service_rate</span><span class='hljl-p'>(</span><span class='hljl-n'>adjusted_net</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is the vector of ρ values</span><span class='hljl-t'>
+</span><span class='hljl-n'>ρ_star</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>maximum</span><span class='hljl-p'>(</span><span class='hljl-n'>ρ</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>ρ_star</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+adjusted_net.α_vector &#61; &#91;0.637, 0.0, 0.0&#93;
+&#40;adjusted_net.γ₁, adjusted_net.γ₂&#41; &#61; &#40;0.1, 0.23333333333333328&#41;
+&#40;R1, R2&#41; &#61; &#40;0.7, 0.3000000000000001&#41;
+ρ_star &#61; 0.6999999999999998
+</pre>
+
+
+<p>Whereas if we repeat with <span class="math">$\kappa = 3$</span> you can see that now <span class="math">$\alpha_1$</span> is increased because now in <code>fast</code> mode the system is faster. So to accommodate for the same target <span class="math">$\rho^*$</span> we can have a faster arrival rate.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>adjusted_net</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>set_scenario</span><span class='hljl-p'>(</span><span class='hljl-n'>scenario2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.7</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>γ₁</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>R1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>0.7</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>κ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>I</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>P</span><span class='hljl-oB'>&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>\</span><span class='hljl-t'> </span><span class='hljl-n'>adjusted_net</span><span class='hljl-oB'>.</span><span class='hljl-n'>α_vector</span><span class='hljl-t'> </span><span class='hljl-cs'>#Solve the traffic equations</span><span class='hljl-t'>
+</span><span class='hljl-n'>ρ</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>λ</span><span class='hljl-t'> </span><span class='hljl-oB'>./</span><span class='hljl-t'> </span><span class='hljl-nf'>averaged_service_rate</span><span class='hljl-p'>(</span><span class='hljl-n'>adjusted_net</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is the vector of ρ values</span><span class='hljl-t'>
+</span><span class='hljl-n'>ρ_star</span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>maximum</span><span class='hljl-p'>(</span><span class='hljl-n'>ρ</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>ρ_star</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+adjusted_net.α_vector &#61; &#91;0.7840000000000001, 0.0, 0.0&#93;
+ρ_star &#61; 0.7000000000000001
+</pre>
+
+
+<p>Now, after you take time to understand the code and computations above, assume we are in one of three test cases, the <strong>always slow</strong> case, the <strong>always fast</strong> case, or the <strong>super fast modulation</strong> case. Since each of these cases agree with a &#40;non-modulated&#41; Open Jackson Network we&#39;ll use these cases as test code later. At this point, set parameters for each scenario and each of these cases &#40;choose the <span class="math">$\gamma_1$</span> and <span class="math">$R^{(1)}$</span> parameters as you like, as long as they approximate these cases; keep <span class="math">$\kappa = 2$</span>&#41;. Then for each of the 4 scenarios and each of the 3 cases create a plot of the Open Jackson Network <strong>total steady state mean queue lengths</strong> as a function of <span class="math">$\rho^*$</span>. For this, simply use the fact that the theoretical steady state mean queue length for individual queue <span class="math">$i$</span> is <span class="math">$\rho_i/(1-\rho_i)$</span>. Then add the queue length of all <span class="math">$L$</span> queues in the scenario. Note the plots you create will not be affected by the type of test case &#40;always slow, always fast, or super fast modulation&#41;. So it is enough to present 4 plots &#40;no need for 12&#41;. Still, you will use this code below for testing. The idea here is that you know what type of behavior to expect from the network in these cases. </p>
+<h2>Task 3: A Simulation Engine Based on Queue States &#40;33pts&#41;</h2>
+<p>Create a simulation engine which can be run either with the following <code>sim_net_trace</code> function or the <code>sim_net_estimation</code> function.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-s'>&quot;&quot;&quot;
+Runs a discrete event simulation of a Modulated Jackson Network `net` and produces traces of queue sizes and the `slow`-`fast` state.
+
+The simulation runs from time `0` to `max_time`.  The simulation starts with empty queues and in `slow` modulation state.
+
+The return value is a trace of the queue sizes of each of the individual stations ( (time, value) pairs). It is also a trace of the simulation state (`slow`/`fast`,time) pairs. The combination of all these traces can be plotted to reconstruct the simulation.
+
+This simulation does NOT keep individual customers state, it only keeps the following minimal state: 
+* The number of jobs in each queue.
+* A boolean value indicating if `slow` or `fast` (for the whole network)
+&quot;&quot;&quot;</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>sim_net_trace</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>::</span><span class='hljl-n'>NetworkParameters</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>max_time</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>seed</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>42</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    
+    </span><span class='hljl-cs'>#Set the random seed</span><span class='hljl-t'>
+    </span><span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-n'>seed</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    
+    </span><span class='hljl-cs'>#The function would execute the simulation here - and this would use multiple other functions, types, and files</span><span class='hljl-t'>
+
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-p'>[]</span><span class='hljl-t'> </span><span class='hljl-cs'># The return value should be some data-structure which contains the traces</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-s'>&quot;&quot;&quot;
+Runs a discrete event simulation of a Modulated Jackson Network `net` and collects statistics during the run. Returns an estimate of the total mean queue length.
+
+The simulation runs from time `0` to `max_time`.  The simulation starts with empty queues and in `slow` modulation state.
+
+Statistics about the total mean queue lengths are recorded from `warm_up_time` onwards and the estimated value is returned. 
+
+This simulation does NOT keep individual customers state, it only keeps the following minimal state: 
+* The number of jobs in each queue.
+* A boolean value indicating if `slow` or `fast` (for the whole network)
+&quot;&quot;&quot;</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>sim_net_estimation</span><span class='hljl-p'>(</span><span class='hljl-n'>net</span><span class='hljl-oB'>::</span><span class='hljl-n'>NetworkParameters</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>max_time</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>6</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>warm_up_time</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>seed</span><span class='hljl-oB'>::</span><span class='hljl-n'>Int64</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>42</span><span class='hljl-p'>)</span><span class='hljl-oB'>::</span><span class='hljl-n'>Float64</span><span class='hljl-t'>
+    
+    </span><span class='hljl-cs'>#Set the random seed</span><span class='hljl-t'>
+    </span><span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-n'>seed</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    
+    </span><span class='hljl-cs'>#The function would execute the simulation here - and this would use multiple other functions, types, and files</span><span class='hljl-t'>
+
+    </span><span class='hljl-n'>estimated_total_mean_queue_length</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>12.3</span><span class='hljl-t'> </span><span class='hljl-cs'>#the function would estimate this value (12.3 is just a place-holder)</span><span class='hljl-t'>
+
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>estimated_total_mean_queue_length</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-p'>;</span>
+</pre>
+
+
+
+<p>The code/functions used by <code>sim_net_trace</code> and <code>sim_net_estimation</code> should be the same code as much as possible &#40;this is the actual discrete event simulation engine&#41;. So avoid code duplication wherever possible.</p>
+<p>Now use <code>sim_net_trace</code> to plot traces for the first three scenarios, each set to have <span class="math">$\rho^* = 0.8$</span>. This plotting can help you debug the simulation as well. As for <code>sim_net_estimation</code>, at this point just see that it runs &#40;this is a longer run&#41;. You will test it in the next task.</p>
+<p><strong>Tip</strong>: Implement this main task one step at a time. Then add more components until you get the full functionality. For example, first have the network without modulation and then add modulation. Also first have deterministic routing and then add random routing. Printing out network states in short debug runs can be helpful also.</p>
+<h2>Task 4: Doing Statistical Testing &#40;20pts&#41;</h2>
+<p>Now you can test/explore the simulation in several ways, each time comparing to an Open Jackson Network. In all cases use <code>sim_net_estimation</code>. If there are problems with the test you may need to return to Task 3 to adjust your code. </p>
+<p><strong>Test #1</strong>: For each of the four scenarios, consider the <strong>always slow</strong> parameters that you chose. Then run a grid of <span class="math">$\rho^*$</span> with steps of <span class="math">$0.01$</span> between <span class="math">$0.1$</span> and <span class="math">$0.9$</span>. Compare the values with the theoretical values that you plotted in the previous task. Compare both by plotting the values and computing the absolute relative error over the grid of <span class="math">$\rho^*$</span>. You will know that your simulation is valid if the absolute relative error will be low and further decrease as <code>max_time</code> is increased.</p>
+<p><strong>Test #2</strong>: Repeat for the  <strong>always fast</strong> parameters that you chose.</p>
+<p><strong>Test #3</strong>: Repeat for the  <strong>super fast modulation</strong> parameters that you chose. Note that here the run time may be longer.</p>
+<p>These tests may be placed in your <code>test</code> folder. For them to be automatic you would require thresholds as they are statistical &#40;noisy tests&#41;. So making the tests automatic is not required.  </p>
+<h2>Task 5: Analysis of the effect of modulation on Mean Queue Sizes &#40;20pts&#41;</h2>
+<p>Now that the simulation appears to be working correctly &#40;based on your tests above&#41;, use your simulation engine to carry out a study. In particular we are interested in the effect of modulation on mean queue sizes. For networks with the same <span class="math">$\rho^*$</span>, how does modulation affect mean queues? We know that as <span class="math">$\rho^*$</span> increases from <span class="math">$0$</span> towards <span class="math">$1$</span>, mean queue sizes increase. But what about modulation? The answer to this is not clear.</p>
+<p>For each of the four scenarios stay with <span class="math">$\kappa = 2$</span> and <span class="math">$\gamma_1 = 0.1$</span>. Now consider <span class="math">$R^{(1)} \in \{0.1, 0.2, 0.3, 0.4, 0.5, 0.9\}$</span>. Use these 24 parameter values &#40;<span class="math">$6\times 4$</span>&#41; to run simulations and create plots of the estimated mean total queue length as a function of <span class="math">$\rho^*$</span>. A total of 24 curves on four plots, one plot for each scenario &#40;with 6 curves in a plot&#41;. In all plots, the x-axis is always <span class="math">$\rho^*$</span> and the y-axis is the estimated total steady queue size in the network. Make sure the legend is properly marked and placed on each plot and that you have an easy script to create all plots. If you have any conclusions from your simulation plots, briefly describe them. Ponder why you get the curves that you get.  </p>
+<p><strong>Tip</strong>: Start with short simulation runs to make sure your plots are well formatted. Then once formatting is complete, go for longer runs to decrease the variance of the estimated curves. Note that in each case you will use a grid of <span class="math">$\rho^*$</span>, so there are many simulation runs per curve &#40;e.g. 100&#41; . As you develop this, start with a smaller grid.</p>
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <p>
+            Published from <a href="project2.jmd">project2.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-10-24.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>

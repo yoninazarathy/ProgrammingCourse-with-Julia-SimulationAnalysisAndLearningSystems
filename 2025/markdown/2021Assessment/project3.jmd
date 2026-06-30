@@ -1,0 +1,111 @@
+# Project \#3 - Semester 2, 2021
+# Analysis of Datasets and Random Forests (+ perspective seminar summary)
+
+(last edit: Oct 25, 2021)
+
+**Due:** End of Day, Saturday, 20, November, 2021. Late submissions are absolutely not accepted (the semester is finishing). Early submissions are acceptable.  
+
+**Note:** The teaching staff will only answer questions (via Piazza, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 17/11. Wednesday 5pm consultation hours will be held up until 17/11.
+
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are **10** points for the summary of Maithili Mehta's perspective seminar. The remaining **80** points are for the project.
+
+**Submission format:** This project should be submitted via a GitHub Repo, a PDF file, and a voice recording via Blackboard. 
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
+
+The PDF file should be a nice formatted file that has:
+
+* Your name, student number, and assignment title (Project 3 - 2021) on the top.
+* A (clickable) link to your GitHub repo.
+* Summaries as instructed below.
+
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
+
+Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. Hence a very readable and clean PDF file is important. Note that in printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
+
+**Individual work**: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means.
+
+**Marking Criteria**: 
+
+* 10 points are allocated for following instructions and the GitHub repo.
+
+* 10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness (the writeup should answer all questions posed). 2 points of originality and style.
+
+* 80 points are for the project itself. 
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts):
+
+* Ideally use the same account you used for PROJECT1 and HW1. 
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2021-PROJECT3`. So for example if your name is "Jeannette Young", the repo name should be `Jeannette-Young-2504-2021-PROJECT3`.
+* Make sure the repo is **private**.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted as exactly as follows:
+* Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `.gitignore` file. 
+* Have basic running instructions on how to run the code. 
+* Note: make sure that there aren't any files in your submission repo except for those mentioned above (with the exception of perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF). Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+
+## Perspective seminar question (10pts)
+
+Write a 1-4 paragraph summary of Maithili Mehta's perspective seminar similar to the previous two perspective seminar summaries that you wrote. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person, or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions:
+
+1. What was Maithili's, career path, and her relationship with software and mathematics?
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, simulation platforms, and the like. Was this the first time that you heard about any of these tools?
+1. Have you picked up any tips from Maithili's talk, which you can perhaps use in your career down the road?
+1. Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous two talks.
+
+## Main project task (80 pts total)
+
+In this project you deal with a [house prices dataset](https://www.kaggle.com/anthonypino/melbourne-housing-market) available from Kaggle. Your overarching purpose is to analyse the dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.
+
+There are 7 separate tasks below. For each of these tasks write a script in a separate file that executes the task. Call the scripts, `task1.jl`, `task2.jl`, etc. Your `README.md` should have instructions that detail how to run the scripts. For example the instructions should state to run `include("task1.jl")` etc. The scripts should produce output as requested below and the output should be neatly included in the submission PDF. Task 2 asks you to create a movie animation. In this case, include the animation file (in animated gif format) in the submission repo. Output files generated from your code (including the animation) should be in an `output` folder in the repo.
+
+All tasks use the `Melbourne_housing_FULL.csv` file. You may download the file from Kaggle and place it in a `data` folder in your repo. Your scripts should access this file.
+
+Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc. 
+
+As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to (don't drop all rows for all tasks). In certain cases, if you see a sensible way to impute (replace/make-up data), feel free to do so and explain your imputation strategy. 
+
+
+
+### Task 1 Exploratory data of single variables (10 pts)
+
+Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Keep in mind that different type of data requires different plots.
+
+### Task 2 Exploratory data analysis comparing variables (10 pts)
+
+Create several plots that present the house price as a function of distance to the city, house size (e.g. land size, rooms, car ports, etc...), and some combination of these variables. In presenting these plots, visually search for relationships between variables.
+
+### Task 3 Exploratory data analysis over time (10 pts)
+
+Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold (`Type = "h"`) over time. 
+
+### Task 4 Postcode, suburb, councils, and regions (10 pts)
+
+The dataset has the fields, `Suburb`, `CouncilArea`, `Regionname`, and `Postcode`. 
+
+Use the data to create a function with several methods that return the postcode(s) of a suburb, council area, or region name. In doing so you'l need to process the data before hand to create some dictionary or similar and handle ambiguities, and/or missing data. 
+
+### Task 5 Making a movie with a map (10 pts)
+
+Create a movie that uses the latitude and longitude data to present sales over time overlaid on the Melbourne metropolitan map. Your movie can show the date, and points of sales, and potentially the volume of sales (in dollars). 
+
+### Task 6 Price prediction using random forests (15 pts)
+
+Use the `DecisionTrees.jl` package to create a price prediction model using random forests. Beforehand, break the data up into a validation set (20%) and training set (80%). Do not use all of the categorical variables in the data, but only those that you think may make sense.
+
+### Task 7 Your own Random Forest (using trees from a package) (15pts)
+
+Repeat now task 6, only using the decision trees functionality from `DecisionTrees.jl` but not using the random forest functionality. Instead, write your own code for random forest, potentially by adapting the random forest source code from `DecisionTrees.jl` and removing the multi-threading functionality in that code. Your performance should not be exactly the same as in task 6 but should be comparable. It is expected that your code will run slower. See [https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/regression/main.jl](https://github.com/bensadeghi/DecisionTree.jl/blob/master/src/regression/main.jl) for the `build_forest()` function which you may adapt.

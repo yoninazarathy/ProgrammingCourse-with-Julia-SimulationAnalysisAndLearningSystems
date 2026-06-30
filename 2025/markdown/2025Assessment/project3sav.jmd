@@ -1,0 +1,103 @@
+# Project \#3 - Semester 2, 2024
+# Analysis and visualization of Data
+
+(last edit: October 21, 2024)
+
+[explainer video](https://www.youtube.com/watch?v=-K6_RYyXG6w).
+
+**Due:** Thursday, 14, November, 2024, 16:00. Late submissions are not accepted at all (the semester is finishing). This is an individual work project.
+
+**Note:** The teaching staff will only answer questions (via Ed and consultation hours) regarding this assignment up to the late evening of Wednesday 13/11. The 7:00pm Wednesday zoom consultation hours will be held up until 13/11. These will be the only weekly contact hours after week 13.
+
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are **20** points for creativity and originality. The remaining **70** points are for the individual tasks of project.
+
+**Submission format:** This project should be submitted via a GitHub Repo, a **single** PDF file, and a voice recording via Blackboard. The GitHub repo should have a jupyter notebook called `analysis.ipynb`.
+
+You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required. The animation movie you create should **not** be in the `analysis.ipynb` notebook so that its size is note excessive. Instead, save the animation movie in the repo with a link to it, or store it elsewhere on the web with a sharable link.
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
+
+The PDF file should be a nice formatted file that has:
+
+* Your name, student number, and assignment title (Project 3 - 2024) on the top.
+* A (clickable) link to your GitHub repo.
+* A PDF printout of your `analysis.ipynb` notebook.
+
+Use a PDF merging utility to create the PDF file. Do not worry about extra white space occurring due to Jupyter notebook PDF printouts.
+
+As with previous assignments you can comment on questions in this PDF (e.g. when asked to answer things not via code). The Jupyter notebook in the GitHub should be "runnable". That is, course staff should be able to download the notebook your repo and run it after activating the environment in the working directory based on your `Project.toml` file which specifies the dependencies used. 
+
+Marking responses will be made by the teaching staff via blackboard. 
+
+**Individual work**: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available. 
+
+**Marking Criteria**: There are 100 points total.
+
+* 10 points are allocated for following instructions and the GitHub repo. Any deviation from the instructions will imply these points are lost.
+
+* 20 points are allocated for creativity and originality. These points will be given in full to projects that are deemed creative in terms of their analysis and presentation. 
+
+* 70 points are for individual tasks.
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. Nevertheless, **in this project you are mostly creating scripting code for data analysis and ML experimentation** so it can be looser in nature. That is, in contrast to previous projects, the code may be less generic. Nevertheless, define functions as needed to avoid duplication (copy pasting) of code where possible.
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts):
+
+* Ideally use the same account you used for previous assignments. 
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2024-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2024-PROJECT3`.
+* Make sure the repo is **private**.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted exactly as follows:
+* Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `.gitignore` file. 
+* Have basic running instructions on how to run the code. 
+* Have the main Jupyter notebooks as instructed above. In the notebook have `using Pkg` and `Pkg.activate(".")` commands at the top so that you work in an environment of your current directory. 
+* Add dependencies to this environment and this will create a `Project.toml` file which should also be part of your repo.
+* A `data` folder with the housing data and any other data needed.
+* You can upload the movie animation you create to GitHub, but make sure it is not part of the notebook so that the notebook is not heavy. Also make sure that your movie is not too heavy.
+
+### Housing Prices Data
+
+You deal with a [house prices dataset](https://www.kaggle.com/datasets/anthonypino/melbourne-housing-market) available from Kaggle.
+
+Your overarching purpose is to carry out basic exploratory analysis of this dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.
+
+We look at the `Melbourne_housing_FULL.csv` file. You can download the file from Kaggle and place it in a `data` folder in your repo. Your scripts should access this file.
+
+Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc. 
+
+As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to (don't drop all rows for all tasks). In certain cases, if you see a sensible way to impute (replace/make-up data), feel free to do so and explain your imputation strategy. 
+
+**Task 1 Exploratory data of single variables (10 pts)**
+
+Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Keep in mind that different type of data requires different plots.
+
+**Task 2 Exploratory data analysis comparing variables (10 pts)**
+
+Create several plots that present the house price as a function of distance to the city, house size (e.g. land size, rooms, car ports, etc...), and some combination of these variables. In presenting these plots, visually search for relationships between variables.
+
+**Task 3 Exploratory data analysis over time (10 pts)**
+
+Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold (`Type = "h"`) over time. 
+
+**Task 4 Linear Regression Models (15 pts)**
+
+Review your results of Task 2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://statisticswithjulia.org/) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
+
+**Task 5 Location data over time movie on map (25 points)**
+
+Your goal here is to create a quality animation (movie) presenting location data over time of the Melbourne Housing Data. The movie should use a background metropolitan Map and present some animation over a timeline of the trends of houses being sold in the Melbourne area. For examples circles with sizes of the deals can pop-up and disappear. Other features are possible also. Presenting additional animated or summarized statistics alongside the movie is also possible and encouraged.  
+
+It is recommended to use [Makie.jl](https://docs.makie.org/stable/) and/or one of its associated and related packages. You'll need to find out how to make it work without help from the course team. 
+
+Please keep the movie shorter than 1 minute. 
+
+Note that it is typically not recommended to upload big binary files onto GitHub. In this case, you can do this with the movie file, but avoid making (many) multiple commits of this file. 
+

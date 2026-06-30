@@ -1,0 +1,2607 @@
+<!DOCTYPE html>
+<HTML lang = "en">
+<HEAD>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+  </script>
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+
+  
+<style>
+pre.hljl {
+    border: 1px solid #ccc;
+    margin: 5px;
+    padding: 5px;
+    overflow-x: auto;
+    color: rgb(68,68,68); background-color: rgb(251,251,251); }
+pre.hljl > span.hljl-t { }
+pre.hljl > span.hljl-w { }
+pre.hljl > span.hljl-e { }
+pre.hljl > span.hljl-eB { }
+pre.hljl > span.hljl-o { }
+pre.hljl > span.hljl-k { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kc { color: rgb(59,151,46); font-style: italic; }
+pre.hljl > span.hljl-kd { color: rgb(214,102,97); font-style: italic; }
+pre.hljl > span.hljl-kn { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kp { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kr { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-kt { color: rgb(148,91,176); font-weight: bold; }
+pre.hljl > span.hljl-n { }
+pre.hljl > span.hljl-na { }
+pre.hljl > span.hljl-nb { }
+pre.hljl > span.hljl-nbp { }
+pre.hljl > span.hljl-nc { }
+pre.hljl > span.hljl-ncB { }
+pre.hljl > span.hljl-nd { color: rgb(214,102,97); }
+pre.hljl > span.hljl-ne { }
+pre.hljl > span.hljl-neB { }
+pre.hljl > span.hljl-nf { color: rgb(66,102,213); }
+pre.hljl > span.hljl-nfm { color: rgb(66,102,213); }
+pre.hljl > span.hljl-np { }
+pre.hljl > span.hljl-nl { }
+pre.hljl > span.hljl-nn { }
+pre.hljl > span.hljl-no { }
+pre.hljl > span.hljl-nt { }
+pre.hljl > span.hljl-nv { }
+pre.hljl > span.hljl-nvc { }
+pre.hljl > span.hljl-nvg { }
+pre.hljl > span.hljl-nvi { }
+pre.hljl > span.hljl-nvm { }
+pre.hljl > span.hljl-l { }
+pre.hljl > span.hljl-ld { color: rgb(148,91,176); font-style: italic; }
+pre.hljl > span.hljl-s { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sa { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sb { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sc { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sd { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sdC { color: rgb(201,61,57); }
+pre.hljl > span.hljl-se { color: rgb(59,151,46); }
+pre.hljl > span.hljl-sh { color: rgb(201,61,57); }
+pre.hljl > span.hljl-si { }
+pre.hljl > span.hljl-so { color: rgb(201,61,57); }
+pre.hljl > span.hljl-sr { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ss { color: rgb(201,61,57); }
+pre.hljl > span.hljl-ssB { color: rgb(201,61,57); }
+pre.hljl > span.hljl-nB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nbB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nfB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nh { color: rgb(59,151,46); }
+pre.hljl > span.hljl-ni { color: rgb(59,151,46); }
+pre.hljl > span.hljl-nil { color: rgb(59,151,46); }
+pre.hljl > span.hljl-noB { color: rgb(59,151,46); }
+pre.hljl > span.hljl-oB { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-ow { color: rgb(102,102,102); font-weight: bold; }
+pre.hljl > span.hljl-p { }
+pre.hljl > span.hljl-c { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-ch { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cm { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cp { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cpB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-cs { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-csB { color: rgb(153,153,119); font-style: italic; }
+pre.hljl > span.hljl-g { }
+pre.hljl > span.hljl-gd { }
+pre.hljl > span.hljl-ge { }
+pre.hljl > span.hljl-geB { }
+pre.hljl > span.hljl-gh { }
+pre.hljl > span.hljl-gi { }
+pre.hljl > span.hljl-go { }
+pre.hljl > span.hljl-gp { }
+pre.hljl > span.hljl-gs { }
+pre.hljl > span.hljl-gsB { }
+pre.hljl > span.hljl-gt { }
+</style>
+
+
+
+  <style type="text/css">
+  @font-face {
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-style: normal;
+  font-weight: 600;
+}
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  font-family: monospace, monospace;
+  font-size : 0.8em;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+thead th {
+    border-bottom: 1px solid black;
+    background-color: white;
+}
+tr:nth-child(odd){
+  background-color: rgb(248,248,248);
+}
+
+
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box; }
+@media (min-width: 400px) {
+  .container {
+    width: 85%;
+    padding: 0; }
+}
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 4%; }
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; }
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-weight: 300; }
+h1 { font-size: 3.6rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 3.4rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 3.2rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.8rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 2.4rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
+
+p {
+  margin-top: 0; }
+a {
+  color: #1EAEDB; }
+a:hover {
+  color: #0FA0CE; }
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 38px;
+  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+ul {
+  list-style: circle; }
+ol {
+  list-style: decimal; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li > p {margin : 0;}
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: 1.5rem; }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+  margin-bottom: 1.0rem; }
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre.hljl {
+  margin: 0 0 10px;
+  display: block;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding : 5px;
+}
+
+pre.output {
+  background: #ffffff;
+}
+
+pre.code {
+  background: #ffffff;
+}
+
+pre.julia-error {
+  color : red
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+
+@media (min-width: 400px) {}
+@media (min-width: 550px) {}
+@media (min-width: 750px) {}
+@media (min-width: 1000px) {}
+@media (min-width: 1200px) {}
+
+h1.title {margin-top : 20px}
+img {max-width : 100%}
+div.title {text-align: center;}
+
+  </style>
+  <link rel="icon" type="image/png" href="../ximg/favicon-32x32.png">
+</HEAD>
+
+<BODY>
+  <div class ="container">
+    <div class = "row">
+      <div class = "col-md-12 twelve columns">
+        <div class="title">
+          
+          
+          
+        </div>
+
+          <h1 class="my-3">UQ MATH2504<br>Programming of Simulation, Analysis, and Learning Systems<br>(Semester 2 2025)</h1>
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <center>
+          <a href = "lecture-unit-1.html"> Unit 1 </a> |
+          <a href = "lecture-unit-2.html"> Unit 2 </a> |
+          <a href = "lecture-unit-3.html"> Unit 3 </a> |
+          <a href = "lecture-unit-4.html"> Unit 4 </a> |
+          <a href = "lecture-unit-5.html"> Unit 5 </a> |
+          <a href = "lecture-unit-6.html"> Unit 6 </a> |
+          <a href = "lecture-unit-7.html"> Unit 7 </a> |
+          <a href = "lecture-unit-8.html"> Unit 8 </a> 
+          </center>
+          <br>
+
+        <h1>Unit 1: Hello World Bootcamp</h1>
+<p>In this unit we&#39;ll study the basic of a programming language, <a href="https://julialang.org/">Julia</a> in our case. The unit ends with suggested class micro-projects and practice questions for the practice quiz that is at the end of the unit. The pace and nature of this unit is aimed at students with little or no programming experience. The units afterwards pick up the pace significantly.  </p>
+<h2>Super simple hello world</h2>
+<p>Here is a Julia statement:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Hello World!&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Hello World&#33;
+</pre>
+
+
+<p>We are calling &#40;or invoking&#41; the function <code>println</code> with the argument <code>&quot;Hello World&#33;&quot;</code>. Round brackets after a name are the application of a function, kind of like in mathematics. But in Julia, round brackets also have other uses:</p>
+<p>For example, dealing with the order of precedence of computations:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>*</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span>
+</pre>
+
+
+<pre class="output">
+4
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>*</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span>
+</pre>
+
+
+<pre class="output">
+6
+</pre>
+
+
+<p>And also creating tuples:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>my_tuple</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>35</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>π</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;world&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;!&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>my_tuple</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Tuple&#123;String, Int64, Irrational&#123;:π&#125;, String, Char&#125;
+</pre>
+
+
+<h2>Input a variable through user interaction</h2>
+<p>Store the following 3 lines into the file &#39;test.jl&#39; and run it either through by runing the command &#39;julia test.jl&#39; from the terminal or through include&#40;&quot;test.jl&quot;&#41; from the REPL.</p>
+<p><code>println&#40;&quot;What is your name: &quot;&#41;</code>   <br /><code>name&#61;readline&#40;&#41;</code>   <br /><code>println&#40;&quot;Hi &#36;name, how are you?&quot;&#41;</code></p>
+<p>This whole notebook is created using a package called <a href="https://github.com/JunoLab/Weave.jl">Weave.jl</a>. But try running these simple commands in:, </p>
+<ul>
+<li><p>REPL &#40;by running Julia and using the REPL, line after line&#41;</p>
+</li>
+<li><p>Jupyter &#40;in a Jupyter notebook with Ctrl&#43;Enter&#41;,</p>
+</li>
+<li><p>In a file &#40;by creating a file such as my<em>code.jl and either running &#96;julia my</em>code.jl&#96; from the terminal or include&#40;&quot;my_code.jl&quot;&#41; within the REPL&#41;</p>
+</li>
+<li><p>In VS-Code with the Julia extension.</p>
+</li>
+</ul>
+<h2>Getting to business - what to expect from this unit:</h2>
+<ul>
+<li><p>Variables</p>
+</li>
+<li><p>Types</p>
+</li>
+<li><p>Using in-built functions &#40;e.g. <code>println</code>&#41; and macros &#40;e.g. <code>@show</code>&#41;</p>
+</li>
+<li><p>Logical statements &#40;AND, OR, etc..&#41;</p>
+</li>
+<li><p>Conditional statements &#40;<code>if-elseif-else</code>&#41;</p>
+</li>
+<li><p>For loops</p>
+</li>
+<li><p>While loops</p>
+</li>
+<li><p>Creating your own functions with &#40;<code>function</code>&#41;</p>
+</li>
+</ul>
+<h2>Variables and types</h2>
+<p>Think of variables as a <strong>storage box</strong>, with a name &#40;tag&#41; on it. The computer&#39;s memory is the <strong>storage facility</strong> in which you can store all your boxes. </p>
+<p><img src="../img/boxes2.png" alt="Variables are boxes in a storage facility &#40;memory&#41;" /></p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span>
+</pre>
+
+
+<pre class="output">
+3
+</pre>
+
+
+<p>stores the value 3 in the box tagged x.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>25</span>
+</pre>
+
+
+<pre class="output">
+28
+</pre>
+
+
+<p>retrieves the value stored in x and adds 25 to it.</p>
+<p>Variables have a type - think of it as the size and shape of the box. </p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Int64
+</pre>
+
+
+<p>gives the type of the variable x &#40;an Integer value of size 64 bits&#61; 8 bytes&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sizeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+8
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-oB'>=</span><span class='hljl-nfB'>34.23</span><span class='hljl-t'>
+</span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Float64
+</pre>
+
+
+<p>gives the type of the variable y &#40;a Floating point number of size 64 bits&#61; 8 bytes&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>isbits</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<p>x is a <strong>primitive type</strong>, i.e. x <strong>directly</strong> refers to the value of the variable. <img src="../img/type_hierarchy.png" alt="Number types in Julia" /></p>
+<p>Use </p>
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typemin</span><span class='hljl-p'>(</span><span class='hljl-n'>Int16</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-nf'>typemax</span><span class='hljl-p'>(</span><span class='hljl-n'>Int16</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+typemin&#40;Int16&#41; &#61; -32768
+typemax&#40;Int16&#41; &#61; 32767
+</pre>
+
+
+<p>to find the minimal and maximal values that can be represented by integer types.</p>
+<h2>Variables of type String &#40;i.e. text&#41; and Char&#40;acter&#41;</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>str</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Hello&quot;</span>
+</pre>
+
+
+<pre class="output">
+&quot;Hello&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>str</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+String
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sizeof</span><span class='hljl-p'>(</span><span class='hljl-n'>str</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+5
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>isbits</span><span class='hljl-p'>(</span><span class='hljl-n'>str</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+false
+</pre>
+
+
+<p>String is the standard data type for text. It is a <strong>composite type</strong>. Therefore the variable &#39;str&#39; does not refer to the text &quot;Hello&quot; itself, but to the address &#40;<strong>reference</strong>, pointer&#41; in memory where the content is stored. Think of the reference as the shelf number in the storage facility &#40;memory&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;η&quot;</span><span class='hljl-t'> </span><span class='hljl-cs'># \eta + [TAB]</span>
+</pre>
+
+
+<pre class="output">
+&quot;η&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sizeof</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;p&quot;</span>
+</pre>
+
+
+<pre class="output">
+&quot;p&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sizeof</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;p&#39;</span>
+</pre>
+
+
+<pre class="output">
+&#39;p&#39;: ASCII/Unicode U&#43;0070 &#40;category Ll: Letter, lowercase&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Char
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>isbits</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<h3>Operations with Variables</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.0</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>4.2</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-oB'>*</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>+</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>-</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>/</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>^</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-cs'>#In Python it would have x**y (raising to a power)</span>
+</pre>
+
+
+<pre class="output">
+&#40;12.600000000000001, 7.2, -1.2000000000000002, 0.7142857142857143, 100.9042
+0610885693&#41;
+</pre>
+
+
+<p>And for non-numerical types such as Strings:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;hello &quot;</span><span class='hljl-t'> </span><span class='hljl-cs'>#notice the extra space</span><span class='hljl-t'>
+</span><span class='hljl-n'>s2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;world&quot;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>s1</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-n'>s1</span><span class='hljl-oB'>*</span><span class='hljl-n'>s2</span><span class='hljl-t'> </span><span class='hljl-cs'>#In Python it would have been x+y for concatenation</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;s1&#41; &#61; String
+&quot;hello world&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;hello &quot;</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>5</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-oB'>^</span><span class='hljl-n'>y</span>
+</pre>
+
+
+<pre class="output">
+243.0
+</pre>
+
+
+<p>These are examples of <strong>operator &#40;method&#41; overloading</strong> in Julia: For different data types, different versions of a function/method/operator can be defined. </p>
+<h4>Indexing into strings using &#91;...&#93;</h4>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+&quot;hello&quot;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s</span><span class='hljl-oB'>^</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>s</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+&quot;hello hello hello hello hello&quot;
+</pre>
+
+
+<p>Since the operator <code>&#39;</code> has precedence of <code>*</code>, this is the same as </p>
+
+
+<pre class='hljl'>
+<span class='hljl-p'>(</span><span class='hljl-n'>s</span><span class='hljl-oB'>^</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>))</span><span class='hljl-oB'>*</span><span class='hljl-n'>s</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+&quot;hello hello hello hello hello&quot;
+</pre>
+
+
+<h4>Common errors: type mismatch</h4>
+<p>What if we did the brackets the other way?</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s</span><span class='hljl-oB'>^</span><span class='hljl-p'>((</span><span class='hljl-n'>y</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-oB'>*</span><span class='hljl-n'>s</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-k'>end</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>])</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: MethodError: no method matching *&#40;::Int64, ::String&#41;
+The function &#96;*&#96; exists, but no method is defined for this combination of argument types.
+
+Closest candidates are:
+  *&#40;::Any, ::Any, &#33;Matched::Any, &#33;Matched::Any...&#41;
+   @ Base operators.jl:596
+  *&#40;::Real, &#33;Matched::Complex&#123;Bool&#125;&#41;
+   @ Base complex.jl:330
+  *&#40;&#33;Matched::Missing, ::Union&#123;AbstractChar, AbstractString&#125;&#41;
+   @ Base missing.jl:174
+  ...
+
+</pre>
+
+
+<p>Here, Julia tries to identify an instance of the method &quot;&#43;&#40;.,.&#41;&quot; which takes an Integer and a String as arguments &#40;this is Julia&#39;s <strong>&quot;multiple dispatch&quot;</strong> paradigm&#41;, but doesn&#39;t succeed. The closest candidates are listed in the error message, but none of them fits &#40;e.g.any argument of type Int64 can be converted into types Real, Number, Any, etc&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'>
+</span><span class='hljl-oB'>√</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-cs'>#\sqrt + [TAB]</span>
+</pre>
+
+
+<pre class="output">
+1.4142135623730951
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1.4142135623730951
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>round</span><span class='hljl-p'>(</span><span class='hljl-oB'>√</span><span class='hljl-n'>x</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>digits</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1.414
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span>
+</pre>
+
+
+<pre class="output">
+-2
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: DomainError with -2.0:
+sqrt was called with a negative real argument but will only return a complex result if called with a complex argument. Try sqrt&#40;Complex&#40;x&#41;&#41;.
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>z</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-n'>im</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+0.0 &#43; 1.4142135623730951im
+</pre>
+
+
+<h4>Be careful about side effects when manipulating composite types</h4>
+<p>For primitive types we have</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a1</span><span class='hljl-oB'>=</span><span class='hljl-ni'>1</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>a2</span><span class='hljl-oB'>=</span><span class='hljl-n'>a1</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>a1</span><span class='hljl-oB'>=</span><span class='hljl-ni'>99</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;After changing the value of a1, the value of a2 is: &quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>a2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+After changing the value of a1, the value of a2 is: 1
+</pre>
+
+
+<p>but for a composite type such as Vector&#123;Float64&#125;</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>v1</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>];</span><span class='hljl-t'> </span><span class='hljl-n'>v2</span><span class='hljl-oB'>=</span><span class='hljl-n'>v1</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-n'>v1</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-oB'>=</span><span class='hljl-ni'>99</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;After changing the value of v1, the value of v2 is: </span><span class='hljl-si'>$v2</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+After changing the value of v1, the value of v2 is: &#91;99, 2, 3&#93;
+</pre>
+
+
+<h4>Syntactic sugar for swapping values</h4>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>20</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>5</span><span class='hljl-t'> 
+
+</span><span class='hljl-cs'>#swapping x and y:  attempt 1</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-cs'>#This is the @show macro</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+x &#61; 5
+y &#61; 5
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>20</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>5</span><span class='hljl-t'> 
+
+</span><span class='hljl-cs'>#swapping x and y:  attempt 2</span><span class='hljl-t'>
+</span><span class='hljl-n'>temp</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>temp</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+x &#61; 5
+y &#61; 20
+</pre>
+
+
+<p>In Julia we can do it without using the variable <code>temp</code>&#33;</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>20</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>5</span><span class='hljl-t'> 
+
+</span><span class='hljl-n'>x</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-cs'>#Julia specific solution</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+x &#61; 5
+y &#61; 20
+</pre>
+
+
+<p>Now, with composite types:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-p'>)</span><span class='hljl-t'>  </span><span class='hljl-cs'>#generates of 1000x1000 matrix with random entries</span><span class='hljl-t'>
+</span><span class='hljl-n'>m2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@time</span><span class='hljl-t'> </span><span class='hljl-n'>m2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>m1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m2</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+0.000004 seconds &#40;3 allocations: 128 bytes&#41;
+</pre>
+
+
+<p>takes about as much time as</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>10000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10000</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>m2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>10000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10000</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@time</span><span class='hljl-t'> </span><span class='hljl-n'>m2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>m1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m2</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+0.000002 seconds &#40;1 allocation: 32 bytes&#41;
+</pre>
+
+
+<p>because for composite types <strong>only the references</strong> are swapped&#33; Compare this to the time required for re-assigning those variables after copying their entire content:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-n'>m2</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1000</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-p'>)</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@time</span><span class='hljl-t'> </span><span class='hljl-n'>m2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>m1</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>copy</span><span class='hljl-p'>(</span><span class='hljl-n'>m1</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>copy</span><span class='hljl-p'>(</span><span class='hljl-n'>m2</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+0.009939 seconds &#40;3.95 k allocations: 15.442 MiB, 46.64&#37; compilation time
+&#41;
+</pre>
+
+
+<h2>Using built-in functions and macros</h2>
+<p>So we have seen in-built functions like <code>println</code> and <code>sqrt</code>, but surely there are many more?  </p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello world&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+hello world
+</pre>
+
+
+<p>The <code>println</code> function can also take several arguments.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot; &quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;world&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+hello world
+</pre>
+
+
+<p>Here is <code>print</code> without a new line.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot; &quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;world&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+hello world
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello</span><span class='hljl-se'>\n</span><span class='hljl-s'>world&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#notice the \n (newline)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Here is the next line&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+hello
+world
+Here is the next line
+</pre>
+
+
+<p>An equivalent use of <code>print</code>:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\n</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;world&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;</span><span class='hljl-se'>\n</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Here is the next line&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+hello
+world
+Here is the next line
+</pre>
+
+
+<p>Let&#39;s see some mathematical in-built functions:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>exp</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+2.718281828459045
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>ℯ</span><span class='hljl-t'> </span><span class='hljl-cs'>#\euler + [TAB]</span>
+</pre>
+
+
+<pre class="output">
+ℯ &#61; 2.7182818284590...
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>log</span><span class='hljl-p'>(</span><span class='hljl-n'>ℯ</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>log2</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-oB'>^</span><span class='hljl-ni'>5</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>log10</span><span class='hljl-p'>(</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;2.0, 5.0, 3.0&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>abs</span><span class='hljl-p'>(</span><span class='hljl-oB'>-</span><span class='hljl-nfB'>3.5</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>abs</span><span class='hljl-p'>(</span><span class='hljl-nfB'>3.5</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>abs</span><span class='hljl-p'>(</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-n'>im</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;3.5, 3.5, 5.0&#41;
+</pre>
+
+
+<p>But you can&#39;t do absolute value of a string:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>abs</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;3.5&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: MethodError: no method matching abs&#40;::String&#41;
+The function &#96;abs&#96; exists, but no method is defined for this combination of argument types.
+
+Closest candidates are:
+  abs&#40;&#33;Matched::Bool&#41;
+   @ Base bool.jl:153
+  abs&#40;&#33;Matched::Missing&#41;
+   @ Base missing.jl:101
+  abs&#40;&#33;Matched::Pkg.Resolve.FieldValue&#41;
+   @ Pkg ~/.julia/juliaup/julia-1.11.6&#43;0.x64.linux.gnu/share/julia/stdlib/v1.11/Pkg/src/Resolve/fieldvalues.jl:51
+  ...
+
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;3.5&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>factorial</span><span class='hljl-p'>(</span><span class='hljl-ni'>4</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+24
+</pre>
+
+
+<p>Note that &#39;@show&#39; does something very similar. It is a <strong>macro &#40;all macros have @ in their names&#41;</strong>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>s</span><span class='hljl-oB'>=</span><span class='hljl-s'>&quot;3.5&quot;</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>s</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>s</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+s &#61; &quot;3.5&quot;
+3.5
+</pre>
+
+
+<p><strong>Macros are evaluated at compile time</strong> &#40;when translating the Julia code into machine code&#41; and therefore have access to more information, e.g. the variable name of their argument. For that reason @show can also output the variable name &#39;s&#39; which is convenient for debugging, whereas prinln only has access to the content &#39;3.5&#39; of its argument.</p>
+<h2>Type conversions</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-oB'>=</span><span class='hljl-ni'>4</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-oB'>=</span><span class='hljl-nf'>Float64</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>);</span><span class='hljl-t'> 
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;a&#41; &#61; Int64
+a &#61; 4
+typeof&#40;x&#41; &#61; Float64
+x &#61; 4.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>y</span><span class='hljl-oB'>=</span><span class='hljl-nf'>sqrt</span><span class='hljl-p'>(</span><span class='hljl-ni'>5</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-n'>b</span><span class='hljl-oB'>=</span><span class='hljl-nf'>round</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>y</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>b</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-n'>b</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;y&#41; &#61; Float64
+y &#61; 2.23606797749979
+typeof&#40;b&#41; &#61; Float64
+b &#61; 2.0
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;a&#39;</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;b&#39;</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;A&#39;</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;B&#39;</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;α&#39;</span><span class='hljl-p'>),</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-sc'>&#39;∀&#39;</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#type \alpha and \forall</span>
+</pre>
+
+
+<pre class="output">
+&#40;97, 98, 65, 66, 945, 8704&#41;
+</pre>
+
+
+<p>gives the ascii/unicode for these letters/symbols.</p>
+<p>Often those conversions are made implicitly &#40;<strong>&quot;multiple dispatch&quot;</strong>&#41;, e.g.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>z</span><span class='hljl-oB'>=</span><span class='hljl-n'>a</span><span class='hljl-oB'>+</span><span class='hljl-n'>x</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-n'>z</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+typeof&#40;z&#41; &#61; Float64
+</pre>
+
+
+<h2>Logical statements &#40;AND, OR, etc..&#41;</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-kc'>true</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-t'> </span><span class='hljl-cs'>#In Python it is True and False (caps first letter)</span>
+</pre>
+
+
+<pre class="output">
+&#40;true, false&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>typeof</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Bool
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-kc'>true</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>Int</span><span class='hljl-p'>(</span><span class='hljl-kc'>false</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+Int&#40;true&#41; &#61; 1
+Int&#40;false&#41; &#61; 0
+</pre>
+
+
+<h4>Logical operators</h4>
+
+
+<pre class='hljl'>
+<span class='hljl-ni'>5</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># check for equality</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-ni'>5</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># check for not being equal (!=)</span>
+</pre>
+
+
+<pre class="output">
+false
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-kc'>false</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-cs'>#logical AND</span>
+</pre>
+
+
+<pre class="output">
+&#40;false, false, false, true&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-kc'>false</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-kc'>false</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-kc'>true</span><span class='hljl-t'> </span><span class='hljl-cs'>#logical OR</span>
+</pre>
+
+
+<pre class="output">
+&#40;false, true, true, true&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-oB'>!</span><span class='hljl-p'>(</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># ! (not)</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<p>For the next block, you need to have the package <code>Random</code> installed: To install it, change to package mode using <code>&#93;</code>, and use <code>add Random</code>. </p>
+<p>The REPL modes are</p>
+<ul>
+<li><p><code>;</code> to access the shell/terminal temporarily , </p>
+</li>
+<li><p><code>?</code> for help mode</p>
+</li>
+<li><p><code>&#93;</code> for package mode</p>
+</li>
+<li><p>Ctrl-C or Backspace brings you back to the standard &quot;Julian&quot; prompt.</p>
+</li>
+</ul>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>using</span><span class='hljl-t'> </span><span class='hljl-n'>Random</span><span class='hljl-t'> 
+
+</span><span class='hljl-n'>Random</span><span class='hljl-oB'>.</span><span class='hljl-nf'>seed!</span><span class='hljl-p'>(</span><span class='hljl-ni'>7</span><span class='hljl-p'>)</span><span class='hljl-t'>  </span><span class='hljl-cs'>#The exclamation mark denotes functions which change the environment (side-effects).</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>100</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#random number within 1, 2, ..., 100</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>rand</span><span class='hljl-p'>(</span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>100</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'>#random number within 1, 2, ..., 100</span><span class='hljl-t'>
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>;</span><span class='hljl-t'>
+
+</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+&#40;x, y&#41; &#61; &#40;25, 72&#41;
+true
+</pre>
+
+
+<p>The command <code>Random.seed&#33;</code> sets the seed value for the random number generator. Without it, an almost random seed value is generated and random numbers will differ every time you evaluate the following &#39;rand&#39; commands. If you set the seed value, then random numbers will always be the same - every time you run the script &#40;which can be useful for debugging, or comparison&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>&lt;=</span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>≤</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>≥</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-t'> </span><span class='hljl-cs'># \le or \ge + [TAB]</span>
+</pre>
+
+
+<pre class="output">
+&#40;true, true, true, false, false&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-n'>y</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+false
+</pre>
+
+
+<h2>Logical operators for composite types</h2>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>y</span><span class='hljl-oB'>=</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-oB'>==</span><span class='hljl-n'>y</span>
+</pre>
+
+
+<pre class="output">
+true
+</pre>
+
+
+<p>compares the content of x to the content of y. To check whether x and y are physically identical &#40;same reference&#41; use</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-oB'>===</span><span class='hljl-n'>y</span><span class='hljl-p'>;</span><span class='hljl-t'>
+</span><span class='hljl-n'>z</span><span class='hljl-oB'>=</span><span class='hljl-n'>y</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>z</span><span class='hljl-oB'>===</span><span class='hljl-n'>y</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+x &#61;&#61;&#61; y &#61; false
+z &#61;&#61;&#61; y &#61; true
+</pre>
+
+
+<p><img src="../img/sketch1.png" alt="composite types" /></p>
+<h1>Control structures</h1>
+<h3>Conditional statements &#40;<code>if-elseif-else</code>&#41;</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;The world has gone crazy&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+
+
+<pre class='hljl'>
+<span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-oB'>||</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;The world makes sense&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+The world makes sense
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>25.3</span><span class='hljl-t'>
+</span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>30</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;It is less than 30&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>else</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;It is greater or equal to 30&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+It is less than 30
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nfB'>25.3</span><span class='hljl-t'>
+</span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>20</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;It is less than 20&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>elseif</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>30</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;It is less than 30 but not less than 20&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>else</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;It is greater or equal to 30&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+It is less than 30 but not less than 20
+</pre>
+
+
+<p>Let&#39;s use it to compute an absolute value.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># some input</span><span class='hljl-t'>
+</span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>else</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+3
+</pre>
+
+
+<h4>Compact ways of formulating if clauses</h4>
+<p>Use either the <strong>ternary operator</strong> <code>condition ? resultiftrue : resultiffalse</code></p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># some input</span><span class='hljl-t'>
+</span><span class='hljl-n'>absx</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-oB'>?</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>:</span><span class='hljl-t'> </span><span class='hljl-n'>x</span>
+</pre>
+
+
+<pre class="output">
+3
+</pre>
+
+
+<p>or using logical AND &#40;<code>&amp;&amp;</code>&#41;, making use of Julia&#39;s <strong>lazy evalution of logical operators</strong>, </p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># some input</span><span class='hljl-t'>
+</span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-oB'>&amp;&amp;</span><span class='hljl-t'> </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;This is a negative number!&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+This is a negative number&#33;
+</pre>
+
+
+<p>Here, the second condition for the AND clause <code>&amp;&amp;</code> is only evaluated if the first condition evaluates to true. Effectively this behaves like a single-line if statement.</p>
+<h3>For loops</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>5</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>i</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+1
+2
+3
+4
+5
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>i</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+1
+2
+3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>∈</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># \in + [TAB]</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>i</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+1
+2
+3
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>_</span><span class='hljl-t'> </span><span class='hljl-oB'>∈</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>3</span><span class='hljl-t'> </span><span class='hljl-cs'># \in + [TAB]</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+hello
+hello
+hello
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+</span><span class='hljl-n'>max_val</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-t'>
+</span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>∈</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-n'>max_val</span><span class='hljl-t'> 
+    </span><span class='hljl-kd'>global</span><span class='hljl-t'> </span><span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-cs'># This line can be ignored by now</span><span class='hljl-t'>
+    </span><span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;The total is: </span><span class='hljl-si'>$total</span><span class='hljl-s'>&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;And using a formula: &quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>max_val</span><span class='hljl-oB'>*</span><span class='hljl-p'>(</span><span class='hljl-n'>max_val</span><span class='hljl-oB'>+</span><span class='hljl-ni'>1</span><span class='hljl-p'>)</span><span class='hljl-oB'>/</span><span class='hljl-ni'>2</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+The total is: 55
+And using a formula: 55.0
+</pre>
+
+
+<p>Notice the above <code>55</code> vs. <code>55.0</code>. This is because of division which converts an integer to a float.</p>
+<h3>While loops</h3>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+</span><span class='hljl-k'>while</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>≤</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-kd'>global</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>i</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+1
+2
+3
+</pre>
+
+
+<p>The hailstone sequence: If a number if even, half it, if it is odd, multiply by 3 and add 1. Stop when you reach 1.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>7</span><span class='hljl-t'>
+</span><span class='hljl-k'>while</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+    </span><span class='hljl-kd'>global</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;, &quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>%</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> </span><span class='hljl-cs'># modulo</span><span class='hljl-t'>
+        </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>÷</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-cs'># \div + [TAB] Integer division</span><span class='hljl-t'>
+    </span><span class='hljl-k'>else</span><span class='hljl-t'>
+        </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
+</pre>
+
+
+<h2>Creating your own functions with &#40;<code>function</code>&#41;</h2>
+<p>We already had logic for an absolute value function &#40;of real values&#41;. Now let&#39;s make a function out of it:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-k'>else</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+my_abs &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>We can also implement this as,</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+my_abs &#40;generic function with 1 method&#41;
+</pre>
+
+
+<p>Or even,</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>x</span><span class='hljl-t'> </span><span class='hljl-oB'>&lt;</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+        </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-n'>x</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-n'>x</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+my_abs &#40;generic function with 1 method&#41;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-oB'>-</span><span class='hljl-nfB'>3.5</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-nfB'>2.3</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>my_abs</span><span class='hljl-p'>(</span><span class='hljl-ni'>0</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+my_abs&#40;-3.5&#41; &#61; 3.5
+my_abs&#40;2.3&#41; &#61; 2.3
+my_abs&#40;0&#41; &#61; 0
+</pre>
+
+
+<p>Functions don&#39;t have to have an argument or a return value:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>print_my_details</span><span class='hljl-p'>()</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Name: Jacob&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Occupation: diesel mechanic&quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>nothing</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>print_my_details</span><span class='hljl-p'>()</span>
+</pre>
+
+
+<pre class="output">
+Name: Jacob
+Occupation: diesel mechanic
+</pre>
+
+
+<p>Functions can be combined.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-n'>x</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-ni'>10</span><span class='hljl-p'>)))</span>
+</pre>
+
+
+<pre class="output">
+80
+</pre>
+
+
+<p>Let&#39;s see the hailstone sequence for the first 10 integers:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-cs'>#let&#39;s &quot;wrap&quot; the code we had before in a function</span><span class='hljl-t'>
+</span><span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n_start</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n_start</span><span class='hljl-t'>
+    </span><span class='hljl-k'>while</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+        </span><span class='hljl-nf'>print</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;, &quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>%</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> 
+            </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>÷</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> 
+        </span><span class='hljl-k'>else</span><span class='hljl-t'>
+            </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+        </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>nothing</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-ni'>7</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Hailstone sequences: &quot;</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+<pre class="output">
+Hailstone sequences: 
+1
+2, 1
+3, 10, 5, 16, 8, 4, 2, 1
+4, 2, 1
+5, 16, 8, 4, 2, 1
+6, 3, 10, 5, 16, 8, 4, 2, 1
+7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
+8, 4, 2, 1
+9, 28, 14, 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1
+10, 5, 16, 8, 4, 2, 1
+</pre>
+
+
+<h4>Alternative, more compact ways, of defining functions</h4>
+<p>When you can implement a function in one line, you can avoid using the <code>function</code> keyword and instead use <strong>mathematical notation for defining functions</strong></p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-n'>x</span><span class='hljl-t'> 
+
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-nf'>times_2</span><span class='hljl-p'>(</span><span class='hljl-ni'>10</span><span class='hljl-p'>))</span><span class='hljl-t'> </span><span class='hljl-cs'>#this uses the function twice.</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>times_2</span><span class='hljl-t'> </span><span class='hljl-oB'>∘</span><span class='hljl-t'> </span><span class='hljl-n'>times_2</span><span class='hljl-p'>)(</span><span class='hljl-ni'>10</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># alternative way of writing function composition</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>|&gt;</span><span class='hljl-t'> </span><span class='hljl-n'>times_2</span><span class='hljl-p'>;</span><span class='hljl-t'> </span><span class='hljl-cs'># or, using piping operator |&gt;</span>
+</pre>
+
+
+<pre class="output">
+times_2&#40;times_2&#40;10&#41;&#41; &#61; 40
+&#40;times_2 ∘ times_2&#41;&#40;10&#41; &#61; 40
+&#91;1, 2, 3&#93; |&gt; times_2 &#61; &#91;2, 4, 6&#93;
+</pre>
+
+
+<p>One can even define <strong>anonymous function</strong> without function names</p>
+
+
+<pre class='hljl'>
+<span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>|&gt;</span><span class='hljl-t'> </span><span class='hljl-p'>(</span><span class='hljl-n'>x</span><span class='hljl-oB'>-&gt;</span><span class='hljl-ni'>2</span><span class='hljl-n'>x</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+3-element Vector&#123;Int64&#125;:
+ 2
+ 4
+ 6
+</pre>
+
+
+<p>Note: in Python you use the <code>def</code> keyword to define &#40;write&#41; functions.</p>
+<h2>Arrays &#61; Data</h2>
+<p>So up to this point we have the basics of programming including variables, logical statements, conditional statements, loops, and functions. One other major component is <strong>data</strong>. For this let us consider arrays.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>15</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-cs'>#this is an array</span>
+</pre>
+
+
+<pre class="output">
+4-element Vector&#123;Int64&#125;:
+  2
+  4
+ -3
+ 15
+</pre>
+
+
+<p>It is a &quot;chunk of memory&quot; &#40;RAM&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>4</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>15</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-n'>b</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-cs'>#This just makes b point to the same chunk of memory as a.</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>pointer</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>);</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>pointer</span><span class='hljl-p'>(</span><span class='hljl-n'>b</span><span class='hljl-p'>);</span>
+</pre>
+
+
+<pre class="output">
+pointer&#40;a&#41; &#61; Ptr&#123;Int64&#125; @0x00007d961b1e0f20
+pointer&#40;b&#41; &#61; Ptr&#123;Int64&#125; @0x00007d961b1e0f20
+</pre>
+
+
+<p>You can see that both a and b &quot;point&quot; to the same location in memory &#40;a reference, or pointer&#41;.</p>
+<h3>Indexing</h3>
+<p>We can get an element of an array by &quot;indexing&quot;. In Julia &#40;like MATLAB and R&#41; indexing starts at 1. In languages like Python, Javascript, and C/C&#43;&#43;, indexing starts at 0.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>];</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>[</span><span class='hljl-ni'>2</span><span class='hljl-p'>];</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>];</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>[</span><span class='hljl-ni'>4</span><span class='hljl-p'>];</span>
+</pre>
+
+
+<pre class="output">
+a&#91;1&#93; &#61; 2
+a&#91;2&#93; &#61; 4
+a&#91;3&#93; &#61; -3
+a&#91;4&#93; &#61; 15
+</pre>
+
+
+<p>You can also change the elements this way.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-p'>[</span><span class='hljl-ni'>3</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-nfB'>100.</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+a &#61; &#91;2, 4, -100, 15&#93;
+</pre>
+
+
+
+<pre class='hljl'>
+<span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>b</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+b &#61; &#91;2, 4, -100, 15&#93;
+</pre>
+
+
+<p>Note that in Python the basic similar entity to an array is the &quot;list&quot;. Also note that if you use <a href="https://numpy.org/">NumPy</a> in Python, as is typically the case for numerical computation, then the basic entity is called an &quot;array&quot;. In Python the length of a list is obtained via the <code>len</code> function. In Julia the length of an array is obtained using <code>length</code>.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+4
+</pre>
+
+
+<p>Note that strings are kind of like arrays.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>my_string</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;Hello&quot;</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-n'>my_string</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>my_string</span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>my_string</span><span class='hljl-p'>[</span><span class='hljl-ni'>5</span><span class='hljl-p'>];</span>
+</pre>
+
+
+<pre class="output">
+length&#40;my_string&#41; &#61; 5
+my_string&#91;1&#93; &#61; &#39;H&#39;
+my_string&#91;5&#93; &#61; &#39;o&#39;
+</pre>
+
+
+<p>But arrays are <strong>mutable</strong> &#40;meaning you can change them&#41; while strings are not &#40;they are <strong>immutable</strong>&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>my_string</span><span class='hljl-p'>[</span><span class='hljl-ni'>5</span><span class='hljl-p'>]</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-sc'>&#39;x&#39;</span>
+</pre>
+
+
+<pre class="julia-error">
+ERROR: MethodError: no method matching setindex&#33;&#40;::String, ::Char, ::Int64&#41;
+The function &#96;setindex&#33;&#96; exists, but no method is defined for this combination of argument types.
+</pre>
+
+
+<p>The error above is how Julia tries to tell you that you can&#39;t change the string. </p>
+<p>Arrays don&#39;t have to be arrays of just numbers, for example.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>my_other_array</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-s'>&quot;hello&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>sqrt</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-nfB'>3.4</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-s'>&quot;bye&quot;</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-p'>]]</span>
+</pre>
+
+
+<pre class="output">
+6-element Vector&#123;Any&#125;:
+  &quot;hello&quot;
+ 2
+  sqrt &#40;generic function with 19 methods&#41;
+ 3.4
+  &quot;bye&quot;
+  &#91;1, 2, 3&#93;
+</pre>
+
+
+<p>Let&#39;s make a function that sums up entries of an array &#40;assuming it is an array of numbers&#41;.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>my_sum</span><span class='hljl-p'>(</span><span class='hljl-n'>input_array</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+    </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-n'>input_array</span><span class='hljl-p'>)</span><span class='hljl-t'>
+        </span><span class='hljl-n'>total</span><span class='hljl-t'> </span><span class='hljl-oB'>+=</span><span class='hljl-t'> </span><span class='hljl-n'>input_array</span><span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-p'>]</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>total</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>100</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>1000</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nf'>my_sum</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1111
+</pre>
+
+
+<p>There is also an in-built function for this.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+1111
+</pre>
+
+
+<p>But you can do more things with the in-built sum. For example:</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>a</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-p'>[</span><span class='hljl-oB'>-</span><span class='hljl-ni'>1</span><span class='hljl-p'>,</span><span class='hljl-ni'>10</span><span class='hljl-p'>,</span><span class='hljl-oB'>-</span><span class='hljl-ni'>100</span><span class='hljl-p'>,</span><span class='hljl-ni'>1000</span><span class='hljl-p'>]</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>a</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-nf'>sum</span><span class='hljl-p'>(</span><span class='hljl-n'>abs</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>a</span><span class='hljl-p'>);</span><span class='hljl-t'> </span><span class='hljl-cs'>#sum the absolute values</span>
+</pre>
+
+
+<pre class="output">
+sum&#40;a&#41; &#61; 909
+sum&#40;abs, a&#41; &#61; 1111
+</pre>
+
+
+<p>Arrays can be extended with the <code>push&#33;</code> function. Note that the <code>&#33;</code> is part of the function name and indicates to us that the function modifies the array.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>my_array</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Int</span><span class='hljl-p'>[]</span><span class='hljl-t'> </span><span class='hljl-cs'>#empty array of integers</span><span class='hljl-t'>
+</span><span class='hljl-nf'>push!</span><span class='hljl-p'>(</span><span class='hljl-n'>my_array</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-oB'>-</span><span class='hljl-ni'>3</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>my_array</span><span class='hljl-t'>
+</span><span class='hljl-nf'>push!</span><span class='hljl-p'>(</span><span class='hljl-n'>my_array</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-ni'>10</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-nd'>@show</span><span class='hljl-t'> </span><span class='hljl-n'>my_array</span><span class='hljl-p'>;</span>
+</pre>
+
+
+<pre class="output">
+my_array &#61; &#91;-3&#93;
+my_array &#61; &#91;-3, 10&#93;
+</pre>
+
+
+<p>Let&#39;s modify our <code>hailstone</code> function to return an array with the sequence instead of printing the sequence. </p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>function</span><span class='hljl-t'> </span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n_start</span><span class='hljl-p'>)</span><span class='hljl-t'>
+    </span><span class='hljl-n'>sequence</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>Int</span><span class='hljl-p'>[]</span><span class='hljl-t'>
+    </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n_start</span><span class='hljl-t'>
+    </span><span class='hljl-k'>while</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>!=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+        </span><span class='hljl-nf'>push!</span><span class='hljl-p'>(</span><span class='hljl-n'>sequence</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># was before print(n, &quot;, &quot;)</span><span class='hljl-t'>
+        </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>%</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-oB'>==</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'> 
+            </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>÷</span><span class='hljl-t'> </span><span class='hljl-ni'>2</span><span class='hljl-t'> 
+        </span><span class='hljl-k'>else</span><span class='hljl-t'>
+            </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>3</span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-oB'>+</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+        </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>push!</span><span class='hljl-p'>(</span><span class='hljl-n'>sequence</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'> </span><span class='hljl-cs'># was before println(n)</span><span class='hljl-t'>
+    </span><span class='hljl-k'>return</span><span class='hljl-t'> </span><span class='hljl-n'>sequence</span><span class='hljl-t'> </span><span class='hljl-cs'># was before return nothing</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-ni'>7</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+17-element Vector&#123;Int64&#125;:
+  7
+ 22
+ 11
+ 34
+ 17
+ 52
+ 26
+ 13
+ 40
+ 20
+ 10
+  5
+ 16
+  8
+  4
+  2
+  1
+</pre>
+
+
+<p>The <a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Collatz Conjecture</a> says that for every starting value the sequence eventually hits 1. Let&#39;s try to disprove it by seeing if this program gets stuck.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>)</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span>
+</pre>
+
+
+
+<p>It didn&#39;t get stuck &#40;try even changing <code>10^3</code> to <code>10^6</code>&#41;.</p>
+<p>Now let&#39;s see what was the longest sequence.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-n'>length_of_longest</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>0</span><span class='hljl-t'>
+</span><span class='hljl-n'>n_of_longest</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-t'>
+</span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>3</span><span class='hljl-t'>
+    </span><span class='hljl-kd'>global</span><span class='hljl-t'> </span><span class='hljl-n'>length_of_longest</span><span class='hljl-p'>,</span><span class='hljl-t'> </span><span class='hljl-n'>n_of_longest</span><span class='hljl-t'>
+    </span><span class='hljl-n'>seq_len</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>))</span><span class='hljl-t'>
+    </span><span class='hljl-k'>if</span><span class='hljl-t'> </span><span class='hljl-n'>seq_len</span><span class='hljl-t'> </span><span class='hljl-oB'>&gt;</span><span class='hljl-t'> </span><span class='hljl-n'>length_of_longest</span><span class='hljl-t'>
+        </span><span class='hljl-n'>length_of_longest</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>seq_len</span><span class='hljl-t'>
+        </span><span class='hljl-n'>n_of_longest</span><span class='hljl-t'> </span><span class='hljl-oB'>=</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'>
+    </span><span class='hljl-k'>end</span><span class='hljl-t'>
+</span><span class='hljl-k'>end</span><span class='hljl-t'>
+
+</span><span class='hljl-nf'>println</span><span class='hljl-p'>(</span><span class='hljl-s'>&quot;Longest sequence is of length </span><span class='hljl-si'>$length_of_longest</span><span class='hljl-s'> when you start at </span><span class='hljl-si'>$n_of_longest</span><span class='hljl-s'>.&quot;</span><span class='hljl-p'>)</span>
+</pre>
+
+
+<pre class="output">
+Longest sequence is of length 179 when you start at 871.
+</pre>
+
+
+<p>One very easy way to create an array is via an array comprehension. </p>
+
+
+<pre class='hljl'>
+<span class='hljl-p'>[</span><span class='hljl-n'>i</span><span class='hljl-oB'>^</span><span class='hljl-ni'>2</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>i</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-p'>]</span>
+</pre>
+
+
+<pre class="output">
+10-element Vector&#123;Int64&#125;:
+   1
+   4
+   9
+  16
+  25
+  36
+  49
+  64
+  81
+ 100
+</pre>
+
+
+<p>The <code>maximum</code> function finds the maximal value of an array. We can find the 179 value from above just like this.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>maximum</span><span class='hljl-p'>([</span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>))</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>3</span><span class='hljl-p'>])</span>
+</pre>
+
+
+<pre class="output">
+179
+</pre>
+
+
+<p>What if we wanted to also know which index attains this maximum? See the <code>findmax</code> function.</p>
+
+
+<pre class='hljl'>
+<span class='hljl-nf'>findmax</span><span class='hljl-p'>([</span><span class='hljl-nf'>length</span><span class='hljl-p'>(</span><span class='hljl-nf'>hailstone</span><span class='hljl-p'>(</span><span class='hljl-n'>n</span><span class='hljl-p'>))</span><span class='hljl-t'> </span><span class='hljl-k'>for</span><span class='hljl-t'> </span><span class='hljl-n'>n</span><span class='hljl-t'> </span><span class='hljl-kp'>in</span><span class='hljl-t'> </span><span class='hljl-ni'>1</span><span class='hljl-oB'>:</span><span class='hljl-ni'>10</span><span class='hljl-oB'>^</span><span class='hljl-ni'>3</span><span class='hljl-p'>])</span>
+</pre>
+
+
+<pre class="output">
+&#40;179, 871&#41;
+</pre>
+
+
+<h2>Classroom Micro-Projects</h2>
+<p>Here are several micro-projects aimed at providing practice using the concepts above. For each of them you may need a bit more functionality and in-built functions that what we explored so far. You can get that from web-search, LLM-help, peer help, or staff help.</p>
+<p><strong>Micro-Project 1</strong>: Write a little program in that gives a student a mathematics arithmetic quiz with the operations &#43;, -, * and divide. It has input numbers in the range 1,200. Students get asked questions and need to respond with the correct answer. After 10 questions the students gets a summary of how many they got correct and what they got wrong. You may need to explore the <code>readline</code> and <code>parse</code> functions. </p>
+<p><strong>Micro-Project 2</strong>: Write a little program that is a Tik-Tak-Toe game between two players. On each turn, the state of the board is re-printed. You can use 1,...,9 as input for the cells.</p>
+<p><strong>Micro-Project 3</strong>: Write a program that works on some fixed long string &#40;e.g. several paragraphs of text such as the text here describing the micro projects&#41;. The program should output the character count, the word count, and perhaps other statistics about the text.</p>
+<h2>Practice questions for the practice quiz</h2>
+<ol>
+<li><p>Consider the Julia code:</p>
+</li>
+</ol>
+<pre><code>a &#61; &#91;&quot;&#36;i&quot; for i in 1:3&#93;
+s &#61; a&#91;1&#93;*a&#91;2&#93;*a&#91;3&#93;</code></pre>
+<p>What is the type and value of <code>s</code>?</p>
+<ol start="2">
+<li><p>You want to write a function <code>my_minimum</code> that gets an array of numbers and returns the minimal value in the array. Do not use the <code>minimum</code> in-built function as part of your answer.</p>
+</li>
+</ol>
+<pre><code>function my_minimum&#40;a&#41;
+
+    return minimal_value
+end</code></pre>
+<p>Fill in the code for the function.</p>
+<ol start="3">
+<li><p>You want to write a Julia function <code>num_sub_str</code> which accepts a string <code>main_string</code> and a string <code>sub_string</code>, and returns a count of how many times <code>sub_string</code> is in <code>main_string</code>. </p>
+</li>
+</ol>
+<pre><code>function num_sub_str&#40;main_string, sub_string&#41;
+
+    return number_occurrences
+end</code></pre>
+<p>Fill in the code for the function.</p>
+<ol start="4">
+<li><p>Consider the Julia function, <code>tamid_nahon</code> which gets two boolean values as inputs, <code>a</code>, and <code>b</code>.</p>
+</li>
+</ol>
+<pre><code>function tamid_nahon&#40;a, b&#41;
+    return &#33;&#40;a &amp;&amp; b&#41; &#61;&#61; &#33;a || &#33;b
+end</code></pre>
+<p>For what combinations of <code>a</code> and <code>b</code> is the return value <code>true</code>? For what is it <code>false</code>?</p>
+<ol start="5">
+<li><p>The Fibonacci sequence is 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ... &#40;every element is the sum of the previous two and the initialization is 0, 1&#41;. Write a Julia function that computes the first <code>n</code> terms of the Fibonacci sequence, returning these terms in an array.</p>
+</li>
+</ol>
+<pre><code>function fibonacci&#40;n&#41;
+    arr &#61; &#91;0, 1&#93;
+
+
+    return arr
+end</code></pre>
+<p>Fill in the code for the function.</p>
+
+
+        <HR/>
+        <div class="footer">
+          <br>
+          <center>
+              <a href="https://courses.smp.uq.edu.au/MATH2504/"> Main MATH2504 Page</a>
+          </center>
+          <br>
+          <center>
+          <a href = "lecture-unit-1.html"> Unit 1 </a> |
+          <a href = "lecture-unit-2.html"> Unit 2 </a> |
+          <a href = "lecture-unit-3.html"> Unit 3 </a> |
+          <a href = "lecture-unit-4.html"> Unit 4 </a> |
+          <a href = "lecture-unit-5.html"> Unit 5 </a> |
+          <a href = "lecture-unit-6.html"> Unit 6 </a> |
+          <a href = "lecture-unit-7.html"> Unit 7 </a> |
+          <a href = "lecture-unit-7.html"> Unit 8 </a> 
+          </center>
+          <br>
+
+          <p>
+            Published from <a href="lecture-unit-1.jmd">lecture-unit-1.jmd</a>
+            using <a href="http://github.com/JunoLab/Weave.jl">Weave.jl</a> v0.10.12 on 2025-08-01.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BODY>
+
+</HTML>

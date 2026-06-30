@@ -1,0 +1,154 @@
+# Project \#3 - Semester 2, 2022
+# Analysis of Datasets and Basic ML Experiments
+
+(last edit: October 26, 2022)
+
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday 16/11. Wednesday 7:30pm consultation hours will be held up until 16/11. These will be the only weekly consultation hours after week 13.
+
+**Weights and marking criteria:** Total number of points: **120**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. The remaining **110** points are for the project. The final 14 point task is more difficult. For that task you may choose to do **one of two options provided**.
+
+**Submission format:** This project should be submitted via a GitHub Repo, a **single** PDF file, and a voice recording via Blackboard. The GitHub repo should have two Jupyter notebooks: 
+
+* `MelbourneHousing.ipynb` should have all the code and output for tasks 1.1, 1.2, 1.3, 1.4 as well as Task 3 in case you choose the map option. 
+
+* `MNISTClassification.ipynb` should have all the code and output for tasks 2.1, 2.2, 2.3, 2.4 as well as Task 3 in case you choose the random forest option. 
+
+You may have additional Julia files in the repo (included into the notebooks) if needed. However this is not required.
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator prior to submission and ideally as soon as possible. 
+
+The PDF file should be a nice formatted file that has:
+
+* Your name, student number, and assignment title (Project 3 - 2021) on the top.
+* A (clickable) link to your GitHub repo.
+* A PDF printout of your `MelbourneHousing.ipynb` (first).
+* A PDF printout of your `MNISTClassification.ipynb` (second).
+
+Use a PDF merging utility to create the PDF file. Do not worry about extra white space occurring due to Jupyter notebook PDF printouts.
+
+As with previous assignments you can comment on questions in this PDF (e.g. when asked to answer things not via code). The Jupyter notebooks in the GitHub should be "runnable". That is, course staff should be able to download them from your repo and run them after activating the environment in the working directory based on your `Project.toml` file which specifies the dependencies used. 
+
+Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. 
+
+**Individual work**: This is an individual work project. Plagiarism will not be accepted. Nevertheless, feel free to consult with friends or classmates via Piazza and other means. Feel also free to use any Julia package that you find on the web as long as it is publicly available. An exception is the random forest question (if you choose to answer that one). For that question you may use code from the lecture, but not anything else (and do not use  `DecisionTree.jl`).
+
+**Marking Criteria**: 
+
+There are 120 points total, yet the grade recorded in blackboard will be between 0 and 100. That is, anyone who gets more than 100 points will recieve a grade of 100.
+
+* 10 points are allocated for following instructions and the GitHub repo.
+
+* 48 points are Task 1 (1.1, 1.2, 1.3, 1.4). 
+
+* 48 points are for Task 2 (2.1, 2.2, 2.3, 2.4).
+
+* 14 points are for Task 3 where you have an option for one of two directions. 
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. Nevertheless, **in this project you are mostly creating scripting code for data analysis and ML experimentation**. Hence in contrast to previous projects, the code may be less generic. Nevertheless, define functions as needed to avoid duplication (copy pasting) of code.
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts):
+
+* Ideally use the same account you used for PROJECT1. 
+* Create a new repo for this assignment. Name the repo exactly as `<<FIRST NAME>>-<<LAST NAME>>-2504-2022-PROJECT3`. So for example if your name is "Ada Lovelace", the repo name should be `Ada-Lovelace-2504-2022-PROJECT3`.
+* Make sure the repo is **private**.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator (please do this early on). You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted as exactly as follows:
+* Have a `README.md` file which states your name, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `.gitignore` file. 
+* Have basic running instructions on how to run the code. 
+* Have the two main Jupyter notebooks `MelbourneHousing.ipynb` and `MNISTClassification.ipynb`. In each notebook have `using Pkg` and `Pkg.activate(".")` commands at the top so that you work in an environment of your current directory. 
+* Add dependencies to this environment and this will create a `Project.toml` file which should also be part of your repo.
+* In case you choose to create a movie for Task 3, do NOT upload the movie to GitHub. Instead, store it in some sharable place on the web and have a link to it from your notebook.
+* A `data` folder with the housing data and any other data needed.
+
+## Main project Task #1 - Housing Prices Data (48 points over 4 sub tasks)
+
+In this part of the project you deal with a [house prices dataset](https://www.kaggle.com/anthonypino/melbourne-housing-market) available from Kaggle. Your overarching purpose is to carry out basic exploratory analysis of this dataset and answer several questions that a data scientist working with such a dataset in the real estate world may wish to answer.
+
+There are 4 separate tasks below. All tasks use the `Melbourne_housing_FULL.csv` file. You can download the file from Kaggle and place it in a `data` folder in your repo. Your scripts should access this file.
+
+Please put extra emphasis on neat graphs, proper choices of axes labels, ranges, colors, legends, etc. 
+
+As there are missing entries in this dataset, handle missing values for each of the tasks in the best way that you see. Only drop data if you really have to (don't drop all rows for all tasks). In certain cases, if you see a sensible way to impute (replace/make-up data), feel free to do so and explain your imputation strategy. 
+
+
+### Task 1.1 Exploratory data of single variables (12 pts)
+
+Create several summaries and plots (e.g. histograms, or cumulative distributions, bar plots, or smoothed histograms) of the following variables: `Rooms`, `Price`, `Method`, `Distance`, and `Landsize`. Keep in mind that different type of data requires different plots.
+
+### Task 1.2 Exploratory data analysis comparing variables (12 pts)
+
+Create several plots that present the house price as a function of distance to the city, house size (e.g. land size, rooms, car ports, etc...), and some combination of these variables. In presenting these plots, visually search for relationships between variables.
+
+### Task 1.3 Exploratory data analysis over time (12 pts)
+
+Create several plots over time that help visualize trends in the data. Specifically plot the volume of sales over time, both in terms of number of properties sold, and transaction values. You may uses aggregate values into months. Similarly plot the proportion of house properties sold (`Type = "h"`) over time. 
+
+### Task 1.4 Linear Regression Models (12 pts)
+
+Review your results of Task 1.2 and try to fit several linear regression models for predicting house price as a function of variables. Use `GLM.jl`. See usage examples from [Chapter 8 of Statistics with Julia](https://statisticswithjulia.org/) or from elsewhere. (Loosely) asses the quality of the linear regression models either via p-values from the statistical output of the models, or by breaking up the data into a training set and validation set. Determine a linear regression model which you find good for predicting house prices. If you believe variable transformations are needed, carry these out.
+
+## Main project Task #2 - Basic ML on MNIST and FashionMNIST (48 points over 4 sub tasks)
+
+This is a more standard machine learning practice task focused on the [MNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.3/datasets/MNIST/) and [FashionMNIST](https://docs.juliahub.com/MLDatasets/9CUQK/0.5.1/datasets/FashionMNIST/) dataset. It deals with a subtle issue of using binary classifiers to create multi-class classifiers.  See the short "Multi-class Classification" subsection in Section 2.3 of [The Mathematical Engineering of Deep Learning](https://deeplearningmath.org). That section outlines the **one vs. all** (rest) strategy and the **one vs. one** strategy for using binary classifiers to create multi-class classifiers. Your purpose here is to create an empirical exploration of these strategies with basic ML models.
+
+Note that some models such as **logistic softmax regression** are naturally set for multiple classes. However in other cases, we only have binary classifiers (e.g. **logistic regression**) and the "one vs. all" or "one vs. one" approaches allow us to use these classifiers to create a multi-class classifier.
+
+The key equation for the "one vs. all" and "one vs. one" approaches isa
+
+$$
+\widehat{\cal Y} = 
+\begin{cases}
+\text{argmax}_{i=1,\ldots,K}~~ {f}_{{\theta}_i}(x) & \qquad \text{in case of one vs. all}, \\
+\text{argmax}_{i=1,\ldots,K}~~ \sum_{j \neq i} \text{sign}\big( {f}_{{\theta}_{i,j}}(x) \big)& \qquad \text{in case of one vs. one}. \\
+\end{cases}
+$$
+
+Here $\widehat{\cal Y}$ is the predicted label (out of $1,\ldots,K$). For the one. vs. all case it is based on $K$ separate models ${f}_{{\theta}_i}(x)$ where the $i$'th model has trained parameters ${{\theta}_i}$ and an output which is a likelihood (or probability) with higher values meaning there is a higher chance for $x$ to be of class $i$.  
+
+For the one. vs. one case we have a bigger number of models where ${f}_{{\theta}_{i,j}}(x)$ is designed to determine if $x$ is $i$ or $j$ (but is not aware of other labels), with higher values meaning it is of type $i$.
+
+In this task, you will compare the performance of theses approaches with several models, on both the MNIST, and FashionMNIST datasets. In each case you are to train models on the 60,000 training observations. You are then to test for the accuracy on the 10,000 test observations with your trained models.
+
+In all cases use gradient descent based bath learning with batch sizes of 1000 observations. In all cases use **explicit** gradient expressions (see for example [The Mathematical Engineering of Deep Learning](https://deeplearningmath.org)) to evaluate gradients. See equation (2.21) in chapter 2 of that book for the gradient of linear models. See equations (3.16) and (3.17), in chapter 3 of that book, for the gradient of logistic regression. See the derivative expression in page 88 of that book, for gradients for logistic softmax regression.
+
+In all cases run gradient descent until "convergence" of the loss function - that is DO not worry about over-training and early stopping. It is recommended that as you develop your code, you use much smaller training sets and batch sizes.
+
+### Task 2.1 One vs. all (rest) Linear and Logistic (12 pts)
+
+Train models for one vs. all on MNIST and FashionMNIST. Do this both for linear regression (example with `pinv()` already in Unit 8 lecture) and for logistic regression. In both cases evaluate performance on the test set. Do this both for MNIST and FashionMNIST. Hence you should have 4 accuracy results.
+
+### Task 2.2 One vs. One Linear and Logistic (12 pts)
+
+Now repeat the above for one vs. one models. This task is more difficult because you need 45 different models. In both cases evaluate performance on the test set. Do this both for MNIST and FashionMNIST. Hence you should have 4 accuracy results.
+
+### Task 2.3 Multi-class classifier (logistic softmax) (12 pts)
+
+Now use a multi-class (softmax logistic regression) classifier. An example was already presented in Unit 8 lectures, yet there automatic differentiation was used. In your case use an explicit gradient expression. o this both for MNIST and FashionMNIST. Hence you should have 2 accuracy results.
+
+### Task 2.4 Comparison of results and discussion (12 pts)
+
+Tabulate the results of the previous three tasks in an elegant table. Comment on the accuracy, the model complexity (number of parameters), the running times (in general terms), and other aspects of which chose seems best. The table should accommodate both MNIST and FashionMNIST.
+
+Bonus: that we did not carry out a multi-class linear model example. It turns out that doing this is equivalent to the one vs. all approach. Explain why.
+
+## Main Project Task #3 Choice Task (harder) (14 pts)
+
+In this task you have a **choice** for two options to either carry out a task associated with Main Task 1 (Melbourne house pricing data), or Main Task 2 (MNIST and Fashion MNIST). Please submit only one of the options.
+
+### Option 1 - Location data over time movie on Map (Melbourne Data)
+
+Making a movie with a map (10 pts).
+
+Create a movie that uses the latitude and longitude data to present sales over time overlaid on the Melbourne metropolitan map. Your movie can show the date, and points of sales, and potentially the volume of sales (in dollars). 
+
+### Option 2 - Your own Random Forest Implementation (MNIST and FashionMNIST)
+
+Implement your own Random Forest (based on decision trees). You can use code supplied in the lecture, but you should also adapt it for your own needs. Then use your algorithm to train models on MNIST and FashionMNIST and in each case present the test accuracy. Try to tweak parameters as to achieve an accuracy of no less than 92% on MNIST.

@@ -1,0 +1,404 @@
+# Project \#2 - Semester 2, 2023
+# Discrete Event Simulation of an Unreliable Queueing Network (+ perspective seminar summary)
+
+(last edit: October 1, 2023)
+
+See [Explainer video](https://www.youtube.com/watch?v=4NUX8uDCt8E).
+
+**Due:** Friday, 20, October, 2023, 16:00. Late submissions are not accepted. **Work in pairs** - you must have a single partner for submission. Any deviation from this requires special permission from the course coordinator.
+
+**Note:** The teaching staff will only answer questions (via Ed, consultation hour, or practicals) regarding this assignment up to the late evening of Wednesday October 18.
+
+**Weights and marking criteria:** Total number of points: **100**. There are **10** points for handing in according to the hand-in instructions, including a voice recording, neat output, and very importantly the GitHub repo. There are **10** points for the summary of Anna Foeglein's perspective seminar (this is not a bonus as in previous assessment). The remaining **80** points are for the project itself.
+
+**Submission format:** This assignment should be submitted via a GitHub Repo and a PDF file via Blackboard. 
+
+Specific instructions for the GitHub repo are below. It is important that the GitHub repo be made **private** and the course user name `uqMATH2504` be invited as a collaborator. It is also important to name the repo exactly as `<<FIRST NAME1>>-<<LAST NAME1>>__<<FIRST NAME2>>-<<LAST NAME2>>-2504-2023-PROJECT2`. So for example if your names are "Queen Latifah" and "Sacha Baron Cohen." the repo name should be `Queen-Latifah__Sacha-Baron-Cohen-2504-2023-PROJECT2`. **Please invite `uqMATH2504` as a collaborator as early as possible.
+
+The PDF file should be a nice formatted file that has:
+
+* Your names, student numbers, and assignment title (Project 2 - 2023) on the top.
+* A (clickable) link to your GitHub repo.
+* Instructions on how to run the main simulation code in the repo via an easy to use `simulation_script.jl` file.
+* All of the project code formatted in an organized manner.
+* Output and answers to specific questions formatted in an organized manner.
+* Plots and graphs should have clean organized labels, legends, etc.
+
+The recommended way to make the PDF file is via a Jupyter notebook where you copy in some code and output into the notebook, and in certain cases use `include()` to run Julia code if appropriate. You also comment on questions in this PDF (e.g. when asked to answer things not via code). If desired you could keep this jupyter notebook (`.ipynb` file) in the repo. However, this Jupyter notebook will not be checked (only the PDF file), and it isn't required to be a "runnable" notebook. In any case, please avoid pixilated screenshots of code, so for example if you choose to format your PDF file in MS-word (instead of Jupyter), make sure the code is clean, formatted, and readable. 
+
+Marking responses will be made by the teaching staff by annotating **selected parts** of your PDF file via blackboard. The teaching staff will also inspect your GitHub repo and potentially run `simulation_script.jl`. A very readable and clean PDF file is important. In printing Jupyter to PDF (or exporting to PDF) there may sometimes be excessive white space. Do not worry about this extra white space; it is not a problem.
+
+**Work in pairs but discuss with others**: This is work in pairs. Plagiarism between groups will not be accepted. Nevertheless, feel free to consult with friends or classmates via Ed and other means about how to go about certain tasks. Answering Ed questions of others is recommended.
+
+**Marking Criteria**: 
+
+* 10 points are allocated for following instructions and the GitHub repo.
+
+* 10 points are allocated to the summary of the perspective seminar. 2 points for coherent and grammatically correct writing. 6 points for completeness (the writeup should answer all questions posed). 2 points of originality and style.
+
+* 80 points are for the simulation project itself.
+
+* In general, points **will be** deducted for sloppy coding style. Make sure to have your code properly indented, to use sensible and consistent variable names, and to write code that is in general clean and consistent. 
+
+---
+
+## Setting up your GitHub repo for hand-in (10pts)
+
+* Ideally use the same accounts you used for PROJECT1 and BigHW. Choose one of the team members to "own" the repo and the other(s) will be invited as collaborators.  
+* Make sure the repo is **private**.
+* Invite the course GitHub user, `uqMATH2504` as a collaborator. You may do so early on while working on the project, and must do this no later than the project due date.
+* Do **not** make any changes (commits) to the repo after the project due date. 
+* Create a local clone of the repo. It is recommended that use use `git` command line via the shell to work on making changes/additions to the assignment and submitting the changes. However you are free to use any other mechanism (VS-Code, GitHub desktop, etc).
+* If for some reason you are not able or willing ot use GitHub an alternative is GitLab. This is not recommended as it adds additional work to the teaching staff, however if you wish to use GitLab instead of GitHub contact the teaching staff for permission.
+
+Your GitHub repo should be formatted exactly as follows:
+* Have a `README.md` file which states your names, the assignment title, and has a (clickable) link to the assignment instructions on the course website (to this document). 
+* Have a `LICENSE.md` file. Choose a license as you wish (for example the MIT license). However keep in mind that you must keep the submission private until the end of the semester.
+* Have a `.gitignore` file.
+* Have basic running instructions on how to run the code. This can be similar to what was provided for Project 1 (polynomials). 
+* Have `src` and `test` folders similarly to Project 1.
+* Note: make sure that there aren't any files in your submission repo except for those mentioned above (with the exception of perhaps a Jupyter `.ipynb` file if you choose to use it for creating the PDF). Use may use the `.gitignore` file to ensure `git` does not commit additional files and output files to your `repo`.
+* All code is to be part of a Julia module (with the [module statement](https://docs.julialang.org/en/v1/manual/modules/)). Call the module `GeneralizedUnreliableJacksonSim`. 
+* Make sure the project has a `Manifest.toml` and a `Project.toml` file that specify all the dependencies exactly. Do not have extra dependencies that are not used.
+* Have a `simulation_script.jl` file which runs all of the code needed for the tasks. As this script runs, make sure it prints some light intermediate output (e.g. progress), especially for simulations that take significant time to run.
+
+Since this project involves work in pairs, it is recommended that you try to use GitHub effectively. You may work on parallel branches with frequent merges (but this is not required), or work on the same branch via peer programming. The way you develop is not being assessed, still it is recommended you make good use of GitHub.
+
+## Perspective seminar question (10pts)
+
+Write a 1-4 paragraph summary of Anna Foeglein's perspective seminar. The writeup should answer these questions without treating the questions directly. That is, don't write "the answer to Q1 is..." etc. Instead incorporate the answers in a flowing writeup report (like a blog post or letter). You may use first person, or similar. Present the writeup as part of your PDF file submission (as the first item in the submission).
+
+The writeup should address the following questions:
+
+1. What was Anna's career path, and her relationship with software and mathematics?
+1. Where does she currently work? What does she do in her job? How do you perceive her personal experience from her job?
+1. Discuss a few key tools that she spoke about during the talk, such as programming languages, mathematics, machine learning, statistical tools, simulation platforms, and the like. Was this the first time that you heard about any of these tools?
+1. Have you picked up any tips from Anna's talk, which you can perhaps use in your career down the road?
+1. Feel free to state anything else that you found interesting from the talk and to contrast this talk with the previous talk.
+
+Note: Since the submission is in pairs you should only submit a single writeup for the pair/group.
+
+## Overview of the model
+
+Your key task is to create a discrete event simulation engine for stochastic models that are called "Open Generalized Jackson Networks with breakdowns". [Jackson networks](https://en.wikipedia.org/wiki/Jackson_network) are well studied in classical "applied probability" and "stochastic modelling". The phrase "generalized" in "Generalized Jackson Networks", is also well studied, but is slightly less popular. "Generalized" networks and networks with breakdowns are less amenable to closed form mathematical results (explicit formulas) - and this is why we will use discrete event simulation to analyze them. The "Open" phrase implies that customers may enter and leave these networks (in contrast with "closed" networks that have a finite number of customers). The "breakdown (and repair)" phrase implies that servers are subject to being turned off due to breakdown. Note: you do not need to dive deeply into the Wikipedia entries or other literature. All the information you need about the model is supplied in this project description.
+
+A Jackson network (or "open generalized Jackson network") is a network of queues (also known as "nodes" or "stations") where customers (also known as "jobs") arrive from the outside world, are served at the queues in a "first come first served manner" and then move to other nodes or leave. As a very rough motivational example consider an amusement park (e.g. [Dream World](https://www.dreamworld.com.au/)). There are multiple rides, and individuals move throughout the park and queue up for rides. At any point (after finishing a ride) an individual may go home, or alternatively they may go to the next ride, and so-fourth. However, this is just a rough motivation and there are several significant differences between the generalized Jackson network models you will simulate and what may constitute something like an amusement park. You are asked to discuss these differences in Task 1. Below is a detailed mathematical description of the model.
+
+There are $L$ stations (e.g. $L=5$ or $L=100$) and each station has a  **server** and a **waiting buffer** (or queue). There are jobs traversing through the network and the stations. If needed, jobs can be uniquely identified (numbered) via $\ell=1,2,3,\ldots$ and it is expected that the simulation processes thousands, or millions of job, so that if you track individual jobs then $\ell$ is an increasing counter of the jobs.
+
+A job's location can be one of:
+
+* Out the system prior to arrival (the job still doesn't exist).
+* In the system in a buffer of one of the stations (queueing - i.e. waiting for its turn to enter service).
+* In the system at one of the stations being served by the server at that station. This means it is "at the head" of the queue (and being served).
+* In the system at one of the stations being partially served - but with a broken down server - so waiting for the server to be repaired before service continues. 
+* Out of the system after leaving.
+
+*Warning:* With the exception of the final task, your simulation should **not** have entities for individual jobs, but rather only have counts and general descriptors as the system state. 
+
+Time is continuous, $t \ge 0$. In this continuous time system, jobs arrive to the system according to a random process and traverse between the stations as we describe now.
+
+Each station $i=1,\ldots,L$ has a service rate $\mu_i > 0$ which is the inverse of the mean expected time it takes the server to process a job. Each station has a queue which has infinite capacity - i.e. there is no limit on the number of jobs in the queue. Jobs are served one by one at each station, where the mean (uninterrupted) service duration of each job is $\mu_i^{-1}$ and that duration is statistically independent from all other services at that node and at other nodes. 
+
+At any given time each server can be in in `on` state (not broken down), or `off` state in which case it is broken down. When a server breaks down (`on` to `off`) if it is serving a job, then the job just freezes and waits until the server is fixed (`off` to `on`) before service continues. Note that the mean $\mu_i^{-1}$ is the mean duration of service NOT counting any broken down (`off`) time.
+
+When a job arrives to station $i$, if the server is free (and this means there are no jobs in the buffer) and if the server is not in broken down (`off`) state, the job immediately starts to receive service from the server. If the server is busy or broken down, the job queues for service and waits for its turn. Jobs may arrive either after finishing service at another node, or directly from the outside world.
+
+The rate of arrivals of jobs to nodes from the outside world is $\alpha_i \ge 0$ for node $i$. Hence for nodes $i$ with external arrivals ($\alpha_i > 0$), the mean duration between external arrivals is $1/\alpha_i$. In this project we'll consider the durations of times between external arrivals to be exponentially distributed (this is gamma distributed with a squared coefficient of variation of $1$). This makes external arrival processes "Poisson processes" (this is also a mathematical detail that is not important for the carrying out the project). 
+
+As for the durations of service times we will set them as gamma distributed with a ratio of the variance and the mean squared (squared coefficient of variation) which is $c_s >0$ for the services. Note that the case of $c_s=1$ is special as it means that the gamma distribution is actually an exponential distribution. In that case (if there are no breakdowns) there are multiple analytical simplifications of such a system and it is no longer a "generalized" Jackson network but rather simply a "Jackson network" and can be also described by a "continuous time Markov chain" (you do not need to know these details for this project). In such a case (and without breakdowns), some explicit results exist and you could use these to test your simulations (and this is the part of Task 2 and Task 3). However when $c_s \neq 1$, explicit results are much more scarce and hence the simulation model may yield information that is not available otherwise (this is Task 4).
+
+When a job completes service it either leaves the system immediately, or immediately moves to another buffer. The choice of its destination is based on the routing matrix $P$. Here $P_{i,j}$ is probability of going to station j after completing service in station $i$.  It is assumed that $P$ has non-negative entries and has a spectral radius less than $1$. Mathematically this means that the maximal absolute value of eigenvalues of $P$ is less than unity. It also means that jobs may always eventually leave the system and that at least some rows of the matrix $P$ sum up to less than $1$. The probability of a job leaving the system (immediately) after service at station $i$ is $1 - \sum_{j=1}^L P_{i,j}$.
+
+*Tip:* Recall (4) from Question 14 of BigHW. The `sample()` function from `StatsBase.jl` may help generate the location (node) of the next job when carrying out the simulation. Yet keep in mind that "outside of the system" is also a possible location.
+
+The process of breakdown and repair (breakdown is `on` to `off` and repair is `off` to `on`) occurs independently
+ of the jobs in the system, and independently for each server. Specifically the server changes between `on` and `off` and back as follows: `on` durations are exponentially distributed with mean $\gamma_1^{-1}$ where $\gamma_1 > 0$. `off` durations are exponentially distributed with mean $\gamma_2^{-1}$ where $\gamma_2 > 0$. Each server just alternates between `on` and `off` and back based on such independent random variables. We denote the long term proportion of time that a server is `on` via $R$ where,
+
+$$
+R = \frac{\gamma_2}{\gamma_1 + \gamma_2} = \frac{\gamma_1^{-1}}{\gamma_1^{-1} + \gamma_2^{-1}}.
+$$
+
+Note that we consider a case of $R=1$ as the case where $\gamma_1 \to 0$ (infinitely slow breakdown rate: `off` to `on`).
+
+It is important to note that the duration of a job in service is drawn/generated at the moment when it enters service. If for a specific job the duration is $x$, then it only leaves service once it has been in service for $x$ units while the server is `on`. That is, service pauses while the sever is `off`.
+
+Hence in summary, the parameters for a network are:
+* The dimension of the network (number of nodes): $L$.
+* The external arrival rates: $\alpha_1,\ldots,\alpha_L$, with $\alpha_i \ge 0$.
+* The service rates: $\mu_1,\ldots,\mu_L$, with $\mu_i > 0$.
+* The $L \times L$ routing matrix $P$.
+* The squared coefficient of variation of the service processes: $c_s > 0$.
+* The on and off parameters, $\gamma_1$ and $\gamma_2$ each strictly positive (these are the same for all servers).
+
+*Tip:* This bit of code with the `rate_scv_gamma()` function may help you see how to generate gamma distributed random variables with the desired rate and squared coefficient of variation.
+```julia
+using Distributions, Statistics
+
+"""
+A convenience function to make a Gamma distribution with desired rate (inverse of shape) and SCV.
+"""
+rate_scv_gamma(desired_rate::Float64, desired_scv::Float64) = Gamma(1/desired_scv, desired_scv/desired_rate)
+
+μ = 1.3
+c_s = 2.1
+dist = rate_scv_gamma(μ, c_s)
+
+println("Theoretical:")
+@show 1/mean(dist)            #this is the mean() method from Distributions (theoretical mean)
+@show var(dist)/mean(dist)^2  #same for the var() method (theoretical variance)
+
+println("\nMonte Carlo:")
+data = [rand(dist) for _ in 1:10^6]
+@show 1/mean(data)            #This is mean() from Base/Distributions (the sample mean)
+@show var(data)/mean(data)^2;  #same for var() (the sample variance)
+```
+
+## Arrival rates to nodes and traffic equations
+
+Jobs arrive to nodes either from outside our internally after being routed to a node. Combining both of these arrivals, a basic quantity one can measure is the rate of arrivals to a given node $i$. That is,
+
+$$
+\lambda_i = \lim_{t \to \infty} \frac{A_i(t)}{t},
+$$
+
+where $A_i(t)$ is the number of arrivals (either from the outside world or from other nodes) to node $i$ during $[0,t]$. This quantity can be measured via simulation (as you will do), but it can also be computed directly via the matrix equation,
+
+$$
+\lambda = P^\top \lambda + \alpha,
+\qquad
+\qquad
+\text{(Traffic equations)}
+$$
+
+where $\lambda$ is a (column) vector of $\lambda_i$ values, and $\alpha$ and $\mu$ are also column vectors of the respective quantities. These "Traffic equations" hold as long as the solution to the equation $\lambda = (I-P^\top)^{-1} \alpha$ satisfies $\lambda < R \mu$ (where the inequality between vectors requires element wise inequality on all elements). To understand the traffic equations further, look at them for each $i$:
+
+$$
+\lambda_i = \alpha_i + \sum_{j=1}^L P_{j,i} \lambda_j.
+$$
+
+*Intuition:* Observe that $\lambda_i$ is equated to the sum of external arrivals and all internal arrivals from other nodes $j$ routed with proportions $P_{j,i}$. This holds as long as the input rates to all nodes $j$ are less than the service rate adjusted to breakdowns. That is, $R \mu_j$.
+
+When $\lambda < R \mu$ we say the **network is stable** and this means that the arrival rate to each node is less than the effective service rate. In this **stable** case, as time goes to infinity, the network converges to statistical equilibrium or "steady state". This means that if we consider a single long simulation, we may run a time average of that simulation to obtain steady state quantities.
+
+We will denote the **load for node $i$** via $\rho_i = \lambda_i/(R \mu_i)$ and always work in a regime where $\rho_i < 1$ for all $i=1,\ldots,L$. We denote $\rho^* = \max \{\rho_1,\ldots,\rho_L\}$ as the "bottleneck load". Clearly, as long as $\rho^*<1$ the network is stable.
+
+## Known queueing theory results and an overview of questions to investigate
+
+In general, it is known that as each $\rho_i$ grows, the congestion in the individual queue at node $i$ increases in the sense that "on average", there are larger steady state queues and longer wait times. Further, as $\rho^*$ grows, the general congestion in the network grows. Since we consider $\rho^* < 1$, we only focus on networks that are stable, yet if $\rho^* \approx 1$, e.g. $=0.95$, they are highly congested. 
+
+It is also generally known that service time variability, quantified via $c_s$, positively affects queues sizes. For example if $c_s =0.01$ the service times at queues are almost deterministic and there is less variability at the queues and thus mean queue lengths are less then say a case of $c_s = 3.0$. As already stated, the case of $c_s = 1$ (with exponentially distributed service times) is quite special and the network is a "Jackson network" (not "Generalized" per se). 
+
+In this case of $c_s = 1$ (with exponential service times) and with $R=1$ (no breakdowns), one can prove that the steady state queue length of each queue has a "geometric distribution" on $0, 1, 2,\ldots$ with a mean of $\rho_i/(1-\rho_i)$. Many more such theoretical results exists, yet we skip the details. This relationship appears as follows: 
+
+```julia
+using Plots
+ρ_grid =0:0.01:0.95
+mean_steady_state_queue_size(ρ) = ρ/(1-ρ) #Theoretical steady state mean queue length (also of M/M/1 queue).
+plot(ρ_grid, mean_steady_state_queue_size.(ρ_grid), 
+        xlabel = "ρ", ylabel = "Mean steady state queue length\nfor an individual node",
+        label = false, lw = 2, c = :black, xlim = (0,1),ylim=(0,20))
+```   
+
+However for cases where $c_s \neq 1$ there generally not an explicit relationship. One of the main goals of the project is to quantify the effect of $c_s$ on the mean total queue sizes as well as the effect of breakdowns.
+
+*Tip:* In the tasks below you are not expected to look at a node per-se but rather at the whole network. You would thus create a superposition of graphs as above, where you sum up all of the queues in the network.
+
+## Example scenarios (networks)
+
+You will work with the following 4 scenarios. These are networks of size 3 nodes, 3 nodes, 5 nodes, or 100 nodes.
+
+```julia
+#You need to install the Parameters.jl package: https://github.com/mauro3/Parameters.jl
+#You need to install the Accessors.jl package: https://github.com/JuliaObjects/Accessors.jl
+using Parameters  
+using Accessors 
+using LinearAlgebra
+using Random 
+
+@with_kw struct NetworkParameters #The @with_kw macro comes from the Parameters.jl package and makes nice constructors
+    L::Int
+    α_vector::Vector{Float64} #This vector is a vector of α_i which can then be scaled
+    μ_vector::Vector{Float64} #This is the vector of service rates considered fixed
+    P::Matrix{Float64} #routing matrix
+    c_s::Float64 = 1.0 #The squared coefficient of variation of the service times with a default value of 1.0
+    γ₁::Float64 = (10^-8) #The rate of breakdown (rate of going from `on` to `off`) default is nothing
+    γ₂::Float64 = 1.0 #The rate of repair (`off` to `on`)
+end
+
+# Returns the effective service rate vector Rμ (taking breakdowns into consideration)
+service_capacity(net::NetworkParameters) = (net.γ₂/(net.γ₁ + net.γ₂)) * net.μ_vector
+
+############################
+# Three queues in tandem
+scenario1 = NetworkParameters(  L=3, 
+                                α_vector = [0.5, 0, 0],
+                                μ_vector = ones(3),
+                                P = [0 1.0 0;
+                                     0 0 1.0;
+                                     0 0 0])
+
+############################
+# Three queues in tandem with option to return back to first queue
+scenario2 = @set scenario1.P  = [0 1.0 0; #The @set macro is from Accessors.jl and allows to easily make a 
+                                 0 0 1.0; # modified copied of an (immutable) struct
+                                 0.3 0 0] 
+
+############################
+# A ring of 5 queues
+scenario3 = NetworkParameters(  L=5, 
+                                α_vector = ones(5),
+                                μ_vector = collect(1:5),
+                                P = [0  .8   0    0   0;
+                                     0   0   .8   0   0;
+                                     0   0   0    .8  0;
+                                     0   0   0    0   .8;
+                                     .8  0   0    0    0])
+
+############################
+# A large arbitrary network
+
+#Generate some random(arbitrary) matrix P
+Random.seed!(0)
+L = 100
+P = rand(L,L)
+P = P ./ sum(P, dims=2) #normalize rows by the sum
+P = P .* (0.2 .+ 0.7rand(L)) # multiply rows by factors in [0.2,0.9] 
+
+scenario4 = NetworkParameters(  L=L, 
+                                α_vector = ones(L),
+                                μ_vector = 0.5 .+ rand(L),
+                                P = P);
+```
+
+Each of these 4 scenarios will be adjusted for desired $\rho^*$ and $c_s$. The way we adjust for a desired $\rho^*$ is by adjusting the `α_vector`. Details below.
+
+# Task 1: Thinking about Modelling Assumptions (5pts)
+
+This task does not involve any coding or computation. Your answer can be in paragraph form or bullet point form. Consider the Generalized Unreliable Jackson Network model and the application of a "Dream World", like amusement park. As mentioned the model can be used to model customer congestion in the amusement park. However, like any model it is at best a rough approximation of reality. Describe some features that exist in the amusement park setting that are **not** captured by the model. Similarly, describe model assumptions that may be **unrealistic** for the application of the amusement park.
+
+Also answer the following: If you were actually using this model to assess congestion at the park, would it be useful or not? You may also use insight from Anna Foeglein's lecture.
+
+# Task 2: Computation for Jackson Networks (10pts)
+
+We provide you with the functions `maximal_alpha_scaling()` and `set_scenario()` for adapting parameters of a scenario for a desired $\rho$ value and $c_s$ value.
+
+```julia
+"""
+Compute the maximal value by which we can scale the α_vector and be stable.
+"""
+function maximal_alpha_scaling(net::NetworkParameters)
+    λ_base = (I - net.P') \ net.α_vector #Solve the traffic equations
+    ρ_base = λ_base ./ service_capacity(net) #Determine the load ρ  
+    return minimum(1 ./ ρ_base) #Return the maximal value by 
+end
+
+max_scalings = round.(maximal_alpha_scaling.([scenario1, scenario2, scenario3, scenario4]),digits=3)
+println("The maximal scalings for scenarios 1 to 4 are: $max_scalings")
+
+"""
+Use this function to adjust the network parameters to the desired ρ⋆, c_s, and R.
+"""
+function set_scenario(net::NetworkParameters, ρ::Float64, c_s::Float64 = 1.0, R::Float64 = 1.0)
+    (ρ ≤ 0 || ρ ≥ 1) && error("ρ is out of range")  
+    (R ≤ 0 || R > 1) && error("R is out of range")  
+    net = @set net.γ₁ = net.γ₂ * (1-R)/R
+    max_scaling = maximal_alpha_scaling(net)
+    net = @set net.α_vector = net.α_vector*max_scaling*ρ
+    net = @set net.c_s = c_s
+    return net
+end;
+```
+
+For example set the parameters of scenario 2 to have ρ⋆ = 0.7 and c_s = 2.4
+
+```julia
+#Adjust scenario 2 for a desired ρ and c_s, adjusted_net is the adjusted network
+adjusted_net = set_scenario(scenario2, 0.7, 2.4)
+@show adjusted_net.α_vector
+
+#We can check by solving the traffic equations
+λ = (I - adjusted_net.P') \ adjusted_net.α_vector #Solve the traffic equations
+ρ = λ ./ service_capacity(adjusted_net) #This is the vector of ρ values
+ρ_star= maximum(ρ) #\star + [TAB]
+@show ρ_star;
+```
+
+Or further if we wish to have $R=0.5$ we can see that the arrival rate is effectively halved.
+
+```julia
+adjusted_net = set_scenario(scenario2, 0.7, 2.4, 0.5)
+@show adjusted_net.α_vector
+@show adjusted_net.γ₁, adjusted_net.γ₂
+
+#We can check by solving the traffic equations
+λ = (I - adjusted_net.P') \ adjusted_net.α_vector #Solve the traffic equations
+ρ = λ ./ service_capacity(adjusted_net) #This is the vector of ρ values
+ρ_star= maximum(ρ) #\star + [TAB]
+@show ρ_star;
+```
+
+Now assume $c_s = 1$ and $R=1.0$. Create 4 plots for the four scenarios where you plot the **total steady state mean queue lengths** as a function of $\rho^*$. Simply use the fact that the theoretical steady state mean queue length for queue $i$ is $\rho_i/(1-\rho_i)$. This is a straight forward task that does not involve simulation, but rather only a deterministic computation.
+
+**Note:** In all cases in this project we aim to run simulations only for networks with $\rho^*<1$. That is only for stable networks. So in any case of testing or analysis, make sure you adjust the parameters of the network using the `set_scenario` function. This type of simulation of stable networks allows us to take long time averages from simulations which approximate "statistical steady state".
+
+## Task 3: A Simulation Engine Based on Queue States Supporting Breakdown and Repair (40pts)
+
+Create a simulation engine which is wrapped with the following function.
+
+```julia 
+"""
+Runs a discrete event simulation of an Open Generalized Jackson Network with Breakdowns and Repairs `net`. 
+
+The simulation runs from time `0` to `max_time`. 
+
+Statistics about the total mean queue lengths are recorded from `warm_up_time` 
+onwards and the estimated value is returned. For debug purposes statistics about proportion of time on are also recorded. 
+
+This simulation does NOT keep individual customers state, it only keeps the following minimal state: 
+* The number of jobs in each queue.
+* If each server is on or off.
+* In case the server is off and there is a job "stuck" in it, how much processing time is left on that job. 
+"""
+function sim_net(net::NetworkParameters; max_time = 10^6, warm_up_time = 10^4, seed::Int64 = 42)::Float64
+    
+    #Set the random seed
+    Random.seed!(seed)
+    
+    #The function would execute the simulation here - and this would use multiple other functions, types, and files
+
+    estimated_total_mean_queue_length = 12.3 #the function would estimate this value (12.3 is just a place-holder)
+
+    return estimated_total_mean_queue_length
+end;
+```
+
+Test the simulation in two ways:
+
+**Test #1**: By running with $c_s = 1.0$ and $R=1.0$ on a grid of $\rho^*$ with steps of $0.01$ between $0.1$ and $0.9$. Compare the values with the theoretical values that you plotted in the previous task. Compare both by plotting the values and computing the absolute relative error over the grid of $\rho^*$. You will know that your simulation is valid if the absolute relative error will be low and further decrease as `max_time` is increased. 
+
+**Test #2**: Modify the `sim_net()` function so that $A_i(T)$ (total overall arrivals to node $i$ over the whole time horizon $T$) is also recorded. Then by computing $A_i(T)/T$ you should get values that agree with (or are near) $\lambda_i$. Note that changing $c_s$ should not affect this - so try for various settings of $c_s$. 
+
+**Test #3**: See the long term proportion of time `on` for each server is at $R$ when you set various values for $R$.
+
+**Test #4**: See qualitatively that as you decrease $R$ mean queue lengths tend to grow. Do this for networks where you adjust the arrival rate via `set_scenario` so that the networks are still stable. Note that even if they are stable, lower values of $R$ should increase mean queue lengths.
+
+These tests may be placed in your `test` folder. For them to be automatic you would require thresholds as they are statistical (noisy tests). So making the tests automatic is not required, but only optional.  
+
+**Tip**: Implement this main task one step at a time. For example start without $c_s$ and with fully reliable networks. Then add more components until you get the full functionality. 
+
+## Task 4: Analysis of the Effect of $c_s$ and $R$ on Queue Sizes (15pts)
+
+Now run further simulations for the same grid of $\rho^*$ but for $c_s \in \{0.1, 0.5, 1.0, 2.0, 4.0\}$ and $R \in \{0.25,0.75,1.0\}$. Specifically use $c_s = 0.5$ for all combinations of $R$ and use $R=0.75$ for all combinations of $c_s$. Use these simulations to add plots of the estimated mean total queue length as a function of $\rho^*$. For each scenario create two plots where the $x-axis$ is always $\rho^*$. In one plot you will vary $c_s$ and in the other plot you will vary $R$. We expect to see that as $c_s$ increases or as $R$ decreases the curves shift up. This is because more variability in the system increases queueing phenomena. Make sure the legend is properly marked and placed on each plot and that you have an easy script to create all plots. 
+
+**Tip**: Start with short simulation runs to make sure your plots are well formatted. Then once formatting is complete, go for longer runs to decrease the variance of the estimated curves. Note that in each case you will use a grid of $\rho^*$, so there are many (e.g. 100) simulation runs per curve.
+
+## Task 5: Sojourn Time Distributions (10pts)
+
+*Note: This final task requires a significant amount of coding (not proportional to the point weighting) and testing on top of the other tasks.*
+
+Now create another parallel simulation module wrapped via a function `sim_net_customers()`. In contrast to the simulation engine you created before, this simulation engine keeps track of each of the customers in the system. One way to do this is to use a `Queue` data structure from [DataStructures.jl](https://juliacollections.github.io/DataStructures.jl/latest/stack_and_queue/#) in a way somewhat similar manner [this basic example](https://github.com/h-Klok/StatsWithJuliaBook/blob/master/10_chapter/mm1DESwaitingTimes.jl). Then each node will have a queue of customers implemented via `Queue` and each customer may have a time-stamp of the time of arrival to the system and time of departure. 
+
+Your goal is now to consider each of the scenarios and for each one to estimate Q1, the median, and Q3 of the sojourn time in the system (this is the time a customer spends in the system) when $\rho^* = 0.8$ and $c_s \in \{0.5, 1.0, 2.0\}$. 
+
+Place the results in a neatly formatted table. Optionally run multiple runs per setting to obtain error bounds for your estimates. 

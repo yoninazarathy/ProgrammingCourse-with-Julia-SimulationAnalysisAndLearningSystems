@@ -1,0 +1,324 @@
+# Homework \#1 - Semester 2, 2021.
+(last edit: Aug 4, 2021)
+
+**Due:** End of Day, Friday, August the 13th, 2021. Late submissions are not accepted.
+
+**Note:** The teaching staff will only answer questions (via Piazza, consultation hour, practicals) regarding this assignment up to the late evening of Wednesday August 11.
+
+**Weights and marking criteria:** Total number of points: 100. There are 10 points for handing in according to the hand-in instructions, including a voice recording, code, and neat output. There 90 points distributed among the eight questions based on difficulty (5, 10, 15, 15, 5, 15, 15, 10). See the [general submission instructions information](https://courses.smp.uq.edu.au/MATH2504/#hand-in).
+
+**Submission format:** For this assignment create a single neat Jupyter notebook answering all questions in order (1-8). 
+
+Since this assignment is in **pairs** make sure to have the names of both partners (or all three in exceptional circumstances) as well as student numbers. Submission will be via the Blackboard account of **only one** of the teammates but will count equally for both (or all three). All cases that involve a group of a single person or three persons requires explicit permission from the course coordinator.
+
+**Marking Criteria**: 
+
+* 10 points are allocated for following instructions. This includes proper submission of the voice recording, the `.ipynb` file, having names and student numbers on the hand-in, and most importantly neatly formatting all the answers of the jupyter notebook.
+
+* Each question is then marked based on correctness.
+
+* As this is the first assignment, points will not be deducted for sloppy coding style. However in future assignments consistent coding style will be required. 
+
+
+--- 
+
+## Question 1 (5pts): LaTeX, Jupyter, HTML, and Markdown
+
+This question deals with basic formatting tools.
+
+**1a**: Consider the following continued fraction formula for the golden ratio $\varphi$:
+
+$$
+\varphi=1+\frac{1}{1+\frac{1}{1+\ddots}}
+$$
+
+Use LaTeX to write a version of it with two additional nested levels. That is, replace the '$\ddots$' with two additional levels. 
+
+**1b**: Use Markdown to write an ordered list of your 5 favorite books. Add (Markdown) hyperlinks to each of the books.
+
+**1c**: Use HTML to embed an image with an hyperlink from the image. Use HTML to resize the image to a size you like. Make sure the aspect ratio is maintained.
+
+**1d**: Use HTML to create a table of your weekly class schedule. See for example this [reference](https://www.w3schools.com/html/html_tables.asp).
+
+
+
+## Question 2 (10pts): Continued Fractions for the Golden Ratio
+
+In this question we deal wit the [golden ratio](https://en.wikipedia.org/wiki/Golden_ratio),
+$$
+\varphi = \frac{\sqrt{5}+1}{2}.
+$$
+
+It naturally appears as the solution of a quadratic equation but can also be represented via a continued fraction as in Question 1. 
+
+Consider the code below which initializes the continued fraction expression with an 'initial guess' of $2$.
+
+```julia
+function golden_continued_frac(n, init = 2)
+    φ = init # \varphi + [TAB]
+    for _ in 1:n
+        φ = 1+1/φ
+    end
+    φ
+end
+
+golden_explicit = (√5+1)/2
+@show golden_explicit
+
+for n in 1:5
+    println("n=$n\tapprox = ", golden_continued_frac(n))
+end
+```
+
+**2a**: Explain why (prove) that if we set `init=(√5+1)/2` then the approximation is exact. I.e, why does the following output occur?
+
+```julia
+for n in 1:5
+    println("n=$n\tapprox = ", golden_continued_frac(n, golden_explicit))
+end
+```
+
+**2b**: It is thus expected that error of the approximation will depend on how far the initial value is from the actual golden ratio, as well as on the number of levels of the continued fraction. Investigate this error for initial values in the range of $\pm 0.5$ with steps of $0.1$ from the golden ratio and $n=5,6,7,8,9,10$. Present your results in the form of a plot, where you show how the initial value affect the absolute error of the approximation after $n$ iterations. For example, plot multiple series (one for each initial value), where the horizontal axis is $n$ and the vertical axis is the absolute error.
+
+To help you with the plotting, here is some code that plots random values, plotting series on a single plot with a legend, labels, and such.
+
+```julia
+using Plots
+
+init_grid = 1.5:0.1:2.3
+n_range = 5:10
+results = Dict()
+for init in init_grid, n in n_range
+    results[(init, n)] = 0.1*rand()/(n+init)
+end
+
+plot(n_range, 
+    [results[(init,n)] for n in n_range, init in init_grid],
+    label=round.(hcat(init_grid...) .- golden_explicit,digits=2),
+    xlabel = "n",
+    ylabel = "Absolute error")
+```
+
+## Question 3 (15pts): Primes and Goldbach's conjecture
+
+[Goldbach's conjecture](https://en.wikipedia.org/wiki/Goldbach%27s_conjecture) states that every even number greater than two can be represented as a sum of two primes. For example $16 = 11+5$ and $40 = 37+3$ or $23+17$. In this question you will try to disprove the conjecture by searching for an even number that is not a sum of two primes (don't expect to succeed in disproving).
+
+First consider the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) implemented as follows:
+
+```julia
+"""
+Returns the all the primes up to n.
+"""
+function sieve_of_Eratosthenes(n)
+    primebits = ones(Bool,n) #Will contain true if the index is prime (initially all assumed prime)
+    primebits[1] = false #The number 1 is not prime
+    p = 2 #Smallest prime
+    while p ≤ n
+        i = 2p
+        while i ≤ n  # \le +[TAB]
+            primebits[i] = false
+            i += p
+        end
+        p += 1
+        while p ≤ n && !primebits[p]
+            p += 1
+        end
+    end
+    (1:n)[primebits]
+end
+
+n = 100
+println("First $n primes: ",sieve_of_Eratosthenes(n))
+```
+
+This sieve yields a way to get a list of the first $n$ primes. However it is used inefficiently in the code below to create a plot of the number of Goldbach pairs.
+
+```julia
+using Plots
+function check_Goldbach(n)
+    @assert iseven(n)
+    num_pairs = 0
+    for p in sieve_of_Eratosthenes(n)
+        if in(n-p,sieve_of_Eratosthenes(n))
+            num_pairs += 1
+        end
+    end
+    return num_pairs
+end
+
+n = 10^3
+even_range = 4:2:n
+checks = check_Goldbach.(even_range)
+if 0 ∈ checks
+    println("Found a counter example for Goldbach")
+end
+scatter(even_range,checks,legend=false,xlabel="n",ylabel="Number of Goldbach pairs")
+```
+
+Modify this code or create code of your own so that you can plot a figure similar to the above for the first $10^6$ Goldbach pairs. Do **not** use any in-built (or package) functions for prime numbers (e.g. [Primes.jl](https://github.com/JuliaMath/Primes.jl). In the figure, instead of plotting all the points associated with Goldbach pairs, only plot a random subset of the points so that the figure won't have more than about $20,000$ points. 
+
+## Question 4 (15pts): Binary, Hex, and Decimal 
+
+Consider this code which creates two functions for creating random strings representing binary numbers and hexadecimal numbers.
+
+```julia
+random_binary_string(n = 12) = *([rand(['0','1']) for _ in 1:n]...)
+random_hex_string(n=3) = *([rand(union('0':'9','A':'F')) for _ in 1:n]...);
+```
+
+For example,
+
+```julia
+using Random
+Random.seed!(0)
+@show random_binary_string()
+@show random_hex_string();
+```
+
+*4a*: Explain how these functions work. 
+
+Assume now that you are given inputs:
+
+```julia
+using Random
+Random.seed!(0)
+r_bin_strs = [random_binary_string() for _ in 1:10^3]
+r_hex_strs = [random_hex_string() for _ in 1:10^3];
+```
+
+*4b*: Use standard Julia functions to parse these arrays of strings into arrays of numerical values and report the sum of the values (present the result in decimal). So your output should be two decimal numbers, one which is the sum of all of the binary numbers in the array, and the other which is the sum of all of the hex numbers. Prior to checking your output, suggest an estimate (expected value) for the sum - explain why.
+
+*4c*: Now create your own functions (from first principles parsing strings) to convert a binary digit string and a hex string into values. Repeat 4b with your own functions and see you get the same result. Present your function implementations and the output.
+
+
+## Question 5 (5pts): Sorting - Part 1
+
+Consider this code which sorts a list of names:
+
+```julia
+function array_table(array, heading)
+    println(heading,":")
+    for (i,a) in enumerate(array)
+        println(i,"\t",a)
+    end
+end
+
+names = [   "Amy Chan",
+            "Maithili Mehta",
+            "Anna Foeglein",
+            "Andy Ferris",
+            "Thomas Graham",
+            "Elaine Schenk",
+            "Jesse Woods",
+            "Tina Moghaddam",
+            "Paul Bellette",
+            "Paul Vrbik",
+            "Tom Cranitch",
+            "Yoni Nazarathy"]
+
+sorted_names = sort(names)
+array_table(sorted_names, "Sorted by first name")
+
+println()
+
+sorted_names = sort(names,by=(x)->reverse(split(x," ")))
+array_table(sorted_names,"Sorted by last name")
+```
+
+**5a**: Read the help entry for `sort()`. Now modify the code to sort the list based on the shortest last name (shortest first, longest last).
+
+**5b**: Implement your own sort function, say `my_sort_bubble()`, using a Bubble sort algorithm. Your function should also accept a `by=` argument and work in the same way. Show the output on the same list, sorting by last name first.
+
+
+## Question 6 (15pts): Sorting - Part 2
+
+**6a**: Now implement a version of your function `my_sort_quick()` that uses the quick sort algorithm. Test it on the list of question 5, using last name first.
+
+**6b**: Now generate lists of a million integers via `data = rand(Int,10^6)`. Compare running times of the system's `sort()`, `my_sort_bubble()`, and `my_sort_quick()` on this list. Use the `@time` macro. Then repeat for $10^7$ and $10^8$ integers. Report your results in an organized manner.
+
+**6c**: Look up a derivation of the average running time of quick sort. Summarize this derivation, explaining the steps.
+
+
+## Question 7 (15pts): Matrix Multiplication
+
+Here is code that creates two random matrices and displays their matrix product:
+
+```julia
+using LinearAlgebra
+Random.seed!(0)
+A = round.(10*rand(2,3))
+B = round.(10*rand(3,4))
+A*B
+```
+
+This in built multiplication is designed to be very numerically efficient. However matrix multiplication can be computed in different ways and to explore these ways you will write your own matrix multiplication functions.
+
+For example:
+
+```julia
+function my_mult_inner_products(A,B)
+    nA,mA = size(A)
+    nB,mB = size(B)
+    @assert mA == nB
+    n, m, p = nA, mA, mB
+    C = Array{Float64}(undef,n,p)
+
+    for i in 1:n
+        for j in 1:p
+            C[i,j] = A[i,:]' * B[:,j] #compute inner product of i'th row of A and j'th column of B
+        end
+    end
+    return C
+end
+
+my_mult_inner_products(A,B)
+```
+
+However, matrix products can be represented in other ways, and each of these other ways will have their own implementation.  You will now create your own three functions that execute these implementations, and in each case test they get the same result for the test matrices `A` and `B` above.
+
+**7a**: `my_mult_by_cols()`: The matrix product can be represented as the linear combination of the columns. That is, the $j$th column of $C$ is a linear combination of the columns of $A$ with weights given by the $j$th column of $B$. Implement this making use of Julia's vector arithmetic e.g.:
+
+```julia
+vec1 = [1,2,3];
+vec2 = [2,0,4];
+3*vec1 + 4*vec2
+```
+**7b**: `my_mult_by_rows()`: Similarly to the above, you can take linear combinations of the rows of $B$. This representation is the "dual" of 7a. Carry this out as well.
+
+**7c**: `my_mult_sum_outer_products()`: A third representation is to consider outer products and observe that,
+
+$$
+A B = \sum_{j=1}^m A_{:,\,j} B_{j,\,:}^\top ~~,
+$$
+
+where $A_{:,\,j}$ is the $j$th column of $A$ and $B_{j,\,:}$ is the $j$th row of $B$ (represented as a column vector and hence its transpose is a row vector).
+
+To see such outer products (rank one matrices) in Julia, consider:
+
+```julia
+vec1 = [1,2,3];
+vec2 = [2,0,4];
+vec1*vec2'
+```
+
+So now rank one matrices may be added up.
+
+**7d**: After you have implemented the functions for 7a, 7b, and 7c, it may appear that in each of these cases there is only a single loop while the function provided, `my_mult_inner_products()` has a nested loop. Does this mean that in terms of complexity of the number of the operations, 7a, 7b, and 7c are necessarily much more efficient? Explain your result.
+
+## Question 8 (10pts): Recursive Computation of Determinants
+
+Here is code that creates a random $10 \times 10$ matrix and computes its determinant.
+
+```julia
+using LinearAlgebra, Random
+Random.seed!(0)
+A = rand(10,10)
+det(A)
+```
+
+**8a**: Write your own determinant function `my_det()` which will recursively compute the determinant based on expansion of the first row of the matrix. Note that this is in no way the efficient way to numerically compute determinants. Your function should call itself $n$ times when presented with matrices of size $n>2$. 
+Test your function on the same matrix $A$ from above to see you obtain the same value.
+
+**8b**: Determine an expression for the number of times `my_det()` is called, when called for an $n \times n$ matrix.
+
+**8c**: Test this by using a global variable (or some better means), which is incremented eat time the function is called.
