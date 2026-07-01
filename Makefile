@@ -23,13 +23,13 @@ lecture-8:
 
 # Individual assessment targets
 .PHONY: assessment-bighw assessment-project3 assessment-projectA assessment-projectB
-assessment-bighw:
+bighw:
 	quarto render quarto/Assessment/bighw.qmd --to html,pdf
-assessment-project3:
+project3:
 	quarto render quarto/Assessment/project3.qmd --to html,pdf
-assessment-projectA:
+projectA:
 	quarto render quarto/Assessment/projectA.qmd --to html,pdf
-assessment-projectB:
+projectB:
 	quarto render quarto/Assessment/projectB.qmd --to html,pdf
 
 # Combined targets
@@ -40,16 +40,16 @@ all-lectures: lecture-1 lecture-2 lecture-3 lecture-4 lecture-5 lecture-6 lectur
 all-assessments: assessment-bighw assessment-project3 assessment-projectA assessment-projectB
 
 .PHONY: quarto-render
-quarto-render: all-lectures all-assessments
+all: all-lectures all-assessments
 
 .PHONY: quarto-html
-quarto-html:
+all-html:
 	quarto render quarto/ --to html
 
 .PHONY: quarto-pdf
-quarto-pdf:
+all-pdf:
 	quarto render quarto/ --to pdf
 
 .PHONY: quarto-clean
-quarto-clean:
+clean:
 	rm -rf quarto/_freeze quarto/.quarto lectures_html_pdf/quarto
